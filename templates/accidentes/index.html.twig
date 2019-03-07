@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+<style>
+    .accion{ cursor:pointer }
+</style>
+<script src="resources/js/functions.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-0Wt6vynQ9q_P23Hj5s0DZv5KvbVTBHc"></script>
+               
+
+<script>
+    main_route = '/accidentes'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
+{% endblock %}
+{% block body %}
+
+{{ include('accidentes/form.html.twig') }}
+
+<div class="header bg-indigo"><h2>ACCIDENTES</h2></div>
+<div class="body">
+    <div class="row clearfix">
+        {% if 'accidentes_insertar' in permisos %}
+        {% if objects %}
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                <label>Tipo Accidente</label>
+                <select id="tipo" class="form-control" onchange="habilitar()">
+                    <option value="Lesión incapacitante">
+                        Lesión incapacitante
+                    </option>
+                    <option value="Lesión no incapacitante">
+                        Lesión no incapacitante
+                    </option>
+                    <option value="Daño a la propiedad">
+                        Daño a la propiedad
+                    </option>
+                    <option value="Cuasi Accidentes">
+                        Cuasi Accidentes
+                    </option>
+                    <option value="Condición y acto subestándar">
+                        Condición y acto subestándar
+                    </option>
+                </select>
+            </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+            {% if 'accidentes_insertar' in permisos %}
+                {% if objects %}
+                    <button id="reset" type="button" class="btn bg-indigo waves-effect" disabled="disabled">
+                        REINICIAR
+                    </button>
+                {% else %}
+                    <button id="reset" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                        INICIAR
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% if 'home_accidentes' in permisos and objects %}
+    <div class="row">
+
+        <div class="body table-responsive">
+            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                <thead>
+                <tr>
+                    <th class="order_by_th" data-name="names">Fecha Inicio</th>
+                    <th class="order_by_th" data-name="phone">Fecha Fin</th>
+                    <th class="order_by_th" data-name="phone">Tipo</th>
+                    <th class="order_by_th" data-name="phone">Días</th>
+                </tr>
+                </thead>
+                <tbody id="table_content">
+                {{ include('accidentes/table.html.twig') }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+    {% endif %}                 
+</div>
+</div>
+{%endblock%}
+{% block javascripts %}
+<script src="resources/plugins/momentjs/moment.js"></script>
+<script src="resources/plugins/momentjs/locale/es.js"></script>
+<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script>
+    function init(){
+        var fini = $('tr .fecini');
+        var ffin = $('tr .fecfin');
+        var dias = $('tr .dias');
+
+        for (let i = 0; i < fini.length; i++) {
+            var ONEDAY = 1000 * 60 * 60 * 24;
+            var firstDate = Date.parse(fini[i].innerHTML);
+            if(ffin[i].innerHTML != 'Vigente'){
+                var secondDate = Date.parse(ffin[i].innerHTML);
+                var diffDays = (Math.abs(firstDate - secondDate))/ONEDAY;
+                var d = parseInt(diffDays);
+                dias[i].innerHTML= d;
+
+            }else {
+                var secondDate = new Date();
+                var diffDays = (Math.abs(firstDate - secondDate.getTime()))/ONEDAY;
+                var d = parseInt(diffDays);
+                dias[i].innerHTML= d;
+            }
+        }
+    };
+    function habilitar(){
+        document.getElementById('reset').removeAttribute('disabled');
+    }
+
+    $('#reset').click(function () {
+        var objeto = {{ objects|json_encode }};
+        if( objeto == undefined || objeto == null || objeto.length <= 0 ){
+            console.log('first');
+            ajax_call("/accidentes_reset", {tipo: ''}, null, function () {})
+            setTimeout(function(){window.location=main_route}, 1000);
+        }else{
+            ajax_call("/accidentes_reset", {tipo: $('#tipo').val()+""}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+        }
+    });
+
+    $('.delete').click(function(){
+        id = parseInt(JSON.parse($(this).attr('data-json')))
+        enabled = false
+        swal({
+            title: "¿Desea dar de baja el tiempo sin accidente?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#004c99",
+            cancelButtonColor: "#F44336",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(function () {
+            ajax_call("/accidentes_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+        })
+    })
+</script>
+
+{% endblock %}

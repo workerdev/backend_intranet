@@ -1,0 +1,14 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.nombre }}</td>
+         <td><img class="ruta" style="width:12vw;height: vw;" src={{ tr.ruta }} ></td>
+        <td align="center">
+        {% if 'organigramagerencia_editar' in permisos %}  
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'organigramagerencia_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

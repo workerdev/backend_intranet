@@ -1,0 +1,31 @@
+{% for t in objects %}
+<tr>
+    <td class="details-control">
+        <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'aud' ~ t.id}}"></i>
+    </td>
+    <td class="d-none">{{ t.id }}</td>
+    <td>{{ t.codigo }}</td>
+    <td>{{ t.fkarea.fkarea.nombre }}</td>
+    <td>{{ t.fktipo.nombre }}</td>
+    <td>{{ t.fechaprogramada | date('Y-m-d') }}</td>
+    <td>{{ t.duracionestimada }}</td>
+    <td>{{ t.lugar }}</td>
+    <td class="d-none">{{ t.alcance }}</td>
+    <td class="d-none">{{ t.objetivos }}</td>
+    <td class="d-none">{{ t.fechahorainicio | date('Y-m-d H:i') }}</td>
+    <td class="d-none">{{ t.fechahorafin | date('Y-m-d H:i') }}</td>
+    <td class="d-none">{{ t.conclusiones }}</td>
+    <td class="d-none">{{ t.responsable }}</td>
+    <td class="d-none">{{ t.fecharegistro | date('Y-m-d') }}</td>
+    <td align="center">
+    {% if 'auditoria_editar' in permisos %}
+        <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+    {% endif %}
+    {% if 'auditoria_eliminar' in permisos %}  
+        <button id="delete" data-json="{{t.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+    {% endif %} 
+        <button id="notifrep" data-json="{{t.id}}" type="button" class="btn btn-primary waves-effect waves-light notifrep" title="Notificación"><i class="material-icons">picture_as_pdf</i></button>
+        <button id="audrep" data-json="{{t.id}}" type="button" class="btn btn-warning waves-effect waves-light audrep" title="Auditoría"><i class="material-icons">picture_as_pdf</i></button>
+    </td>
+</tr>
+{% endfor %}

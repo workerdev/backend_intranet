@@ -1,0 +1,31 @@
+{% for tr in objects %}
+    <tr>
+        <td class="details-control">
+            <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'cro' ~ tr.id}}"></i>
+        </td>
+        <td class="d-none">{{ tr.id }}</td>
+        <td class="d-none">{{ tr.descripcion }}</td>
+        <td class="d-none">{{ tr.origen }}</td>
+        <td class="d-none">{{ tr.accion }}</td>
+        <td>{{ tr.fecha|date('Y-m-d') }}</td>
+        <td>{{ tr.estadocro }}</td>
+        <td class="d-none">{{ tr.analisiscausaraiz }}</td>
+        <td>{{ tr.fkficha.codproceso }}</td>
+        <td>{{ tr.fktipo.nombre }}</td>
+        <td>{{ tr.fkprobabilidad.nombre }}</td>
+        <td>{{ tr.fkimpacto.nombre }}</td>
+        {% if tr.fkresponsable.estado == 2 %}
+            <td class="d-none">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td class="d-none">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% endif %}
+        <td align="center">
+        {% if 'riesgosoportunidades_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'riesgosoportunidades_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

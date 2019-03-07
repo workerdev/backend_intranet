@@ -1,0 +1,25 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.codigo }}</td>
+        {% if tr.fkproceso != null %}
+            <td>{{ tr.fkproceso.codproceso }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        <td>{{ tr.fktipo.nombre }}</td>
+        <td>{{ tr.titulo }}</td>
+        <td>{{ tr.versionvigente }}</td>
+        <td>{{ tr.fechapublicacion | date('Y-m-d') }}</td>
+        <td>{{ tr.aprobadopor }}</td>
+        <td>{{ tr.carpetaoperativa }}</td>
+        <td>{{ tr.vinculoarchivo }}</td>
+        <td align="center">
+        {% if 'bajadocumento_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'bajadocumento_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

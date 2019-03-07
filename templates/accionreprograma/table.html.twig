@@ -1,0 +1,19 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.fkaccion.descripcion }}</td>
+        <td>{{ tr.fechaanterior | date ('Y-m-d') }}</td>
+        <td>{{ tr.fechaimplementacion | date ('Y-m-d') }}</td>
+        <td>{{ tr.motivojustificacion }}</td>
+        <td>{{ tr.autoriza }}</td>
+        <td>{{ tr.responsableregistro }}</td>
+        <td>{{ tr.fecharegistro | date ('Y-m-d') }}</td>
+        <td align="center">
+        {% if 'accionreprograma_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'accionreprograma_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

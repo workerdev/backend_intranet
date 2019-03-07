@@ -1,0 +1,45 @@
+<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Turno</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    <div id="id_div" class="form-group">
+                        <div class="form-line">
+                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <label class="form-label">Turno ID</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            {#<input id="turno" name="turno" type="text" class="form-control text">#}
+                            <label class="form-label">Turno</label>
+                            <select id="nombre" class="form-control">
+                                <option value="Mañana">Mañana</option>
+                                <option value="Tarde">Tarde</option>
+                                <option value="Noche">Noche</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <select id="fkpersonal" class="form-control">
+                        {% for t in personal %}
+                            <option value="{{t.id}}">{{t.nombre ~ ' ' ~ t.apellido}}</option>
+                        {% endfor %}
+                    </select>
+                        </br>
+                        </br>
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

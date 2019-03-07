@@ -1,0 +1,15 @@
+{% for t in objects %}
+<tr>
+    <td>{{ t.nombre }}</td>
+    <td>{{ t.descripcion }}</td>
+    <td>{{ t.sigla }}</td>
+    <td align="center">
+    {% if 'unidadmedida_editar' in permisos %}
+        <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+    {% endif %}
+    {% if 'unidadmedida_eliminar' in permisos %}  
+        <button id="delete" data-json="{{t.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+    {% endif %}
+    </td>
+</tr>
+{% endfor %}

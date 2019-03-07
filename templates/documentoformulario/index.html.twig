@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+<style>
+    .accion{ cursor:pointer }
+</style>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/documentoformulario'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
+{% endblock %}
+{% block body %}
+
+{{ include('documentoformulario/form.html.twig') }}
+
+<div class="header bg-indigo"><h2>DOCUMENTO FORMULARIO</h2></div>
+<div class="body">
+    <div class="row clearfix">
+        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+        {% if 'documentoformulario_insertar' in permisos %}    
+            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                <i class="material-icons">add</i>
+            </button>
+        {% endif %}   
+        </div>
+    </div>
+    {% if 'home_documentoformulario' in permisos and objects %}
+    <div class="row">
+        <div class="body table-responsive">
+            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                <thead>
+                <tr>
+                    <th class="order_by_th" data-name="names">Codigo </th>
+                    <th class="order_by_th" data-name="phone">Título </th>                    
+                    <th class="order_by_th" data-name="phone">Versión </th>
+                    <th class="order_by_th" data-name="phone">Fecha Publicación </th>
+                    <th class="order_by_th" data-name="phone">Aprobador </th>
+                    <th class="order_by_th" data-name="phone">Documento </th>
+                    <th class="actions_header">Acciones </th>
+                </tr>
+                </thead>
+                <tbody id="table_content">
+                {{ include('documentoformulario/table.html.twig') }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+    {% endif %}
+</div>
+{%endblock%}
+{% block javascripts %}
+<script src="resources/plugins/momentjs/moment.js"></script>
+<script src="resources/plugins/momentjs/locale/es.js"></script>
+<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+
+<script>
+    attach_validators()
+
+    $('#fkdocumento').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar documento.',
+        title: 'Seleccione un documento.'
+    })
+
+    $('#new').click(function () {
+        $('#codigo').val('')
+        $('#titulo').val('')
+        $('#versionVigente').val('')
+        $('#fechaPublicacion').val('')
+        $('#aprobadoPor').val('')
+        $('#vinculoFileDig').val('')
+        $('#vinculoFileDesc').val('')
+
+        clean_form()
+        verif_inputs()
+        $('#id_div').hide()
+        $('#insert').show()
+        $('#update').hide()
+        $('#form').modal('show')
+    })
+    
+    $('#insert').click(function () {
+        objeto = JSON.stringify({
+            'codigo': $('#codigo').val(),
+            'titulo': $('#titulo').val(),
+            'version': $('#versionVigente').val(),
+            'carpeta': $('#carpetaOperativa').val(),
+            'aprobador': $('#aprobadoPor').val(),
+            'fechapb': $('#fechaPublicacion').val(),
+            'vfiledg': $('#vinculoFileDig').val(),
+            'vfileds': $('#vinculoFileDesc').val(),
+
+            'documento': $('#fkdocumento').val()
+        })
+        console.log(objeto)
+        ajax_call_validation("/documentoformulario_insertar", {object: objeto}, null, main_route)
+        // ajax_call("/documentoformulario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        // $('#form').modal('hide')
+    })
+
+    function attach_edit() {
+        $('.edit').click(function () {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
+            });
+            ajax_call_get("/documentoformulario_editar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                console.log(self)
+                
+                $('#id').val(self.id)
+                $('#codigo').val(self.codigo)
+                $('#titulo').val(self.titulo)
+                $('#versionVigente').val(self.versionVigente)
+                $('#carpetaOperativa').val(self.carpetaOperativa)
+                
+                $('#fechapb').val(self.fechaPublicacion)
+                $('#aprobadoPor').val(self.aprobadoPor)
+                $('#vinculoFileDig').val(self.vinculoDig)
+                $('#vinculoFileDesc').val(self.vinculoDesc)
+
+                $('#fkdocumento').val(self.fkdocumento.id)
+                $('#fkdocumento').selectpicker('render')
+
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                $('#form').modal('show')
+            })
+        })
+    }
+
+    $('#update').click(function () {
+        objeto = JSON.stringify({
+            'id': parseInt(JSON.parse($('#id').val())),
+            'codigo': $('#codigo').val(),
+            'titulo': $('#titulo').val(),
+            'version': $('#versionVigente').val(),
+            'carpeta': $('#carpetaOperativa').val(),
+            'aprobador': $('#aprobadoPor').val(),
+            'fechapb': $('#fechaPublicacion').val(),
+            'vfiledg': $('#vinculoFileDig').val(),
+            'vfileds': $('#vinculoFileDesc').val(),
+
+            'documento': $('#fkdocumento').val()
+        })
+        ajax_call_validation("/documentoformulario_actualizar", {object: objeto}, null, main_route)
+        // ajax_call("/documentoformulario_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        // $('#form').modal('hide')
+    })
+    reload_form()
+</script>
+<script>
+
+    attach_edit()
+
+    $('.delete').click(function () {
+        id = parseInt(JSON.parse($(this).attr('data-json')))
+        enabled = false
+        swal({
+            title: "¿Desea dar de baja al documento formulario?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#004c99",
+            cancelButtonColor: "#F44336",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(function () {
+            ajax_call("/documentoformulario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+        })
+    })
+
+</script>
+
+{% endblock %}

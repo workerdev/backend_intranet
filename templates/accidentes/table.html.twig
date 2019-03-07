@@ -1,0 +1,14 @@
+{% for t in objects %}
+<tr>
+    <td class="fecini">{{ t.fechaInicio|date('Y-m-d')  }}</td>
+    {% if t.fechaFin %}
+        <td class="fecfin">{{ t.fechaFin|date('Y-m-d') }}</td>
+    {% else %}
+        <td class="fecfin">Vigente</td>
+    {% endif %}
+    <td >{{ t.tipo }}</td>
+    <td class="dias">
+
+    </td>
+</tr>
+{% endfor %}

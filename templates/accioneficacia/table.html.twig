@@ -1,0 +1,19 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.fkaccion.descripcion }}</td>
+        <td>{{ tr.eficaz }}</td>
+        <td>{{ tr.resultado }}</td>
+        <td>{{ tr.fecha | date ('Y-m-d') }}</td>
+        <td>{{ tr.responsable }}</td>
+        <td>{{ tr.nombreverificador }}</td>
+        <td>{{ tr.cargoverificador }}</td>
+        <td align="center">
+        {% if 'accionseguimiento_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'accionseguimiento_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

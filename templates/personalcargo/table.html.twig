@@ -1,0 +1,24 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.nombre }}</td>
+        <td>{{ tr.descripcion }}</td>
+        
+        {% if tr.fksuperior == "" %}
+        <td>{{ tr.fksuperior }}</td>
+        {% else %}
+        <td>{{ tr.fksuperior.nombre }}</td>
+        {% endif %}
+        
+        <td>{{ tr.fktipo.nombre }}</td>
+        <td align="center">
+        {% if 'personalcargo_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'personalcargo_eliminar' in permisos %}
+            {% if tr.fksuperior != "" %} 
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+            {% endif %}
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

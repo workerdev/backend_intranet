@@ -1,0 +1,22 @@
+{% for t in objects %}
+<tr>
+    <td>{{ t.codigo }}</td>
+    <td>{{ t.vigente }}</td>
+    <td>{{ t.fkgerencia.nombre }}</td>
+    <td>{{ t.fkarea.nombre }}</td>
+    <td>{{ t.fksector.nombre }}</td>
+    {% if t.fkresponsable.estado == 2 %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+    {% else %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido }}</td>
+    {% endif %}
+    <td align="center">
+    {% if 'gciarsector_editar' in permisos %} 
+        <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+    {% endif %}
+    {% if 'gciarsector_eliminar' in permisos %}  
+        <button id="delete" data-json="{{t.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+    {% endif %}
+    </td>
+</tr>
+{% endfor %}

@@ -1,0 +1,30 @@
+{% for tr in objects %}
+    <tr>
+        <td class="details-control">
+            <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'fc' ~ tr.id}}"></i>
+        </td>
+        <td class="d-none">{{ tr.id }}</td>
+        <td>{{ tr.nombre }}</td>
+        <td>{{ tr.fkarea.fkarea.nombre ~' | '~ tr.fkarea.fkgerencia.nombre ~' | '~  tr.fkarea.fksector.nombre }}</td>
+        <td class="d-none">{{ tr.objetivo }}</td>
+        <td class="d-none">{{ tr.responsabilidades }}</td>
+        <td class="d-none">{{ tr.experiencia }}</td>
+        <td class="d-none">{{ tr.conocimientos }}</td>
+        <td class="d-none">{{ tr.formacion }}</td>
+        <td class="d-none">{{ tr.caracteristicas }}</td>
+        <td class="d-none">{{ tr.fechaaprobacion | date('d-m-Y') }}</td>
+        <td>{{ tr.aprobadojefe }}</td>
+        <td>{{ tr.firmajefe }}</td>
+        <td>{{ tr.aprobadogerente }}</td>
+        <td>{{ tr.firmagerente }}</td>
+        <td class="d-none">{{ tr.hipervinculo }}</td>
+        <td align="center">
+        {% if 'fichacargo_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'fichacargo_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

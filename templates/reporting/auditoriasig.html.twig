@@ -1,0 +1,180 @@
+{% block stylesheets %}
+    <meta charset="UTF-8">
+    <meta name="Report" content="Aud-Anual">
+    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
+{% endblock %}
+   
+{% block body %}   
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="resources/images/image_rep.png" width="47" height="50" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="font-weight-bold float-right">GCDO-0802-01</h6>
+            
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h6 class="font-weight-bold text-center">PROGRAMA ANUAL DE AUDITORÍAS AL SISTEMA INTEGRADO DE GESTIÓN</h6>
+                <h6 class="font-weight-bold text-center"> GESTIÓN: 
+                {% if objects %}
+                    {{objects[0].cb_auditoria_fechahorainicio|date('Y')}}
+                {% endif %}
+                </h6>
+            </div>
+        </div>
+    </div>
+    
+    {% if objects %}
+    <table class="table table-bordered table-sm" id="aud_year">
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+        {% if objects %}
+            {% set code = objects[0].cb_auditoria_equipo_id %}
+            {% set pass = 'false' %}
+            
+            {% for t in objects %}
+                {% if t.cb_auditoria_equipo_id != code and pass == 'true' %}
+                    {% set code = t.cb_auditoria_equipo_id %}
+                    {% set pass = 'false' %}
+                {% endif %}
+
+                {% if t.cb_auditoria_equipo_id == code and pass == 'false' %}
+                    <tr>
+                        <th colspan="1" scope="colgroup">Equipo  {{ t.cb_auditoria_equipo_id }}</th>
+                        <th colspan="1" scope="colgroup">
+                            Auditor líder:
+                            {% if t.cb_tipo_auditor_nombre == 'AUDITOR LIDER' %}
+                                {{ t.cb_auditor_apellidosnombres }} 
+                            {% endif %}
+                        </th>
+                        <th colspan="1" scope="colgroup">
+                            Auditor: 
+                            {% if t.cb_tipo_auditor_nombre == 'OBSERVADOR' %}
+                                {{ t.cb_auditor_apellidosnombres }}
+                            {% endif %}
+                            Observador: 
+                            {% if t.cb_tipo_auditor_nombre == 'AUDITOR' %}
+                                {{ t.cb_auditor_apellidosnombres }}
+                            {% endif %}
+                        </th>
+                        <th colspan="1" scope="colgroup">Experto técnico:</th>
+                        <td rowspan="1"></td>
+                        <th colspan="1" scope="colgroup">Fecha y hora</th>
+                        <th colspan="1" scope="colgroup">Fecha y hora</th>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                        <td rowspan="1"> </td>
+                    </tr>
+                    <tr>
+                        <th scope="col">No. Auditoría</th>
+                        <th scope="col">Proceso a auditar</th>
+                        <th scope="col">Gerencia o área</th>
+                        <th scope="col">Lugar</th>
+                        <th scope="col">Persona auditar</th>
+                        <th scope="col">INICIO</th>
+                        <th scope="col">FIN</th>
+                        <th scope="col">Duración (hrs.)</th>
+                        <th scope="col">Tipo documento</th>
+                        <th scope="col">Código doc.</th>
+                        <th scope="col">Descripción del documento</th>
+                        <th scope="col">Resultados de auditorías previas</th>
+                        <th scope="col">Verificación de la eficacia Aud. Previa</th>
+                        <th scope="col">Propósitos comerciales y de negocio</th>
+                        <th scope="col">Prioridades de la Dirección</th>
+                    </tr>
+                    {% set pass = 'true' %}
+                {% endif %}
+                <tr>
+                    <td>{{ t.cb_auditoria_equipo_fkauditoria }}</td>
+                    <td>{{ t.cb_ficha_procesos_nombre }}</td>
+                    <td>{{ t.cb_gerencia_nombre }}</td>
+                    <td>{{ t.cb_auditoria_lugar }} </td>
+                    <td>{{ t.cb_auditoria_responsable }} </td>
+                    <td>{{ t.cb_auditoria_fechahorainicio }} </td>
+                    <td>{{ t.cb_auditoria_fechahorafin }} </td>
+                    <td>{{ t.cb_auditoria_duracionestimada }} </td>
+                    
+                    {% if docs %} 
+                        {% set i = 0 %}
+                        {% for o in docs %} 
+                            {% if i == 0 and t.cb_auditoria_equipo_fkauditoria == o.cb_auditoria_id and t.cb_auditoria_fkarea == o.cb_auditoria_fkarea %}  
+                            <td> {{o.cb_doc_tipoextra_tipo}} </td>
+                            <td> {{o.cb_documento_extra_codigo}}  </td>
+                            <td> {{o.cb_documento_extra_titulo}} </td>
+                            {% set i = loop.index %}
+                            {% endif %} 
+                        {% endfor %}    
+                    {% endif %}   
+                    
+                    <td> {{ t.cb_accion_descripcion }} </td>
+                    <td> {{ t.cb_accion_eficacia_resultado }}  </td>
+                    <td> </td>
+                    <td> </td> 
+                </tr>
+                {% if docs %}
+                    {% for m in docs|slice(i) %}
+                        {% if t.cb_auditoria_equipo_fkauditoria == m.cb_auditoria_id and t.cb_auditoria_fkarea == m.cb_auditoria_fkarea %}
+                        <tr>
+                            <td> </td>
+                            <td> </td> 
+                            <td> </td>
+                            <td> </td> 
+                            <td> </td>
+                            <td> </td> 
+                            <td> </td>
+                            <td> </td> 
+                            <td> {{m.cb_doc_tipoextra_tipo}}  </td> 
+                            <td> {{m.cb_documento_extra_codigo}} </td>
+                            <td> {{m.cb_documento_extra_titulo}} </td> 
+                            <td> </td>
+                            <td> </td> 
+                            <td> </td>
+                            <td> </td> 
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endif %} 
+    </table>
+    
+    <table class="table borderless table-sm">
+        <tr>
+            <td> </td>
+            <th>Fecha</th>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr>
+            <th>COORDINADOR GCDO</th>
+            <th>RESPONSABLE MEDIO AMBIENTE</th>
+            <th>RESPONSABLE SySO</th>
+            <th>DIRECTOR SIG</th>
+            <th>GERENTE GENERAL</th>
+        </tr>
+    </table>
+    {% else %}
+        <div class="m-2 p-3">
+            <p>No se encontraron registros.</p>
+        </div>
+    {% endif %}
+ {% endblock %}
+
+{% block javascripts %}
+<script src="resources/bootstrap4/js/bootstrap.min.js"></script>
+{% endblock %}

@@ -1,0 +1,82 @@
+<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Registro de Mejora</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    <div id="id_div" class="form-group">
+                        <div class="form-line">
+                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <label class="form-label">Registro de Mejora ID</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="responsablenovedad" name="responsablenovedad" type="text" class="form-control name">
+                            <label class="form-label">Responsable</label>
+                        </div>
+                    </div>
+                      <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="novedad" name="novedad" type="text" class="form-control text">
+                            <label class="form-label">Novedad</label>
+                        </div>
+                    </div>
+                      <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="analisis" name="analisis" type="text" class="form-control text">
+                            <label class="form-label">Análisis</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="responsableimplementacion" name="responsableimplementacion" type="text" class="form-control text">
+                            <label class="form-label">Responsable de implementación</label>
+                        </div>
+                    </div>
+                    
+                    <label>Tipo de ficha</label>
+                        <select id="fkficha" class="form-control">
+                        {% for t in tipo %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br> 
+                    <label>Tipo de novedad</label>
+                        <select id="fktiponovedad" class="form-control">
+                        {% for t in tipo2 %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br> 
+                    <label>Tipo de norma</label>
+                        <select id="fknorma" class="form-control">
+                        {% for t in tipo3 %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br> 
+                    <label>Tipo de estado</label>
+                        <select id="fkestado" class="form-control">
+                        {% for t in tipo4 %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

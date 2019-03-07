@@ -1,0 +1,78 @@
+<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Personal</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    <div id="id_div" class="form-group">
+                        <div class="form-line">
+                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <label class="form-label">Personal ID</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="nombre" name="nombre" type="text" class="form-control name">
+                            <label class="form-label">Nombre</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="apellido" name="apellido" type="text" class="form-control name">
+                            <label class="form-label">Apellido</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="ci" name="ci" type="text" class="form-control ci">
+                            <label class="form-label">Ci</label>
+                        </div>
+                    </div><div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="correo" name="correo" type="text" class="form-control email">
+                            <label class="form-label">Correo</label>
+                        </div>
+                    </div><div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="telefono" name="telefono" type="text" class="form-control telefono">
+                            <label class="form-label">Teléfono</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                        
+                            <label class="form-label">Fecha de Nacimiento</label>
+                            </br>
+                            </br>
+                            <input id="fnac" name="fnac" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <label>Tipo de Cargo</label>
+                        <select id="fkprocesoscargo" class="form-control">
+                        {% for t in tipo %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+                        <label>Tipo de Estado Personal</label>
+                        <select id="fkestadopersonal" class="form-control">
+                        {% for t2 in tipo2 %}
+                            <option value="{{t2.id}}">{{t2.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

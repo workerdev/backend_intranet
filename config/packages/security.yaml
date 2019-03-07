@@ -1,0 +1,120 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\Usuario:
+            algorithm: bcrypt
+
+    providers:
+        my_provider: 
+            entity:
+                class: App\Entity\Usuario
+                property: username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+
+            form_login:
+                login_path: login2
+                check_path: login2
+                provider: my_provider
+
+            logout:
+                path: logout
+                target: /
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+        # - { path: ^/usuario, roles: ROLE_USER }
+        # - { path: ^/rol, roles: ROLE_USER }
+        # - { path: ^/perfil, roles: ROLE_USER }
+
+        # - { path: ^/responsabilidad, roles: ROLE_USER }
+        # - { path: ^/menu, roles: ROLE_USER }
+        # - { path: ^/enlaces, roles: ROLE_USER }
+        # - { path: ^/tipo_constitucional, roles: ROLE_USER }
+        # - { path: ^/catalogo, roles: ROLE_USER }
+        # - { path: ^/accidentes, roles: ROLE_USER }
+
+        # - { path: ^/tipodocumento, roles: ROLE_USER }
+        # - { path: ^/documento, roles: ROLE_USER }
+        # - { path: ^/doctipoextra, roles: ROLE_USER }
+        # - { path: ^/documentoextra, roles: ROLE_USER }
+        # - { path: ^/tiponorma, roles: ROLE_USER }
+        # - { path: ^/normadocumento, roles: ROLE_USER }
+        # - { path: ^/documentoproceso, roles: ROLE_USER }
+        # - { path: ^/docprocesorev, roles: ROLE_USER }
+        # - { path: ^/bajadocumento, roles: ROLE_USER }
+        # - { path: ^/documentoformulario, roles: ROLE_USER }
+        # - { path: ^/estadodocumento, roles: ROLE_USER }
+        # - { path: ^/estadoseguimiento, roles: ROLE_USER }
+        # - { path: ^/seguimientoelaboracion, roles: ROLE_USER }
+
+        # - { path: ^/gerencia, roles: ROLE_USER }
+        # - { path: ^/area, roles: ROLE_USER }
+        # - { path: ^/sector, roles: ROLE_USER }
+        # - { path: ^/gciarsector, roles: ROLE_USER }
+        # - { path: ^/fichaprocesos, roles: ROLE_USER }
+        # - { path: ^/tipocro, roles: ROLE_USER }
+        # - { path: ^/impacto, roles: ROLE_USER }
+        # - { path: ^/probabilidad, roles: ROLE_USER }
+        # - { path: ^/riesgosoportunidades, roles: ROLE_USER }
+        # - { path: ^/gruporiesgo, roles: ROLE_USER }
+        # - { path: ^/estadoriesgo, roles: ROLE_USER }
+        # - { path: ^/procesorelacionado, roles: ROLE_USER }
+        # - { path: ^/seguimientocro, roles: ROLE_USER }
+        # - { path: ^/recurso, roles: ROLE_USER }
+        # - { path: ^/recursonecesario, roles: ROLE_USER }
+        # - { path: ^/controlcorrelativo, roles: ROLE_USER }
+        # - { path: ^/tiponota, roles: ROLE_USER }
+        # - { path: ^/estadocorrelativo, roles: ROLE_USER }
+
+        # - { path: ^/unidadmedida, roles: ROLE_USER }
+        # - { path: ^/indicadorproceso, roles: ROLE_USER }
+        # - { path: ^/seguimientoindicador, roles: ROLE_USER }
+
+        # - { path: ^/planaccion, roles: ROLE_USER }
+        # - { path: ^/estadoplan, roles: ROLE_USER }
+        # - { path: ^/auditoria, roles: ROLE_USER }
+        # - { path: ^/auditor, roles: ROLE_USER }
+        # - { path: ^/documentoadicional, roles: ROLE_USER }
+        # - { path: ^/tipohallazgo, roles: ROLE_USER }
+        # - { path: ^/seguimientoplan, roles: ROLE_USER }
+        # - { path: ^/hallazgoauditoria, roles: ROLE_USER }
+        # - { path: ^/detalleauditor, roles: ROLE_USER }
+        # - { path: ^/detalledocumento, roles: ROLE_USER }
+
+        # - { path: ^/estadonovedad, roles: ROLE_USER }
+        # - { path: ^/registromejora, roles: ROLE_USER }
+        # - { path: ^/seguimientomejora, roles: ROLE_USER }
+        # - { path: ^/tipodatoempresarial, roles: ROLE_USER }
+        # - { path: ^/datoempresarial, roles: ROLE_USER }
+        # - { path: ^/tiponovedad, roles: ROLE_USER }
+
+        # - { path: ^/noticia, roles: ROLE_USER }
+        # - { path: ^/categorianoticia, roles: ROLE_USER }
+        # - { path: ^/noticiacategoria, roles: ROLE_USER }
+        # - { path: ^/galeria, roles: ROLE_USER }
+        # - { path: ^/file, roles: ROLE_USER }
+
+        # - { path: ^/organigrama, roles: ROLE_USER }
+
+        # - { path: ^/tipocargo, roles: ROLE_USER }
+        # - { path: ^/personalcargo, roles: ROLE_USER }
+        # - { path: ^/estadopersonal, roles: ROLE_USER }
+        # - { path: ^/personal, roles: ROLE_USER }
+        # - { path: ^/turno, roles: ROLE_USER }
+        

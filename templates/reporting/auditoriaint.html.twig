@@ -1,0 +1,295 @@
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
+    <style>
+        .borderless td, .borderless th, .borderless tr {
+            border: none;
+        }
+    </style>
+{% endblock %}
+ 
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="resources/images/image_rep.png" width="47" height="50" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="font-weight-bold float-right">GCDO-0802-04</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h6 class="font-weight-bold text-center">INFORME DE AUDITORIA INTERNA SIG</h6>
+            </div>
+        </div>
+    </div>
+    
+    {% if objects %}
+    <div class="m-2 p-3">
+    <table class="table borderless table-sm">
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Auditoría Unidad: </th>
+                <td class="text-normal">{{ objects[0].cb_gerencia_nombre }}</td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Macro Proceso: </th>
+                <td class="text-normal"> </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <th colspan="1" scope="colgroup">Proceso: </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                {% for t in objects %}
+                    <td class="text-normal">{{ t.cb_ficha_procesos_nombre }}</td>
+                {% endfor %}
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Fecha de la Auditoría: </th>
+                <td class="text-normal"> {{ objects[0].cb_auditoria_fechahorainicio }} </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <th colspan="1" scope="colgroup">Fecha de entrega de Informe: </th>
+                <td class="text-normal"> {{ "now"|date('d-m-Y') }} </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <th colspan="1" scope="colgroup">Tipo de Auditoría: </th>
+                <td class="text-normal"> {{ objects[0].cb_tipo_auditoria_nombre }} </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Número de Auditoría: </th>
+                <td class="text-normal"> {{ objects[0].cb_auditoria_id }} </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <th colspan="1" scope="colgroup">1. Equipo Auditor que realizó el trabajo </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">AUDITOR </th>
+                <th colspan="1" scope="colgroup">FIRMA </th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            {% for q in team %}
+            <tr>
+                <td class="text-normal"> {{ q.cb_auditor_apellidosnombres }}</td>
+                <td class="text-normal"> ______________ </td>
+                <td class="text-normal">  </td>
+            </tr>
+            {% endfor %}
+
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">AUDITOR LIDER</th>
+                <td class="text-normal"> 
+                {% for adr in team %}
+                    {% if adr.cb_tipo_auditor_nombre == 'AUDITOR LIDER' %}
+                         {{ adr.cb_auditor_apellidosnombres }} 
+                    {% endif %}
+                {% endfor %}
+                </td>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">2. Objetivos del trabajo realizado </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <td class="text-normal"> {{ objects[0].cb_auditoria_objetivos }} </td>
+                <td class="text-normal"></td>
+                <td class="text-normal"></td>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">3. Alcance del trabajo realizado </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <td class="text-normal"> {{ objects[0].cb_auditoria_alcance }} </td>
+                <td class="text-normal"></td>
+                <td class="text-normal"></td>
+            </tr>
+
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">4. Documentación base utilizada para el trabajo (Criterios de Auditoría) </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Tipo documento </th>
+                <th colspan="1" scope="colgroup">Código doc. </th>
+                <th colspan="1" scope="colgroup">Descripción del documento</th>
+            </tr>
+            {% for d in docs %}
+            <tr>
+                <td class="text-normal"> {{d.cb_doc_tipoextra_tipo}} </td>
+                <td class="text-normal"> {{d.cb_documento_extra_codigo}} </td>
+                <td class="text-normal"> {{d.cb_documento_extra_titulo}} </td>
+            </tr>
+            {% endfor %}
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">5. Descripción general de la auditoría realizada </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <td class="text-normal"> {{objects[0].cb_auditoria_alcance}} </td>
+                <td class="text-normal"></td>
+                <td class="text-normal"></td>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">6. Fortalezas identificadas en el proceso auditado </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            {% for f in fort %}
+            <tr>
+                <td class="text-normal"> {{f.cb_fortaleza_descripcion}} </td>
+                <td class="text-normal"></td>
+                <td class="text-normal"></td>
+            </tr>
+            {% endfor %}
+
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">7. Situaciones identificadas / hallazgos / Resultados </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+
+            <tr>
+                <th colspan="1" scope="colgroup">Acción </th>
+                <th colspan="1" scope="colgroup">Hallazgo </th>
+                <th colspan="1" scope="colgroup">Resultados de Eficacia </th>
+            </tr>
+            {% for h in hlzg %}
+            <tr>
+                <td class="text-normal"> {{h.cb_accion_descripcion}} </td>
+                <td class="text-normal"> {{h.cb_hallazgo_descripcion}} </td>
+                <td class="text-normal"> {{h.cb_accion_eficacia_resultado}} </td>
+            </tr>
+            {% endfor %}
+
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">8. CONCLUSIONES </th>
+                <th colspan="1" scope="colgroup"></th>
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+            <tr>
+                <td class="text-normal"> {{objects[0].cb_auditoria_conclusiones}} </td>
+                <td class="text-normal"></td>
+                <td class="text-normal"></td>
+            </tr>
+
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr class="spacer"> <td> </td></tr>
+            <tr>
+                <th colspan="1" scope="colgroup">Fecha de Revisión de Informe:	</th>
+                {% if hlzg|length > 0 %}
+                    <td class="text-normal"> {{hlzg[0].cb_accion_eficacia_fecha}} </td>
+                {% else %}
+                    <td class="text-normal"> </td>
+                {% endif %}
+                <th colspan="1" scope="colgroup"></th>
+            </tr>
+    </table>
+    
+    <table class="table borderless table-sm">
+
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr> 
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+
+        <tr>
+            <th>Jefe / Supervisor Unidad Auditada</th>
+            <th>Gerente / Coordinador Unidad Auditada</th>
+            <th>Coordinador Gestión de Calidad y Desarrollo Organizacional</th>
+        </tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+        <tr class="spacer"> <td> </td></tr>
+    </table>
+    </div>
+    {% else %}
+        <div class="m-2 p-3">
+            <p>No se encontraron registros de esta gestión.</p>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
+{% endblock %}  

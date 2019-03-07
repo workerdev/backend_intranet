@@ -1,0 +1,195 @@
+{% block stylesheets %}
+    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
+    <style>
+        .borderless td, .borderless th, .borderless tr {
+            border: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="resources/images/image_rep.png" width="47" height="50" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="font-weight-bold float-right">GCDO-0802-02</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h6 class="font-weight-bold text-center"><u>NOTIFICACION DE INICIO DE AUDITORIA</u></h6>
+                <h6 class="font-weight-bold text-center"><u>AUDITORIA DEL SISTEMA INTEGRADO DE GESTION</u></h6>
+            </div>
+        </div>
+    </div>
+
+    {% if objects %}
+    <div class="container mt-3">
+        <div class="">
+            </br>          
+            <table class="table borderless table-sm">
+                <tr>
+                    <th>Fecha de Notificación:</th>
+                    <td>{{ "now"|date('d-m-Y') }} </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% if objects %}
+                <tr>
+                    <th>Gerencia o Unidad a ser auditada:</th>
+                    <td>{{ objects[0].cb_gerencia_nombre }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Gerente Coordinador</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Jefe o supervisor de Area:</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Proceso a ser auditado:</th>
+                    <td>{{ objects[0].cb_ficha_procesos_nombre }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Número de Auditoría:</th>
+                    <td>{{ objects[0].cb_auditoria_equipo_fkauditoria }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Equipo Auditor:</th>
+                    <td>{{ objects[0].cb_auditoria_equipo_id }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th>AUDITOR SIG</th>
+                    <td>
+                    {% if objects[0].cb_tipo_auditor_nombre == 'AUDITOR' %}
+                         {{ objects[0].cb_auditor_apellidosnombres }}
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th>AUDITOR LIDER</th>
+                    <td>
+                    {% if objects[0].cb_tipo_auditor_nombre == 'AUDITOR LIDER' %}
+                         {{ objects[0].cb_auditor_apellidosnombres }} 
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Fecha y hora estimada de inicio:</th>
+                    <td>{{ objects[0].cb_auditoria_fechahorainicio }}</td>
+                    <th>Duración:</th>
+                    <th>{{ objects[0].cb_auditoria_duracionestimada }} Hrs.</th>
+                </tr>
+                <tr>
+                    <th>Fecha y hora estimada de término:</th>
+                    <td>{{ objects[0].cb_auditoria_fechahorafin }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endif %}
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Objetivos:</th>
+                    <td>{{objects[0].cb_auditoria_objetivos}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Documentos base para realizar la auditoría:</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                {% if docs %} 
+                <tr>
+                    <th><u>CODIGO</u></th>
+                    <th><u>DESCRIPCION</u></th>
+                </tr>
+                {% for m in docs %}
+                    {% if objects[0].cb_auditoria_equipo_fkauditoria == m.cb_auditoria_id and objects[0].cb_auditoria_fkarea == m.cb_auditoria_fkarea %}
+                    <tr>
+                        <td>{{m.cb_documento_extra_codigo}}</td>
+                        <td>{{m.cb_documento_extra_titulo}}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+                    
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <th>Alcance:</th>
+                    <td>{{objects[0].cb_auditoria_alcance}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Personal Requerido:</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr class="spacer"> <td></td></tr>
+                <tr>
+                    <td>Auditor Líder</td>
+                    <td></td>
+                    <td></td>
+                    <td>Coordinador UGCDO</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+    {% else %}
+        <div class="container mt-3">
+            <p>No se encontraron registros.</p>
+        </div>
+    {% endif %}
+    
+{% endblock %}
+
+{% block javascripts %}
+    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
+{% endblock %}

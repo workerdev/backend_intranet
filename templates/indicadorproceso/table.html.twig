@@ -1,0 +1,30 @@
+{% for tr in objects %}
+    <tr>
+        <td class="details-control">
+            <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'i' ~ tr.id}}"></i>
+        </td>
+        <td class="d-none">{{ tr.id }}</td>
+        <td>{{ tr.fkficha.codproceso }}</td>
+        <td>{{ tr.descripcion }}</td>
+        <td>{{ tr.formula }}</td>
+        <td>{{ tr.fkunidad.nombre }}</td>
+        <td class="d-none">{{ tr.metaanual }}</td>
+        <td class="d-none">{{ tr.metamensual }}</td>
+        <td>{{ tr.codigo }}</td>
+        <td class="d-none">{{ tr.objetivo }}</td>
+        <td class="d-none">{{ tr.vigente }}</td>
+        {% if tr.fkresponsable.estado == 2 %}
+            <td class="d-none">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td class="d-none">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% endif %}
+        <td align="center">
+        {% if 'indicadorproceso_editar' in permisos %}
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'indicadorproceso_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

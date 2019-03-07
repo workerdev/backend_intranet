@@ -1,0 +1,27 @@
+{% for tr in objects %}
+    <tr>
+        {% if tr.tipo == 'imagen' %}
+            <td>
+                {#<input class="ruta" value={{ tr.ruta }} />#}
+                <img class="rutas" style="width:12vw;height: vw;" src={{ tr.ruta[29:] }} >
+            </td>
+        {% else %}
+            <td>
+                {#<input class="ruta" value={{ tr.ruta }} />#}
+                <video style="width:12vw;height: 8vw;" class="rutas" src={{ tr.ruta[29:] }} controls>
+                    Your browser does not support the video tag.
+                </video>
+            </td>
+        {% endif %}
+        <td>{{ tr.tipo }}</td>
+        <td>{{ tr.fkgaleria.nombre }}</td>
+        <td align="center">
+        {% if 'file_editar' in permisos %}  
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'file_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

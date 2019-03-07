@@ -1,0 +1,220 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+/**
+ * DocumentoFormulario
+ * @ORM\Table(name="cb_gest_doc_formulario", uniqueConstraints={@ORM\UniqueConstraint(name="cb_documento_formulario_id", columns={"cb_documento_formulario_id"})})
+ * @ORM\Entity(repositoryClass="App\Repository\DocumentoFormularioRepository")
+ */
+class DocumentoFormulario
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cb_documento_formulario_id", type="integer", nullable=false, unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+    
+    /**
+     * @var \documento
+     * 
+     *
+     * @ORM\ManyToOne(targetEntity="Documento")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_documento_formulario_fkdocumento", referencedColumnName="cb_documento_id")
+     * })
+     * @Assert\NotBlank
+     */
+    private $fkdocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_formulario_codigo", type="string", length=20, nullable=false)
+     * @Assert\NotBlank
+     */
+    private $codigo;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_formulario_titulo", type="string", length=90, nullable=false)
+      * @Assert\NotBlank
+     */
+    private $titulo;
+
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="cb_documento_formulario_versionVigente", type="string", length=10, nullable=false)
+     * @Assert\NotBlank
+    */
+   private $versionVigente;
+
+    /**
+     * @var date
+     *
+     * @ORM\Column(name="cb_documento_formulario_fechaPublicacion", type="date", nullable=true)
+     * @Assert\NotBlank
+     */
+    private $fechaPublicacion;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_formulario_aprobadoPor", type="string", length=50, nullable=false)
+      * @Assert\NotBlank
+     */
+    private $aprobadoPor;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_formulario_vinculoFileDig", type="string", length=200, nullable=true)
+     * @Assert\NotBlank
+     */
+    private $vinculoFileDig;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_formulario_vinculoFileDesc", type="string", length=200, nullable=true)
+     * @Assert\NotBlank
+     */
+    private $vinculoFileDesc;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cb_documento_formulario_estado", type="integer", nullable=false)
+     */
+    private $estado;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getEstado(): ?int
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(int $estado): self
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+    
+    public function getCodigo(): ?string
+    {
+        return $this->codigo;
+    }
+
+    public function setCodigo(string $codigo): self
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    } 
+
+    public function getTitulo(): ?string
+    {
+        return $this->titulo;
+    }
+
+    public function setTitulo(string $titulo): self
+    {
+        $this->titulo = $titulo;
+
+        return $this;
+    }   
+
+    public function getVersionVigente(): ?string
+    {
+        return $this->versionVigente;
+    }
+
+    public function setVersionVigente(string $versionVigente): self
+    {
+        $this->versionVigente = $versionVigente;
+
+        return $this;
+    }   
+
+    public function getFechaPublicacion(): ?\DateTimeInterface
+    {
+        return $this->fechaPublicacion;
+    }
+
+    public function setFechaPublicacion(\DateTimeInterface $fechaPublicacion): self
+    {
+        $this->fechaPublicacion = $fechaPublicacion;
+        return $this;
+    }
+
+    public function getAprobadoPor(): ?string
+    {
+        return $this->aprobadoPor;
+    }
+
+    public function setAprobadoPor(string $aprobadoPor): self
+    {
+        $this->aprobadoPor = $aprobadoPor;
+
+        return $this;
+    }  
+
+    public function getFkdocumento(): ?Documento
+    {
+        return $this->fkdocumento;
+    }
+
+    public function setFkdocumento(?Documento $fkdocumento): self
+    {
+        $this->fkdocumento = $fkdocumento;
+
+        return $this;
+    }
+
+    public function getVinculoDig(): ?string
+    {
+        return $this->vinculoFileDig;
+    }
+
+    public function setVinculoDig(string $vinculoFileDig): self
+    {
+        $this->vinculoFileDig = $vinculoFileDig;
+
+        return $this;
+    }   
+
+    public function getVinculoDesc(): ?string
+    {
+        return $this->vinculoFileDesc;
+    }
+
+    public function setVinculoDesc(string $vinculoFileDesc): self
+    {
+        $this->vinculoFileDesc = $vinculoFileDesc;
+
+        return $this;
+    }   
+}

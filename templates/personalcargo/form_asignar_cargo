@@ -1,0 +1,29 @@
+<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="personal_tittle" class="modal-title">Personal</h3>
+                <h4 id="personal_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+
+                    <label>Personal disponible</label>
+                    <select id="persona" class="form-control">
+                        {% for t in personas %}
+                            <option value="{{t.id}}-{{t.nombre}} {{ t.apellido }}">{{t.nombre}} {{ t.apellido }}</option>
+                        {% endfor %}
+
+                    </select>
+                    </br>
+                    </br>
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
+                    {#<button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>#}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
