@@ -52,7 +52,7 @@ class __TwigTemplate_125b5aabb92c36d8bd1b37600f0cef620eb8c2bf8f2361e87ebdce0a6e5
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "alcance", array()), "html", null, true);
             echo "</option>
                         ";
         }
@@ -73,7 +73,7 @@ class __TwigTemplate_125b5aabb92c36d8bd1b37600f0cef620eb8c2bf8f2361e87ebdce0a6e5
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "apellidosnombres", array()), "html", null, true);
             echo "</option>
                         ";
         }
@@ -136,14 +136,14 @@ class __TwigTemplate_125b5aabb92c36d8bd1b37600f0cef620eb8c2bf8f2361e87ebdce0a6e5
                     <label>Tipo de auditoría</label>
                         <select id=\"auditoria\" class=\"form-control\">
                         {% for t in tipo %}
-                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
+                            <option value=\"{{t.id}}\">{{t.alcance}}</option>
                         {% endfor %}
                         </select>
                         </br>
                         </br><label>Tipo de auditor</label>
                         <select id=\"auditor\" class=\"form-control\">
                         {% for t in tipo2 %}
-                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
+                            <option value=\"{{t.id}}\">{{t.apellidosnombres}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -156,6 +156,6 @@ class __TwigTemplate_125b5aabb92c36d8bd1b37600f0cef620eb8c2bf8f2361e87ebdce0a6e5
             </div>
         </div>
     </div>
-</div>", "detalleauditor/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\detalleauditor\\form.html.twig");
+</div>", "detalleauditor/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\detalleauditor\\form.html.twig");
     }
 }

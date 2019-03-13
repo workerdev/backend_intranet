@@ -129,6 +129,6 @@ class __TwigTemplate_9b537202ad5bb95ad193018087eeec89d91db3cf934a6c65184392a701d
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "registromejora/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\registromejora\\table.html.twig");
+{% endfor %}", "registromejora/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\registromejora\\table.html.twig");
     }
 }

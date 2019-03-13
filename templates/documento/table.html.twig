@@ -13,7 +13,11 @@
         <td class="d-none">{{ tr.fechaPublicacion | date('Y-m-d')  }}</td>
         <td>{{ tr.fkficha.codproceso }}</td>
         <td>{{ tr.fktipo.nombre }}</td>
-        <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+        {% if tr.fkaprobador.estado == 2 %}
+            <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+        {% endif %}
         <td align="center">
         {% if 'documento_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

@@ -38,52 +38,48 @@ class __TwigTemplate_1d8ec73601dd5552df446796b5471f5c0cdb4d1c30e2836a68e5997b204
             echo "</td>
     <td>";
             // line 5
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "ci", array()), "html", null, true);
-            echo "</td>
-    <td>";
-            // line 6
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "correo", array()), "html", null, true);
             echo "</td>
     <td>";
-            // line 7
+            // line 6
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "username", array()), "html", null, true);
             echo "</td>
     <td>";
-            // line 8
+            // line 7
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkrol", array()), "nombre", array()), "html", null, true);
             echo "</td>
     <td align=\"center\">
     ";
-            // line 10
-            if (twig_in_filter("usuario_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 10, $this->source); })()))) {
+            // line 9
+            if (twig_in_filter("usuario_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 9, $this->source); })()))) {
                 echo " 
         <button id=\"edit\" data-json=\"";
-                // line 11
+                // line 10
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
     ";
             }
-            // line 13
+            // line 12
             echo "    ";
-            if (twig_in_filter("usuario_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 13, $this->source); })()))) {
+            if (twig_in_filter("usuario_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 12, $this->source); })()))) {
                 echo " 
-        <button id=\"upd-pass\" data-json=\"";
-                // line 14
+        <!--button id=\"upd-pass\" data-json=\"";
+                // line 13
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
-                echo "\" type=\"button\" class=\"btn btn-info waves-effect waves-light upd-pass\" title=\"Editar Password\" onclick=\"Open_Modal();\"><i class=\"material-icons\">vpn_key</i></button>
+                echo "\" type=\"button\" class=\"btn btn-info waves-effect waves-light upd-pass\" title=\"Editar Password\" onclick=\"Open_Modal();\"><i class=\"material-icons\">vpn_key</i></button-->
     ";
             }
-            // line 16
+            // line 15
             echo "    ";
-            if (twig_in_filter("usuario_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 16, $this->source); })()))) {
+            if (twig_in_filter("usuario_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 15, $this->source); })()))) {
                 echo "  
         <button id=\"delete\" data-json=\"";
-                // line 17
+                // line 16
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     ";
             }
-            // line 19
+            // line 18
             echo "    </td>
 </tr>
 ";
@@ -108,7 +104,7 @@ class __TwigTemplate_1d8ec73601dd5552df446796b5471f5c0cdb4d1c30e2836a68e5997b204
 
     public function getDebugInfo()
     {
-        return array (  87 => 19,  82 => 17,  77 => 16,  72 => 14,  67 => 13,  62 => 11,  58 => 10,  53 => 8,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  83 => 18,  78 => 16,  73 => 15,  68 => 13,  63 => 12,  58 => 10,  54 => 9,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -117,7 +113,6 @@ class __TwigTemplate_1d8ec73601dd5552df446796b5471f5c0cdb4d1c30e2836a68e5997b204
 <tr>
     <td>{{ t.nombre }}</td>
     <td>{{ t.apellido }}</td>
-    <td>{{ t.ci }}</td>
     <td>{{ t.correo }}</td>
     <td>{{ t.username }}</td>
     <td>{{ t.fkrol.nombre }}</td>
@@ -126,13 +121,13 @@ class __TwigTemplate_1d8ec73601dd5552df446796b5471f5c0cdb4d1c30e2836a68e5997b204
         <button id=\"edit\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
     {% endif %}
     {% if 'usuario_editar' in permisos %} 
-        <button id=\"upd-pass\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn btn-info waves-effect waves-light upd-pass\" title=\"Editar Password\" onclick=\"Open_Modal();\"><i class=\"material-icons\">vpn_key</i></button>
+        <!--button id=\"upd-pass\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn btn-info waves-effect waves-light upd-pass\" title=\"Editar Password\" onclick=\"Open_Modal();\"><i class=\"material-icons\">vpn_key</i></button-->
     {% endif %}
     {% if 'usuario_eliminar' in permisos %}  
         <button id=\"delete\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "usuario/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\usuario\\table.html.twig");
+{% endfor %}", "usuario/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\usuario\\table.html.twig");
     }
 }

@@ -45,9 +45,11 @@
         <div class="body table-responsive">
             <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                 <thead>
-                <tr>
-                    <th class="order_by_th" data-name="names">Contenido </th>
-                    <th class="actions_header">Acciones </th>
+                <tr >
+                
+                    <th class="actions_header text-center">Ver Contenido </th>
+                    <th class="order_by_th " data-name="names">Contenido </th>
+                    <th class="actions_header text-center">Acciones </th>
                 </tr>
                 </thead>
                 <tbody id="table_content">
@@ -72,6 +74,7 @@
         selector: "textarea#contenido",
         language : "es_MX",
         theme: "modern",
+        content_style: "img {max-width: 100%; max-height: 50%;}",
         resize: false,
         
         height: 350,
@@ -116,9 +119,13 @@
 
         clean_form()
         verif_inputs()
-        $('#id_div').hide()
+        $('#cabecera').show()
+        $('#id').show()
+        $('#id_div').show()
         $('#insert').show()
         $('#update').hide()
+         $('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
         $('#form').modal('show')
     })
     
@@ -138,7 +145,7 @@
             obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
-            ajax_call_get("/responsabilidad_editar",{
+            ajax_call_get(" /responsabilidad_editar",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
@@ -149,13 +156,54 @@
 
                 clean_form()
                 verif_inputs()
+                $('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
+                $('#cabecera').show()
                 $('#id_div').show()
+                $('#id').show()
                 $('#insert').hide()
+                
+               
+                
                 $('#update').show()
                 $('#form').modal('show')
             })
         })
     }
+
+        $('.view').click(function () {
+            obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+            })
+            ajax_call_get(" /responsabilidad_editar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                $('#id').val(self.id)
+
+                tinyMCE.get('contenido').setContent(self.contenido)
+                $("#contenido").html(self.contenido)
+
+                clean_form()
+                verif_inputs()
+                $('#id_div').hide()
+                $('#cabecera').hide()
+                
+                $('#insert').hide()
+                $('#update').hide()
+            $('.mce-toolbar').hide(); 
+                tinymce.activeEditor.setMode('readonly');
+                $('#id').hide()
+                $('#form').modal('show')
+            })
+        })
+
+
+    
+    
+    
+
+   
 
     $('#update').click(function () {
         tinyMCE.triggerSave();

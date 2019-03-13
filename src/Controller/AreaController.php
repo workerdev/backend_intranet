@@ -12,6 +12,8 @@ use App\Entity\Area;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 use App\Entity\Rol;
 use App\Entity\GerenciaAreaSector;
 use Symfony\Component\Serializer\Serializer;
@@ -58,8 +60,12 @@ class AreaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+      
         $area = $this->getDoctrine()->getRepository(Area::class)->findBy(array('estado' => '1'));
-        return $this->render('area/index.html.twig', array('objects' => $area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('area/index.html.twig', array('objects' => $area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

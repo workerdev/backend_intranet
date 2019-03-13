@@ -23,6 +23,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 
 class NoticiaCategoriaController extends Controller
@@ -57,10 +60,14 @@ class NoticiaCategoriaController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $NoticiaCategoria = $this->getDoctrine()->getRepository(NoticiaCategoria::class)->findAll();
         $CategoriaNoticia = $this->getDoctrine()->getRepository(CategoriaNoticia::class)->findBy(array('estado' => '1'));
         $Noticia = $this->getDoctrine()->getRepository(Noticia::class)->findBy(array('estado' => '1'));
-        return $this->render('noticiacategoria/index.html.twig', array('objects' => $NoticiaCategoria,'noticia' => $Noticia,'categoria' => $CategoriaNoticia, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('noticiacategoria/index.html.twig', array('objects' => $NoticiaCategoria,'noticia' => $Noticia,'categoria' => $CategoriaNoticia, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

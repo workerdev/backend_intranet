@@ -26,6 +26,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 
 class AuditoriaEquipoController extends AbstractController
@@ -60,11 +63,15 @@ class AuditoriaEquipoController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+       
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
         $auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(array('estado' => '1'));
         $tipo = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(array('estado' => '1'));
         $equipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(array('estado' => '1'));
-        return $this->render('auditoriaequipo/index.html.twig', array('objects' => $equipo, 'auditoria' => $auditoria, 'auditor' => $auditor, 'tipo' => $tipo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('auditoriaequipo/index.html.twig', array('objects' => $equipo, 'auditoria' => $auditoria, 'auditor' => $auditor, 'tipo' => $tipo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

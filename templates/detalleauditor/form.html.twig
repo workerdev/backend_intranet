@@ -19,14 +19,14 @@
                     <label>Tipo de auditoría</label>
                         <select id="auditoria" class="form-control">
                         {% for t in tipo %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
+                            <option value="{{t.id}}">{{t.alcance}}</option>
                         {% endfor %}
                         </select>
                         </br>
                         </br><label>Tipo de auditor</label>
                         <select id="auditor" class="form-control">
                         {% for t in tipo2 %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
+                            <option value="{{t.id}}">{{t.apellidosnombres}}</option>
                         {% endfor %}
                         </select>
                         </br>

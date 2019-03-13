@@ -30,11 +30,11 @@ class __TwigTemplate_9a4d98720ba9edd330f83dcac3a6ed97789836d7d8c244959afd7b7c6f5
             echo "    <tr>
         <td>";
             // line 3
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkauditoria", array()), "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkauditoria", array()), "alcance", array()), "html", null, true);
             echo "</td>
         <td>";
             // line 4
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkauditor", array()), "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkauditor", array()), "apellidosnombres", array()), "html", null, true);
             echo "</td>
         <td align=\"center\">
         ";
@@ -88,8 +88,8 @@ class __TwigTemplate_9a4d98720ba9edd330f83dcac3a6ed97789836d7d8c244959afd7b7c6f5
     {
         return new Twig_Source("{% for tr in objects %}
     <tr>
-        <td>{{ tr.fkauditoria.nombre }}</td>
-        <td>{{ tr.fkauditor.nombre }}</td>
+        <td>{{ tr.fkauditoria.alcance }}</td>
+        <td>{{ tr.fkauditor.apellidosnombres }}</td>
         <td align=\"center\">
         {% if 'detalleauditor_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -99,6 +99,6 @@ class __TwigTemplate_9a4d98720ba9edd330f83dcac3a6ed97789836d7d8c244959afd7b7c6f5
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "detalleauditor/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\detalleauditor\\table.html.twig");
+{% endfor %}", "detalleauditor/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\detalleauditor\\table.html.twig");
     }
 }

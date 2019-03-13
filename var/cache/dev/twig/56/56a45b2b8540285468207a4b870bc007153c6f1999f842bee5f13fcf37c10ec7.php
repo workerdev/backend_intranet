@@ -179,6 +179,6 @@ class __TwigTemplate_c52b6d93779925707dbedc785f07818754f2ac561af954d0e5b474cdb97
         <button id=\"audrep\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn btn-warning waves-effect waves-light audrep\" title=\"Auditoría\"><i class=\"material-icons\">picture_as_pdf</i></button>
     </td>
 </tr>
-{% endfor %}", "auditoria/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\auditoria\\table.html.twig");
+{% endfor %}", "auditoria/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\auditoria\\table.html.twig");
     }
 }

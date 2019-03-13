@@ -8,68 +8,7 @@
             </div>
             <div class="modal-body">
                 <div id="cliente_form_body" class="box-body">
-                    <div id="id_div" class="form-group">
-                        <div class="form-line">
-                            <input id="id" type="text" class="form-control" disabled="disabled">
-                            <label class="form-label">Documento formulario ID</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="codigo" name="codigo" type="text" class="form-control text">
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="titulo" name="titulo" type="text" class="form-control text">
-                            <label class="form-label">Título</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="versionVigente" name="versionVigente" type="text" class="form-control text">
-                            <label class="form-label">Versión vigente</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha de publicación</label><br>
-                            <input id="fechaPublicacion" name="fechaPublicacion" type="date" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="aprobadoPor" name="aprobadoPor" type="text" class="form-control text">
-                            <label class="form-label">Aprobador</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="vinculoFileDig" namie="vinculoFileDig" type="text" class="form-control text">
-                            <label class="form-label">Vinculo del archivo digital</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="vinculoFileDesc" name="vinculoFileDesc" type="text" class="form-control">
-                            <label class="form-label">Vinculo del archivo de descarga</label>
-                        </div>
-                    </div>
-                    
-                    <label>Documento</label>
-                        <select id="fkdocumento" class="form-control">
-                        {% for tr in documento %}
-                            <option value="{{tr.id}}">{{tr.codigo}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
-                </div>
-                <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">refresh</i></button>
+                    {{ form(form) }}    
                 </div>
             </div>
         </div>

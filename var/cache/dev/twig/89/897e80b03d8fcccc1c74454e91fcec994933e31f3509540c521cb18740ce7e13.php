@@ -167,6 +167,6 @@ class __TwigTemplate_81bc0a917795223cbaae33da30966ce30f1aa0ec777996a4f6a27556676
         </div>
     </div>
 </div>
-", "@Twig/Exception/traces.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\vendor\\symfony\\twig-bundle\\Resources\\views\\Exception\\traces.html.twig");
+", "@Twig/Exception/traces.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\vendor\\symfony\\twig-bundle\\Resources\\views\\Exception\\traces.html.twig");
     }
 }

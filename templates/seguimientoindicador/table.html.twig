@@ -5,7 +5,11 @@
         <td>{{ tr.valor }}</td>
         <td>{{ tr.observacion }}</td>
         <td>{{ tr.fkindicador.codigo }}</td>
-        <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% if tr.fkresponsable.estado == 2 %}
+            <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% endif %}
         <td align="center">
         {% if 'seguimientoindicador_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

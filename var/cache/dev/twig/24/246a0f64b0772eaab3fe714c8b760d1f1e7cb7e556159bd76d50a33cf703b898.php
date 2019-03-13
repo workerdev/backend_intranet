@@ -44,7 +44,12 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
 
         // line 3
         echo "<style>
-    .accion{ cursor:pointer }
+    .accion{ 
+        cursor:pointer
+    }
+    .swal2-title{
+        font-size: 16px !important;
+    }
 </style>
 <script src=\"resources/js/functions.js\"></script>
 
@@ -66,16 +71,16 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
 
     }
 
-    // line 21
+    // line 26
     public function block_body($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "body"));
 
-        // line 22
+        // line 27
         echo "
 ";
-        // line 23
+        // line 28
         echo twig_include($this->env, $context, "tiponota/form.html.twig");
         echo "
 
@@ -84,21 +89,21 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         ";
-        // line 29
-        if (twig_in_filter("tiponota_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 29, $this->source); })()))) {
-            // line 30
-            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+        // line 34
+        if (twig_in_filter("tiponota_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 34, $this->source); })()))) {
+            // line 35
+            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         ";
         }
-        // line 34
+        // line 39
         echo "        </div>
     </div>
     ";
-        // line 36
-        if ((twig_in_filter("home_tiponota", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 36, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 36, $this->source); })()))) {
-            // line 37
+        // line 41
+        if ((twig_in_filter("home_tiponota", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 41, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 41, $this->source); })()))) {
+            // line 42
             echo "    <div class=\"row\">
         <div class=\"body table-responsive\">
             <table id=\"data_table\" class=\"table table-bordered table-striped table-hover js-basic-example dataTable\">
@@ -111,7 +116,7 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
                 </thead>
                 <tbody id=\"table_content\">
                 ";
-            // line 48
+            // line 53
             echo twig_include($this->env, $context, "tiponota/table.html.twig");
             echo "
                 </tbody>
@@ -120,11 +125,11 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
     </div>
     ";
         } else {
-            // line 54
+            // line 59
             echo "    <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
     ";
         }
-        // line 56
+        // line 61
         echo "</div>
 ";
         
@@ -132,13 +137,13 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
 
     }
 
-    // line 58
+    // line 63
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 59
+        // line 64
         echo "<script src=\"resources/plugins/momentjs/moment.js\"></script>
 <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
 <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -203,23 +208,62 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
     reload_form()
 </script>
 <script>
-
     attach_edit()
+
+    let message= ''
+    function tiponota_prev(id) {
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse(id))
+        });
+        ajax_call_get(\"/tiponota_prev\",{
+            object: obj
+        },function(response){
+            message = response;
+        });
+    }
 
     \$('.delete').click(function () {
         id = parseInt(JSON.parse(\$(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: \"¿Desea dar de baja el tipo correlativo?\",
-            type: \"warning\",
-            showCancelButton: true,
-            confirmButtonColor: \"#004c99\",
-            cancelButtonColor: \"#F44336\",
-            confirmButtonText: \"Aceptar\",
-            cancelButtonText: \"Cancelar\"
-        }).then(function () {
-            ajax_call(\"/tiponota_eliminar\", { id,enabled,_xsrf: getCookie(\"_xsrf\")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-        })
+        tiponota_prev(id)
+
+        setTimeout(function(){
+            let quest = message
+            enabled = false
+
+            if((quest.split(\" \").length) > 8){
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+
+                })
+            }else{
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+                    ajax_call(\"/tiponota_eliminar\", { 
+                        id, enabled,_xsrf: getCookie(\"_xsrf\")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
+                    })
+                })
+            }
+
+            }, 1500
+        )
     })
 
 </script>
@@ -242,7 +286,7 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
 
     public function getDebugInfo()
     {
-        return array (  142 => 59,  136 => 58,  128 => 56,  124 => 54,  115 => 48,  102 => 37,  100 => 36,  96 => 34,  90 => 30,  88 => 29,  79 => 23,  76 => 22,  70 => 21,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  147 => 64,  141 => 63,  133 => 61,  129 => 59,  120 => 53,  107 => 42,  105 => 41,  101 => 39,  95 => 35,  93 => 34,  84 => 28,  81 => 27,  75 => 26,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -250,7 +294,12 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
         return new Twig_Source("{% extends 'base.html.twig' %}
 {% block stylesheets %}
 <style>
-    .accion{ cursor:pointer }
+    .accion{ 
+        cursor:pointer
+    }
+    .swal2-title{
+        font-size: 16px !important;
+    }
 </style>
 <script src=\"resources/js/functions.js\"></script>
 
@@ -276,7 +325,7 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         {% if 'tiponota_insertar' in permisos %}
-            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         {% endif %}
@@ -369,27 +418,66 @@ class __TwigTemplate_c1e5b1c9364318b54dae6deda1b4fe5161aeba49177db92712473437b75
     reload_form()
 </script>
 <script>
-
     attach_edit()
+
+    let message= ''
+    function tiponota_prev(id) {
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse(id))
+        });
+        ajax_call_get(\"/tiponota_prev\",{
+            object: obj
+        },function(response){
+            message = response;
+        });
+    }
 
     \$('.delete').click(function () {
         id = parseInt(JSON.parse(\$(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: \"¿Desea dar de baja el tipo correlativo?\",
-            type: \"warning\",
-            showCancelButton: true,
-            confirmButtonColor: \"#004c99\",
-            cancelButtonColor: \"#F44336\",
-            confirmButtonText: \"Aceptar\",
-            cancelButtonText: \"Cancelar\"
-        }).then(function () {
-            ajax_call(\"/tiponota_eliminar\", { id,enabled,_xsrf: getCookie(\"_xsrf\")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-        })
+        tiponota_prev(id)
+
+        setTimeout(function(){
+            let quest = message
+            enabled = false
+
+            if((quest.split(\" \").length) > 8){
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+
+                })
+            }else{
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+                    ajax_call(\"/tiponota_eliminar\", { 
+                        id, enabled,_xsrf: getCookie(\"_xsrf\")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
+                    })
+                })
+            }
+
+            }, 1500
+        )
     })
 
 </script>
 
-{% endblock %}", "tiponota/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tiponota\\index.html.twig");
+{% endblock %}", "tiponota/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\tiponota\\index.html.twig");
     }
 }

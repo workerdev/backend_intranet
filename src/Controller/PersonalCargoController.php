@@ -21,6 +21,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 
 class PersonalCargoController extends Controller
@@ -55,10 +58,14 @@ class PersonalCargoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $PersonalCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(array('estado' => '1'));
         $TipoCargo = $this->getDoctrine()->getRepository(TipoCargo::class)->findBy(array('estado' => '1'));
         $superior = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(array('estado' => '1'));
-        return $this->render('personalcargo/index.html.twig', array('objects' => $PersonalCargo, 'tipo' => $TipoCargo, 'superior' => $superior, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('personalcargo/index.html.twig', array('objects' => $PersonalCargo, 'tipo' => $TipoCargo, 'superior' => $superior, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -73,7 +80,7 @@ class PersonalCargoController extends Controller
             return $redireccion;
         }
         
-        $vid = $s_user[0]['fkrol']['id'];
+        $vid = $s_user['fkrol']['id'];
         $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('id' => $vid, 'estado' => '1'));
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
@@ -85,6 +92,12 @@ class PersonalCargoController extends Controller
         }
         $parent = $mods;
         $child = $mods;
+        $permisos = array();
+        foreach ($mods as $mdl) {
+            $mdldt = (object) $mdl;
+            $item = $mdldt->getNombre();
+            $permisos[] = $item;
+        }
         try
         {
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
@@ -141,11 +154,13 @@ class PersonalCargoController extends Controller
             $data3=  json_encode($data2);
             $data5=  json_decode($data3);
 
+            $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+            $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+            $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
             $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1', 'fkprocesoscargo' => null));
 
-            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'parents' => $parent, 'children' => $child));
+            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
         }catch(Exception $e){
-            
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }

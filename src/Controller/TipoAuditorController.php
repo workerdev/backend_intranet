@@ -24,7 +24,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 class TipoAuditorController extends AbstractController
 {   
@@ -40,7 +41,7 @@ class TipoAuditorController extends AbstractController
             return $redireccion;
         }
         
-        $vid = $s_user[0]['fkrol']['id'];
+        $vid = $s_user['fkrol']['id'];
         $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('id' => $vid, 'estado' => '1'));
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
@@ -58,8 +59,13 @@ class TipoAuditorController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $tipoauditor = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(array('estado' => '1'));
-        return $this->render('tipoauditor/index.html.twig', array('objects' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('tipoauditor/index.html.twig', array('objects' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

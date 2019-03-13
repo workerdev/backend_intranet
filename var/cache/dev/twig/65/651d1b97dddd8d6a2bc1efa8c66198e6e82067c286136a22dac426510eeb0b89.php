@@ -80,7 +80,7 @@ class __TwigTemplate_6be9ba7efd6520f09228f31053dc86fe70295d43999070393dcd0dde6f5
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, $context["tr"], "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, $context["tr"], "apellido", array())), "html", null, true);
             echo "</option>
                         ";
         }
@@ -108,8 +108,8 @@ class __TwigTemplate_6be9ba7efd6520f09228f31053dc86fe70295d43999070393dcd0dde6f5
                         </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -172,7 +172,7 @@ class __TwigTemplate_6be9ba7efd6520f09228f31053dc86fe70295d43999070393dcd0dde6f5
                    <label>Responsable</label>
                         <select id=\"fkresponsable\" class=\"form-control\">
                         {% for tr in fkresponsable %}
-                            <option value=\"{{tr.id}}\">{{tr.nombre}}</option>
+                            <option value=\"{{tr.id}}\">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -194,12 +194,12 @@ class __TwigTemplate_6be9ba7efd6520f09228f31053dc86fe70295d43999070393dcd0dde6f5
                         </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
     </div>
-</div>", "seguimientocro/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\seguimientocro\\form.html.twig");
+</div>", "seguimientocro/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\seguimientocro\\form.html.twig");
     }
 }

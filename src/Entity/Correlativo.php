@@ -9,12 +9,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Correlativo
- * @ORM\Table(name="cb_procesos_correlativo", indexes={@ORM\Index(name="cb_correlativo_id", columns={"cb_correlativo_id"})})
+ * Correlativo 
+ * @ORM\Table(name="cb_proc_correlativo", uniqueConstraints={@ORM\UniqueConstraint(name="cb_correlativo_id", columns={"cb_correlativo_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\CorrelativoRepository")
- *  @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */
-class Correlativo
+
+class Correlativo 
 {
     /**
      * @var int
@@ -29,11 +29,9 @@ class Correlativo
      * @var int
      *
      * @ORM\Column(name="cb_correlativo_numcorrelativo", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $numcorrelativo;
-    
+
     /**
      * @var date
      *
@@ -59,23 +57,23 @@ class Correlativo
      * @Assert\NotBlank
      */
     private $redactor;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_destinatario", type="text", nullable=false)
-       * @Assert\NotBlank
+         * @Assert\NotBlank
      */
     private $destinatario;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_referencia", type="text", nullable=false)
-       * @Assert\NotBlank
+         * @Assert\NotBlank
      */
     private $referencia;
-    
+
     /**
      * @var \correlativo
      *
@@ -97,36 +95,35 @@ class Correlativo
      * @Assert\NotBlank
      */
     private $fktiponota;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_equipo", type="text", nullable=false)
-       * @Assert\NotBlank
+         * @Assert\NotBlank
      */
     private $equipo;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_ip", type="text", nullable=false)
-       * @Assert\NotBlank
+         * @Assert\NotBlank
      */
     private $ip;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_url", type="text", nullable=false)
-       * @Assert\NotBlank
      */
     private $url;
-    
+
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_correlativo_antecedente", type="text", nullable=false)
-       * @Assert\NotBlank
+     * @ORM\Column(name="cb_correlativo_antecedente", type="text", nullable=true)
+         * @Assert\NotBlank
      */
     private $antecedente;
 
@@ -143,19 +140,22 @@ class Correlativo
 
     /**
      * @var int
-     *
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="numeric",
+     *     message="Tiene que ingresar un valor númerico válido"
+     * )
      * @ORM\Column(name="cb_correlativo_item", type="integer", nullable=false)
      */
     private $item;
-    
+
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_correlativo_urleditable", type="text", nullable=false)
-       * @Assert\NotBlank
+     * @ORM\Column(name="cb_correlativo_urleditable", type="text", nullable=true)
      */
     private $urleditable;
-    
+
     /**
      * @var date
      *
@@ -173,19 +173,18 @@ class Correlativo
      * @Assert\NotBlank
      */
     private $fkunidad;
-    
+
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_correlativo_urlorigen", type="text", nullable=false)
-       * @Assert\NotBlank
+     * @ORM\Column(name="cb_correlativo_urlorigen", type="text", nullable=true)
      */
     private $urlorigen;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="cb_correlativo_estado", type="integer", nullable=false)
+     * @ORM\Column(name="cb_correlativo_estado", type="integer", nullable=true)
      */
     private $estado;
 
@@ -194,60 +193,229 @@ class Correlativo
     {
         return $this->id;
     }
-    public function setId(string $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function getNombre(): ?string
+    public function getNumcorrelativo(): ?int
     {
-        return $this->nombre;
+        return $this->numcorrelativo;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNumcorrelativo(string $numcorrelativo): self
     {
-        $this->nombre = $nombre;
+        $this->numcorrelativo = $numcorrelativo;
 
         return $this;
     }
 
-    public function getCodigo(): ?string
+    public function getFechareg(): ?\DateTimeInterface
     {
-        return $this->codigo;
+        return $this->fechareg;
     }
 
-    public function setCodigo(string $codigo): self
+    public function setFechareg(\DateTimeInterface $fechareg): self
     {
-        $this->codigo = $codigo;
+        $this->fechareg = $fechareg;
 
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getFksolicitante(): ?Personal
     {
-        return $this->descripcion;
+        return $this->fksolicitante;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setFksolicitante(?Personal $fksolicitante): self
     {
-        $this->descripcion = $descripcion;
+        $this->fksolicitante = $fksolicitante;
 
         return $this;
     }
 
-    public function getFkgerencia(): ?Gerencia
+    public function getRedactor(): ?string
     {
-        return $this->fkgerencia;
+        return $this->redactor;
     }
 
-    public function setFkgerencia(?Gerencia $fkgerencia): self
+    public function setRedactor(string $redactor): self
     {
-        $this->fkgerencia = $fkgerencia;
+        $this->redactor = $redactor;
 
         return $this;
     }
+
+    public function getDestinatario(): ?string
+    {
+        return $this->destinatario;
+    }
+
+    public function setDestinatario(string $destinatario): self
+    {
+        $this->destinatario = $destinatario;
+
+        return $this;
+    }
+
+    public function getReferencia(): ?string
+    {
+        return $this->referencia;
+    }
+
+    public function setReferencia(string $referencia): self
+    {
+        $this->referencia = $referencia;
+
+        return $this;
+    }
+
+    public function getFkcorrelativo(): ?ControlCorrelativo
+    {
+        return $this->fkcorrelativo;
+    }
+
+    public function setFkcorrelativo(?ControlCorrelativo $fkcorrelativo): self
+    {
+        $this->fkcorrelativo = $fkcorrelativo;
+
+        return $this;
+    }
+
+    public function getFktiponota(): ?TipoNota
+    {
+        return $this->fktiponota;
+    }
+
+    public function setFktiponota(?TipoNota $fktiponota): self
+    {
+        $this->fktiponota = $fktiponota;
+
+        return $this;
+    }
+
+    public function getEquipo(): ?string
+    {
+        return $this->equipo;
+    }
+
+    public function setEquipo(string $equipo): self
+    {
+        $this->equipo = $equipo;
+
+        return $this;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
+
+    public function setIp(string $ip): self
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function getAntecedente(): ?string
+    {
+        return $this->antecedente;
+    }
+
+    public function setAntecedente(string $antecedente): self
+    {
+        $this->antecedente = $antecedente;
+
+        return $this;
+    }
+
+    public function getFkestado(): ?EstadoCorrelativo
+    {
+        return $this->fkestado;
+    }
+
+    public function setFkestado(?EstadoCorrelativo $fkestado): self
+    {
+        $this->fkestado = $fkestado;
+
+        return $this;
+    }
+
+    public function getItem(): ?int
+    {
+        return $this->item;
+    }
+
+    public function setItem(int $item): self
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    public function getUrleditable(): ?string
+    {
+        return $this->urleditable;
+    }
+
+    public function setUrleditable(string $urleditable): self
+    {
+        $this->urleditable = $urleditable;
+
+        return $this;
+    }
+
+    public function getEntrega(): ?\DateTimeInterface
+    {
+        return $this->entrega;
+    }
+
+    public function setEntrega(\DateTimeInterface $entrega): self
+    {
+        $this->entrega = $entrega;
+
+        return $this;
+    }
+
+    public function getFkunidad(): ?Unidad
+    {
+        return $this->fkunidad;
+    }
+
+    public function setFkunidad(?Unidad $fkunidad): self
+    {
+        $this->fkunidad = $fkunidad;
+
+        return $this;
+    }
+
+    public function getUrlorigen(): ?string
+    {
+        return $this->urlorigen;
+    }
+
+    public function setUrlorigen(string $urlorigen): self
+    {
+        $this->urlorigen = $urlorigen;
+
+        return $this;
+    }
+
     public function getEstado(): ?int
     {
         return $this->estado;

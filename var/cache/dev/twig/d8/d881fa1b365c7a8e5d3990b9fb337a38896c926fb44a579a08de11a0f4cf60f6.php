@@ -52,27 +52,45 @@ class __TwigTemplate_b06bdd0bc18d9080b92c76232bfbb53371c2a65d9be40c60e9c7c8018d7
             // line 8
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "vigente", array()), "html", null, true);
             echo "</td>
-        <td align=\"center\">
         ";
-            // line 10
-            if (twig_in_filter("documentoextra_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 10, $this->source); })()))) {
-                // line 11
+            // line 9
+            if ((twig_get_attribute($this->env, $this->source, $context["tr"], "vinculoarchivo", array()) != "N/A")) {
+                // line 10
+                echo "            <td><a href=\"";
+                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "vinculoarchivo", array()), "html", null, true);
+                echo "\">";
+                echo twig_escape_filter($this->env, twig_slice($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "vinculoarchivo", array()), 28, null), "html", null, true);
+                echo "</a></td>
+        ";
+            } else {
+                // line 12
+                echo "            <td>";
+                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "vinculoarchivo", array()), "html", null, true);
+                echo "</td>
+        ";
+            }
+            // line 14
+            echo "        <td align=\"center\">
+        ";
+            // line 15
+            if (twig_in_filter("documentoextra_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 15, $this->source); })()))) {
+                // line 16
                 echo "            <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
         ";
             }
-            // line 13
+            // line 18
             echo "        ";
-            if (twig_in_filter("documentoextra_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 13, $this->source); })()))) {
+            if (twig_in_filter("documentoextra_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 18, $this->source); })()))) {
                 echo "  
             <button id=\"delete\" data-json=\"";
-                // line 14
+                // line 19
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
         ";
             }
-            // line 16
+            // line 21
             echo "        </td>
     </tr>
 ";
@@ -97,7 +115,7 @@ class __TwigTemplate_b06bdd0bc18d9080b92c76232bfbb53371c2a65d9be40c60e9c7c8018d7
 
     public function getDebugInfo()
     {
-        return array (  76 => 16,  71 => 14,  66 => 13,  60 => 11,  58 => 10,  53 => 8,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  94 => 21,  89 => 19,  84 => 18,  78 => 16,  76 => 15,  73 => 14,  67 => 12,  59 => 10,  57 => 9,  53 => 8,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -110,6 +128,11 @@ class __TwigTemplate_b06bdd0bc18d9080b92c76232bfbb53371c2a65d9be40c60e9c7c8018d7
         <td>{{ tr.fktipo.tipo }}</td>
         <td>{{ tr.fechapublicacion | date('Y-m-d') }}</td>
         <td>{{ tr.vigente }}</td>
+        {% if tr.vinculoarchivo != 'N/A' %}
+            <td><a href=\"{{ tr.vinculoarchivo }}\">{{ tr.vinculoarchivo[28:] }}</a></td>
+        {% else %}
+            <td>{{ tr.vinculoarchivo }}</td>
+        {% endif %}
         <td align=\"center\">
         {% if 'documentoextra_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -119,6 +142,6 @@ class __TwigTemplate_b06bdd0bc18d9080b92c76232bfbb53371c2a65d9be40c60e9c7c8018d7
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "documentoextra/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\documentoextra\\table.html.twig");
+{% endfor %}", "documentoextra/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoextra\\table.html.twig");
     }
 }

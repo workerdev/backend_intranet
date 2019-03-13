@@ -69,105 +69,108 @@
     <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
     <script>
-    // attach_validators()
-
-    $('#fkproceso').selectpicker({
+    $('#documento_baja_fkficha').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar proceso.',
         title: 'Seleccione un proceso.'
     })
     
-    $('#fktipo').selectpicker({
+    $('#documento_baja_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo.',
         title: 'Seleccione un tipo de tipo.'
     })
     
+    $('#documento_baja_fkaprobador').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar aprobador.',
+        title: 'Seleccione un aprobador.'
+    })
+    
+    $('#documento_baja_versionvigente').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar opción.',
+        title: 'Seleccione una opción.'
+    })
+    
     $('#new').click(function () {
-        $('#fkproceso').val('')
-        $('#fktipo').val('')
+        $('#lnkva').remove();
+        $('#documento_baja_id').hide()
+        $("#documento_baja_id").siblings().hide()
+        
+        $('#documento_baja_codigo').val('')
+        $('#documento_baja_titulo').val('')
+        $('#documento_baja_versionvigente').val('')
+        $('#documento_baja_fechapublicacion').val('')
+        $('#documento_baja_carpetaoperativa').val('')
+        $('#documento_baja_vinculoarchivo').val('')
 
         clean_form()
         verif_inputs()
         $('#id_div').hide()
         $('#insert').show()
         $('#update').hide()
+
+        document.getElementById("documento_baja_submit").innerHTML= "Guardar"
+        $('#documento_baja_id').val(0)
         $('#form').modal('show')
     })
 
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'version': $('#versionvigente').val(),
-            'fechapublicacion': $('#fechapublicacion').val(),
-            'aprobadopor': $('#aprobadopor').val(),
-            'carpetaoperativa': $('#carpetaoperativa').val(),
-            'vinculoarchivo': $('#vinculoarchivo').val(),
-
-            'proceso': $('#fkproceso').val(),
-            'tipo': $('#fktipo').val()
-        })
-        console.log(objeto)
-      ajax_call_validation("/bajadocumento_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/bajadocumento_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
+    $("#documento_baja_vinculoarchivo").change(function(){
+        $("#lnkva").hide();
+    });
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/bajadocumento_editar",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                $('#id').val(self.id)
-                $('#codigo').val(self.codigo)
-                $('#titulo').val(self.titulo)
-                $('#versionvigente').val(self.versionvigente)
-                $('#fechapublicacion').val(self.fechapublicacion)
-                $('#aprobadopor').val(self.aprobadopor)
-                $('#carpetaoperativa').val(self.carpetaoperativa)
-                $('#vinculoarchivo').val(self.vinculoarchivo)
+                var self = JSON.parse(response)   
+                            
+                $('#documento_baja_id').val(self.id)
+                $('#documento_baja_codigo').val(self.codigo)
+                $('#documento_baja_titulo').val(self.titulo)
+                $('#documento_baja_versionvigente').val(self.versionvigente)
+                $('#documento_baja_fechapublicacion').val(self.fechapublicacion)
+                $('#documento_baja_carpetaoperativa').val(self.carpetaoperativa)
 
-                $('#fkproceso').val(self.fkproceso.id)
-                $('#fkproceso').selectpicker('render')
+                $('#documento_baja_fkproceso').val(self.fkproceso.id)
+                $('#documento_baja_fkproceso').selectpicker('render')
 
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
+                $('#documento_baja_fktipo').val(self.fktipo.id)
+                $('#documento_baja_fktipo').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                $('#documento_baja_fkaprobador').val(self.fkaprobador.id)
+                $('#documento_baja_fkaprobador').selectpicker('render')
+
+                $('#documento_baja_versionvigente').val(self.versionvigente)
+                $('#documento_baja_versionvigente').selectpicker('render')
+
+                if(self.vinculoarchivo != 'N/A') {
+                    $('#lnkva').remove();
+                    let urlfile = self.vinculoarchivo;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_baja_vinculoarchivo");
+                }
             })
+            clean_form()
+            verif_inputs()
+            $('#id_div').show()
+            $('#insert').hide()
+            $('#update').show()
+            
+            document.getElementById("documento_baja_submit").innerHTML = "Modificar"
+            setTimeout(function(){$('#form').modal('show')}, 500);
         })
     }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'version': $('#versionvigente').val(),
-            'fechapublicacion': $('#fechapublicacion').val(),
-            'aprobadopor': $('#aprobadopor').val(),
-            'carpetaoperativa': $('#carpetaoperativa').val(),
-            'vinculoarchivo': $('#vinculoarchivo').val(),
-
-            'proceso': $('#fkproceso').val(),
-            'tipo': $('#fktipo').val()
-        })
-        ajax_call_validation("/bajadocumento_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/bajadocumento_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
     reload_form()
     </script>
     <script>

@@ -68,19 +68,21 @@ class DocumentoFormulario
      */
     private $fechaPublicacion;
 
-     /**
-     * @var string
+    /**
+     * @var \aprobador
      *
-     * @ORM\Column(name="cb_documento_formulario_aprobadoPor", type="string", length=50, nullable=false)
-      * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_documento_formulario_fkaprobador", referencedColumnName="cb_usuario_id")
+     * })
+     * @Assert\NotBlank
      */
-    private $aprobadoPor;
+    private $fkaprobador;
 
     /**
      * @var string
      *
      * @ORM\Column(name="cb_documento_formulario_vinculoFileDig", type="string", length=200, nullable=true)
-     * @Assert\NotBlank
      */
     private $vinculoFileDig;
 
@@ -88,7 +90,6 @@ class DocumentoFormulario
      * @var string
      *
      * @ORM\Column(name="cb_documento_formulario_vinculoFileDesc", type="string", length=200, nullable=true)
-     * @Assert\NotBlank
      */
     private $vinculoFileDesc;
 
@@ -170,17 +171,16 @@ class DocumentoFormulario
         return $this;
     }
 
-    public function getAprobadoPor(): ?string
+    public function getFkaprobador(): ?Usuario
     {
-        return $this->aprobadoPor;
+        return $this->fkaprobador;
     }
-
-    public function setAprobadoPor(string $aprobadoPor): self
+    public function setFkaprobador(?Usuario $fkaprobador): self
     {
-        $this->aprobadoPor = $aprobadoPor;
+        $this->fkaprobador = $fkaprobador;
 
         return $this;
-    }  
+    }
 
     public function getFkdocumento(): ?Documento
     {
@@ -194,24 +194,24 @@ class DocumentoFormulario
         return $this;
     }
 
-    public function getVinculoDig(): ?string
+    public function getVinculoFileDig(): ?string
     {
         return $this->vinculoFileDig;
     }
 
-    public function setVinculoDig(string $vinculoFileDig): self
+    public function setVinculoFileDig(string $vinculoFileDig): self
     {
         $this->vinculoFileDig = $vinculoFileDig;
 
         return $this;
     }   
 
-    public function getVinculoDesc(): ?string
+    public function getVinculoFileDesc(): ?string
     {
         return $this->vinculoFileDesc;
     }
 
-    public function setVinculoDesc(string $vinculoFileDesc): self
+    public function setVinculoFileDesc(string $vinculoFileDesc): self
     {
         $this->vinculoFileDesc = $vinculoFileDesc;
 

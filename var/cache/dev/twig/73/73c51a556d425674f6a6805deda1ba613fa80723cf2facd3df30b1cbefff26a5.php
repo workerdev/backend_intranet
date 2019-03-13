@@ -147,6 +147,6 @@ class __TwigTemplate_e632dc91e1553d8516e154ac51de26a81fa645f787a81ce77c8954ca933
             <button id=\"eficrep\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn btn-warning waves-effect waves-light eficrep\" title=\"Auditoría\"><i class=\"material-icons\">picture_as_pdf</i></button>
         </td>
     </tr>
-{% endfor %}", "accion/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\accion\\table.html.twig");
+{% endfor %}", "accion/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\accion\\table.html.twig");
     }
 }

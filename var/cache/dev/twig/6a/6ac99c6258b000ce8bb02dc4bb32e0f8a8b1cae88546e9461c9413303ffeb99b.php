@@ -28,7 +28,7 @@ class __TwigTemplate_2f40c8b6e989aeab0d5b3608c17c75f02d44b491a677e581da6a2251824
         <div class=\"modal-content\">
             <div class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                <h3 id=\"cliente_tittle\" class=\"modal-title\">Organigrama Gerencia</h3>
+                <h3 id=\"cliente_tittle\" class=\"modal-title\">Organigrama por Gerencia</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
             </div>
             <div class=\"modal-body\">
@@ -74,7 +74,7 @@ class __TwigTemplate_2f40c8b6e989aeab0d5b3608c17c75f02d44b491a677e581da6a2251824
         <div class=\"modal-content\">
             <div class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                <h3 id=\"cliente_tittle\" class=\"modal-title\">Organigrama Gerencia</h3>
+                <h3 id=\"cliente_tittle\" class=\"modal-title\">Organigrama por Gerencia</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
             </div>
             <div class=\"modal-body\">
@@ -86,6 +86,6 @@ class __TwigTemplate_2f40c8b6e989aeab0d5b3608c17c75f02d44b491a677e581da6a2251824
              </div>  
         </div>
     </div>
-</div>", "organigramagerencia/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\organigramagerencia\\form.html.twig");
+</div>", "organigramagerencia/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\organigramagerencia\\form.html.twig");
     }
 }

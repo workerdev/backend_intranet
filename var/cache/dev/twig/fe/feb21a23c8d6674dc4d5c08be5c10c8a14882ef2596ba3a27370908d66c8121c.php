@@ -556,6 +556,6 @@ class __TwigTemplate_f1edec07f48063dd2138a6ab120d000a7c50ccead4798e63d44eb5acc6a
 
 </script>
 
-{% endblock %}", "noticia/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\noticia\\index.html.twig");
+{% endblock %}", "noticia/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\noticia\\index.html.twig");
     }
 }

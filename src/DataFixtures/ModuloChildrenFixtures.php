@@ -57,6 +57,11 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const ESTADOCRLTVO_CHILD = 'child-estctvo';
     public const TIPORECURSO_CHILD = 'child-tprec';
 
+    public const CORRELATIVO_CHILD = 'child-crtv';
+    public const UNIDAD_CHILD = 'child-und';
+    public const TIPOPERMISO_CHILD = 'child-tperms';
+    public const PERMISO_CHILD = 'child-perms';
+
     /** MODULO DE INDICADORES **/
     public const INDICADORPROC_CHILD = 'child-indproc';
     public const INDICADORSEG_CHILD = 'child-indseg';
@@ -99,6 +104,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
 
     /** MODULO DE CONSULTA **/
     public const ORGANIGRAMA_CHILD = 'child-org';
+    public const ORGANIGRAMAGERENCIA_CHILD = 'child-orgcia';
 
     /** MODULO DE PERSONAL **/
     public const TIPOCARGO_CHILD = 'child-tpcrg';
@@ -468,6 +474,43 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $tpnotaprt->setMenu(1);
         $tpnotaprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
         $manager->persist($tpnotaprt);
+        
+        $tpermsprt = new Modulo();
+        $tpermsprt->setNombre('tipopermiso');
+        $tpermsprt->setTitulo('Tipo de permiso');
+        $tpermsprt->setRuta('/tipopermiso');
+        $tpermsprt->setIcono('business');
+        $tpermsprt->setMenu(1);
+        $tpermsprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $manager->persist($tpermsprt);
+        
+        $ctvoprt = new Modulo();
+        $ctvoprt->setNombre('correlativo');
+        $ctvoprt->setTitulo('Correlativo');
+        $ctvoprt->setRuta('/correlativo');
+        $ctvoprt->setIcono('business');
+        $ctvoprt->setMenu(1);
+        $ctvoprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $manager->persist($ctvoprt);
+        
+        $undprt = new Modulo();
+        $undprt->setNombre('unidad');
+        $undprt->setTitulo('Unidad');
+        $undprt->setRuta('/unidad');
+        $undprt->setIcono('business');
+        $undprt->setMenu(1);
+        $undprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $manager->persist($undprt);
+        
+        $permsprt = new Modulo();
+        $permsprt->setNombre('permiso');
+        $permsprt->setTitulo('Permiso');
+        $permsprt->setRuta('/permiso');
+        $permsprt->setIcono('business');
+        $permsprt->setMenu(1);
+        $permsprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $manager->persist($permsprt);
+
 
         /** MODULO DE INDICADORES **/
         $undmedprt = new Modulo();
@@ -776,6 +819,15 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $orgprt->setFkmodulo($this->getReference(ModuloFixtures::CONSULTA_MOD));
         $manager->persist($orgprt);
 
+        $orgciaprt = new Modulo();
+        $orgciaprt->setNombre('organigramagerencia');
+        $orgciaprt->setTitulo('Organigrama Gerencia');
+        $orgciaprt->setRuta('/organigramagerencia');
+        $orgciaprt->setIcono('business');
+        $orgciaprt->setMenu(1);
+        $orgciaprt->setFkmodulo($this->getReference(ModuloFixtures::CONSULTA_MOD));
+        $manager->persist($orgciaprt);
+
 
         /** MODULO DE PERSONAL **/
         $tpcrgprt = new Modulo();
@@ -853,6 +905,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::ENLACES_CHILD, $enlcprt);
         $this->addReference(self::CATALOGO_CHILD, $catlgprt);
         $this->addReference(self::ACCIDENTE_CHILD, $tsaccprt);
+
         $this->addReference(self::DOCUMENTO_CHILD, $dctoprt);
         $this->addReference(self::DOCEXTRA_CHILD, $docaddprt);
         $this->addReference(self::TIPODOC_CHILD, $tpdocprt);
@@ -863,6 +916,10 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::BAJADOC_CHILD, $bajadocprt);
         $this->addReference(self::DOCFORM_CHILD, $docfrmprt);
         $this->addReference(self::DOCTIPOEXT_CHILD, $doctpexprt);
+        $this->addReference(self::ESTADODOC_CHILD, $estdocprt);
+        $this->addReference(self::ESTADOSEG_CHILD, $estsegprt);
+        $this->addReference(self::SEGUIMIENTOELAB_CHILD, $segelbprt);
+
         $this->addReference(self::GERENCIA_CHILD, $grciaprt);
         $this->addReference(self::AREA_CHILD, $areaprt);
         $this->addReference(self::SECTOR_CHILD, $sectprt);
@@ -874,8 +931,21 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::TIPORIESGOPT_CHILD, $tpcroprt);
         $this->addReference(self::SEGUIMIENTORSOP_CHILD, $crosegprt);
         $this->addReference(self::GCIARSECTOR_CHILD, $gciarstprt);
+        $this->addReference(self::RECURSONEC_CHILD, $recnecprt);
+        $this->addReference(self::CONTROLCRTLVO_CHILD, $ctlctvoprt);
+        $this->addReference(self::GRUPORIESGO_CHILD, $grprsgprt);
+        $this->addReference(self::ESTADORIESGO_CHILD, $estrsgprt);
+        $this->addReference(self::TIPONOTA_CHILD, $tpnotaprt);
+        $this->addReference(self::ESTADOCRLTVO_CHILD, $estctvoprt);
+        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt);       
+        $this->addReference(self::TIPOPERMISO_CHILD, $tpermsprt);
+        $this->addReference(self::CORRELATIVO_CHILD, $ctvoprt);
+        $this->addReference(self::UNIDAD_CHILD, $undprt);
+        $this->addReference(self::PERMISO_CHILD, $permsprt);
+        
         $this->addReference(self::INDICADORPROC_CHILD, $indprcprt);
         $this->addReference(self::INDICADORSEG_CHILD, $segindprt);
+        $this->addReference(self::UNIDADMEDIDA_CHILD, $undmedprt);
 
         $this->addReference(self::PLANACCION_CHILD, $plnaccprt);
         $this->addReference(self::ESTADOPLAN_CHILD, $estplnprt);
@@ -908,6 +978,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::FILE_CHILD, $fileprt);
 
         $this->addReference(self::ORGANIGRAMA_CHILD, $orgprt);
+        $this->addReference(self::ORGANIGRAMAGERENCIA_CHILD, $orgciaprt);        
 
         $this->addReference(self::TIPOCARGO_CHILD, $tpcrgprt);
         $this->addReference(self::CARGO_CHILD, $cargoprt);
@@ -916,20 +987,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::TURNO_CHILD, $turnprt);
         $this->addReference(self::FICHACARGO_CHILD, $fcargoprt);
         $this->addReference(self::DOCUMENTOASO_CHILD, $docuasoprt);
-        
-        $this->addReference(self::ESTADODOC_CHILD, $estdocprt);
-        $this->addReference(self::ESTADOSEG_CHILD, $estsegprt);
-        $this->addReference(self::SEGUIMIENTOELAB_CHILD, $segelbprt);
-        
-        $this->addReference(self::RECURSONEC_CHILD, $recnecprt);
-        $this->addReference(self::CONTROLCRTLVO_CHILD, $ctlctvoprt);
-        $this->addReference(self::GRUPORIESGO_CHILD, $grprsgprt);
-        $this->addReference(self::ESTADORIESGO_CHILD, $estrsgprt);
-        $this->addReference(self::TIPONOTA_CHILD, $tpnotaprt);
-        $this->addReference(self::ESTADOCRLTVO_CHILD, $estctvoprt);
-        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt);
-
-        $this->addReference(self::UNIDADMEDIDA_CHILD, $undmedprt);
     }
 
     public function getDependencies()

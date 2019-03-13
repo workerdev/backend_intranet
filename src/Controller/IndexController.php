@@ -11,6 +11,8 @@ use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -47,6 +49,9 @@ class IndexController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        return $this->render('index/index.html.twig', array('parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        return $this->render('index/index.html.twig', array('parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 }

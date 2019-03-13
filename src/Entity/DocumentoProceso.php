@@ -8,11 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 /**
  * DocumentoProceso
  * @ORM\Table(name="cb_gest_doc_proceso", uniqueConstraints={@ORM\UniqueConstraint(name="cb_documento_proceso_id", columns={"cb_documento_proceso_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\DocumentoProcesoRepository")
  */
+
 class DocumentoProceso
 {
     /**
@@ -85,7 +88,6 @@ class DocumentoProceso
      * @var string
      *
      * @ORM\Column(name="cb_documento_proceso_vinculoarchivo", type="text", nullable=true)
-     * @Assert\NotBlank
      */
     private $vinculoarchivo;
 
@@ -106,12 +108,15 @@ class DocumentoProceso
     private $aprobadorechazado;
 
     /**
-     * @var string
+     * @var \aprobador
      *
-     * @ORM\Column(name="cb_documento_proceso_aprobadopor", type="text", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_documento_proceso_fkaprobador", referencedColumnName="cb_usuario_id")
+     * })
      * @Assert\NotBlank
      */
-    private $aprobadopor;
+    private $fkaprobador;
     
     /**
      * @var date
@@ -249,14 +254,13 @@ class DocumentoProceso
         return $this;
     } 
 
-    public function getAprobadopor(): ?string
+    public function getFkaprobador(): ?Usuario
     {
-        return $this->aprobadopor;
+        return $this->fkaprobador;
     }
-
-    public function setAprobadopor(string $aprobadopor): self
+    public function setFkaprobador(?Usuario $fkaprobador): self
     {
-        $this->aprobadopor = $aprobadopor;
+        $this->fkaprobador = $fkaprobador;
 
         return $this;
     }

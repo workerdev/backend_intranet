@@ -143,7 +143,7 @@ class CorrelativoType extends AbstractType
                 'label' => 'Guardar',
                 'attr' => ['class' => 'btn bg-indigo waves-effect']
             ))
-            ;
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

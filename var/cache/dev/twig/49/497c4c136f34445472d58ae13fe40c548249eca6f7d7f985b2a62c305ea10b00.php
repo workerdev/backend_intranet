@@ -76,7 +76,7 @@ class __TwigTemplate_071df154a485c2d6b2d02568fba9bb34151794a71b414e317cc422c05c9
             echo "</td>
         <td>";
             // line 16
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "aprobadojefe", array()), "html", null, true);
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkjefeaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkjefeaprobador", array()), "apellido", array())), "html", null, true);
             echo "</td>
         <td>";
             // line 17
@@ -84,7 +84,7 @@ class __TwigTemplate_071df154a485c2d6b2d02568fba9bb34151794a71b414e317cc422c05c9
             echo "</td>
         <td>";
             // line 18
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "aprobadogerente", array()), "html", null, true);
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkgerenteaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkgerenteaprobador", array()), "apellido", array())), "html", null, true);
             echo "</td>
         <td>";
             // line 19
@@ -159,9 +159,9 @@ class __TwigTemplate_071df154a485c2d6b2d02568fba9bb34151794a71b414e317cc422c05c9
         <td class=\"d-none\">{{ tr.formacion }}</td>
         <td class=\"d-none\">{{ tr.caracteristicas }}</td>
         <td class=\"d-none\">{{ tr.fechaaprobacion | date('d-m-Y') }}</td>
-        <td>{{ tr.aprobadojefe }}</td>
+        <td>{{ tr.fkjefeaprobador.nombre ~ ' ' ~ tr.fkjefeaprobador.apellido }}</td>
         <td>{{ tr.firmajefe }}</td>
-        <td>{{ tr.aprobadogerente }}</td>
+        <td>{{ tr.fkgerenteaprobador.nombre ~ ' ' ~ tr.fkgerenteaprobador.apellido }}</td>
         <td>{{ tr.firmagerente }}</td>
         <td class=\"d-none\">{{ tr.hipervinculo }}</td>
         <td align=\"center\">
@@ -173,6 +173,6 @@ class __TwigTemplate_071df154a485c2d6b2d02568fba9bb34151794a71b414e317cc422c05c9
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "fichacargo/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\fichacargo\\table.html.twig");
+{% endfor %}", "fichacargo/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\fichacargo\\table.html.twig");
     }
 }

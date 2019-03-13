@@ -44,7 +44,12 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
 
         // line 3
         echo "    <style>
-        .accion{ cursor:pointer }
+        .accion{ 
+            cursor:pointer 
+        }
+        .swal2-title{
+            font-size: 16px !important;
+        }
     </style>
     <script src=\"resources/js/transporte.js\"></script>
     <script src=\"resources/js/functions.js\"></script>
@@ -67,40 +72,40 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
 
     }
 
-    // line 22
+    // line 27
     public function block_body($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "body"));
 
-        // line 23
+        // line 28
         echo "
     ";
-        // line 24
+        // line 29
         echo twig_include($this->env, $context, "controlcorrelativo/form.html.twig");
         echo "
 
-    <div class=\"header bg-indigo\"><h2>CONTROL CORRELATIVO</h2></div>
+    <div class=\"header bg-indigo\"><h2>CENTRO DE CONTROL CORRELATIVO</h2></div>
     <div class=\"body\">
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             ";
-        // line 30
-        if (twig_in_filter("controlcorrelativo_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 30, $this->source); })()))) {
+        // line 35
+        if (twig_in_filter("controlcorrelativo_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 35, $this->source); })()))) {
             echo "    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                     <i class=\"material-icons\">add</i>
                 </button>
             ";
         }
-        // line 34
+        // line 39
         echo "   
             </div>
         </div>
         ";
-        // line 37
-        if ((twig_in_filter("home_controlcorrelativo", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 37, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 37, $this->source); })()))) {
-            // line 38
+        // line 42
+        if ((twig_in_filter("home_controlcorrelativo", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 42, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 42, $this->source); })()))) {
+            // line 43
             echo "            <div class=\"row\">
                 <div class=\"body table-responsive\">
                     <table id=\"data_tabletr\" class=\"table table-bordered table-striped table-hover js-basic-example dataTable\">
@@ -115,7 +120,7 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
                         </thead>
                         <tbody id=\"table_content\">
                         ";
-            // line 51
+            // line 56
             echo twig_include($this->env, $context, "controlcorrelativo/table.html.twig");
             echo "
                         </tbody>
@@ -124,11 +129,11 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
             </div>
         ";
         } else {
-            // line 57
+            // line 62
             echo "            <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
         ";
         }
-        // line 59
+        // line 64
         echo "    </div>
 ";
         
@@ -136,13 +141,13 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
 
     }
 
-    // line 61
+    // line 66
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 62
+        // line 67
         echo "    <script src=\"resources/plugins/momentjs/moment.js\"></script>
     <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -228,20 +233,42 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
     <script>
         attach_edit()
 
+        let message= ''
+        function ctrlcorrelativo_prev(id) {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get(\"/ctrlcorrelativo_prev\",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
-            enabled = false
-            swal({
-                title: \"¿Desea dar de baja el control correlativo?\",
-                type: \"warning\",
-                showCancelButton: true,
-                confirmButtonColor: \"#004c99\",
-                cancelButtonColor: \"#F44336\",
-                confirmButtonText: \"Aceptar\",
-                cancelButtonText: \"Cancelar\"
-            }).then(function () {
-                ajax_call(\"/controlcorrelativo_eliminar\", { id,enabled,_xsrf: getCookie(\"_xsrf\")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-            })
+            ctrlcorrelativo_prev(id)
+            setTimeout(function(){
+                let quest = message + \" ¿Está seguro en dar de baja los datos del control correlativo?\" 
+                enabled = false
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+                    ajax_call(\"/controlcorrelativo_eliminar\", { 
+                        id, enabled,_xsrf: getCookie(\"_xsrf\")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
+                    })
+                })
+                }, 1000
+            )
         })
     </script>
 
@@ -263,7 +290,7 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
 
     public function getDebugInfo()
     {
-        return array (  146 => 62,  140 => 61,  132 => 59,  128 => 57,  119 => 51,  104 => 38,  102 => 37,  97 => 34,  89 => 30,  80 => 24,  77 => 23,  71 => 22,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  151 => 67,  145 => 66,  137 => 64,  133 => 62,  124 => 56,  109 => 43,  107 => 42,  102 => 39,  94 => 35,  85 => 29,  82 => 28,  76 => 27,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -271,7 +298,12 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
         return new Twig_Source("{% extends 'base.html.twig' %}
 {% block stylesheets %}
     <style>
-        .accion{ cursor:pointer }
+        .accion{ 
+            cursor:pointer 
+        }
+        .swal2-title{
+            font-size: 16px !important;
+        }
     </style>
     <script src=\"resources/js/transporte.js\"></script>
     <script src=\"resources/js/functions.js\"></script>
@@ -293,12 +325,12 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
 
     {{ include('controlcorrelativo/form.html.twig') }}
 
-    <div class=\"header bg-indigo\"><h2>CONTROL CORRELATIVO</h2></div>
+    <div class=\"header bg-indigo\"><h2>CENTRO DE CONTROL CORRELATIVO</h2></div>
     <div class=\"body\">
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             {% if 'controlcorrelativo_insertar' in permisos %}    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                     <i class=\"material-icons\">add</i>
                 </button>
             {% endif %}   
@@ -414,23 +446,45 @@ class __TwigTemplate_db15a62354ab5d7e044b56bf46fbe83f2dc3cc151db28e7d85e48356f8f
     <script>
         attach_edit()
 
+        let message= ''
+        function ctrlcorrelativo_prev(id) {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get(\"/ctrlcorrelativo_prev\",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
-            enabled = false
-            swal({
-                title: \"¿Desea dar de baja el control correlativo?\",
-                type: \"warning\",
-                showCancelButton: true,
-                confirmButtonColor: \"#004c99\",
-                cancelButtonColor: \"#F44336\",
-                confirmButtonText: \"Aceptar\",
-                cancelButtonText: \"Cancelar\"
-            }).then(function () {
-                ajax_call(\"/controlcorrelativo_eliminar\", { id,enabled,_xsrf: getCookie(\"_xsrf\")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-            })
+            ctrlcorrelativo_prev(id)
+            setTimeout(function(){
+                let quest = message + \" ¿Está seguro en dar de baja los datos del control correlativo?\" 
+                enabled = false
+                swal({
+                    title: quest,
+                    type: \"warning\",
+                    showCancelButton: true,
+                    confirmButtonColor: \"#004c99\",
+                    cancelButtonColor: \"#F44336\",
+                    confirmButtonText: \"Aceptar\",
+                    cancelButtonText: \"Cancelar\"
+                }).then(function () {
+                    ajax_call(\"/controlcorrelativo_eliminar\", { 
+                        id, enabled,_xsrf: getCookie(\"_xsrf\")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
+                    })
+                })
+                }, 1000
+            )
         })
     </script>
 
-{% endblock %}", "controlcorrelativo/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\controlcorrelativo\\index.html.twig");
+{% endblock %}", "controlcorrelativo/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\controlcorrelativo\\index.html.twig");
     }
 }

@@ -17,14 +17,14 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
 
     public function match($pathinfo)
     {
-        $allow = $allowSchemes = array();
+        $allow = $allowSchemes = [];
         if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
             return $ret;
         }
         if ($allow) {
             throw new MethodNotAllowedException(array_keys($allow));
         }
-        if (!in_array($this->context->getMethod(), array('HEAD', 'GET'), true)) {
+        if (!in_array($this->context->getMethod(), ['HEAD', 'GET'], true)) {
             // no-op
         } elseif ($allowSchemes) {
             redirect_scheme:
@@ -37,8 +37,8 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
             } finally {
                 $this->context->setScheme($scheme);
             }
-        } elseif ('/' !== $pathinfo) {
-            $pathinfo = '/' !== $pathinfo[-1] ? $pathinfo.'/' : substr($pathinfo, 0, -1);
+        } elseif ('/' !== $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/') {
+            $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
             if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
                 return $this->redirect($pathinfo, $ret['_route']) + $ret;
             }
@@ -50,10 +50,11 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
         throw new ResourceNotFoundException();
     }
 
-    private function doMatch(string $rawPathinfo, array &$allow = array(), array &$allowSchemes = array()): array
+    private function doMatch(string $pathinfo, array &$allow = [], array &$allowSchemes = []): array
     {
-        $allow = $allowSchemes = array();
-        $pathinfo = rawurldecode($rawPathinfo) ?: '/';
+        $allow = $allowSchemes = [];
+        $pathinfo = rawurldecode($pathinfo) ?: '/';
+        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
         $host = strtolower($context->getHost());
@@ -62,42 +63,39 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
             $canonicalMethod = 'GET';
         }
 
-        switch ($trimmedPathinfo = '/' !== $pathinfo && '/' === $pathinfo[-1] ? substr($pathinfo, 0, -1) : $pathinfo) {
+        switch ($trimmedPathinfo) {
             default:
-                $routes = array(
-                    '/test/baz' => array(array('_route' => 'baz'), null, null, null, false),
-                    '/test/baz.html' => array(array('_route' => 'baz2'), null, null, null, false),
-                    '/test/baz3' => array(array('_route' => 'baz3'), null, null, null, true),
-                    '/foofoo' => array(array('_route' => 'foofoo', 'def' => 'test'), null, null, null, false),
-                    '/spa ce' => array(array('_route' => 'space'), null, null, null, false),
-                    '/multi/new' => array(array('_route' => 'overridden2'), null, null, null, false),
-                    '/multi/hey' => array(array('_route' => 'hey'), null, null, null, true),
-                    '/ababa' => array(array('_route' => 'ababa'), null, null, null, false),
-                    '/route1' => array(array('_route' => 'route1'), 'a.example.com', null, null, false),
-                    '/c2/route2' => array(array('_route' => 'route2'), 'a.example.com', null, null, false),
-                    '/route4' => array(array('_route' => 'route4'), 'a.example.com', null, null, false),
-                    '/c2/route3' => array(array('_route' => 'route3'), 'b.example.com', null, null, false),
-                    '/route5' => array(array('_route' => 'route5'), 'c.example.com', null, null, false),
-                    '/route6' => array(array('_route' => 'route6'), null, null, null, false),
-                    '/route11' => array(array('_route' => 'route11'), '#^(?P<var1>[^\\.]++)\\.example\\.com$#sDi', null, null, false),
-                    '/route12' => array(array('_route' => 'route12', 'var1' => 'val'), '#^(?P<var1>[^\\.]++)\\.example\\.com$#sDi', null, null, false),
-                    '/route17' => array(array('_route' => 'route17'), null, null, null, false),
-                    '/secure' => array(array('_route' => 'secure'), null, null, array('https' => 0), false),
-                    '/nonsecure' => array(array('_route' => 'nonsecure'), null, null, array('http' => 0), false),
-                );
+                $routes = [
+                    '/test/baz' => [['_route' => 'baz'], null, null, null, false],
+                    '/test/baz.html' => [['_route' => 'baz2'], null, null, null, false],
+                    '/test/baz3' => [['_route' => 'baz3'], null, null, null, true],
+                    '/foofoo' => [['_route' => 'foofoo', 'def' => 'test'], null, null, null, false],
+                    '/spa ce' => [['_route' => 'space'], null, null, null, false],
+                    '/multi/new' => [['_route' => 'overridden2'], null, null, null, false],
+                    '/multi/hey' => [['_route' => 'hey'], null, null, null, true],
+                    '/ababa' => [['_route' => 'ababa'], null, null, null, false],
+                    '/route1' => [['_route' => 'route1'], 'a.example.com', null, null, false],
+                    '/c2/route2' => [['_route' => 'route2'], 'a.example.com', null, null, false],
+                    '/route4' => [['_route' => 'route4'], 'a.example.com', null, null, false],
+                    '/c2/route3' => [['_route' => 'route3'], 'b.example.com', null, null, false],
+                    '/route5' => [['_route' => 'route5'], 'c.example.com', null, null, false],
+                    '/route6' => [['_route' => 'route6'], null, null, null, false],
+                    '/route11' => [['_route' => 'route11'], '#^(?P<var1>[^\\.]++)\\.example\\.com$#sDi', null, null, false],
+                    '/route12' => [['_route' => 'route12', 'var1' => 'val'], '#^(?P<var1>[^\\.]++)\\.example\\.com$#sDi', null, null, false],
+                    '/route17' => [['_route' => 'route17'], null, null, null, false],
+                    '/secure' => [['_route' => 'secure'], null, null, ['https' => 0], false],
+                    '/nonsecure' => [['_route' => 'nonsecure'], null, null, ['http' => 0], false],
+                ];
 
                 if (!isset($routes[$trimmedPathinfo])) {
                     break;
                 }
                 list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$trimmedPathinfo];
-
-                if ('/' !== $pathinfo) {
-                    if ($hasTrailingSlash !== ('/' === $pathinfo[-1])) {
-                        if ((!$requiredMethods || isset($requiredMethods['GET'])) && 'GET' === $canonicalMethod) {
-                            return $allow = $allowSchemes = array();
-                        }
-                        break;
+                if ('/' !== $pathinfo && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
+                    if ('GET' === $canonicalMethod && (!$requiredMethods || isset($requiredMethods['GET']))) {
+                        return $allow = $allowSchemes = [];
                     }
+                    break;
                 }
 
                 if ($requiredHost) {
@@ -126,7 +124,7 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
         }
 
         $matchedPathinfo = $host.'.'.$pathinfo;
-        $regexList = array(
+        $regexList = [
             0 => '{^(?'
                 .'|(?:(?:[^./]*+\\.)++)(?'
                     .'|/foo/(baz|symfony)(*:47)'
@@ -172,39 +170,39 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                         .')'
                     .')'
                 .')'
-                .')(?:/?)$}sD',
-        );
+                .')/?$}sD',
+        ];
 
         foreach ($regexList as $offset => $regex) {
             while (preg_match($regex, $matchedPathinfo, $matches)) {
                 switch ($m = (int) $matches['MARK']) {
                     case 115:
-                        $matches = array('foo' => $matches[1] ?? null);
-
                         // baz4
-                        if ('/' !== $pathinfo[-1]) {
+                        if ('/' !== $pathinfo && $trimmedPathinfo === $pathinfo) {
                             if ('GET' === $canonicalMethod) {
-                                return $allow = $allowSchemes = array();
+                                return $allow = $allowSchemes = [];
                             }
                             goto not_baz4;
                         }
-                        if ('/' !== $pathinfo && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
+                        if ('/' !== $pathinfo && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
                             $matches = $n;
                         }
 
-                        return $this->mergeDefaults(array('_route' => 'baz4') + $matches, array());
+                        $matches = ['foo' => $matches[1] ?? null];
+
+                        return $this->mergeDefaults(['_route' => 'baz4'] + $matches, []);
                         not_baz4:
 
                         // baz5
-                        if ('/' !== $pathinfo[-1]) {
+                        if ('/' !== $pathinfo && $trimmedPathinfo === $pathinfo) {
                             goto not_baz5;
                         }
-                        if ('/' !== $pathinfo && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
+                        if ('/' !== $pathinfo && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
                             $matches = $n;
                         }
 
-                        $ret = $this->mergeDefaults(array('_route' => 'baz5') + $matches, array());
-                        if (!isset(($a = array('POST' => 0))[$requestMethod])) {
+                        $ret = $this->mergeDefaults(['_route' => 'baz5'] + $matches, []);
+                        if (!isset(($a = ['POST' => 0])[$requestMethod])) {
                             $allow += $a;
                             goto not_baz5;
                         }
@@ -213,15 +211,15 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                         not_baz5:
 
                         // baz.baz6
-                        if ('/' !== $pathinfo[-1]) {
+                        if ('/' !== $pathinfo && $trimmedPathinfo === $pathinfo) {
                             goto not_bazbaz6;
                         }
-                        if ('/' !== $pathinfo && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
+                        if ('/' !== $pathinfo && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
                             $matches = $n;
                         }
 
-                        $ret = $this->mergeDefaults(array('_route' => 'baz.baz6') + $matches, array());
-                        if (!isset(($a = array('PUT' => 0))[$requestMethod])) {
+                        $ret = $this->mergeDefaults(['_route' => 'baz.baz6'] + $matches, []);
+                        if (!isset(($a = ['PUT' => 0])[$requestMethod])) {
                             $allow += $a;
                             goto not_bazbaz6;
                         }
@@ -231,15 +229,15 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
 
                         break;
                     case 160:
-                        $matches = array('foo' => $matches[1] ?? null);
-
                         // foo1
-                        if ('/' !== $pathinfo && '/' === $pathinfo[-1] && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
+                        if ($trimmedPathinfo !== $pathinfo) {
                             goto not_foo1;
                         }
 
-                        $ret = $this->mergeDefaults(array('_route' => 'foo1') + $matches, array());
-                        if (!isset(($a = array('PUT' => 0))[$requestMethod])) {
+                        $matches = ['foo' => $matches[1] ?? null];
+
+                        $ret = $this->mergeDefaults(['_route' => 'foo1'] + $matches, []);
+                        if (!isset(($a = ['PUT' => 0])[$requestMethod])) {
                             $allow += $a;
                             goto not_foo1;
                         }
@@ -249,73 +247,61 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
 
                         break;
                     case 204:
-                        $matches = array('foo1' => $matches[1] ?? null);
-
                         // foo2
-                        if ('/' !== $pathinfo && '/' === $pathinfo[-1] && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
-                            if ('GET' === $canonicalMethod) {
-                                return $allow = $allowSchemes = array();
-                            }
+                        if ($trimmedPathinfo !== $pathinfo) {
                             goto not_foo2;
                         }
 
-                        return $this->mergeDefaults(array('_route' => 'foo2') + $matches, array());
+                        $matches = ['foo1' => $matches[1] ?? null];
+
+                        return $this->mergeDefaults(['_route' => 'foo2'] + $matches, []);
                         not_foo2:
 
                         break;
                     case 279:
-                        $matches = array('_locale' => $matches[1] ?? null, 'foo' => $matches[2] ?? null);
-
                         // foo3
-                        if ('/' !== $pathinfo && '/' === $pathinfo[-1] && preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
-                            if ('GET' === $canonicalMethod) {
-                                return $allow = $allowSchemes = array();
-                            }
+                        if ($trimmedPathinfo !== $pathinfo) {
                             goto not_foo3;
                         }
 
-                        return $this->mergeDefaults(array('_route' => 'foo3') + $matches, array());
+                        $matches = ['_locale' => $matches[1] ?? null, 'foo' => $matches[2] ?? null];
+
+                        return $this->mergeDefaults(['_route' => 'foo3'] + $matches, []);
                         not_foo3:
 
                         break;
                     default:
-                        $routes = array(
-                            47 => array(array('_route' => 'foo', 'def' => 'test'), array('bar'), null, null, false),
-                            70 => array(array('_route' => 'bar'), array('foo'), array('GET' => 0, 'HEAD' => 1), null, false),
-                            90 => array(array('_route' => 'barhead'), array('foo'), array('GET' => 0), null, false),
-                            131 => array(array('_route' => 'quoter'), array('quoter'), null, null, false),
-                            168 => array(array('_route' => 'bar1'), array('bar'), null, null, false),
-                            181 => array(array('_route' => 'overridden'), array('var'), null, null, false),
-                            212 => array(array('_route' => 'bar2'), array('bar1'), null, null, false),
-                            248 => array(array('_route' => 'helloWorld', 'who' => 'World!'), array('who'), null, null, false),
-                            287 => array(array('_route' => 'bar3'), array('_locale', 'bar'), null, null, false),
-                            309 => array(array('_route' => 'foo4'), array('foo'), null, null, false),
-                            371 => array(array('_route' => 'route13'), array('var1', 'name'), null, null, false),
-                            389 => array(array('_route' => 'route14', 'var1' => 'val'), array('var1', 'name'), null, null, false),
-                            441 => array(array('_route' => 'route15'), array('name'), null, null, false),
-                            489 => array(array('_route' => 'route16', 'var1' => 'val'), array('name'), null, null, false),
-                            510 => array(array('_route' => 'a'), array(), null, null, false),
-                            531 => array(array('_route' => 'b'), array('var'), null, null, false),
-                            549 => array(array('_route' => 'c'), array('var'), null, null, false),
-                        );
+                        $routes = [
+                            47 => [['_route' => 'foo', 'def' => 'test'], ['bar'], null, null, false, true],
+                            70 => [['_route' => 'bar'], ['foo'], ['GET' => 0, 'HEAD' => 1], null, false, true],
+                            90 => [['_route' => 'barhead'], ['foo'], ['GET' => 0], null, false, true],
+                            131 => [['_route' => 'quoter'], ['quoter'], null, null, false, true],
+                            168 => [['_route' => 'bar1'], ['bar'], null, null, false, true],
+                            181 => [['_route' => 'overridden'], ['var'], null, null, false, true],
+                            212 => [['_route' => 'bar2'], ['bar1'], null, null, false, true],
+                            248 => [['_route' => 'helloWorld', 'who' => 'World!'], ['who'], null, null, false, true],
+                            287 => [['_route' => 'bar3'], ['_locale', 'bar'], null, null, false, true],
+                            309 => [['_route' => 'foo4'], ['foo'], null, null, false, true],
+                            371 => [['_route' => 'route13'], ['var1', 'name'], null, null, false, true],
+                            389 => [['_route' => 'route14', 'var1' => 'val'], ['var1', 'name'], null, null, false, true],
+                            441 => [['_route' => 'route15'], ['name'], null, null, false, true],
+                            489 => [['_route' => 'route16', 'var1' => 'val'], ['name'], null, null, false, true],
+                            510 => [['_route' => 'a'], [], null, null, false, false],
+                            531 => [['_route' => 'b'], ['var'], null, null, false, true],
+                            549 => [['_route' => 'c'], ['var'], null, null, false, true],
+                        ];
 
-                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$m];
+                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
 
-                        if ('/' !== $pathinfo) {
-                            if ('/' === $pathinfo[-1]) {
-                                if (preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
-                                    $matches = $n;
-                                } else {
-                                    $hasTrailingSlash = true;
-                                }
+                        $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
+                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
+                            if ('GET' === $canonicalMethod && (!$requiredMethods || isset($requiredMethods['GET']))) {
+                                return $allow = $allowSchemes = [];
                             }
-
-                            if ($hasTrailingSlash !== ('/' === $pathinfo[-1])) {
-                                if ((!$requiredMethods || isset($requiredMethods['GET'])) && 'GET' === $canonicalMethod) {
-                                    return $allow = $allowSchemes = array();
-                                }
-                                break;
-                            }
+                            break;
+                        }
+                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
+                            $matches = $n;
                         }
 
                         foreach ($vars as $i => $v) {
@@ -350,6 +336,6 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 
-        return array();
+        return [];
     }
 }

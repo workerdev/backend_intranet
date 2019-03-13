@@ -2,7 +2,6 @@
 <tr>
     <td>{{ t.nombre }}</td>
     <td>{{ t.apellido }}</td>
-    <td>{{ t.ci }}</td>
     <td>{{ t.correo }}</td>
     <td>{{ t.username }}</td>
     <td>{{ t.fkrol.nombre }}</td>
@@ -11,7 +10,7 @@
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
     {% endif %}
     {% if 'usuario_editar' in permisos %} 
-        <button id="upd-pass" data-json="{{t.id}}" type="button" class="btn btn-info waves-effect waves-light upd-pass" title="Editar Password" onclick="Open_Modal();"><i class="material-icons">vpn_key</i></button>
+        <!--button id="upd-pass" data-json="{{t.id}}" type="button" class="btn btn-info waves-effect waves-light upd-pass" title="Editar Password" onclick="Open_Modal();"><i class="material-icons">vpn_key</i></button-->
     {% endif %}
     {% if 'usuario_eliminar' in permisos %}  
         <button id="delete" data-json="{{t.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>

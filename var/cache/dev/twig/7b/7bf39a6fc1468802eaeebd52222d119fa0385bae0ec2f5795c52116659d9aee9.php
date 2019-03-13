@@ -88,7 +88,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         // line 30
         if (twig_in_filter("documentoextra_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 30, $this->source); })()))) {
             echo "    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                     <i class=\"material-icons\">add</i>
                 </button>
             ";
@@ -112,12 +112,13 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                             <th class=\"order_by_th\" data-name=\"phone\">Tipo de documento extra </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Fecha de publicación </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Vigente </th>
+                            <th class=\"order_by_th\" data-name=\"phone\">Vínculo archivo </th>
                             <th class=\"actions_header\">Acciones </th>
                         </tr>
                         </thead>
                         <tbody id=\"table_content\">
                         ";
-            // line 53
+            // line 54
             echo twig_include($this->env, $context, "documentoextra/table.html.twig");
             echo "
                         </tbody>
@@ -126,11 +127,11 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             </div>
         ";
         } else {
-            // line 59
+            // line 60
             echo "            <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
         ";
         }
-        // line 61
+        // line 62
         echo "    </div>
 ";
         
@@ -138,13 +139,13 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
 
     }
 
-    // line 63
+    // line 64
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 64
+        // line 65
         echo "    <script src=\"resources/plugins/momentjs/moment.js\"></script>
     <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -152,46 +153,51 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
     <script>
     attach_validators()
 
-    \$('#fkproceso').selectpicker({
+    \$('#documento_extra_fkproceso').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de ficha.',
         title: 'Seleccione un tipo de ficha.'
     })
 
-    \$('#fktipo').selectpicker({
+    \$('#documento_extra_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar documento tipo extra.',
         title: 'Seleccione un documento tipo extra.'
     })
+
+    \$('#documento_extra_vigente').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar opción.',
+        title: 'Seleccione una opción.'
+    })
     
     \$('#new').click(function () {
-        \$('#codigo').val('')
-        \$('#titulo').val('')
-        \$('#fechapublicacion').val('')
+        \$('#lnkva').remove();
+        \$('#documento_extra_id').hide()
+        \$(\"#documento_extra_id\").siblings().hide()
+
+        \$('#documento_extra_codigo').val('')
+        \$('#documento_extra_titulo').val('')
+        \$('#documento_extra_fechapublicacion').val('')
+        \$('#documento_extra_vinculoarchivo').val('')
         
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"documento_extra_submit\").innerHTML= \"Guardar\"
+        \$('#documento_extra_id').val(0)
         \$('#form').modal('show')
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'fechapublicacion': \$('#fechapublicacion').val(),
-            'vigente': \$('#vigente').val(),
-            'proceso': \$('#fkproceso').val(),
-            'tipo': \$('#fktipo').val()
-        })
-        ajax_call_validation(\"/documentoextra_insertar\", {object: objeto}, null, main_route );
-        // ajax_call(\"/documentoextra_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
+    \$(\"#documento_extra_vinculoarchivo\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -201,43 +207,40 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             ajax_call_get(\"/documentoextra_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                \$('#id').val(self.id)
-                \$('#codigo').val(self.codigo)
-                \$('#titulo').val(self.titulo)
-                \$('#fechapublicacion').val(self.fechapublicacion)
-                \$('#vigente').val(self.vigente)
+                var self = JSON.parse(response)   
+                           
+                \$('#documento_extra_id').val(self.id)
+                \$('#documento_extra_codigo').val(self.codigo)
+                \$('#documento_extra_titulo').val(self.titulo)
+                \$('#documento_extra_fechapublicacion').val(self.fechapublicacion)
 
-                \$('#fkproceso').val(self.fkproceso.id)
-                \$('#fkproceso').selectpicker('render')
+                document.getElementById('documento_extra_vigente').value = self.vigente
+                \$('#documento_extra_vigente').selectpicker('render')
 
-                \$('#fktipo').val(self.fktipo.id)
-                \$('#fktipo').selectpicker('render')
+                document.getElementById('documento_extra_fkproceso').value = self.fkproceso.id
+                \$('#documento_extra_fkproceso').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                \$('#id_div').show()
-                \$('#insert').hide()
-                \$('#update').show()
-                \$('#form').modal('show')
+                document.getElementById('documento_extra_fktipo').value = self.fktipo.id
+                \$('#documento_extra_fktipo').selectpicker('render')
+
+                if(self.vinculoarchivo != 'N/A') {
+                    \$('#lnkva').remove();
+                    let urlfile = self.vinculoarchivo;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#documento_extra_vinculoarchivo\");
+                }
             })
+            clean_form()
+            verif_inputs()
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"documento_extra_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
-    \$('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse(\$('#id').val())),
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'fechapublicacion': \$('#fechapublicacion').val(),
-            'vigente': \$('#vigente').val(),
-            'proceso': \$('#fkproceso').val(),
-            'tipo': \$('#fktipo').val()
-        })
-        ajax_call_validation(\"/documentoextra_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documentoextra_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
     reload_form()
     </script>
     <script>
@@ -278,7 +281,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
 
     public function getDebugInfo()
     {
-        return array (  148 => 64,  142 => 63,  134 => 61,  130 => 59,  121 => 53,  104 => 38,  102 => 37,  97 => 34,  89 => 30,  80 => 24,  77 => 23,  71 => 22,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  149 => 65,  143 => 64,  135 => 62,  131 => 60,  122 => 54,  104 => 38,  102 => 37,  97 => 34,  89 => 30,  80 => 24,  77 => 23,  71 => 22,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -313,7 +316,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             {% if 'documentoextra_insertar' in permisos %}    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                     <i class=\"material-icons\">add</i>
                 </button>
             {% endif %}   
@@ -331,6 +334,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                             <th class=\"order_by_th\" data-name=\"phone\">Tipo de documento extra </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Fecha de publicación </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Vigente </th>
+                            <th class=\"order_by_th\" data-name=\"phone\">Vínculo archivo </th>
                             <th class=\"actions_header\">Acciones </th>
                         </tr>
                         </thead>
@@ -353,46 +357,51 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
     <script>
     attach_validators()
 
-    \$('#fkproceso').selectpicker({
+    \$('#documento_extra_fkproceso').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de ficha.',
         title: 'Seleccione un tipo de ficha.'
     })
 
-    \$('#fktipo').selectpicker({
+    \$('#documento_extra_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar documento tipo extra.',
         title: 'Seleccione un documento tipo extra.'
     })
+
+    \$('#documento_extra_vigente').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar opción.',
+        title: 'Seleccione una opción.'
+    })
     
     \$('#new').click(function () {
-        \$('#codigo').val('')
-        \$('#titulo').val('')
-        \$('#fechapublicacion').val('')
+        \$('#lnkva').remove();
+        \$('#documento_extra_id').hide()
+        \$(\"#documento_extra_id\").siblings().hide()
+
+        \$('#documento_extra_codigo').val('')
+        \$('#documento_extra_titulo').val('')
+        \$('#documento_extra_fechapublicacion').val('')
+        \$('#documento_extra_vinculoarchivo').val('')
         
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"documento_extra_submit\").innerHTML= \"Guardar\"
+        \$('#documento_extra_id').val(0)
         \$('#form').modal('show')
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'fechapublicacion': \$('#fechapublicacion').val(),
-            'vigente': \$('#vigente').val(),
-            'proceso': \$('#fkproceso').val(),
-            'tipo': \$('#fktipo').val()
-        })
-        ajax_call_validation(\"/documentoextra_insertar\", {object: objeto}, null, main_route );
-        // ajax_call(\"/documentoextra_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
+    \$(\"#documento_extra_vinculoarchivo\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -402,43 +411,40 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             ajax_call_get(\"/documentoextra_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                \$('#id').val(self.id)
-                \$('#codigo').val(self.codigo)
-                \$('#titulo').val(self.titulo)
-                \$('#fechapublicacion').val(self.fechapublicacion)
-                \$('#vigente').val(self.vigente)
+                var self = JSON.parse(response)   
+                           
+                \$('#documento_extra_id').val(self.id)
+                \$('#documento_extra_codigo').val(self.codigo)
+                \$('#documento_extra_titulo').val(self.titulo)
+                \$('#documento_extra_fechapublicacion').val(self.fechapublicacion)
 
-                \$('#fkproceso').val(self.fkproceso.id)
-                \$('#fkproceso').selectpicker('render')
+                document.getElementById('documento_extra_vigente').value = self.vigente
+                \$('#documento_extra_vigente').selectpicker('render')
 
-                \$('#fktipo').val(self.fktipo.id)
-                \$('#fktipo').selectpicker('render')
+                document.getElementById('documento_extra_fkproceso').value = self.fkproceso.id
+                \$('#documento_extra_fkproceso').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                \$('#id_div').show()
-                \$('#insert').hide()
-                \$('#update').show()
-                \$('#form').modal('show')
+                document.getElementById('documento_extra_fktipo').value = self.fktipo.id
+                \$('#documento_extra_fktipo').selectpicker('render')
+
+                if(self.vinculoarchivo != 'N/A') {
+                    \$('#lnkva').remove();
+                    let urlfile = self.vinculoarchivo;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#documento_extra_vinculoarchivo\");
+                }
             })
+            clean_form()
+            verif_inputs()
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"documento_extra_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
-    \$('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse(\$('#id').val())),
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'fechapublicacion': \$('#fechapublicacion').val(),
-            'vigente': \$('#vigente').val(),
-            'proceso': \$('#fkproceso').val(),
-            'tipo': \$('#fktipo').val()
-        })
-        ajax_call_validation(\"/documentoextra_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documentoextra_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
     reload_form()
     </script>
     <script>
@@ -461,6 +467,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         })
     </script>
 
-{% endblock %}", "documentoextra/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\documentoextra\\index.html.twig");
+{% endblock %}", "documentoextra/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoextra\\index.html.twig");
     }
 }

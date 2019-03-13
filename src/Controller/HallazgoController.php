@@ -27,6 +27,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 
 class HallazgoController extends Controller
@@ -61,12 +63,16 @@ class HallazgoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(array('estado' => '1'));
         $tipo = $this->getDoctrine()->getRepository(TipoHallazgo::class)->findBy(array('estado' => '1'));
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(array('estado' => '1'));
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(array('estado' => '1'));
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
-        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipo' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipo' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

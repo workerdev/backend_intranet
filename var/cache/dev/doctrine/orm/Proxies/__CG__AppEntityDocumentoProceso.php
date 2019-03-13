@@ -64,10 +64,10 @@ class DocumentoProceso extends \App\Entity\DocumentoProceso implements \Doctrine
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'id', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'nuevoactualizacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkdocumento', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkproceso', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fktipo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'titulo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'versionvigente', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'vinculoarchivo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'carpetaoperativa', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadorechazado', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadopor', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'estado'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'id', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'nuevoactualizacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkdocumento', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkproceso', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fktipo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'titulo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'versionvigente', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'vinculoarchivo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'carpetaoperativa', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadorechazado', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkaprobador', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'estado'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'id', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'nuevoactualizacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkdocumento', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkproceso', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fktipo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'titulo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'versionvigente', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'vinculoarchivo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'carpetaoperativa', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadorechazado', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadopor', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'estado'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'id', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'nuevoactualizacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkdocumento', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkproceso', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fktipo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'titulo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'versionvigente', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'vinculoarchivo', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'carpetaoperativa', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'aprobadorechazado', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fkaprobador', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\DocumentoProceso' . "\0" . 'estado'];
     }
 
     /**
@@ -400,23 +400,23 @@ class DocumentoProceso extends \App\Entity\DocumentoProceso implements \Doctrine
     /**
      * {@inheritDoc}
      */
-    public function getAprobadopor(): ?string
+    public function getFkaprobador(): ?\App\Entity\Usuario
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAprobadopor', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFkaprobador', []);
 
-        return parent::getAprobadopor();
+        return parent::getFkaprobador();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setAprobadopor(string $aprobadopor): \App\Entity\DocumentoProceso
+    public function setFkaprobador(?\App\Entity\Usuario $fkaprobador): \App\Entity\DocumentoProceso
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAprobadopor', [$aprobadopor]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFkaprobador', [$fkaprobador]);
 
-        return parent::setAprobadopor($aprobadopor);
+        return parent::setFkaprobador($fkaprobador);
     }
 
     /**

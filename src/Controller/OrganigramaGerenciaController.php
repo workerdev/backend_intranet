@@ -66,77 +66,48 @@ class OrganigramaGerenciaController extends Controller
             $datosOrga = $form->getData();
             
             if($datosOrga->getId() == 0 ){
-                $Organigramas = new OrganigramaGerencia();
+                $organigramagerencia = new OrganigramaGerencia();
             }else{
-                $Organigramas = $this->getDoctrine()->getRepository(OrganigramaGerencia::class)->find($datosOrga->getId());
+                $organigramagerencia = $this->getDoctrine()->getRepository(OrganigramaGerencia::class)->find($datosOrga->getId());
             }            
             $cx = $this->getDoctrine()->getManager(); 
 
-            $organigrama = $datosOrga->getRuta();
-            $fileName = $organigrama->getClientOriginalName();                
-            $organigrama->move($this->getParameter('Directorio_OrganigramaGerencia'),$fileName);
-            $ruta1 = $this->getParameter('Directorio_proyecto').'\\'.$fileName;
-            $Organigramas->setRuta($ruta1);
-            $Organigramas->setNombre($datosOrga->getNombre());
-          
-            $Organigramas->setEstado(1);
+            if(empty($form['ruta']->getData())){
+                if($organigramagerencia->getRuta() == null){
+                    $organigramagerencia->setRuta("N/A");
+                }
+            }else{
+                $file = $form['ruta']->getData();
+                $fileName = $file->getClientOriginalName();  
+                $directorio = $this->getParameter('Directorio_OrganigramaGerencia');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $organigramagerencia->setRuta($url);
+            } 
+            $organigramagerencia->setNombre($datosOrga->getNombre());
+            $organigramagerencia->setEstado(1);
 
             if($datosOrga->getId() == 0){
-                $cx->persist($Organigramas);
+                $cx->persist($organigramagerencia);
                 $cx->flush();
-                unset($Organigramas);
+                unset($organigramagerencia);
                 unset($datosOrga);
             }else{
-                $cx->persist($Organigramas);
+                $cx->persist($organigramagerencia);
                 $cx->flush();
-                unset($Organigramas);
+                unset($organigramagerencia);
                 unset($datosOrga);
             }
-
-         
-           // $OrganigramaGerencia = $this->getDoctrine()->getRepository(OrganigramaGerencia::class)->findBy(array('estado' => '1'));
-            //return $this->render('organigramagerencia/index.html.twig', array('objects' => $OrganigramaGerencia,'form' => $form->createView(),'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+           
             $redireccion = new RedirectResponse('/organigramagerencia');
             return $redireccion;
         }
         $OrganigramaGerencia = $this->getDoctrine()->getRepository(OrganigramaGerencia::class)->findBy(array('estado' => '1'));
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         return $this->render('organigramagerencia/index.html.twig', array('objects' => $OrganigramaGerencia, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr, 'form' => $form->createView()));
-    }
-
-    
-    /**
-     * @Route("/organigramagerencia_actualizar", methods={"POST"}, name="organigramagerencia_actualizar")
-     */
-    public function actualizar()
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-
-            $sx = json_decode($_POST['object'], true);
-            $id = $sx['id'];
-            $ruta = $sx['ruta'];
-            $nombre = $sx['nombre'];
-
-            $file = new OrganigramaGerencia();
-            $file->setId($id);
-            $file->setRuta($ruta);
-            $file->setNombre($nombre);
-            $file->setEstado(1);
-
-            $cx->merge($file);
-            $cx->flush();
-
-            $resultado = array('success' => true,
-                    'message' => 'Organigrama gerencia actualizado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
     }
 
 

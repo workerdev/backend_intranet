@@ -55,9 +55,10 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
         ";
         // line 23
         $this->displayBlock('stylesheets', $context, $blocks);
-        // line 33
+        // line 32
         echo "    </head>
     <body class=\"theme-indigo\" onload=\"init()\">
+
     <div class=\"page-loader-wrapper\">
         <div class=\"loader\">
             <div class=\"preloader\">
@@ -69,7 +70,9 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
             <p>Por favor espere.</p>
         </div>
     </div>
+
     <div class=\"overlay\"></div>
+
     <nav class=\"navbar\">
         <div class=\"container-fluid\">
             <div class=\"navbar-header\">
@@ -81,15 +84,69 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
                     </center>
                 </a>
             </div>
+
             <div id=\"right-options\" class=\"more-options\">
                 <ul class=\"header-dropdown m-r--5\">
                     <li class=\"dropdown\">
-                        <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\" onclick=\"salir()\" title=\"Cerrar sesión\">
+                        ";
+        // line 64
+        if ((isset($context["docderiv"]) || array_key_exists("docderiv", $context) ? $context["docderiv"] : (function () { throw new Twig_Error_Runtime('Variable "docderiv" does not exist.', 64, $this->source); })())) {
+            // line 65
+            echo "                            <a href=\"/docprocesorev\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Documentos derivados\">folder</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #26a69a;\">";
+            echo twig_escape_filter($this->env, twig_length_filter($this->env, (isset($context["docderiv"]) || array_key_exists("docderiv", $context) ? $context["docderiv"] : (function () { throw new Twig_Error_Runtime('Variable "docderiv" does not exist.', 65, $this->source); })())), "html", null, true);
+            echo "</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        ";
+        }
+        // line 69
+        echo "                        ";
+        if ((isset($context["fcaprobgr"]) || array_key_exists("fcaprobgr", $context) ? $context["fcaprobgr"] : (function () { throw new Twig_Error_Runtime('Variable "fcaprobgr" does not exist.', 69, $this->source); })())) {
+            // line 70
+            echo "                            <a href=\"/fichacargo\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Fichas por aprobar - Gerente\">assignment</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #00bcd4;\">";
+            echo twig_escape_filter($this->env, twig_length_filter($this->env, (isset($context["fcaprobgr"]) || array_key_exists("fcaprobgr", $context) ? $context["fcaprobgr"] : (function () { throw new Twig_Error_Runtime('Variable "fcaprobgr" does not exist.', 70, $this->source); })())), "html", null, true);
+            echo "</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        ";
+        }
+        // line 74
+        echo "                        ";
+        if ((isset($context["fcaprobjf"]) || array_key_exists("fcaprobjf", $context) ? $context["fcaprobjf"] : (function () { throw new Twig_Error_Runtime('Variable "fcaprobjf" does not exist.', 74, $this->source); })())) {
+            // line 75
+            echo "                            <a href=\"/fichacargo\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Fichas por aprobar - Jefe\">assignment_turned_in</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #00bcd4;\">";
+            echo twig_escape_filter($this->env, twig_length_filter($this->env, (isset($context["fcaprobjf"]) || array_key_exists("fcaprobjf", $context) ? $context["fcaprobjf"] : (function () { throw new Twig_Error_Runtime('Variable "fcaprobjf" does not exist.', 75, $this->source); })())), "html", null, true);
+            echo "</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        ";
+        }
+        // line 79
+        echo "                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        ";
+        // line 87
+        if (twig_in_filter("perfil", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 87, $this->source); })()))) {
+            // line 88
+            echo "                            <a href=\"/perfil\"><i class=\"material-icons\" title=\"Perfil de usuario\">account_circle</i></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        ";
+        }
+        // line 92
+        echo "                        <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\" onclick=\"salir()\" title=\"Cerrar sesión\">
                             <i class=\"material-icons\">power_settings_new</i>
                         </a>
                     </li>
                 </ul>  
             </div>
+        </div>
     </nav>
     
     <section>
@@ -97,84 +154,84 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
             <div class=\"menu\">
                 <ul class=\"list\">
                 ";
-        // line 73
+        // line 105
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["parents"]) || array_key_exists("parents", $context) ? $context["parents"] : (function () { throw new Twig_Error_Runtime('Variable "parents" does not exist.', 73, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["parents"]) || array_key_exists("parents", $context) ? $context["parents"] : (function () { throw new Twig_Error_Runtime('Variable "parents" does not exist.', 105, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["mods"]) {
             echo " 
                     ";
-            // line 74
+            // line 106
             if ((twig_get_attribute($this->env, $this->source, $context["mods"], "fkmodulo", array()) == null)) {
                 echo "    
                     <li>
                         ";
-                // line 76
+                // line 108
                 if ((twig_get_attribute($this->env, $this->source, $context["mods"], "ruta", array()) == null)) {
-                    // line 77
+                    // line 109
                     echo "                        <a href=\"#\" class=\"menu-toggle waves-effect waves-block\">
                         ";
                 } else {
-                    // line 79
+                    // line 111
                     echo "                        <a href=\"";
                     echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "ruta", array()), "html", null, true);
                     echo "\" class=\"menu-toggle waves-effect waves-block\">
                         ";
                 }
-                // line 81
+                // line 113
                 echo "                            <i class=\"material-icons\">";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "icono", array()), "html", null, true);
                 echo "</i>
                             <span>";
-                // line 82
+                // line 114
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "titulo", array()), "html", null, true);
                 echo "</span>
                         </a>
                         <ul class=\"ml-menu\">
                         ";
-                // line 85
+                // line 117
                 $context['_parent'] = $context;
-                $context['_seq'] = twig_ensure_traversable((isset($context["children"]) || array_key_exists("children", $context) ? $context["children"] : (function () { throw new Twig_Error_Runtime('Variable "children" does not exist.', 85, $this->source); })()));
+                $context['_seq'] = twig_ensure_traversable((isset($context["children"]) || array_key_exists("children", $context) ? $context["children"] : (function () { throw new Twig_Error_Runtime('Variable "children" does not exist.', 117, $this->source); })()));
                 foreach ($context['_seq'] as $context["_key"] => $context["child"]) {
-                    // line 86
+                    // line 118
                     echo "                            ";
-                    if (((twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()) != null) && (twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()) == twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()), "id", array())))) {
-                        // line 87
+                    if ((((twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()) != null) && (twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()) == twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()), "id", array()))) && (twig_get_attribute($this->env, $this->source, $context["child"], "nombre", array()) != "perfil"))) {
+                        // line 119
                         echo "                                <li>
                                     <a href=\"";
-                        // line 88
+                        // line 120
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "ruta", array()), "html", null, true);
                         echo "\" class=\"\">
                                         <i class=\"material-icons\">";
-                        // line 89
+                        // line 121
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "icono", array()), "html", null, true);
                         echo "</i>
                                         <span>";
-                        // line 90
+                        // line 122
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "titulo", array()), "html", null, true);
                         echo "</span>
                                     </a>
                                 </li>
                             ";
                     }
-                    // line 93
+                    // line 125
                     echo " 
                         ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_iterated'], $context['_key'], $context['child'], $context['_parent'], $context['loop']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 95
+                // line 127
                 echo "                        </ul>
                     </li>
                     ";
             }
-            // line 98
+            // line 130
             echo "                ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['mods'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 99
+        // line 131
         echo "                </ul>
             </div>
         </aside>
@@ -185,9 +242,9 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
             <div class=\"block-header\">
                 <div class=\"card\" id=\"render_content\">
                     ";
-        // line 108
+        // line 140
         $this->displayBlock('body', $context, $blocks);
-        // line 109
+        // line 141
         echo "                </div>
             </div>
         </div>
@@ -256,9 +313,9 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
             }
         </script>
         ";
-        // line 176
+        // line 208
         $this->displayBlock('javascripts', $context, $blocks);
-        // line 177
+        // line 209
         echo "    </body>
 </html>
 ";
@@ -292,7 +349,6 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
                 padding: 2px;
                 width: auto;
             }
-
         </style>
         ";
         
@@ -300,7 +356,7 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
 
     }
 
-    // line 108
+    // line 140
     public function block_body($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
@@ -311,7 +367,7 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
 
     }
 
-    // line 176
+    // line 208
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
@@ -334,7 +390,7 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
 
     public function getDebugInfo()
     {
-        return array (  315 => 176,  304 => 108,  289 => 24,  283 => 23,  271 => 5,  262 => 177,  260 => 176,  191 => 109,  189 => 108,  178 => 99,  172 => 98,  167 => 95,  160 => 93,  153 => 90,  149 => 89,  145 => 88,  142 => 87,  139 => 86,  135 => 85,  129 => 82,  124 => 81,  118 => 79,  114 => 77,  112 => 76,  107 => 74,  101 => 73,  59 => 33,  57 => 23,  36 => 5,  30 => 1,);
+        return array (  371 => 208,  360 => 140,  346 => 24,  340 => 23,  328 => 5,  319 => 209,  317 => 208,  248 => 141,  246 => 140,  235 => 131,  229 => 130,  224 => 127,  217 => 125,  210 => 122,  206 => 121,  202 => 120,  199 => 119,  196 => 118,  192 => 117,  186 => 114,  181 => 113,  175 => 111,  171 => 109,  169 => 108,  164 => 106,  158 => 105,  143 => 92,  137 => 88,  135 => 87,  125 => 79,  117 => 75,  114 => 74,  106 => 70,  103 => 69,  95 => 65,  93 => 64,  59 => 32,  57 => 23,  36 => 5,  30 => 1,);
     }
 
     public function getSourceContext()
@@ -368,11 +424,11 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
                 padding: 2px;
                 width: auto;
             }
-
         </style>
         {% endblock %}
     </head>
     <body class=\"theme-indigo\" onload=\"init()\">
+
     <div class=\"page-loader-wrapper\">
         <div class=\"loader\">
             <div class=\"preloader\">
@@ -384,7 +440,9 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
             <p>Por favor espere.</p>
         </div>
     </div>
+
     <div class=\"overlay\"></div>
+
     <nav class=\"navbar\">
         <div class=\"container-fluid\">
             <div class=\"navbar-header\">
@@ -396,15 +454,45 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
                     </center>
                 </a>
             </div>
+
             <div id=\"right-options\" class=\"more-options\">
                 <ul class=\"header-dropdown m-r--5\">
                     <li class=\"dropdown\">
+                        {% if docderiv %}
+                            <a href=\"/docprocesorev\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Documentos derivados\">folder</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #26a69a;\">{{ docderiv|length }}</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        {% endif %}
+                        {% if fcaprobgr %}
+                            <a href=\"/fichacargo\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Fichas por aprobar - Gerente\">assignment</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #00bcd4;\">{{ fcaprobgr|length }}</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        {% endif %}
+                        {% if fcaprobjf %}
+                            <a href=\"/fichacargo\"><i class=\"material-icons\" style=\"font-size: 18px\" title=\"Fichas por aprobar - Jefe\">assignment_turned_in</i> <span class=\"new badge\" style=\"padding: 2px 4px; font-size: 10px; background-color: #00bcd4;\">{{ fcaprobjf|length }}</span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        {% endif %}
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        {% if 'perfil' in permisos %}
+                            <a href=\"/perfil\"><i class=\"material-icons\" title=\"Perfil de usuario\">account_circle</i></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                            <a href=\"\"><i class=\"material-icons\"> </i></span></a>
+                        {% endif %}
                         <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\" onclick=\"salir()\" title=\"Cerrar sesión\">
                             <i class=\"material-icons\">power_settings_new</i>
                         </a>
                     </li>
                 </ul>  
             </div>
+        </div>
     </nav>
     
     <section>
@@ -424,7 +512,7 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
                         </a>
                         <ul class=\"ml-menu\">
                         {% for child in children %}
-                            {% if child.fkmodulo != null and mods.id == child.fkmodulo.id %}
+                            {% if child.fkmodulo != null and mods.id == child.fkmodulo.id and child.nombre != 'perfil' %}
                                 <li>
                                     <a href=\"{{child.ruta}}\" class=\"\">
                                         <i class=\"material-icons\">{{child.icono}}</i>
@@ -517,6 +605,6 @@ class __TwigTemplate_abcbc2e9b939b59c38d295f32c5f03b141213e2dbfae96d489a3f931e64
         {% block javascripts %}{% endblock %}
     </body>
 </html>
-", "base.html.twig", "C:\\Users\\CHARLY\\Desktop\\CLOUDBIT\\Ariel Elfec\\elfec_intranet_backend_preprod\\elfec_intranet_backend\\templates\\base.html.twig");
+", "base.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\base.html.twig");
     }
 }

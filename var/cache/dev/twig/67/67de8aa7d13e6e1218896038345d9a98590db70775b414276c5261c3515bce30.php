@@ -264,6 +264,6 @@ class __TwigTemplate_2003a5cd9cba42b86361e1bbe512de7c775c26cebf4609c449c8f984a29
             </div>
         </div>
     </div>
-</div>", "registromejora/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\registromejora\\form.html.twig");
+</div>", "registromejora/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\registromejora\\form.html.twig");
     }
 }

@@ -99,6 +99,6 @@ class __TwigTemplate_70f07fefee57e77707f687a72418f5e51a1e99830f70c2f19783ee28e33
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "estadoplan/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\estadoplan\\table.html.twig");
+{% endfor %}", "estadoplan/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\estadoplan\\table.html.twig");
     }
 }

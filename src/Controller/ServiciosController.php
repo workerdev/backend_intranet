@@ -22,10 +22,15 @@ use App\Entity\Accidentes;
 use App\Entity\Noticia;
 use App\Entity\CategoriaNoticia;
 use App\Entity\FichaProcesos;
+use App\Entity\Impacto;
+use App\Entity\Probabilidad;
 use App\Entity\RiesgosOportunidades;
+use App\Entity\TipoCRO;
 use App\Entity\Documento;
 use App\Entity\IndicadorProceso;
 use App\Entity\GerenciaAreaSector;
+use App\Entity\Usuario;
+use App\Entity\OrganigramaGerencia;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -41,6 +46,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Ldap\Exception\ConnectionException;
 
 use Symfony\Component\Ldap\Ldap;
 
@@ -55,7 +61,7 @@ class ServiciosController extends AbstractController
         try {
             $cx = $this->getDoctrine()->getManager();
             $enlace = $cx->getRepository(Enlaces::class)->findBy(array('estado' => '1'));
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array      ('json' => new JsonEncoder()));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
             $data = $serializer->serialize($enlace, 'json');
 
             return new jsonResponse(json_decode($data));
@@ -1719,10 +1725,10 @@ class ServiciosController extends AbstractController
         try {
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_ficha_cargo_nombre AS id_cargo, cb_ficha_cargo_fechaaprobacion AS f_aprobacion,
-                        cb_ficha_cargo_aprobadojefe AS aprobado_jefe, cb_ficha_cargo_aprobadogerente AS aprobado_gerente, cb_ficha_cargo_id AS id
-                    FROM cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_fc_ficha_cargo
-                    WHERE cb_ficha_cargo_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_ficha_cargo_estado=1
-                    ORDER BY 1, 2, 3";
+            jefe.cb_usuario_nombre AS aprobado_jefe, gerente.cb_usuario_nombre AS aprobado_gerente, cb_ficha_cargo_id AS id
+          FROM cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_fc_ficha_cargo,cb_usuario_usuario jefe,cb_usuario_usuario gerente
+          WHERE cb_ficha_cargo_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_ficha_cargo_estado=1 and cb_ficha_cargo_fkjefeaprobador= jefe.cb_usuario_id and cb_ficha_cargo_fkgerenteaprobador= gerente.cb_usuario_id
+          ORDER BY 1, 2, 3";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
@@ -2176,7 +2182,6 @@ class ServiciosController extends AbstractController
             
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($elementos, 'json');
-
             
             return new jsonResponse(json_decode($data2));
         }
@@ -2249,4 +2254,268 @@ class ServiciosController extends AbstractController
         }
     }
 
+
+    /**
+     * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
+    */
+    public function info(Request $request)
+    {
+        $sx = json_decode($request->getContent(), true);
+        $user = $sx['user'];
+        $password = $sx['password'];
+        $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
+    
+        $ldap = Ldap::create('ext_ldap', array(
+            'host' => '172.17.1.150',
+            //'host' => '192.168.4.100',
+            'encryption' => 'none',
+            'port' => '389',
+        ));
+    
+        try {
+            if(empty($user) || empty($password)) {
+                $mensaje="empty";
+                return new JsonResponse($mensaje);
+            }
+            $attributes = ['cn','givenName','title','sn'];
+            $ldap->bind($dn, $password);
+            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
+    
+            $results = $query->execute()->toArray();
+    
+            if(!empty($results)){      
+                
+                $results = $query->execute()->toArray();
+                $encoders = [new XmlEncoder(), new JsonEncoder()];
+                $normalizers = [new ObjectNormalizer()];
+    
+                $serializer = new Serializer($normalizers, $encoders);
+                $data = $serializer->normalize($results, null);
+                
+                $Nombre=$data[0]['attributes']['givenName'][0];
+                $Apellido=$data[0]['attributes']['sn'][0];
+                $Cargo=$data[0]['attributes']['title'][0];
+                $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo);
+                
+                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                $data2 = $serializer->serialize($elementos, 'json');
+                return new Response($data2);
+            }
+        }
+        catch (ConnectionException $ce) {
+            $mensaje =  "error";
+            return new JsonResponse($mensaje);
+        }
+    }
+
+
+    /**
+     * @Route("/combo_proceso", name="combo_proceso")
+     * @Method({"GET"})
+     */
+    public function combo_proceso()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            
+            $sql = "SELECT cb_ficha_procesos_id AS idfp, cb_ficha_procesos_codproceso AS codigofp
+                    FROM cb_procesos_ficha_procesos";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $proceso = $stmt->fetchAll();
+            
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($proceso, 'json');
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+
+    /**
+     * @Route("/combo_tipocrocm", name="combo_tipocrocm")
+     * @Method({"GET"})
+     */
+    public function combo_tipocrocm()
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+            $tipo = $cx->getRepository(TipoCRO::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($tipo, 'json');
+
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+
+    /**
+     * @Route("/combo_probabilidad", name="combo_probabilidad")
+     * @Method({"GET"})
+     */
+    public function combo_probabilidad()
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+            $probabilidad = $cx->getRepository(Probabilidad::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($probabilidad, 'json');
+
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+
+    /**
+     * @Route("/combo_impacto", name="combo_impacto")
+     * @Method({"GET"})
+     */
+    public function combo_impacto()
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+            $impacto = $cx->getRepository(Impacto::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($impacto, 'json');
+
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+
+    /**
+     * @Route("/combo_responsable", name="combo_responsable")
+     * @Method({"GET"})
+     */
+    public function combo_responsable()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            
+            $sql = "SELECT cb_usuario_id AS idu, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS nombre
+                    FROM cb_usuario_usuario";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $responsable = $stmt->fetchAll();
+            
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($responsable, 'json');
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+
+    /**
+     * @Route("/insertar_crocm", methods={"POST"}, name="insertar_crocm")
+     */
+    public function insertar_crocm(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $cx = $this->getDoctrine()->getEntityManager();
+            
+            $descripcion = $sx['descripcion'];
+            $origen = $sx['origen'];
+            $accion = $sx['accion'];
+            $fecha = $sx['fecha'];
+            $estadocro = $sx['estadocro'];
+            $analisiscausaraiz = $sx['analisiscausaraiz'];
+
+            $fichaprocesos = $sx['fichaprocesos'];                
+            $tipocro = $sx['tipocro'];
+            $probabilidad = $sx['probabilidad'];
+            $impacto = $sx['impacto'];
+            $fkresponsable = $sx['fkresponsable'];
+
+            $riesgosoportunidades = new RiesgosOportunidades();
+            $riesgosoportunidades->setDescripcion($descripcion);
+            $riesgosoportunidades->setOrigen($origen);
+            $riesgosoportunidades->setAccion($accion);
+            $riesgosoportunidades->setFecha(new \DateTime($fecha));
+            $estadocro == null ? $estadocro='': $estadocro = $sx['estadocro'];
+
+            $riesgosoportunidades->setEstadocro($estadocro);
+            $riesgosoportunidades->setAnalisiscausaraiz($analisiscausaraiz);
+            $riesgosoportunidades->setEstado(1);
+
+            $fichaprocesos != '' ? $fichaprocesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($fichaprocesos) : $fichaprocesos = null;
+            $tipocro != '' ? $tipocro = $this->getDoctrine()->getRepository(TipoCRO::class)->find($tipocro) : $tipocro = null;
+            $probabilidad != '' ? $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->find($probabilidad) : $probabilidad=null;
+            $impacto != '' ? $impacto = $this->getDoctrine()->getRepository(Impacto::class)->find($impacto) : $impacto=null;
+            $fkresponsable != '' ? $fkresponsable = $this->getDoctrine()->getRepository(Usuario::class)->find($fkresponsable) : $fkresponsable =null;
+           
+            $riesgosoportunidades->setFkficha($fichaprocesos);
+            $riesgosoportunidades->setFktipo($tipocro);
+            $riesgosoportunidades->setFkprobabilidad($probabilidad);
+            $riesgosoportunidades->setFkimpacto($impacto);
+            $riesgosoportunidades->setFkresponsable($fkresponsable);
+            $cx->persist($riesgosoportunidades);
+            $cx->flush();
+            
+            $mensaje[0] = ["response" => "success"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+        catch(Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+
+    /**
+     * @Route("/combo_organigrama", name="combo_organigrama")
+     * @Method({"GET"})
+     */
+    public function combo_organigrama()
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+            $organigrama = $cx->getRepository(OrganigramaGerencia::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($organigrama, 'json');
+
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
 }

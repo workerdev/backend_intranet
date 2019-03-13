@@ -412,6 +412,6 @@ class __TwigTemplate_28307d1099266289e5403b9bb19c72068eefead26475c09d51bbba6592b
         }
     </script>
     <script src=\"resources/bootstrap4/js/bootstrap.min.js\"></script>
-{% endblock %}", "reporting/verificacionef.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\reporting\\verificacionef.html.twig");
+{% endblock %}", "reporting/verificacionef.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\reporting\\verificacionef.html.twig");
     }
 }

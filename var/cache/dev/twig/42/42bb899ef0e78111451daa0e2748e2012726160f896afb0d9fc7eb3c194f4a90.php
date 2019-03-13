@@ -304,11 +304,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'anio': \$('#gestion').val()
             });
+
             ajax_call_rep(\"/aud_anual\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
             \$('#form_aud').modal('hide')
         })
@@ -319,12 +323,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep(\"/auditoria_notif\",{
+
+            ajax_call_reptb(\"/auditoria_notif\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -334,12 +341,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep(\"/auditoria_rep\",{
+            
+            ajax_call_reptb(\"/auditoria_rep\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -717,11 +727,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'anio': \$('#gestion').val()
             });
+
             ajax_call_rep(\"/aud_anual\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
             \$('#form_aud').modal('hide')
         })
@@ -732,12 +746,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep(\"/auditoria_notif\",{
+
+            ajax_call_reptb(\"/auditoria_notif\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -747,12 +764,15 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep(\"/auditoria_rep\",{
+            
+            ajax_call_reptb(\"/auditoria_rep\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#rep\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -885,6 +905,6 @@ class __TwigTemplate_70dfefe2021c53f22c054efe498b5b89b93be9c27751fd588ae530c2b97
     });
 </script>
 
-{% endblock %}", "auditoria/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\auditoria\\index.html.twig");
+{% endblock %}", "auditoria/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\auditoria\\index.html.twig");
     }
 }

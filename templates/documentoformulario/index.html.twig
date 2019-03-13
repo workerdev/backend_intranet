@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 <style>
-    .accion{ cursor:pointer }
+    .accion{ 
+            cursor:pointer 
+    }
+    .swal2-title{
+        font-size: 16px !important;
+    }
 </style>
+<link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
 <script src="resources/js/functions.js"></script>
 
 <script>
@@ -39,12 +45,16 @@
             <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                 <thead>
                 <tr>
+                    <th></th>
+                    <th class="d-none" data-name="phone">ID </th>
                     <th class="order_by_th" data-name="names">Codigo </th>
                     <th class="order_by_th" data-name="phone">Título </th>                    
                     <th class="order_by_th" data-name="phone">Versión </th>
                     <th class="order_by_th" data-name="phone">Fecha Publicación </th>
-                    <th class="order_by_th" data-name="phone">Aprobador </th>
+                    <th class="d-none" data-name="phone">Aprobador </th>
                     <th class="order_by_th" data-name="phone">Documento </th>
+                    <th class="d-none" data-name="phone">Archivo digital </th>
+                    <th class="d-none" data-name="phone">Archivo de descarga </th>
                     <th class="actions_header">Acciones </th>
                 </tr>
                 </thead>
@@ -67,21 +77,39 @@
 <script>
     attach_validators()
 
-    $('#fkdocumento').selectpicker({
+    $('#documento_formulario_fkaprobador').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar aprobador.',
+        title: 'Seleccione un aprobador.'
+    })
+
+    $('#documento_formulario_fkdocumento').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar documento.',
         title: 'Seleccione un documento.'
     })
 
+    $('#documento_formulario_versionVigente').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar una opción.',
+        title: 'Seleccione una opción.'
+    })
+
     $('#new').click(function () {
-        $('#codigo').val('')
-        $('#titulo').val('')
-        $('#versionVigente').val('')
-        $('#fechaPublicacion').val('')
-        $('#aprobadoPor').val('')
-        $('#vinculoFileDig').val('')
-        $('#vinculoFileDesc').val('')
+        $('#lnkva').remove();
+        $('#lnkvd').remove();
+        $('#documento_formulario_id').hide()
+        $("#documento_formulario_id").siblings().hide()
+
+        $('#documento_formulario_codigo').val('')
+        $('#documento_formulario_titulo').val('')
+        $('#documento_formulario_versionVigente').val('')
+        $('#documento_formulario_fechaPublicacion').val('')
+        $('#documento_formulario_vinculoFileDig').val('')
+        $('#documento_formulario_vinculoFileDesc').val('')
 
         clean_form()
         verif_inputs()
@@ -89,83 +117,73 @@
         $('#insert').show()
         $('#update').hide()
         $('#form').modal('show')
-    })
-    
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'version': $('#versionVigente').val(),
-            'carpeta': $('#carpetaOperativa').val(),
-            'aprobador': $('#aprobadoPor').val(),
-            'fechapb': $('#fechaPublicacion').val(),
-            'vfiledg': $('#vinculoFileDig').val(),
-            'vfileds': $('#vinculoFileDesc').val(),
 
-            'documento': $('#fkdocumento').val()
-        })
-        console.log(objeto)
-        ajax_call_validation("/documentoformulario_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/documentoformulario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
+        document.getElementById("documento_formulario_submit").innerHTML= "Guardar"
+        $('#documento_formulario_id').val(0)
+        $('#form').modal('show')
     })
+
+    $("#documento_formulario_vinculoFileDig").change(function(){
+        $("#lnkva").hide();
+    });
+
+    $("#documento_formulario_vinculoFileDesc").change(function(){
+        $("#lnkvd").hide();
+    });
 
     function attach_edit() {
         $('.edit').click(function () {
+                console.log('into')
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
             ajax_call_get("/documentoformulario_editar",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
+                console.log(self)
                 
-                $('#id').val(self.id)
-                $('#codigo').val(self.codigo)
-                $('#titulo').val(self.titulo)
-                $('#versionVigente').val(self.versionVigente)
-                $('#carpetaOperativa').val(self.carpetaOperativa)
+                $('#documento_formulario_id').val(self.id)
+                $('#documento_formulario_codigo').val(self.codigo)
+                $('#documento_formulario_titulo').val(self.titulo)
+                $('#documento_formulario_carpetaOperativa').val(self.carpetaOperativa)
+                $('#documento_formulario_versionVigente').val(self.versionVigente)
                 
-                $('#fechapb').val(self.fechaPublicacion)
-                $('#aprobadoPor').val(self.aprobadoPor)
-                $('#vinculoFileDig').val(self.vinculoDig)
-                $('#vinculoFileDesc').val(self.vinculoDesc)
+                $('#documento_formulario_fechaPublicacion').val(self.fechaPublicacion)
 
-                $('#fkdocumento').val(self.fkdocumento.id)
-                $('#fkdocumento').selectpicker('render')
+                $('#documento_formulario_fkdocumento').val(self.fkdocumento.id)
+                $('#documento_formulario_fkdocumento').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                $('#documento_formulario_fkaprobador').val(self.fkaprobador.id)
+                $('#documento_formulario_fkaprobador').selectpicker('render')
+
+                if(self.vinculoFileDig != 'N/A') {
+                    $('#lnkva').remove();
+                    let urlfile = self.vinculoFileDig;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_formulario_vinculoFileDig");
+                }
+
+                if(self.vinculoFileDesc != 'N/A') {
+                    $('#lnkvd').remove();
+                    let urldown = self.vinculoFileDesc;
+                    let vdown = urldown.substring(urldown.lastIndexOf("/")+1, urldown.length);
+                    $("<a id='lnkvd' href='"+urldown+"'>"+vdown+"</a>").insertAfter("#documento_formulario_vinculoFileDesc");
+                }
             })
+            clean_form()
+            verif_inputs()
+            $('#id_div').show()
+            $('#insert').hide()
+            $('#update').show()
+            
+            document.getElementById("documento_formulario_submit").innerHTML = "Modificar"
+            setTimeout(function(){$('#form').modal('show')}, 500);
         })
     }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'version': $('#versionVigente').val(),
-            'carpeta': $('#carpetaOperativa').val(),
-            'aprobador': $('#aprobadoPor').val(),
-            'fechapb': $('#fechaPublicacion').val(),
-            'vfiledg': $('#vinculoFileDig').val(),
-            'vfileds': $('#vinculoFileDesc').val(),
-
-            'documento': $('#fkdocumento').val()
-        })
-        ajax_call_validation("/documentoformulario_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/documentoformulario_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
     reload_form()
 </script>
 <script>
-
     attach_edit()
 
     $('.delete').click(function () {
@@ -185,5 +203,65 @@
     })
 
 </script>
+<script>
+    function format (d) {
+        let urlfile = d[8];
+        let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
+        let urldown = d[9];
+        let vdown = urldown.substring(urldown.lastIndexOf("/") + 1, urldown.length); 
+        html = '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
+        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td class="bold">Versión vigente:</td>'+
+                '<td>'+d[6]+'</td>'+
+            '</tr>';
+        if(urlfile != 'N/A'){
+            html += '<tr>'+
+                '<td class="bold">Vínculo archivo digital:</td>'+
+                '<td><a href="' + urlfile +'">' + vfile + '</a></td>'+
+            '</tr>';
+        }else{
+            html += '<tr>'+
+                '<td class="bold">Vínculo archivo digital:</td>'+
+                '<td>' + urlfile + '</td>'+
+            '</tr>';
+        } 
 
+        if(urldown != 'N/A'){
+            html += '<tr>'+
+                '<td class="bold">Vínculo diagrama flujo:</td>'+
+                '<td><a href="' + urldown +'">' + vdown + '</a></td>'+
+            '</tr>';
+        }else{
+            html += '<tr>'+
+                '<td class="bold">Vínculo diagrama flujo:</td>'+
+                '<td>' + urldown + '</td>'+
+            '</tr>';
+        }     
+        html += '</table></div>';
+        return html;
+    }
+
+    $(document).ready(function() {
+        table = $('#data_table').DataTable();
+        $('#data_table tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            let idet = 'df'+row.data()[1];
+            if ( row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                $("#"+idet).attr('title', 'Mostrar más');
+            }
+            else {
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                $("#"+idet).attr('title', 'Ver menos');
+            }
+        });
+    });
+</script>
 {% endblock %}

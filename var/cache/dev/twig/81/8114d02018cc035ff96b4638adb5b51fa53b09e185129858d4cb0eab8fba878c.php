@@ -74,31 +74,45 @@ class __TwigTemplate_a1838b6b1708bf94fc01c4869a6fdac1475e5f279755a57a49ba25a7705
             // line 15
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "vigente", array()), "html", null, true);
             echo "</td>
-        <td class=\"d-none\">";
-            // line 16
-            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
-            echo "</td>
-        <td align=\"center\">
         ";
-            // line 18
-            if (twig_in_filter("indicadorproceso_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 18, $this->source); })()))) {
+            // line 16
+            if ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "estado", array()) == 2)) {
+                // line 17
+                echo "            <td class=\"d-none\">";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+                echo " <b><i>";
+                echo " (Inactivo)";
+                echo "</i></b></td>
+        ";
+            } else {
                 // line 19
+                echo "            <td class=\"d-none\">";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+                echo "</td>
+        ";
+            }
+            // line 21
+            echo "        <td align=\"center\">
+        ";
+            // line 22
+            if (twig_in_filter("indicadorproceso_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 22, $this->source); })()))) {
+                // line 23
                 echo "            <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
         ";
             }
-            // line 21
+            // line 25
             echo "        ";
-            if (twig_in_filter("indicadorproceso_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 21, $this->source); })()))) {
+            if (twig_in_filter("indicadorproceso_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 25, $this->source); })()))) {
                 echo "  
             <button id=\"delete\" data-json=\"";
-                // line 22
+                // line 26
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
         ";
             }
-            // line 24
+            // line 28
             echo "        </td>
     </tr>
 ";
@@ -123,7 +137,7 @@ class __TwigTemplate_a1838b6b1708bf94fc01c4869a6fdac1475e5f279755a57a49ba25a7705
 
     public function getDebugInfo()
     {
-        return array (  102 => 24,  97 => 22,  92 => 21,  86 => 19,  84 => 18,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
+        return array (  116 => 28,  111 => 26,  106 => 25,  100 => 23,  98 => 22,  95 => 21,  89 => 19,  81 => 17,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -143,7 +157,11 @@ class __TwigTemplate_a1838b6b1708bf94fc01c4869a6fdac1475e5f279755a57a49ba25a7705
         <td>{{ tr.codigo }}</td>
         <td class=\"d-none\">{{ tr.objetivo }}</td>
         <td class=\"d-none\">{{ tr.vigente }}</td>
-        <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% if tr.fkresponsable.estado == 2 %}
+            <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
+        {% endif %}
         <td align=\"center\">
         {% if 'indicadorproceso_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -153,6 +171,6 @@ class __TwigTemplate_a1838b6b1708bf94fc01c4869a6fdac1475e5f279755a57a49ba25a7705
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "indicadorproceso/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\indicadorproceso\\table.html.twig");
+{% endfor %}", "indicadorproceso/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\indicadorproceso\\table.html.twig");
     }
 }

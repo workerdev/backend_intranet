@@ -25,6 +25,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Rol;
 
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 class CategoriaNoticiaController extends AbstractController
 {   
@@ -58,8 +60,12 @@ class CategoriaNoticiaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+       
         $CategoriaNoticia = $this->getDoctrine()->getRepository(CategoriaNoticia::class)->findBy(array('estado' => '1'));
-        return $this->render('CategoriaNoticia/index.html.twig', array('objects' => $CategoriaNoticia, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));    
+        return $this->render('CategoriaNoticia/index.html.twig', array('objects' => $CategoriaNoticia, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));    
     }
 
 

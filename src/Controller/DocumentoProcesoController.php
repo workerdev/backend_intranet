@@ -10,6 +10,7 @@ use App\Entity\Acceso;
 use App\Entity\Documento;
 use App\Entity\DocumentoProceso;
 use App\Entity\DocProcRevision;
+use App\Form\DocumentoProcesoType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,6 +25,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use App\Entity\Rol;
+use App\Entity\FichaCargo;
+
 
 class DocumentoProcesoController extends Controller
 {
@@ -31,7 +34,7 @@ class DocumentoProcesoController extends Controller
      * @Route("/documentoproceso", name="documentoproceso_listar")
      * @Method({"GET"})
      */
-    public function index()
+    public function index(DocumentoProceso $docproceso = null, Request $request)
     {
         $s_user = $this->get('session')->get('s_user');
         if(empty($s_user)){
@@ -56,141 +59,78 @@ class DocumentoProcesoController extends Controller
             $mdldt = (object) $mdl;
             $item = $mdldt->getNombre();
             $permisos[] = $item;
+        } 
+
+        $form = $this->createForm(DocumentoProcesoType::class, null);
+        $form ->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){ 
+            $datosDocumento = $form->getData();
+            
+            if($datosDocumento->getId() == 0 ){
+                $docproceso = new DocumentoProceso();
+            }else{
+                $docproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($datosDocumento->getId());
+            }            
+            $cx = $this->getDoctrine()->getManager(); 
+
+            if(empty($form['vinculoarchivo']->getData())){
+                if($docproceso->getVinculoarchivo() == null){
+                    $docproceso->setVinculoarchivo("N/A");
+                }
+            }else{
+                $file = $form['vinculoarchivo']->getData();
+                $fileName = $file->getClientOriginalName();          
+                $directorio = $this->getParameter('Directorio_DocProceso');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $docproceso->setVinculoarchivo($url);
+            }
+
+            $docproceso->setNuevoactualizacion($datosDocumento->getNuevoactualizacion());
+            $docproceso->setTitulo($datosDocumento->getTitulo());
+            $docproceso->setVersionvigente($datosDocumento->getVersionvigente());
+            $docproceso->setCarpetaoperativa($datosDocumento->getCarpetaoperativa());
+            $docproceso->setAprobadorechazado($datosDocumento->getAprobadorechazado());
+            $docproceso->setFechaaprobacion($datosDocumento->getFechaaprobacion());
+            $docproceso->setEstado(1);
+            
+            $documento = new Documento();
+            $documento = $datosDocumento->getFkdocumento();
+            $docproceso->setFkdocumento($documento);
+
+            $proceso = new FichaProcesos();
+            $proceso = $datosDocumento->getFkproceso();
+            $docproceso->setFkproceso($proceso);
+
+            $tipo = new TipoDocumento();
+            $tipo = $datosDocumento->getFktipo();
+            $docproceso->setFktipo($tipo);
+
+            $arobador = new Usuario();
+            $arobador = $datosDocumento->getFkaprobador();
+            $docproceso->setFkaprobador($arobador);
+
+            if($datosDocumento->getId() == 0){
+                $cx->persist($docproceso);
+                $cx->flush();
+                unset($docproceso);
+                unset($datosDocumento);
+            }else{
+                $cx->merge($docproceso);
+                $cx->flush();
+                unset($docproceso);
+                unset($datosDocumento);
+            }
+            $redireccion = new RedirectResponse('/documentoproceso');
+            return $redireccion;
         }
+        
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $DocumentoProceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('estado' => '1'));
-        $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
-        $TipoDocumento = $this->getDoctrine()->getRepository(TipoDocumento::class)->findBy(array('estado' => '1'));
-        $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
-        return $this->render('documentoproceso/index.html.twig', array('objects' => $DocumentoProceso, 'proceso' => $FichaProcesos, 'tipo' => $TipoDocumento, 'documento' => $Documento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
-    }
-    
-
-    /**
-     * @Route("/documentoproceso_insertar", methods={"POST"}, name="documentoproceso_insertar")
-     */
-    public function insertar(ValidatorInterface $validator)
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-
-            $sx = json_decode($_POST['object'], true);
-            $nuevoactualizacion = $sx['nuevoactualizacion'];
-            $documento = $sx['documento'];
-            $proceso = $sx['proceso'];
-            $tipo = $sx['tipo'];
-            $titulo = $sx['titulo'];
-            $versionvigente = $sx['versionvigente'];
-            $vinculoarchivo = $sx['vinculoarchivo'];
-            $carpetaoperativa = $sx['carpetaoperativa'];
-            $aprobadorechazado = $sx['aprobadorechazado'];
-            $aprobadopor = $sx['aprobadopor'];
-            $fechaaprobacion = $sx['fechaaprobacion'];
-
-            $documentoproceso = new DocumentoProceso();
-            $documentoproceso->setNuevoactualizacion($nuevoactualizacion);
-            $documentoproceso->setTitulo($titulo);
-            $documentoproceso->setVersionvigente($versionvigente);
-            $documentoproceso->setVinculoarchivo($vinculoarchivo);
-            $documentoproceso->setCarpetaoperativa($carpetaoperativa);
-            $documentoproceso->setAprobadorechazado($aprobadorechazado);
-            $documentoproceso->setAprobadopor($aprobadopor);
-            $documentoproceso->setFechaaprobacion(new \DateTime($fechaaprobacion));
-            $documentoproceso->setEstado(1);
-
-            $proceso != '' ? $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($proceso): $proceso =null;
-            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->find($tipo) : $tipo = null;
-            $documento != '' ? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento) : $documento = null;
-            $documentoproceso->setFkproceso($proceso); 
-            $documentoproceso->setFktipo($tipo); 
-            $documentoproceso->setFkdocumento($documento);
-
-            $errors = $validator->validate($documentoproceso);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
-                }
-                return  new  Response(json_encode($array)) ;
-            }
-
-            $cx->persist($documentoproceso);
-            $cx->flush();
-
-            $resultado = array('response'=>"El ID registrado es: ".$documentoproceso->getId().".",'success' => true,
-                'message' => 'Documento en proceso registrado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
-
-
-    /**
-     * @Route("/documentoproceso_actualizar", methods={"POST"}, name="documentoproceso_actualizar")
-     */
-    public function actualizar(ValidatorInterface $validator)
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-
-            $sx = json_decode($_POST['object'], true);
-            $id = $sx['id'];
-            $nuevoactualizacion = $sx['nuevoactualizacion'];
-            $documento = $sx['documento'];
-            $proceso = $sx['proceso'];
-            $tipo = $sx['tipo'];
-            $titulo = $sx['titulo'];
-            $versionvigente = $sx['versionvigente'];
-            $vinculoarchivo = $sx['vinculoarchivo'];
-            $carpetaoperativa = $sx['carpetaoperativa'];
-            $aprobadorechazado = $sx['aprobadorechazado'];
-            $aprobadopor = $sx['aprobadopor'];
-            $fechaaprobacion = $sx['fechaaprobacion'];
-
-            $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($id);
-            $documentoproceso->setId($id);
-            $documentoproceso->setNuevoactualizacion($nuevoactualizacion);
-            $documentoproceso->setTitulo($titulo);
-            $documentoproceso->setVersionvigente($versionvigente);
-            $documentoproceso->setVinculoarchivo($vinculoarchivo);
-            $documentoproceso->setCarpetaoperativa($carpetaoperativa);
-            $documentoproceso->setAprobadorechazado($aprobadorechazado);
-            $documentoproceso->setAprobadopor($aprobadopor);
-            $documentoproceso->setFechaaprobacion(new \DateTime($fechaaprobacion));
-            $documentoproceso->setEstado(1);
-
-            $proceso != '' ? $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($proceso): $proceso =null;
-            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->find($tipo) : $tipo = null;
-            $documento != '' ? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento) : $documento = null;
-            $documentoproceso->setFkproceso($proceso); 
-            $documentoproceso->setFktipo($tipo); 
-            $documentoproceso->setFkdocumento($documento);
-
-            $errors = $validator->validate($documentoproceso);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
-                }
-                return  new  Response(json_encode($array)) ;
-            }
-            $cx->merge($documentoproceso);
-            $cx->flush();
-
-            $resultado = array('success' => true,
-                    'message' => 'Documento en proceso actualizado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
+        return $this->render('documentoproceso/index.html.twig', array('objects' => $DocumentoProceso, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -216,7 +156,7 @@ class DocumentoProcesoController extends Controller
                 "vinculoarchivo" => $documentoproceso->getVinculoarchivo(),
                 "carpetaoperativa" => $documentoproceso->getCarpetaoperativa(),
                 "aprobadorechazado" => $documentoproceso->getAprobadorechazado(),
-                "aprobadopor" => $documentoproceso->getAprobadopor(),
+                "fkaprobador" => $documentoproceso->getFkaprobador(),
                 "fechaaprobacion" => $result
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));

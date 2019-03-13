@@ -170,31 +170,31 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
 
     <script>
-    \$('#correlativo_solicitante').selectpicker({
+    \$('#correlativo_fksolicitante').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar solicitante.',
         title: 'Seleccione un solicitante.'
     })
-    \$('#correlativo_correlativo').selectpicker({
+    \$('#correlativo_fkcorrelativo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar control correlativo.',
         title: 'Seleccione un control correlativo.'
     })
-    \$('#correlativo_tiponota').selectpicker({
+    \$('#correlativo_fktiponota').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de nota.',
         title: 'Seleccione un tipo de nota.'
     })
-    \$('#correlativo_estado').selectpicker({
+    \$('#correlativo_fkestado').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar estado.',
         title: 'Seleccione un estado.'
     })
-    \$('#correlativo_unidad').selectpicker({
+    \$('#correlativo_fkunidad').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar unidad.',
@@ -276,26 +276,32 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
             ajax_call_get(\"/correlativo_editar\",{
                 object: obj
             },function(response){ 
-                //console.log(response)
-                var self = JSON.parse(response)                
+                
+                var self = JSON.parse(response)    
+                console.log(self)        
                 \$('#correlativo_id').val(self.id)
                 \$('#correlativo_antecedente').val(self.antecedente)
                 \$('#correlativo_item').val(self.item)
                 \$('#correlativo_entrega').val(self.entrega)
                 \$('#correlativo_numcorrelativo').val(self.numcorrelativo)
                 \$('#correlativo_fechareg').val(self.fechareg)
+               
                 \$('#correlativo_redactor').val(self.redactor)
+                 
                 \$('#correlativo_destinatario').val(self.destinatario)
                 \$('#correlativo_referencia').val(self.referencia)
                 \$('#correlativo_equipo').val(self.equipo)
                 \$('#correlativo_ip').val(self.ip)
-                \$('#correlativo_url').val(self.url)
-                \$('#correlativo_urleditable').val(self.urleditable)
-                \$('#correlativo_urlorigen').val(self.urlorigen)
+                // console.log('1.1')
+                // \$('#correlativo_url').val(self.url)
+                //console.log('1.2')
+                //   \$('#correlativo_urleditable').val(self.urleditable)
+                // console.log('1.3')
+                // \$('#correlativo_urlorigen').val(self.urlorigen)
 
                 document.getElementById('correlativo_fksolicitante').value = self.fksolicitante.id
                 \$('#correlativo_fksolicitante').selectpicker('render')
-
+    
                 document.getElementById('correlativo_fkcorrelativo').value = self.fkcorrelativo.id
                 \$('#correlativo_fkcorrelativo').selectpicker('render')
 
@@ -305,8 +311,9 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
                 document.getElementById('correlativo_fkestado').value = self.fkestado.id
                 \$('#correlativo_fkestado').selectpicker('render')
 
-                document.getElementById('correlativo_fkunidad').value = self.fku00idad.id
+                document.getElementById('correlativo_fkunidad').value = self.fkunidad.id
                 \$('#correlativo_fkunidad').selectpicker('render')
+          
             })
             clean_form()
             verif_inputs()
@@ -321,7 +328,6 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
     </script>
     <script>
         attach_edit()
-
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
             enabled = false
@@ -528,31 +534,31 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
 
     <script>
-    \$('#correlativo_solicitante').selectpicker({
+    \$('#correlativo_fksolicitante').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar solicitante.',
         title: 'Seleccione un solicitante.'
     })
-    \$('#correlativo_correlativo').selectpicker({
+    \$('#correlativo_fkcorrelativo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar control correlativo.',
         title: 'Seleccione un control correlativo.'
     })
-    \$('#correlativo_tiponota').selectpicker({
+    \$('#correlativo_fktiponota').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de nota.',
         title: 'Seleccione un tipo de nota.'
     })
-    \$('#correlativo_estado').selectpicker({
+    \$('#correlativo_fkestado').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar estado.',
         title: 'Seleccione un estado.'
     })
-    \$('#correlativo_unidad').selectpicker({
+    \$('#correlativo_fkunidad').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar unidad.',
@@ -634,26 +640,32 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
             ajax_call_get(\"/correlativo_editar\",{
                 object: obj
             },function(response){ 
-                //console.log(response)
-                var self = JSON.parse(response)                
+                
+                var self = JSON.parse(response)    
+                console.log(self)        
                 \$('#correlativo_id').val(self.id)
                 \$('#correlativo_antecedente').val(self.antecedente)
                 \$('#correlativo_item').val(self.item)
                 \$('#correlativo_entrega').val(self.entrega)
                 \$('#correlativo_numcorrelativo').val(self.numcorrelativo)
                 \$('#correlativo_fechareg').val(self.fechareg)
+               
                 \$('#correlativo_redactor').val(self.redactor)
+                 
                 \$('#correlativo_destinatario').val(self.destinatario)
                 \$('#correlativo_referencia').val(self.referencia)
                 \$('#correlativo_equipo').val(self.equipo)
                 \$('#correlativo_ip').val(self.ip)
-                \$('#correlativo_url').val(self.url)
-                \$('#correlativo_urleditable').val(self.urleditable)
-                \$('#correlativo_urlorigen').val(self.urlorigen)
+                // console.log('1.1')
+                // \$('#correlativo_url').val(self.url)
+                //console.log('1.2')
+                //   \$('#correlativo_urleditable').val(self.urleditable)
+                // console.log('1.3')
+                // \$('#correlativo_urlorigen').val(self.urlorigen)
 
                 document.getElementById('correlativo_fksolicitante').value = self.fksolicitante.id
                 \$('#correlativo_fksolicitante').selectpicker('render')
-
+    
                 document.getElementById('correlativo_fkcorrelativo').value = self.fkcorrelativo.id
                 \$('#correlativo_fkcorrelativo').selectpicker('render')
 
@@ -663,8 +675,9 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
                 document.getElementById('correlativo_fkestado').value = self.fkestado.id
                 \$('#correlativo_fkestado').selectpicker('render')
 
-                document.getElementById('correlativo_fkunidad').value = self.fku00idad.id
+                document.getElementById('correlativo_fkunidad').value = self.fkunidad.id
                 \$('#correlativo_fkunidad').selectpicker('render')
+          
             })
             clean_form()
             verif_inputs()
@@ -679,7 +692,6 @@ class __TwigTemplate_1b9b57b2d411e103262ca1bb48489c45bd0772f9f7e009945059a238f63
     </script>
     <script>
         attach_edit()
-
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
             enabled = false

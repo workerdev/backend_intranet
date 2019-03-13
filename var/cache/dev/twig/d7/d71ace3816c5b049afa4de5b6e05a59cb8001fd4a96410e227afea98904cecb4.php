@@ -603,6 +603,6 @@ class __TwigTemplate_9b45d0f7b511bd38333394f783f426c400ba6a11e0d2cd03ace4c80c307
 
 </script>
 
-{% endblock %}", "gciarsector/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\gciarsector\\index.html.twig");
+{% endblock %}", "gciarsector/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\gciarsector\\index.html.twig");
     }
 }

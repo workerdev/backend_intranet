@@ -5,7 +5,11 @@
     <td>{{ t.fkgerencia.nombre }}</td>
     <td>{{ t.fkarea.nombre }}</td>
     <td>{{ t.fksector.nombre }}</td>
-    <td>{{ t.fkresponsable.nombre }}</td>
+    {% if t.fkresponsable.estado == 2 %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+    {% else %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido }}</td>
+    {% endif %}
     <td align="center">
     {% if 'gciarsector_editar' in permisos %} 
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

@@ -46,6 +46,7 @@
                             <th class="order_by_th" data-name="phone">Tipo de documento extra </th>
                             <th class="order_by_th" data-name="phone">Fecha de publicación </th>
                             <th class="order_by_th" data-name="phone">Vigente </th>
+                            <th class="order_by_th" data-name="phone">Vínculo archivo </th>
                             <th class="actions_header">Acciones </th>
                         </tr>
                         </thead>
@@ -68,46 +69,51 @@
     <script>
     attach_validators()
 
-    $('#fkproceso').selectpicker({
+    $('#documento_extra_fkproceso').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de ficha.',
         title: 'Seleccione un tipo de ficha.'
     })
 
-    $('#fktipo').selectpicker({
+    $('#documento_extra_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar documento tipo extra.',
         title: 'Seleccione un documento tipo extra.'
     })
+
+    $('#documento_extra_vigente').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar opción.',
+        title: 'Seleccione una opción.'
+    })
     
     $('#new').click(function () {
-        $('#codigo').val('')
-        $('#titulo').val('')
-        $('#fechapublicacion').val('')
+        $('#lnkva').remove();
+        $('#documento_extra_id').hide()
+        $("#documento_extra_id").siblings().hide()
+
+        $('#documento_extra_codigo').val('')
+        $('#documento_extra_titulo').val('')
+        $('#documento_extra_fechapublicacion').val('')
+        $('#documento_extra_vinculoarchivo').val('')
         
         clean_form()
         verif_inputs()
         $('#id_div').hide()
         $('#insert').show()
         $('#update').hide()
+
+        document.getElementById("documento_extra_submit").innerHTML= "Guardar"
+        $('#documento_extra_id').val(0)
         $('#form').modal('show')
     })
 
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'fechapublicacion': $('#fechapublicacion').val(),
-            'vigente': $('#vigente').val(),
-            'proceso': $('#fkproceso').val(),
-            'tipo': $('#fktipo').val()
-        })
-        ajax_call_validation("/documentoextra_insertar", {object: objeto}, null, main_route );
-        // ajax_call("/documentoextra_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
+    $("#documento_extra_vinculoarchivo").change(function(){
+        $("#lnkva").hide();
+    });
 
     function attach_edit() {
         $('.edit').click(function () {
@@ -117,43 +123,40 @@
             ajax_call_get("/documentoextra_editar",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                $('#id').val(self.id)
-                $('#codigo').val(self.codigo)
-                $('#titulo').val(self.titulo)
-                $('#fechapublicacion').val(self.fechapublicacion)
-                $('#vigente').val(self.vigente)
+                var self = JSON.parse(response)   
+                           
+                $('#documento_extra_id').val(self.id)
+                $('#documento_extra_codigo').val(self.codigo)
+                $('#documento_extra_titulo').val(self.titulo)
+                $('#documento_extra_fechapublicacion').val(self.fechapublicacion)
 
-                $('#fkproceso').val(self.fkproceso.id)
-                $('#fkproceso').selectpicker('render')
+                document.getElementById('documento_extra_vigente').value = self.vigente
+                $('#documento_extra_vigente').selectpicker('render')
 
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
+                document.getElementById('documento_extra_fkproceso').value = self.fkproceso.id
+                $('#documento_extra_fkproceso').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                document.getElementById('documento_extra_fktipo').value = self.fktipo.id
+                $('#documento_extra_fktipo').selectpicker('render')
+
+                if(self.vinculoarchivo != 'N/A') {
+                    $('#lnkva').remove();
+                    let urlfile = self.vinculoarchivo;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_extra_vinculoarchivo");
+                }
             })
+            clean_form()
+            verif_inputs()
+            $('#id_div').show()
+            $('#insert').hide()
+            $('#update').show()
+            
+            document.getElementById("documento_extra_submit").innerHTML = "Modificar"
+            setTimeout(function(){$('#form').modal('show')}, 500);
         })
     }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'codigo': $('#codigo').val(),
-            'titulo': $('#titulo').val(),
-            'fechapublicacion': $('#fechapublicacion').val(),
-            'vigente': $('#vigente').val(),
-            'proceso': $('#fkproceso').val(),
-            'tipo': $('#fktipo').val()
-        })
-        ajax_call_validation("/documentoextra_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/documentoextra_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
     reload_form()
     </script>
     <script>

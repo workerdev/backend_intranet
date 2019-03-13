@@ -13,9 +13,9 @@
         <td class="d-none">{{ tr.formacion }}</td>
         <td class="d-none">{{ tr.caracteristicas }}</td>
         <td class="d-none">{{ tr.fechaaprobacion | date('d-m-Y') }}</td>
-        <td>{{ tr.aprobadojefe }}</td>
+        <td>{{ tr.fkjefeaprobador.nombre ~ ' ' ~ tr.fkjefeaprobador.apellido }}</td>
         <td>{{ tr.firmajefe }}</td>
-        <td>{{ tr.aprobadogerente }}</td>
+        <td>{{ tr.fkgerenteaprobador.nombre ~ ' ' ~ tr.fkgerenteaprobador.apellido }}</td>
         <td>{{ tr.firmagerente }}</td>
         <td class="d-none">{{ tr.hipervinculo }}</td>
         <td align="center">

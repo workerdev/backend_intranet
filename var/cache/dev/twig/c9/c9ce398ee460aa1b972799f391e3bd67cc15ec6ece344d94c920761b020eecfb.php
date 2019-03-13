@@ -34,9 +34,7 @@ class __TwigTemplate_e01057415274bd33033ac416770a590301b8c9f99487cf3547b3a5073f3
             echo "</td>
         <td>";
             // line 4
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkpersonal", array()), "nombre", array()), "html", null, true);
-            echo " ";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkpersonal", array()), "apellido", array()), "html", null, true);
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkpersonal", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkpersonal", array()), "apellido", array())), "html", null, true);
             echo "</td>
         <td align=\"center\">
         ";
@@ -83,7 +81,7 @@ class __TwigTemplate_e01057415274bd33033ac416770a590301b8c9f99487cf3547b3a5073f3
 
     public function getDebugInfo()
     {
-        return array (  62 => 12,  57 => 10,  52 => 9,  46 => 7,  44 => 6,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  60 => 12,  55 => 10,  50 => 9,  44 => 7,  42 => 6,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -91,7 +89,7 @@ class __TwigTemplate_e01057415274bd33033ac416770a590301b8c9f99487cf3547b3a5073f3
         return new Twig_Source("{% for tr in objects %}
     <tr>
         <td>{{ tr.nombre}}</td>
-        <td>{{ tr.fkpersonal.nombre }} {{ tr.fkpersonal.apellido }}</td>
+        <td>{{ tr.fkpersonal.nombre ~ ' ' ~ tr.fkpersonal.apellido }}</td>
         <td align=\"center\">
         {% if 'turno_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -101,6 +99,6 @@ class __TwigTemplate_e01057415274bd33033ac416770a590301b8c9f99487cf3547b3a5073f3
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "turno/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\turno\\table.html.twig");
+{% endfor %}", "turno/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\turno\\table.html.twig");
     }
 }

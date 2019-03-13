@@ -488,6 +488,6 @@ class __TwigTemplate_5e16d1355a127aacd968b79ab1ae39f85fd882c4f4a1f49137906151346
 
 </script>
 
-{% endblock %}", "probabilidad/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\probabilidad\\index.html.twig");
+{% endblock %}", "probabilidad/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\probabilidad\\index.html.twig");
     }
 }

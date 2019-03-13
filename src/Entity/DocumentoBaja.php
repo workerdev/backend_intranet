@@ -78,12 +78,15 @@ class DocumentoBaja
     private $fechapublicacion;
     
     /**
-     * @var string
+     * @var \aprobador
      *
-     * @ORM\Column(name="cb_bajadocumento_aprobadopor", type="string", length=50, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_bajadocumento_fkaprobador", referencedColumnName="cb_usuario_id")
+     * })
      * @Assert\NotBlank
      */
-    private $aprobadopor;
+    private $fkaprobador;
 
     /**
      * @var string
@@ -96,8 +99,7 @@ class DocumentoBaja
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_bajadocumento_vinculoarchivo", type="string", length=100, nullable=true)
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_bajadocumento_vinculoarchivo", type="text", nullable=true)
      */
     private $vinculoarchivo;
 
@@ -191,14 +193,13 @@ class DocumentoBaja
         return $this;
     }
 
-    public function getAprobadopor(): ?string
+    public function getFkaprobador(): ?Usuario
     {
-        return $this->aprobadopor;
-    }   
-
-    public function setAprobadopor(string $aprobadopor): self
+        return $this->fkaprobador;
+    }
+    public function setFkaprobador(?Usuario $fkaprobador): self
     {
-        $this->aprobadopor = $aprobadopor;
+        $this->fkaprobador = $fkaprobador;
 
         return $this;
     }

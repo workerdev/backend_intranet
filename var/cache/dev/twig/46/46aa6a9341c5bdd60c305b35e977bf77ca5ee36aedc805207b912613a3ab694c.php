@@ -26,7 +26,7 @@ class __TwigTemplate_ca6723edf6d461649e74467b02593cb8272f90c45f8123372cd5670af58
         echo "<div id=\"form\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">
     <div class=\"modal-dialog\" role=\"document\">
         <div class=\"modal-content\">
-            <div class=\"modal-header\">
+            <div id=\"cabecera\" class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
                 <h3 id=\"cliente_tittle\" class=\"modal-title\">Responsabilidad Social</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
@@ -60,8 +60,8 @@ class __TwigTemplate_ca6723edf6d461649e74467b02593cb8272f90c45f8123372cd5670af58
                     </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@ class __TwigTemplate_ca6723edf6d461649e74467b02593cb8272f90c45f8123372cd5670af58
         return new Twig_Source("<div id=\"form\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">
     <div class=\"modal-dialog\" role=\"document\">
         <div class=\"modal-content\">
-            <div class=\"modal-header\">
+            <div id=\"cabecera\" class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
                 <h3 id=\"cliente_tittle\" class=\"modal-title\">Responsabilidad Social</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
@@ -121,12 +121,12 @@ class __TwigTemplate_ca6723edf6d461649e74467b02593cb8272f90c45f8123372cd5670af58
                     </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
     </div>
-</div>", "responsabilidadsocial/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\responsabilidadsocial\\form.html.twig");
+</div>", "responsabilidadsocial/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\responsabilidadsocial\\form.html.twig");
     }
 }

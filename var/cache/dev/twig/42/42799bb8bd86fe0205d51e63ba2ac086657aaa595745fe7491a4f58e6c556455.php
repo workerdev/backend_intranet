@@ -119,6 +119,6 @@ class __TwigTemplate_e3107360f60455fcac1ffad0d12c4779228f12871d9ffc7ee41b0be6497
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "seguimientoplan/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\seguimientoplan\\table.html.twig");
+{% endfor %}", "seguimientoplan/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\seguimientoplan\\table.html.twig");
     }
 }

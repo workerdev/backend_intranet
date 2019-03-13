@@ -12,6 +12,8 @@ use App\Entity\EstadoDocumento;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -57,8 +59,11 @@ class EstadoDocumentoController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $estadodocumento = $this->getDoctrine()->getRepository(EstadoDocumento::class)->findBy(array('estado' => '1'));
-        return $this->render('estadodocumento/index.html.twig', array('objects' => $estadodocumento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('estadodocumento/index.html.twig', array('objects' => $estadodocumento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

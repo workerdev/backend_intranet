@@ -12,6 +12,10 @@ use App\Entity\TipoNota;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+use App\Entity\Correlativo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -20,10 +24,6 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Entity\Rol;
-
 
 class TipoNotaController extends AbstractController
 {   
@@ -44,6 +44,8 @@ class TipoNotaController extends AbstractController
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
         $mods = array();
+        $children = array();
+        $options = array();
         foreach ($accesos as $access) {
             $accdt = (object) $access;
             $item = $this->getDoctrine()->getRepository(Modulo::class)->find($accdt->getFkmodulo()->getId());
@@ -51,14 +53,20 @@ class TipoNotaController extends AbstractController
         }
         $parent = $mods;
         $child = $mods;
+        $option = $mods;
+
         $permisos = array();
         foreach ($mods as $mdl) {
             $mdldt = (object) $mdl;
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        
         $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('estado' => '1'));
-        return $this->render('tiponota/index.html.twig', array('objects' => $tiponota, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        return $this->render('tiponota/index.html.twig', array('objects' => $tiponota, 'parents' => $parent, 'children' => $child, 'options' => $option, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -184,6 +192,34 @@ class TipoNotaController extends AbstractController
             $resultado = array('response'=>"El ID modificado es: ".$tiponota->getId().".",'success' => true,
                 'message' => 'Tipo de nota dado de baja correctamente.');
             $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+    
+
+    /**
+     * @Route("/tiponota_prev", methods={"POST"}, name="tiponota_prev")
+     */
+    public function tiponota_prev()
+    {
+        try {
+            $info = "";
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findBy(array('fktiponota' => $id, 'estado' => '1'));
+            
+            if(sizeof($correlativo) == 0){
+                $info = array('response'=>"¿Desea dar de baja el tipo de nota?", 'success' => true,
+                'message' => 'Baja tipo de nota.');
+            }else{
+                if(sizeof($correlativo) > 0) $vr = " correlativo";
+
+                $info = array('response'=>"El tipo de nota no se puede eliminar, debido a que tiene relación con los datos de".$vr, 'success' => false,
+                'message' => 'Se eliminarán todos los registros asociados al tipo de nota.');
+            }
+            $resultado = json_encode($info);
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

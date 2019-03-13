@@ -23,6 +23,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 
 class CROSeguimientoController extends AbstractController
@@ -57,9 +60,13 @@ class CROSeguimientoController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+       
         $croseguimiento = $this->getDoctrine()->getRepository(CROSeguimiento::class)->findBy(array('estado' => '1'));
         $riesgos = $this->getDoctrine()->getRepository(RiesgosOportunidades::class)->findBy(array('estado' => '1'));
-        return $this->render('croseguimiento/index.html.twig', array('objects' => $croseguimiento, 'riesgos' => $riesgos, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('croseguimiento/index.html.twig', array('objects' => $croseguimiento, 'riesgos' => $riesgos, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,7 +39,8 @@ class DocumentoExtraType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Fecha de publicación',
                 'attr' => ['class' => 'form-line form-label']
-            ))->add('vigente', ChoiceType::class, array(
+            ))
+            ->add('vigente', ChoiceType::class, array(
                 'choices'  => array(
                     'SI' => 'SI',
                     'NO' => 'NO',

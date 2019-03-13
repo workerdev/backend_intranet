@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 class FileController extends Controller
 {
@@ -62,6 +64,8 @@ class FileController extends Controller
         $form ->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){ 
             $datosFiles = $form->getData();
+           // $datosFiles123= $this->getPathname();
+            
             
             if($datosFiles->getId() == 0 ){
                 $files = new Files();
@@ -69,15 +73,19 @@ class FileController extends Controller
                 $files = $this->getDoctrine()->getRepository(Files::class)->find($datosFiles->getId());
             }            
             $cx = $this->getDoctrine()->getManager(); 
-
-            $file = $datosFiles->getRuta();
-            $fileName = $file->getClientOriginalName();                
-            $file->move($this->getParameter('Directorio_Files'),$fileName);
-            $ruta1 = $this->getParameter('Directorio_Files').'\\'.$fileName;
-            $files->setRuta($ruta1);
-            $files->setTipo($datosFiles->getTipo());
             $galeriav = new Galeria();
             $galeriav = $datosFiles->getFkgaleria();
+            $galeriadesc =$galeriav->getNombre();
+            $file = $datosFiles->getRuta();
+            $directorio=$this->getParameter('Directorio_Files');
+            $directorioproyec=$this->getParameter('Directorio_proyecto');
+            $fileName = $file->getClientOriginalName();
+           // $fileName2 = $file->getPathname(); direcion de xamp
+          //  $fileName3 = $file->getClientOriginalExtension(); .jpg               
+            $file->move($directorio.'\\'.$galeriadesc,$fileName);
+            $ruta1 = $directorioproyec.'\\'.$galeriadesc.'\\'.$fileName;
+            $files->setRuta($ruta1);
+            $files->setTipo($datosFiles->getTipo());
             $files->setFkgaleria($galeriav);
             $files->setEstado(1);
 
@@ -92,19 +100,23 @@ class FileController extends Controller
                 unset($files);
                 unset($datosFiles);
             }
-
-            $Files = $this->getDoctrine()->getRepository(Files::class)->findBy(array('estado' => '1'));
-            $Galeria = $this->getDoctrine()->getRepository(Galeria::class)->findBy(array('estado' => '1'));
-            return $this->render('files/index.html.twig', array('objects' => $Files,'form' => $form->createView(), 'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+            $redireccion = new RedirectResponse('/files');
+            return $redireccion;
+            //return $this->render('files/index.html.twig', array('objects' => $Files,'form' => $form->createView(), 'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
         }
+        
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+       
         $Files = $this->getDoctrine()->getRepository(Files::class)->findBy(array('estado' => '1'));
         $Galeria = $this->getDoctrine()->getRepository(Galeria::class)->findBy(array('estado' => '1'));
 
-        return $this->render('files/index.html.twig', array('objects' => $Files,'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'form' => $form->createView()));
+        return $this->render('files/index.html.twig', array('objects' => $Files,'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos , 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr, 'form' => $form->createView()));
     }
 
     
-    /**
+   /**
      * @Route("/files_actualizar", methods={"POST"}, name="files_actualizar")
      */
     public function actualizar()

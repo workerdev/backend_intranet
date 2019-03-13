@@ -1,11 +1,17 @@
 {% for t in objects %}
 <tr>
+    <td class="details-control">
+        <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'df' ~ t.id}}"></i>
+    </td>
+    <td class="d-none">{{ t.id }}</td>
     <td>{{ t.codigo }}</td>
     <td>{{ t.titulo }}</td>
     <td>{{ t.versionVigente }}</td>
     <td>{{ t.fechaPublicacion | date('Y-m-d')  }}</td>
-    <td>{{ t.aprobadoPor }}</td>
-    <td>{{ t.fkdocumento.titulo }}</td>
+    <td class="d-none">{{ t.fkaprobador.nombre ~ ' ' ~ t.fkaprobador.apellido }}</td>
+    <td>{{ t.fkdocumento.codigo }}</td>
+    <td class="d-none">{{ t.vinculofiledig }}</td>
+    <td class="d-none">{{ t.vinculofiledesc }}</td>
     <td align="center">
     {% if 'documentoformulario_editar' in permisos %} 
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

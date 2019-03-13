@@ -50,8 +50,6 @@ class Unidad
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cb_unidad_fksuperior", referencedColumnName="cb_unidad_id")
      * })
-     *
-     * @Assert\NotBlank
      */
     private $fksuperior;
 
@@ -68,6 +66,7 @@ class Unidad
     {
         return $this->id;
     }
+    
     public function setId(int $id): self
     {
         $this->id = $id;

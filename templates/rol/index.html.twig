@@ -191,6 +191,7 @@
     $('#new').click(function () {
         $('#nombre').val('')
         $('#descripcion').val('')
+        $("#cont-mods input[type=radio]").prop( "checked", false);
         $("#cont-mods input[type=checkbox]").prop( "checked", false);
 
         clean_form()
@@ -203,8 +204,19 @@
 
     function check_all(e){
         if($(e).is(':checked')){
+            $("#usl-all").prop( "checked", false);
             $("input[type=checkbox]").each(function (index) {
 			    $(".padre").prop( "checked", true);
+                check_content(this);
+            });
+		}
+	}
+
+    function uncheck_all(e){
+        if($(e).is(':checked')){
+            $("#slt-all").prop( "checked", false);
+            $("input[type=checkbox]").each(function (index) {
+			    $(".padre").prop( "checked", false);
                 check_content(this);
             });
 		}
@@ -283,6 +295,7 @@
 
     function attach_edit() {
         $('.edit').click(function () {
+            $("#cont-mods input[type=radio]").prop( "checked", false);
             $("#cont-mods input[type=checkbox]").prop( "checked", false);
             
             obj = JSON.stringify({

@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -53,10 +55,14 @@ class AccionSeguimientoController extends Controller
             $mdldt = (object) $mdl;
             $item = $mdldt->getNombre();
             $permisos[] = $item;
-        }
+        } 
+         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+      
         $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
         $accionseguimiento = $this->getDoctrine()->getRepository(AccionSeguimiento::class)->findBy(array('estado' => '1'));
-        return $this->render('accionseguimiento/index.html.twig', array('objects' => $accionseguimiento, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('accionseguimiento/index.html.twig', array('objects' => $accionseguimiento, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

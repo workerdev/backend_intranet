@@ -35,7 +35,6 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
 
 
         $useradm = new Usuario();
-        $useradm->setCi(9614523);
         $useradm->setNombre('Admin');
         $useradm->setApellido('Super-user');
         $useradm->setCorreo('admin@gmail.com');
@@ -48,7 +47,6 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($useradm);
 
         $user = new Usuario();
-        $user->setCi(6541892);
         $user->setNombre('Usuario');
         $user->setApellido('rol-user');
         $user->setCorreo('user@gmail.com');
@@ -60,36 +58,6 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $user->setFkrol($roluser);
         $manager->persist($user);
 
-
-        $usrcfgm = new Acceso();
-        $usrcfgm->setFkrol($roluser);
-        $usrcfgm->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD)); 
-        $manager->persist($usrcfgm);
-
-        $usrcfgp = new Acceso();
-        $usrcfgp->setFkrol($roluser);
-        $usrcfgp->setFkmodulo($this->getReference(ModuloChildrenFixtures::MENU_CHILD)); 
-        $manager->persist($usrcfgp);
-
-        $usrmnh = new Acceso();
-        $usrmnh->setFkrol($roluser);
-        $usrmnh->setFkmodulo($this->getReference(ModuloAccionFixtures::MENU_HOME)); 
-        $manager->persist($usrmnh);
-
-        $usrmni = new Acceso();
-        $usrmni->setFkrol($roluser);
-        $usrmni->setFkmodulo($this->getReference(ModuloAccionFixtures::MENU_INSERT)); 
-        $manager->persist($usrmni);
-
-        $usrmne = new Acceso();
-        $usrmne->setFkrol($roluser);
-        $usrmne->setFkmodulo($this->getReference(ModuloAccionFixtures::MENU_EDIT)); 
-        $manager->persist($usrmne);
-
-        $usrmnd = new Acceso();
-        $usrmnd->setFkrol($roluser);
-        $usrmnd->setFkmodulo($this->getReference(ModuloAccionFixtures::MENU_DELETE)); 
-        $manager->persist($usrmnd); 
 
         $admumdu = new Acceso();
         $admumdu->setFkrol($roladm);
@@ -120,6 +88,66 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $admurd->setFkrol($roladm);
         $admurd->setFkmodulo($this->getReference(ModuloAccionFixtures::ROL_DELETE)); 
         $manager->persist($admurd);
+
+        $admprf = new Acceso();
+        $admprf->setFkrol($roladm);
+        $admprf->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERFIL_CHILD)); 
+        $manager->persist($admprf);
+
+
+
+
+        $usrumdu = new Acceso();
+        $usrumdu->setFkrol($roluser);
+        $usrumdu->setFkmodulo($this->getReference(ModuloFixtures::USUARIO_MOD)); 
+        $manager->persist($usrumdu);
+
+        $usrupr = new Acceso();
+        $usrupr->setFkrol($roluser);
+        $usrupr->setFkmodulo($this->getReference(ModuloChildrenFixtures::ROL_CHILD)); 
+        $manager->persist($usrupr);
+
+        $usrurh = new Acceso();
+        $usrurh->setFkrol($roluser);
+        $usrurh->setFkmodulo($this->getReference(ModuloAccionFixtures::ROL_HOME)); 
+        $manager->persist($usrurh);
+
+        $usruri = new Acceso();
+        $usruri->setFkrol($roluser);
+        $usruri->setFkmodulo($this->getReference(ModuloAccionFixtures::ROL_INSERT)); 
+        $manager->persist($usruri);
+
+        $usrure = new Acceso();
+        $usrure->setFkrol($roluser);
+        $usrure->setFkmodulo($this->getReference(ModuloAccionFixtures::ROL_EDIT)); 
+        $manager->persist($usrure);
+
+        $usrurd = new Acceso();
+        $usrurd->setFkrol($roluser);
+        $usrurd->setFkmodulo($this->getReference(ModuloAccionFixtures::ROL_DELETE)); 
+        $manager->persist($usrurd);
+
+        $usrprf = new Acceso();
+        $usrprf->setFkrol($roluser);
+        $usrprf->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERFIL_CHILD)); 
+        $manager->persist($usrprf);
+
+        
+        $usrcfgm = new Acceso();
+        $usrcfgm->setFkrol($roluser);
+        $usrcfgm->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD)); 
+        $manager->persist($usrcfgm);
+
+        $usrcfgp = new Acceso();
+        $usrcfgp->setFkrol($roluser);
+        $usrcfgp->setFkmodulo($this->getReference(ModuloChildrenFixtures::MENU_CHILD)); 
+        $manager->persist($usrcfgp);
+
+        $usrmnh = new Acceso();
+        $usrmnh->setFkrol($roluser);
+        $usrmnh->setFkmodulo($this->getReference(ModuloAccionFixtures::MENU_HOME)); 
+        $manager->persist($usrmnh);
+
 
         $manager->flush();
     }

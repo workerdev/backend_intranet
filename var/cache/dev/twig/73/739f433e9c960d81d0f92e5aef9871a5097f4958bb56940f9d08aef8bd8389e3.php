@@ -33,144 +33,10 @@ class __TwigTemplate_ee5615e1c9dc12f51de48ff6278fe4b78267790435dd51f66667cbbfce2
             </div>
             <div class=\"modal-body\">
                 <div id=\"cliente_form_body\" class=\"box-body\">
-                    <div id=\"id_div\" class=\"form-group\">
-                        <div class=\"form-line\">
-                            <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
-                            <label class=\"form-label\">Documento en proceso ID</label>
-                        </div>
-                    </div>
-
-                    <label>Nuevo/Actualización</label>
-                        <select id=\"nuevoactualizacion\" class=\"form-control\">
-                            <option value=\"Nuevo\">Nuevo</option>
-                            <option value=\"Actualizacion\">Actualización</option>
-                        </select>
-                        </br>
-                        </br>
-                    
-                    <label>Ficha de proceso</label>
-                        <select id=\"fkproceso\" class=\"form-control\">
-                        ";
-        // line 28
-        $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["proceso"]) || array_key_exists("proceso", $context) ? $context["proceso"] : (function () { throw new Twig_Error_Runtime('Variable "proceso" does not exist.', 28, $this->source); })()));
-        foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 29
-            echo "                            <option value=\"";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
-            echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "codproceso", array()), "html", null, true);
-            echo "</option>
-                        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 31
-        echo "                        </select>
-                        </br>
-                        </br> 
-                        
-                    <label>Tipo de documento</label>
-                        <select id=\"fktipo\" class=\"form-control\">
-                        ";
-        // line 37
-        $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo"]) || array_key_exists("tipo", $context) ? $context["tipo"] : (function () { throw new Twig_Error_Runtime('Variable "tipo" does not exist.', 37, $this->source); })()));
-        foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 38
-            echo "                            <option value=\"";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
-            echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
-            echo "</option>
-                        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 40
-        echo "                        </select>
-                        </br>
-                        </br>  
-
-                    <label>Documento</label>
-                        <select id=\"fkdocumento\" class=\"form-control\">
-                        ";
-        // line 46
-        $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["documento"]) || array_key_exists("documento", $context) ? $context["documento"] : (function () { throw new Twig_Error_Runtime('Variable "documento" does not exist.', 46, $this->source); })()));
-        foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 47
-            echo "                            <option value=\"";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
-            echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "codigo", array()), "html", null, true);
-            echo "</option>
-                        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 49
-        echo "                        </select>
-                        </br>
-                        </br> 
-                   
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"titulo\" name=\"titulo\" type=\"text\" class=\"form-control name\">
-                            <label class=\"form-label\">Título</label>
-                        </div>
-                    </div>
-                   
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"versionvigente\" name=\"versionvigente\" type=\"text\" class=\"form-control\">
-                            <label class=\"form-label\">Versión vigente</label>
-                        </div>
-                    </div>
-                    
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"vinculoarchivo\" name=\"vinculoarchivo\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Vínculo del archivo</label>
-                        </div>
-                    </div>
-
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"carpetaoperativa\" name=\"carpetaoperativa\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Carpeta operativa</label>
-                        </div>
-                    </div>
-
-                    <label>Aprobado/Rechazado</label>
-                        <select id=\"aprobadorechazado\" class=\"form-control\">
-                            <option value=\"Aprobado\">Aprobado</option>
-                            <option value=\"Rechazado\">Rechazado</option>
-                        </select>
-                        </br>
-                        </br>
-
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"aprobadopor\" name=\"aprobadopor\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Aprobado por</label>
-                        </div>
-                    </div>
-                    
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <label class=\"form-label\">Fecha de aprobación</label><br>
-                            <input id=\"fechaaprobacion\" name=\"fechaaprobacion\" type=\"date\" class=\"form-control\">
-                        </div>
-                    </div>
-                         
-                </div>
-                <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">save</i></button>
+                    ";
+        // line 11
+        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new Twig_Error_Runtime('Variable "form" does not exist.', 11, $this->source); })()), 'form');
+        echo "   
                 </div>
             </div>
         </div>
@@ -193,7 +59,7 @@ class __TwigTemplate_ee5615e1c9dc12f51de48ff6278fe4b78267790435dd51f66667cbbfce2
 
     public function getDebugInfo()
     {
-        return array (  116 => 49,  105 => 47,  101 => 46,  93 => 40,  82 => 38,  78 => 37,  70 => 31,  59 => 29,  55 => 28,  26 => 1,);
+        return array (  38 => 11,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -208,106 +74,11 @@ class __TwigTemplate_ee5615e1c9dc12f51de48ff6278fe4b78267790435dd51f66667cbbfce2
             </div>
             <div class=\"modal-body\">
                 <div id=\"cliente_form_body\" class=\"box-body\">
-                    <div id=\"id_div\" class=\"form-group\">
-                        <div class=\"form-line\">
-                            <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
-                            <label class=\"form-label\">Documento en proceso ID</label>
-                        </div>
-                    </div>
-
-                    <label>Nuevo/Actualización</label>
-                        <select id=\"nuevoactualizacion\" class=\"form-control\">
-                            <option value=\"Nuevo\">Nuevo</option>
-                            <option value=\"Actualizacion\">Actualización</option>
-                        </select>
-                        </br>
-                        </br>
-                    
-                    <label>Ficha de proceso</label>
-                        <select id=\"fkproceso\" class=\"form-control\">
-                        {% for t in proceso %}
-                            <option value=\"{{t.id}}\">{{t.codproceso}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
-                        
-                    <label>Tipo de documento</label>
-                        <select id=\"fktipo\" class=\"form-control\">
-                        {% for t in tipo %}
-                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br>  
-
-                    <label>Documento</label>
-                        <select id=\"fkdocumento\" class=\"form-control\">
-                        {% for t in documento %}
-                            <option value=\"{{t.id}}\">{{t.codigo}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
-                   
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"titulo\" name=\"titulo\" type=\"text\" class=\"form-control name\">
-                            <label class=\"form-label\">Título</label>
-                        </div>
-                    </div>
-                   
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"versionvigente\" name=\"versionvigente\" type=\"text\" class=\"form-control\">
-                            <label class=\"form-label\">Versión vigente</label>
-                        </div>
-                    </div>
-                    
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"vinculoarchivo\" name=\"vinculoarchivo\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Vínculo del archivo</label>
-                        </div>
-                    </div>
-
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"carpetaoperativa\" name=\"carpetaoperativa\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Carpeta operativa</label>
-                        </div>
-                    </div>
-
-                    <label>Aprobado/Rechazado</label>
-                        <select id=\"aprobadorechazado\" class=\"form-control\">
-                            <option value=\"Aprobado\">Aprobado</option>
-                            <option value=\"Rechazado\">Rechazado</option>
-                        </select>
-                        </br>
-                        </br>
-
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <input id=\"aprobadopor\" name=\"aprobadopor\" type=\"text\" class=\"form-control text\">
-                            <label class=\"form-label\">Aprobado por</label>
-                        </div>
-                    </div>
-                    
-                    <div class=\"form-group form-float\">
-                        <div class=\"form-line\">
-                            <label class=\"form-label\">Fecha de aprobación</label><br>
-                            <input id=\"fechaaprobacion\" name=\"fechaaprobacion\" type=\"date\" class=\"form-control\">
-                        </div>
-                    </div>
-                         
-                </div>
-                <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">save</i></button>
+                    {{ form(form) }}   
                 </div>
             </div>
         </div>
     </div>
-</div>", "documentoproceso/form.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\documentoproceso\\form.html.twig");
+</div>", "documentoproceso/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoproceso\\form.html.twig");
     }
 }

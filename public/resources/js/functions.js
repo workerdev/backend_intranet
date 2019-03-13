@@ -322,3 +322,39 @@ function ajax_call_rep(url, data, callback) {
         }
     })
 }
+
+function ajax_call_reptb(url, data, callback) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: false,
+        beforeSend: function() {
+            $('html, body').animate({
+                scrollTop: $(".header").offset().top
+            }, 1000);
+            //location.href = ".header";
+            $(".plan-icon-load").css('display', 'inline-block');
+            $('html, body').animate({scrollTop: 0}, 'slow');
+        },
+        success:function (data, textStatus) {
+            $(".plan-icon-load").css('display', 'none');
+            /*
+            document.getElementById('msg-rep').innerHTML = data;
+            $('#msg-rep').show();
+            $("#msg-rep").fadeToggle(5000);*/
+        }
+    }).done(function (response) {
+        dictionary = JSON.parse(response)
+        if ("message" in dictionary && dictionary.message != ''){
+            if (dictionary.success) {
+                showMessage(dictionary.message, "success", "ok")
+            } else {
+                showMessage(dictionary.message, "danger", "remove")
+            }
+        }
+        if(callback != null){
+            callback(response)
+        }
+    })
+}

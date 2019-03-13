@@ -84,14 +84,12 @@ class Documento
 
     /**
      * @var string
-     *@Assert\NotBlank
      * @ORM\Column(name="cb_documento_vinculoarchivodig", type="text", nullable=false)
      */
     private $vinculoarchivodig;
 
     /**
      * @var string
-     *@Assert\NotBlank
      * @ORM\Column(name="cb_documento_vinculodiagflujo", type="text", nullable=false)
      */
     private $vinculodiagflujo;

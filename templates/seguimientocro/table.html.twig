@@ -2,7 +2,11 @@
 <tr>
     <td>{{ t.fkriesgos.descripcion }}</td>
     <td>{{ t.fechaseg | date('Y-m-d') }}</td>
-    <td>{{ t.fkresponsable.id }}</td>
+    {% if t.fkresponsable.estado == 2 %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+    {% else %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido }}</td>
+    {% endif %}
     <td>{{ t.observaciones }}</td>
     <td>{{ t.estadoseg }}</td>
     <td align="center">

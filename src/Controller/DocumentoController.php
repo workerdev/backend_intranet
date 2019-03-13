@@ -13,6 +13,7 @@ use App\Entity\DocumentoProceso;
 use App\Entity\DocumentoFormulario;
 use App\Entity\NormaDocumento;
 use App\Entity\DocumentosAso;
+use App\Form\DocumentoType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +26,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 use App\Entity\Rol;
 
@@ -34,7 +37,7 @@ class DocumentoController extends Controller
      * @Route("/documento", name="documento_listar")
      * @Method({"GET"})
      */
-    public function index()
+    public function index(Documento $documento = null, Request $request)
     {
         $s_user = $this->get('session')->get('s_user');
         if(empty($s_user)){
@@ -60,11 +63,86 @@ class DocumentoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+
+        $form = $this->createForm(DocumentoType::class, null);
+        $form ->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){ 
+            $datosDocumento = $form->getData();
+            
+            if($datosDocumento->getId() == 0 ){
+                $documento = new Documento();
+            }else{
+                $documento = $this->getDoctrine()->getRepository(Documento::class)->find($datosDocumento->getId());
+            }            
+            $cx = $this->getDoctrine()->getManager(); 
+
+            if(empty($form['vinculoarchivodig']->getData())){
+                if($documento->getVinculoarchivodig() == null){
+                    $documento->setVinculoarchivodig("N/A");
+                }
+            }else{
+                $file = $form['vinculoarchivodig']->getData();
+                $fileName = $file->getClientOriginalName();  
+                $directorio = $this->getParameter('Directorio_Documento');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $documento->setVinculoarchivodig($url);
+            } 
+
+            if(empty($form['vinculodiagflujo']->getData())){
+                if($documento->getvinculodiagflujo() == null){
+                    $documento->setvinculodiagflujo("N/A");
+                }
+            }else{
+                $file = $form['vinculodiagflujo']->getData();
+                $fileName = $file->getClientOriginalName();             
+                $directorio = $this->getParameter('Directorio_Documento');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $documento->setvinculodiagflujo($url);
+            }
+
+            $documento->setCodigo($datosDocumento->getCodigo());
+            $documento->setVersionvigente($datosDocumento->getVersionvigente());
+            $documento->setTitulo($datosDocumento->getTitulo());
+            $documento->setFechaPublicacion($datosDocumento->getFechaPublicacion());
+            $documento->setCarpetaOperativa($datosDocumento->getCarpetaOperativa());
+            $documento->setEstado(1);
+            
+            $proceso = new FichaProcesos();
+            $proceso = $datosDocumento->getFkficha();
+            $documento->setFkficha($proceso);
+
+            $tipo = new TipoDocumento();
+            $tipo = $datosDocumento->getFktipo();
+            $documento->setFktipo($tipo);
+
+            $aprobador = new Usuario();
+            $aprobador = $datosDocumento->getFkaprobador();
+            $documento->setFkaprobador($aprobador);
+
+            if($datosDocumento->getId() == 0){
+                $cx->persist($documento);
+                $cx->flush();
+                unset($documento);
+                unset($datosDocumento);
+            }else{
+                $cx->persist($documento);
+                $cx->flush();
+                unset($documento);
+                unset($datosDocumento);
+            }
+            $redireccion = new RedirectResponse('/documento');
+            return $redireccion;
+        }
+
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
-        $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
-        $TipoDocumento = $this->getDoctrine()->getRepository(TipoDocumento::class)->findBy(array('estado' => '1'));
-        $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-        return $this->render('documento/index.html.twig', array('objects' => $Documento, 'tipo' => $FichaProcesos, 'tipo2' => $TipoDocumento, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('documento/index.html.twig', array('objects' => $Documento, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -97,8 +175,6 @@ class DocumentoController extends Controller
             $Documento->setCarpetaOperativa($carpetaop);
             $Documento->setEstado(1);
 
-            
-
             $ficha != '' ? $ficha = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($ficha) : $ficha=null;
             $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->find($tipo) : $tipo=null;
             $aprobador != '' ? $aprobador = $this->getDoctrine()->getRepository(Usuario::class)->find($aprobador) : $aprobador =null;
@@ -112,8 +188,6 @@ class DocumentoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e) {
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return new  Response(json_encode($array));
             }
@@ -204,13 +278,15 @@ class DocumentoController extends Controller
                 "fkficha" => $Documento->getFkficha(),
                 "fktipo" => $Documento->getFktipo(),
                 "fkaprobador" => $Documento->getFkaprobador()
+                //"server" => $_SERVER['SERVER_NAME'].' - '.$_SERVER['SERVER_PORT']
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
             $json = $serializer->serialize($sendinf, 'json');
-            $resultado = array('response' => $json, 'success' => true,
+            $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Documento listado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }

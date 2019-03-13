@@ -28,8 +28,7 @@ class Permiso
     /**
      * @var int
      *
-     * @ORM\Column(name="cb_permiso_item", type="integer", nullable=true)
-     *
+     * @ORM\Column(name="cb_permiso_item", type="integer", nullable=false)
      */
     private $item;
 
@@ -49,7 +48,7 @@ class Permiso
      *
      * @ORM\ManyToOne(targetEntity="Unidad")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_permiso_fkunidad", referencedColumnName="cb_permiso_id")
+     *   @ORM\JoinColumn(name="cb_permiso_fkunidad", referencedColumnName="cb_unidad_id")
      * })
      *
      * @Assert\NotBlank
@@ -59,8 +58,7 @@ class Permiso
     /**
      * @var int
      *
-     * @ORM\Column(name="cb_permiso_estado", type="integer", nullable=true)
-     *
+     * @ORM\Column(name="cb_permiso_estado", type="integer", nullable=false)
      */
     private $estado;
 

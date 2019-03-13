@@ -192,6 +192,6 @@ class __TwigTemplate_62527186d4096a11a73d9d7516b94838b4bda1c8b828c64b9b6547d9306
             </div>
         </div>
     </div>
-</div>", "auditoriaequipo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\auditoriaequipo\\form.html.twig");
+</div>", "auditoriaequipo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\auditoriaequipo\\form.html.twig");
     }
 }

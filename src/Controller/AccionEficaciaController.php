@@ -8,6 +8,9 @@ use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,9 +59,13 @@ class AccionEficaciaController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
         $accioneficacia = $this->getDoctrine()->getRepository(AccionEficacia::class)->findBy(array('estado' => '1'));
-        return $this->render('accioneficacia/index.html.twig', array('objects' => $accioneficacia, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('accioneficacia/index.html.twig', array('objects' => $accioneficacia, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

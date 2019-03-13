@@ -99,6 +99,6 @@ class __TwigTemplate_171d839ed600918764f47d56c21a0867a8df69265b15c7d6bb69b5efd24
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "tiponorma/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tiponorma\\table.html.twig");
+{% endfor %}", "tiponorma/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\tiponorma\\table.html.twig");
     }
 }

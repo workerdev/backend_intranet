@@ -161,67 +161,57 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
 
     <script>
-    // attach_validators()
-    \$('#fkficha').selectpicker({
+    \$('#documento_fkficha').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de ficha.',
         title: 'Seleccione un tipo de ficha.'
     })
-     \$('#fktipo').selectpicker({
+     \$('#documento_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de documento.',
         title: 'Seleccione un tipo de documento.'
     })
-     \$('#fkaprobador').selectpicker({
+     \$('#documento_fkaprobador').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de aprobador.',
         title: 'Seleccione un tipo de aprobador.'
     })
-     \$('#estado').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de estado.',
-        title: 'Seleccione un tipo de estado.'
-    })
     
     \$('#new').click(function () {
-        \$('#codigo').val('')
-        \$('#titulo').val('')
-        \$('#versionvigente').val('')
-        \$('#vinculoarchivodig').val('')
-        \$('#vinculodiagflujo').val('')
-        \$('#carpetaOperativa').val('')
-        \$('#fechaPublicacion').val('')
+        \$('#lnkva').remove();
+        \$('#lnkvd').remove();
+        \$('#documento_id').hide()
+        \$(\"#documento_id\").siblings().hide()
+
+        \$('#documento_codigo').val('')
+        \$('#documento_titulo').val('')
+        \$('#documento_versionvigente').val('')
+        \$('#documento_vinculoarchivodig').val('')
+        \$('#documento_vinculodiagflujo').val('')
+        \$('#documento_carpetaOperativa').val('')
+        \$('#documento_fechaPublicacion').val('')
 
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"documento_submit\").innerHTML= \"Guardar\"
+        \$('#documento_id').val(0)
         \$('#form').modal('show')
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'versionvigente': \$('#versionvigente').val(),
-            'vinculoarchivodig': \$('#vinculoarchivodig').val(),
-            'vinculodiagflujo': \$('#vinculodiagflujo').val(),
-            'fkficha': \$('#fkficha').val(),
-            'fktipo': \$('#fktipo').val(),
-            'fkaprobador': \$('#fkaprobador').val(),
-            'carpetaOperativa': \$('#carpetaOperativa').val(),
-            'fechaPublicacion': \$('#fechaPublicacion').val()
-        }) 
+    \$(\"#documento_vinculoarchivodig\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
-        ajax_call_validation(\"/documento_insertar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documento_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
+    \$(\"#documento_vinculodiagflujo\").change(function(){
+        \$(\"#lnkvd\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -231,52 +221,52 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
             ajax_call_get(\"/documento_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                \$('#id').val(self.id)
-                \$('#codigo').val(self.codigo)
-                \$('#titulo').val(self.titulo)
-                \$('#versionvigente').val(self.versionVigente)
-                \$('#vinculoarchivodig').val(self.vinculoarchivodig)
-                \$('#vinculodiagflujo').val(self.vinculodiagflujo)
-                \$('#carpetaOperativa').val(self.carpetaOperativa)
-                \$('#fechaPublicacion').val(self.fechaPublicacion)
+                var self = JSON.parse(response)
+                             
+                \$('#documento_id').val(self.id)
+                \$('#documento_codigo').val(self.codigo)
+                \$('#documento_titulo').val(self.titulo)
+                \$('#documento_versionvigente').val(self.versionVigente)
 
-                \$('#fkficha').val(self.fkficha.id)
-                \$('#fkficha').selectpicker('render')
+                \$('#documento_carpetaOperativa').val(self.carpetaOperativa)
+                \$('#documento_fechaPublicacion').val(self.fechaPublicacion)
 
-                 \$('#fktipo').val(self.fktipo.id)
-                \$('#fktipo').selectpicker('render')
+                document.getElementById('documento_fkficha').value = self.fkficha.id
+                \$('#documento_fkficha').selectpicker('render')
+    
+                document.getElementById('documento_fktipo').value = self.fktipo.id
+                \$('#documento_fktipo').selectpicker('render')
 
-                 \$('#fkaprobador').val(self.fkaprobador.id)
-                \$('#fkaprobador').selectpicker('render')
-                clean_form()
-                verif_inputs()
-                \$('#id_div').show()
-                \$('#insert').hide()
-                \$('#update').show()
-                \$('#form').modal('show')
+                document.getElementById('documento_fkaprobador').value = self.fkaprobador.id
+                \$('#documento_fkaprobador').selectpicker('render')
+
+                if(self.vinculoarchivodig != 'N/A') {
+                    \$('#lnkva').remove();
+                    let urlfile = self.vinculoarchivodig;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#documento_vinculoarchivodig\");
+                }
+                else \$('#lnkva').hide();
+
+                if(self.vinculodiagflujo != 'N/A') {
+                    \$('#lnkvd').remove();
+                    let urldown = self.vinculodiagflujo;
+                    let vdown = urldown.substring(urldown.lastIndexOf(\"/\")+1, urldown.length);
+                    \$(\"<a id='lnkvd' href='\"+urldown+\"'>\"+vdown+\"</a>\").insertAfter(\"#documento_vinculodiagflujo\");
+                }
+                else \$('#lnkvd').hide();
             })
+            clean_form()
+            verif_inputs()
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"documento_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
-    \$('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse(\$('#id').val())),           
-            'codigo': \$('#codigo').val(),           
-            'titulo': \$('#titulo').val(),
-            'versionvigente': \$('#versionvigente').val(),
-            'vinculoarchivodig': \$('#vinculoarchivodig').val(),
-            'vinculodiagflujo': \$('#vinculodiagflujo').val(),
-            'fkficha': \$('#fkficha').val(),
-            'fktipo': \$('#fktipo').val(),
-            'fkaprobador': \$('#fkaprobador').val(),
-            'carpetaOperativa': \$('#carpetaOperativa').val(),
-            'fechaPublicacion': \$('#fechaPublicacion').val()
-        }) 
-        ajax_call_validation(\"/documento_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documento_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')0
-    })
     reload_form()
     </script>
     <script>
@@ -293,7 +283,6 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
                 message = response;
             });
         }
-
 
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
@@ -323,21 +312,40 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
     </script>
     <script>
         function format (d) {
-            return '<div class=\"card\" style=\"width: 100%; background-color: rgba(0, 76, 153, .15)\">'+
+            let urlfile = d[5];
+            let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\") + 1, urlfile.length);
+            let urldown = d[6];
+            let vdown = urldown.substring(urldown.lastIndexOf(\"/\") + 1, urldown.length); 
+            html = '<div class=\"card\" style=\"width: 100%; background-color: rgba(0, 76, 153, .15)\">'+
             '<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" style=\"padding-left:50px;\">'+
                 '<tr>'+
                     '<td class=\"bold\">Versión vigente:</td>'+
                     '<td>'+d[4]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                '</tr>';
+            if(urlfile != 'N/A'){
+                html += '<tr>'+
                     '<td class=\"bold\">Vínculo archivo digital:</td>'+
-                    '<td>'+d[5]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                    '<td><a href=\"' + urlfile +'\">' + vfile + '</a></td>'+
+                '</tr>';
+            }else{
+                html += '<tr>'+
+                    '<td class=\"bold\">Vínculo archivo digital:</td>'+
+                    '<td>' + urlfile + '</td>'+
+                '</tr>';
+            } 
+
+            if(urldown != 'N/A'){
+                html += '<tr>'+
                     '<td class=\"bold\">Vínculo diagrama flujo:</td>'+
-                    '<td>'+d[6]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                    '<td><a href=\"' + urldown +'\">' + vdown + '</a></td>'+
+                '</tr>';
+            }else{
+                html += '<tr>'+
+                    '<td class=\"bold\">Vínculo diagrama flujo:</td>'+
+                    '<td>' + urldown + '</td>'+
+                '</tr>';
+            }     
+            html += '<tr>'+
                     '<td class=\"bold\">Carpeta operativa:</td>'+
                     '<td>'+d[7]+'</td>'+
                 '</tr>'+
@@ -346,6 +354,7 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
                     '<td>'+d[8]+'</td>'+
                 '</tr>'+
             '</table></div>';
+            return html;
         }
     
         \$(document).ready(function() {
@@ -474,67 +483,57 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
 
     <script>
-    // attach_validators()
-    \$('#fkficha').selectpicker({
+    \$('#documento_fkficha').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de ficha.',
         title: 'Seleccione un tipo de ficha.'
     })
-     \$('#fktipo').selectpicker({
+     \$('#documento_fktipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de documento.',
         title: 'Seleccione un tipo de documento.'
     })
-     \$('#fkaprobador').selectpicker({
+     \$('#documento_fkaprobador').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de aprobador.',
         title: 'Seleccione un tipo de aprobador.'
     })
-     \$('#estado').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de estado.',
-        title: 'Seleccione un tipo de estado.'
-    })
     
     \$('#new').click(function () {
-        \$('#codigo').val('')
-        \$('#titulo').val('')
-        \$('#versionvigente').val('')
-        \$('#vinculoarchivodig').val('')
-        \$('#vinculodiagflujo').val('')
-        \$('#carpetaOperativa').val('')
-        \$('#fechaPublicacion').val('')
+        \$('#lnkva').remove();
+        \$('#lnkvd').remove();
+        \$('#documento_id').hide()
+        \$(\"#documento_id\").siblings().hide()
+
+        \$('#documento_codigo').val('')
+        \$('#documento_titulo').val('')
+        \$('#documento_versionvigente').val('')
+        \$('#documento_vinculoarchivodig').val('')
+        \$('#documento_vinculodiagflujo').val('')
+        \$('#documento_carpetaOperativa').val('')
+        \$('#documento_fechaPublicacion').val('')
 
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"documento_submit\").innerHTML= \"Guardar\"
+        \$('#documento_id').val(0)
         \$('#form').modal('show')
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': \$('#codigo').val(),
-            'titulo': \$('#titulo').val(),
-            'versionvigente': \$('#versionvigente').val(),
-            'vinculoarchivodig': \$('#vinculoarchivodig').val(),
-            'vinculodiagflujo': \$('#vinculodiagflujo').val(),
-            'fkficha': \$('#fkficha').val(),
-            'fktipo': \$('#fktipo').val(),
-            'fkaprobador': \$('#fkaprobador').val(),
-            'carpetaOperativa': \$('#carpetaOperativa').val(),
-            'fechaPublicacion': \$('#fechaPublicacion').val()
-        }) 
+    \$(\"#documento_vinculoarchivodig\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
-        ajax_call_validation(\"/documento_insertar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documento_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
-    })
+    \$(\"#documento_vinculodiagflujo\").change(function(){
+        \$(\"#lnkvd\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -544,52 +543,52 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
             ajax_call_get(\"/documento_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)                
-                \$('#id').val(self.id)
-                \$('#codigo').val(self.codigo)
-                \$('#titulo').val(self.titulo)
-                \$('#versionvigente').val(self.versionVigente)
-                \$('#vinculoarchivodig').val(self.vinculoarchivodig)
-                \$('#vinculodiagflujo').val(self.vinculodiagflujo)
-                \$('#carpetaOperativa').val(self.carpetaOperativa)
-                \$('#fechaPublicacion').val(self.fechaPublicacion)
+                var self = JSON.parse(response)
+                             
+                \$('#documento_id').val(self.id)
+                \$('#documento_codigo').val(self.codigo)
+                \$('#documento_titulo').val(self.titulo)
+                \$('#documento_versionvigente').val(self.versionVigente)
 
-                \$('#fkficha').val(self.fkficha.id)
-                \$('#fkficha').selectpicker('render')
+                \$('#documento_carpetaOperativa').val(self.carpetaOperativa)
+                \$('#documento_fechaPublicacion').val(self.fechaPublicacion)
 
-                 \$('#fktipo').val(self.fktipo.id)
-                \$('#fktipo').selectpicker('render')
+                document.getElementById('documento_fkficha').value = self.fkficha.id
+                \$('#documento_fkficha').selectpicker('render')
+    
+                document.getElementById('documento_fktipo').value = self.fktipo.id
+                \$('#documento_fktipo').selectpicker('render')
 
-                 \$('#fkaprobador').val(self.fkaprobador.id)
-                \$('#fkaprobador').selectpicker('render')
-                clean_form()
-                verif_inputs()
-                \$('#id_div').show()
-                \$('#insert').hide()
-                \$('#update').show()
-                \$('#form').modal('show')
+                document.getElementById('documento_fkaprobador').value = self.fkaprobador.id
+                \$('#documento_fkaprobador').selectpicker('render')
+
+                if(self.vinculoarchivodig != 'N/A') {
+                    \$('#lnkva').remove();
+                    let urlfile = self.vinculoarchivodig;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#documento_vinculoarchivodig\");
+                }
+                else \$('#lnkva').hide();
+
+                if(self.vinculodiagflujo != 'N/A') {
+                    \$('#lnkvd').remove();
+                    let urldown = self.vinculodiagflujo;
+                    let vdown = urldown.substring(urldown.lastIndexOf(\"/\")+1, urldown.length);
+                    \$(\"<a id='lnkvd' href='\"+urldown+\"'>\"+vdown+\"</a>\").insertAfter(\"#documento_vinculodiagflujo\");
+                }
+                else \$('#lnkvd').hide();
             })
+            clean_form()
+            verif_inputs()
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"documento_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
-    \$('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse(\$('#id').val())),           
-            'codigo': \$('#codigo').val(),           
-            'titulo': \$('#titulo').val(),
-            'versionvigente': \$('#versionvigente').val(),
-            'vinculoarchivodig': \$('#vinculoarchivodig').val(),
-            'vinculodiagflujo': \$('#vinculodiagflujo').val(),
-            'fkficha': \$('#fkficha').val(),
-            'fktipo': \$('#fktipo').val(),
-            'fkaprobador': \$('#fkaprobador').val(),
-            'carpetaOperativa': \$('#carpetaOperativa').val(),
-            'fechaPublicacion': \$('#fechaPublicacion').val()
-        }) 
-        ajax_call_validation(\"/documento_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/documento_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')0
-    })
     reload_form()
     </script>
     <script>
@@ -606,7 +605,6 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
                 message = response;
             });
         }
-
 
         \$('.delete').click(function () {
             id = parseInt(JSON.parse(\$(this).attr('data-json')))
@@ -636,21 +634,40 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
     </script>
     <script>
         function format (d) {
-            return '<div class=\"card\" style=\"width: 100%; background-color: rgba(0, 76, 153, .15)\">'+
+            let urlfile = d[5];
+            let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\") + 1, urlfile.length);
+            let urldown = d[6];
+            let vdown = urldown.substring(urldown.lastIndexOf(\"/\") + 1, urldown.length); 
+            html = '<div class=\"card\" style=\"width: 100%; background-color: rgba(0, 76, 153, .15)\">'+
             '<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" style=\"padding-left:50px;\">'+
                 '<tr>'+
                     '<td class=\"bold\">Versión vigente:</td>'+
                     '<td>'+d[4]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                '</tr>';
+            if(urlfile != 'N/A'){
+                html += '<tr>'+
                     '<td class=\"bold\">Vínculo archivo digital:</td>'+
-                    '<td>'+d[5]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                    '<td><a href=\"' + urlfile +'\">' + vfile + '</a></td>'+
+                '</tr>';
+            }else{
+                html += '<tr>'+
+                    '<td class=\"bold\">Vínculo archivo digital:</td>'+
+                    '<td>' + urlfile + '</td>'+
+                '</tr>';
+            } 
+
+            if(urldown != 'N/A'){
+                html += '<tr>'+
                     '<td class=\"bold\">Vínculo diagrama flujo:</td>'+
-                    '<td>'+d[6]+'</td>'+
-                '</tr>'+
-                '<tr>'+
+                    '<td><a href=\"' + urldown +'\">' + vdown + '</a></td>'+
+                '</tr>';
+            }else{
+                html += '<tr>'+
+                    '<td class=\"bold\">Vínculo diagrama flujo:</td>'+
+                    '<td>' + urldown + '</td>'+
+                '</tr>';
+            }     
+            html += '<tr>'+
                     '<td class=\"bold\">Carpeta operativa:</td>'+
                     '<td>'+d[7]+'</td>'+
                 '</tr>'+
@@ -659,6 +676,7 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
                     '<td>'+d[8]+'</td>'+
                 '</tr>'+
             '</table></div>';
+            return html;
         }
     
         \$(document).ready(function() {
@@ -684,6 +702,6 @@ class __TwigTemplate_803d62439efb888cf7fc6ac37ea62821cda30ec9d872851561ae3ca6cc4
         });
     </script>
 
-{% endblock %}", "documento/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\documento\\index.html.twig");
+{% endblock %}", "documento/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documento\\index.html.twig");
     }
 }

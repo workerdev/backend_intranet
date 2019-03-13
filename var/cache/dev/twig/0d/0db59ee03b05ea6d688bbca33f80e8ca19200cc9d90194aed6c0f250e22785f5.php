@@ -52,7 +52,7 @@ class __TwigTemplate_ef96f8547a7581cffd27c5098de7319c083824e1ba17c10ed419b747fb0
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "alcance", array()), "html", null, true);
             echo "</option>
                         ";
         }
@@ -74,7 +74,7 @@ class __TwigTemplate_ef96f8547a7581cffd27c5098de7319c083824e1ba17c10ed419b747fb0
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "codigo", array()), "html", null, true);
             echo "</option>
                         ";
         }
@@ -137,7 +137,7 @@ class __TwigTemplate_ef96f8547a7581cffd27c5098de7319c083824e1ba17c10ed419b747fb0
                     <label>Tipo de auditoría</label>
                         <select id=\"auditoria\" class=\"form-control\">
                         {% for t in tipo %}
-                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
+                            <option value=\"{{t.id}}\">{{t.alcance}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -145,7 +145,7 @@ class __TwigTemplate_ef96f8547a7581cffd27c5098de7319c083824e1ba17c10ed419b747fb0
                         <label>Tipo de documento</label>
                         <select id=\"documento\" class=\"form-control\">
                         {% for t in tipo %}
-                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
+                            <option value=\"{{t.id}}\">{{t.codigo}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -158,6 +158,6 @@ class __TwigTemplate_ef96f8547a7581cffd27c5098de7319c083824e1ba17c10ed419b747fb0
             </div>
         </div>
     </div>
-</div>", "detalledocumento/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\detalledocumento\\form.html.twig");
+</div>", "detalledocumento/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\detalledocumento\\form.html.twig");
     }
 }

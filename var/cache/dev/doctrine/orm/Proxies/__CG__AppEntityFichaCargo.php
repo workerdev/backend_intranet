@@ -64,10 +64,10 @@ class FichaCargo extends \App\Entity\FichaCargo implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'id', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkarea', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'objetivo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'responsabilidades', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'experiencia', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'conocimientos', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'formacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'caracteristicas', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'aprobadojefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmajefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'aprobadogerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmagerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'hipervinculo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'estado'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'id', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkarea', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'objetivo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'responsabilidades', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'experiencia', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'conocimientos', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'formacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'caracteristicas', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkjefeaprobador', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmajefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkgerenteaprobador', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmagerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'hipervinculo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'estado'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'id', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkarea', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'objetivo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'responsabilidades', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'experiencia', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'conocimientos', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'formacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'caracteristicas', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'aprobadojefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmajefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'aprobadogerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmagerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'hipervinculo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'estado'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'id', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkarea', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'objetivo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'responsabilidades', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'experiencia', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'conocimientos', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'formacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'caracteristicas', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fechaaprobacion', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkjefeaprobador', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmajefe', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'fkgerenteaprobador', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'firmagerente', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'hipervinculo', '' . "\0" . 'App\\Entity\\FichaCargo' . "\0" . 'estado'];
     }
 
     /**
@@ -400,23 +400,23 @@ class FichaCargo extends \App\Entity\FichaCargo implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getAprobadojefe(): ?string
+    public function getFkjefeaprobador(): ?\App\Entity\Usuario
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAprobadojefe', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFkjefeaprobador', []);
 
-        return parent::getAprobadojefe();
+        return parent::getFkjefeaprobador();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setAprobadojefe(string $aprobadojefe): \App\Entity\FichaCargo
+    public function setFkjefeaprobador(?\App\Entity\Usuario $fkjefeaprobador): \App\Entity\FichaCargo
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAprobadojefe', [$aprobadojefe]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFkjefeaprobador', [$fkjefeaprobador]);
 
-        return parent::setAprobadojefe($aprobadojefe);
+        return parent::setFkjefeaprobador($fkjefeaprobador);
     }
 
     /**
@@ -444,23 +444,23 @@ class FichaCargo extends \App\Entity\FichaCargo implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getAprobadogerente(): ?string
+    public function getFkgerenteaprobador(): ?\App\Entity\Usuario
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAprobadogerente', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFkgerenteaprobador', []);
 
-        return parent::getAprobadogerente();
+        return parent::getFkgerenteaprobador();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setAprobadogerente(string $aprobadogerente): \App\Entity\FichaCargo
+    public function setFkgerenteaprobador(?\App\Entity\Usuario $fkgerenteaprobador): \App\Entity\FichaCargo
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAprobadogerente', [$aprobadogerente]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFkgerenteaprobador', [$fkgerenteaprobador]);
 
-        return parent::setAprobadogerente($aprobadogerente);
+        return parent::setFkgerenteaprobador($fkgerenteaprobador);
     }
 
     /**

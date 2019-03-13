@@ -94,6 +94,6 @@ class __TwigTemplate_a508c249a4e1fb5c4540f30464a3263168d653d44b14d702ba3cc672fae
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "tipodatoempresarial/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tipodatoempresarial\\table.html.twig");
+{% endfor %}", "tipodatoempresarial/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\tipodatoempresarial\\table.html.twig");
     }
 }

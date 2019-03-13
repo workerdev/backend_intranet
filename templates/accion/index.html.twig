@@ -168,11 +168,14 @@
             obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
-            ajax_call_rep("/accion_verif",{
+            ajax_call_reptb("/accion_verif",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#new");
+                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
             })
         })
     }

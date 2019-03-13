@@ -15,10 +15,11 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
         $this->context = $context;
     }
 
-    public function match($rawPathinfo)
+    public function match($pathinfo)
     {
-        $allow = $allowSchemes = array();
-        $pathinfo = rawurldecode($rawPathinfo) ?: '/';
+        $allow = $allowSchemes = [];
+        $pathinfo = rawurldecode($pathinfo) ?: '/';
+        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
@@ -27,42 +28,36 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
         }
 
         $matchedPathinfo = $pathinfo;
-        $regexList = array(
+        $regexList = [
             0 => '{^(?'
                     .'|/(a)(*:11)'
-                .')(?:/?)$}sD',
+                .')/?$}sD',
             11 => '{^(?'
                     .'|/(.)(*:22)'
-                .')(?:/?)$}sDu',
+                .')/?$}sDu',
             22 => '{^(?'
                     .'|/(.)(*:33)'
-                .')(?:/?)$}sD',
-        );
+                .')/?$}sD',
+        ];
 
         foreach ($regexList as $offset => $regex) {
             while (preg_match($regex, $matchedPathinfo, $matches)) {
                 switch ($m = (int) $matches['MARK']) {
                     default:
-                        $routes = array(
-                            11 => array(array('_route' => 'a'), array('a'), null, null, false),
-                            22 => array(array('_route' => 'b'), array('a'), null, null, false),
-                            33 => array(array('_route' => 'c'), array('a'), null, null, false),
-                        );
+                        $routes = [
+                            11 => [['_route' => 'a'], ['a'], null, null, false, true],
+                            22 => [['_route' => 'b'], ['a'], null, null, false, true],
+                            33 => [['_route' => 'c'], ['a'], null, null, false, true],
+                        ];
 
-                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$m];
+                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
 
-                        if ('/' !== $pathinfo) {
-                            if ('/' === $pathinfo[-1]) {
-                                if (preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
-                                    $matches = $n;
-                                } else {
-                                    $hasTrailingSlash = true;
-                                }
-                            }
-
-                            if ($hasTrailingSlash !== ('/' === $pathinfo[-1])) {
-                                break;
-                            }
+                        $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
+                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
+                            break;
+                        }
+                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
+                            $matches = $n;
                         }
 
                         foreach ($vars as $i => $v) {

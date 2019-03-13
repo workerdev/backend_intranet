@@ -29,7 +29,7 @@
 
                     <select id="fkpersonal" class="form-control">
                         {% for t in personal %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
+                            <option value="{{t.id}}">{{t.nombre ~ ' ' ~ t.apellido}}</option>
                         {% endfor %}
                     </select>
                         </br>

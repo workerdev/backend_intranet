@@ -12,7 +12,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * TipoPermiso
  * @ORM\Table(name="cb_procesos_tipo_permiso", uniqueConstraints={@ORM\UniqueConstraint(name="cb_tipo_permiso_id", columns={"cb_tipo_permiso_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\TipoPermisoRepository")
- *  @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */
 
 class TipoPermiso

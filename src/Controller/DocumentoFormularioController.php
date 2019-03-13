@@ -13,6 +13,9 @@ use App\Entity\Documento;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+use App\Form\DocumentoFormularioType;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -32,7 +35,7 @@ class DocumentoFormularioController extends AbstractController
      * @Route("/documentoformulario", name="documentoformulario")
      * @Method({"GET"})
      */
-    public function index()
+    public function index(DocumentoFormulario $docformulario = null, Request $request)
     {
         $s_user = $this->get('session')->get('s_user');
         if(empty($s_user)){
@@ -58,125 +61,81 @@ class DocumentoFormularioController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->findBy(array('estado' => '1'));
-        $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
-        return $this->render('documentoformulario/index.html.twig', array('objects' => $DocumentoFormulario, 'documento' => $Documento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
-    }
 
-
-    /**
-     * @Route("/documentoformulario_insertar", methods={"POST"}, name="documentoformulario_insertar")
-     */
-    public function insertar(ValidatorInterface $validator  )
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-            $sx = json_decode($_POST['object'], true);
+        $form = $this->createForm(DocumentoFormularioType::class, null);
+        $form ->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){ 
+            $datosDocumento = $form->getData();
             
-            $documento = $sx['documento'];
-            $codigo = $sx['codigo'];
-            $titulo = $sx['titulo'];
-            $version = $sx['version'];
-            $fecha = $sx['fechapb'];                
-            //$carpetaop = $sx['carpeta'];
-            $vinculodig = $sx['vfiledg'];              
-            $vinculodesc = $sx['vfileds'];             
-            $aprobador = $sx['aprobador']; 
+            if($datosDocumento->getId() == 0 ){
+                $docformulario = new DocumentoFormulario();
+            }else{
+                $docformulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($datosDocumento->getId());
+            }            
+            $cx = $this->getDoctrine()->getManager(); 
 
-            $DocumentoFormulario = new DocumentoFormulario();
-            $DocumentoFormulario->setCodigo($codigo);
-            $DocumentoFormulario->setTitulo($titulo);
-            $DocumentoFormulario->setVersionVigente($version);
-            $DocumentoFormulario->setFechaPublicacion(new \DateTime($fecha));
-            $DocumentoFormulario->setAprobadoPor($aprobador);
-            //$carpetaop == '' ? $carpetaop = null:$carpetaop;
-            //$DocumentoFormulario->setCarpetaOperativa($carpetaop);
-            $DocumentoFormulario->setVinculoDig($vinculodig);
-            $DocumentoFormulario->setVinculoDesc($vinculodesc);
-            $DocumentoFormulario->setEstado(1);
-
-            $documento !=''? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento):$documento = null ;
-            $DocumentoFormulario->setFkdocumento($documento);
-            $errors = $validator->validate($DocumentoFormulario);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
+            if(empty($form['vinculoFileDig']->getData())){
+                if($docformulario->getVinculoFileDig() == null){
+                    $docformulario->setVinculoFileDig("N/A");
                 }
-                return  new  Response(json_encode($array)) ;
-            }
-            $cx->persist($DocumentoFormulario);
-            $cx->flush();
-            $resultado = array('response'=>"El ID registrado es: ".$DocumentoFormulario->getId().".",   
-            'success' => true,
-            'message' => 'Documento formulario registrado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
+            }else{
+                $file = $form['vinculoFileDig']->getData();
+                $fileName = $file->getClientOriginalName();             
+                $directorio = $this->getParameter('Directorio_DocFormulario');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $docformulario->setVinculoFileDig($url);
+            } 
 
-    
-    /**
-     * @Route("/documentoformulario_actualizar", methods={"POST"}, name="documentoformulario_actualizar")
-     */
-    public function actualizar(ValidatorInterface $validator)
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-
-            $sx = json_decode($_POST['object'], true);
-            $id = $sx['id'];
-            $documento = $sx['documento'];
-            $codigo = $sx['codigo'];
-            $titulo = $sx['titulo'];
-            $version = $sx['version'];
-            $fecha = $sx['fechapb'];                    
-            $vinculodig = $sx['vfiledg'];              
-            $vinculodesc = $sx['vfileds'];            
-            $aprobador = $sx['aprobador']; 
-
-            $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
-            $DocumentoFormulario->setId($id);
-            $DocumentoFormulario->setCodigo($codigo);
-            $DocumentoFormulario->setTitulo($titulo);
-            $DocumentoFormulario->setVersionVigente($version);
-            $DocumentoFormulario->setFechaPublicacion(new \DateTime($fecha));
-            $DocumentoFormulario->setAprobadoPor($aprobador);
-            //$carpetaop == '' ? $carpetaop = null:$carpetaop;
-            //$DocumentoFormulario->setCarpetaOperativa($carpetaop);
-            $DocumentoFormulario->setVinculoDig($vinculodig);
-            $DocumentoFormulario->setVinculoDesc($vinculodesc);
-            $DocumentoFormulario->setEstado(1);
-
-            $documento !=''? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento):$documento = null ;
-            $DocumentoFormulario->setFkdocumento($documento);
-            $errors = $validator->validate($DocumentoFormulario);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
+            if(empty($form['vinculoFileDesc']->getData())){
+                if($docformulario->getvinculoFileDesc() == null){
+                    $docformulario->setvinculoFileDesc("N/A");
                 }
-                return  new  Response(json_encode($array)) ;
+            }else{
+                $file = $form['vinculoFileDesc']->getData();
+                $fileName = $file->getClientOriginalName();             
+                $directorio = $this->getParameter('Directorio_DocFormulario');           
+                $file->move($directorio, $fileName);
+                $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
+                $url = str_replace("\\", "/", $ruta).'/'.$fileName;
+                $docformulario->setvinculoFileDesc($url);
             }
 
-            $cx->merge($DocumentoFormulario);
-            $cx->flush();
+            $docformulario->setCodigo($datosDocumento->getCodigo());
+            $docformulario->setTitulo($datosDocumento->getTitulo());
+            $docformulario->setVersionVigente($datosDocumento->getVersionVigente());
+            $docformulario->setFechaPublicacion($datosDocumento->getFechaPublicacion());
+            $docformulario->setEstado(1);
+            
+            $documento = new Documento();
+            $documento = $datosDocumento->getFkdocumento();
+            $docformulario->setFkdocumento($documento);
 
-            $resultado = array('success' => true,
-                    'message' => 'Documento formulario actualizado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            $aprobador = new Usuario();
+            $aprobador = $datosDocumento->getFkaprobador();
+            $docformulario->setFkaprobador($aprobador);
+
+            if($datosDocumento->getId() == 0){
+                $cx->persist($docformulario);
+                $cx->flush();
+                unset($docformulario);
+                unset($datosDocumento);
+            }else{
+                $cx->merge($docformulario);
+                $cx->flush();
+                unset($docformulario);
+                unset($datosDocumento);
+            }
+            $redireccion = new RedirectResponse('/documentoformulario');
+            return $redireccion;
         }
+
+        $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->findBy(array('estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        return $this->render('documentoformulario/index.html.twig', array('objects' => $DocumentoFormulario, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -190,16 +149,16 @@ class DocumentoFormularioController extends AbstractController
             $id = $sx['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
             $fpb = $DocumentoFormulario->getFechaPublicacion();
-            $result = $fpb->format('Y-m-d');
+            if($fpb != null) $result = $fpb->format('Y-m-d'); else $result = $fpb;
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),
                 "codigo" => $DocumentoFormulario->getCodigo(),
                 "titulo" => $DocumentoFormulario->getTitulo(),
                 "versionVigente" => $DocumentoFormulario->getversionVigente(),
                 "fechaPublicacion" => $result,
-                "aprobadoPor" => $DocumentoFormulario->getAprobadoPor(),
-                "vinculoDig" => $DocumentoFormulario->getVinculoDig(),
-                "vinculoDesc" => $DocumentoFormulario->getVinculoDesc(),
+                "fkaprobador" => $DocumentoFormulario->getFkaprobador(),
+                "vinculoFileDig" => $DocumentoFormulario->getVinculoFileDig(),
+                "vinculoFileDesc" => $DocumentoFormulario->getVinculoFileDesc(),
                 "fkdocumento" => $DocumentoFormulario->getFkdocumento()
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));

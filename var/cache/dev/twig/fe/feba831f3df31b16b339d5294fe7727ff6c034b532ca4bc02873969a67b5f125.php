@@ -468,6 +468,6 @@ class __TwigTemplate_7eb4f208ad3d2d1a12e0e1ccc0241a92d98f2a19fd98213ff99567abc78
         {% endif %}
     </div>
 </div>
-", "@Twig/Exception/exception.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\vendor\\symfony\\twig-bundle\\Resources\\views\\Exception\\exception.html.twig");
+", "@Twig/Exception/exception.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\vendor\\symfony\\twig-bundle\\Resources\\views\\Exception\\exception.html.twig");
     }
 }

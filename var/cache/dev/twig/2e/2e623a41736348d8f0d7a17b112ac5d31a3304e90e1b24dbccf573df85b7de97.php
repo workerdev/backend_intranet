@@ -95,15 +95,25 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
-        ";
+            ";
+            // line 38
+            if ((isset($context["docderiv"]) || array_key_exists("docderiv", $context) ? $context["docderiv"] : (function () { throw new Twig_Error_Runtime('Variable "docderiv" does not exist.', 38, $this->source); })())) {
+                // line 39
+                echo "            <button id=\"apb\" type=\"button\" class=\"btn bg-teal waves-effect\" title=\"Documentos derivados\">
+                <i class=\"material-icons\">folder</i>
+            </button>
+            ";
+            }
+            // line 43
+            echo "        ";
         }
-        // line 39
+        // line 44
         echo "        </div>
     </div>
     ";
-        // line 41
-        if ((twig_in_filter("home_docprocesorev", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 41, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 41, $this->source); })()))) {
-            // line 42
+        // line 46
+        if ((twig_in_filter("home_docprocesorev", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 46, $this->source); })())) && (isset($context["objects"]) || array_key_exists("objects", $context) ? $context["objects"] : (function () { throw new Twig_Error_Runtime('Variable "objects" does not exist.', 46, $this->source); })()))) {
+            // line 47
             echo "    <div class=\"row\">
         <div class=\"body table-responsive\">
             <table id=\"data_table\" class=\"table table-bordered table-striped table-hover js-basic-example dataTable\">
@@ -119,7 +129,7 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
                 </thead>
                 <tbody id=\"table_content\">
                 ";
-            // line 56
+            // line 61
             echo twig_include($this->env, $context, "docprocesorev/table.html.twig");
             echo "
                 </tbody>
@@ -128,11 +138,11 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
     </div>
     ";
         } else {
-            // line 62
+            // line 67
             echo "    <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
     ";
         }
-        // line 64
+        // line 69
         echo "</div>
 ";
         
@@ -140,20 +150,23 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
 
     }
 
-    // line 66
+    // line 71
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 67
+        // line 72
         echo "<script src=\"resources/plugins/momentjs/moment.js\"></script>
 <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
 <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
 <script src=\"resources/plugins/tinymce/tinymce.js\"></script>
 
 <script>
- 
+    var derivar = false;
+    var aprobar = false;
+    var rechazar = false;
+    var idrev = 0;
     \$('#fkdoc').selectpicker({
         size: 4,
         liveSearch: true,
@@ -168,16 +181,33 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
         title: 'Seleccione una opción.'
     })
 
+    \$('#responsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
+    \$('#dresponsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
     \$('#new').click(function () {
-        \$('#responsable').val('')
-        \$('#firma').val('')
+        \$('#firma').val('Por revisar');
         
-        clean_form()
-        verif_inputs()
-        \$('#id_div').hide()
-        \$('#insert').show()
-        \$('#update').hide()
-        \$('#form').modal('show')
+        clean_form();
+        verif_inputs();
+        \$('#id_div').hide();
+        \$('#insert').show();
+        \$('#update').hide();
+        \$('#form').modal('show');
+    })
+
+    \$('#apb').click(function () {
+        \$('#form-rev').modal('show');
     })
     
     \$('#insert').click(function () {
@@ -187,11 +217,118 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             'firma': \$(\"#firma\").val(),
             'estadodoc': \$(\"#estadodoc\").val(),
             'fkdocs': \$(\"#fkdoc\").val()
-        })
-    ajax_call_validation(\"/docprocesorev_insertar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/docprocesorev_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
+        });
+        ajax_call_validation(\"/docprocesorev_insertar\", {object: objeto}, null, main_route)
     })
+
+    \$('#confirm').click(function () {
+        objeto = JSON.stringify({
+            'password': \$('#clave').val()
+        });
+        \$.ajax({
+            method: \"POST\",
+            url: \"/valid_action\",
+            data: {object : objeto},
+            async: false,
+            beforeSend: function () {
+                \$(\".plan-icon-load\").css('display', 'inline-block');
+            },
+            success: function (data, textStatus) {
+                \$(\".plan-icon-load\").css('display', 'none');
+            }
+        }).done(function (response) {
+            let message = \"\";
+            if(response == \"vacio\"){
+                message = 'Por favor ingrese su password.'; 
+                document.getElementById('msgv').innerHTML = message;
+                \$(\"#msgv\").show();
+                setTimeout(function(){ \$(\"#msgv\").fadeOut() }, 1000);
+            }
+            if(response == \"error\"){ 
+                message = 'Datos invalidos, intente de nuevo.';
+                document.getElementById('msgv').innerHTML = message;
+                \$(\"#msgv\").show();
+                setTimeout(function(){ 
+                        \$(\"#msgv\").fadeOut();
+                        \$('#clave').val(''); 
+                    }
+                , 3000);
+            }
+            if(response == \"exitoso\"){
+                if(derivar){ 
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': \$('#dresponsable').val(),
+                        'firma': 'DERIVADO',
+                        'estadodoc': 'DERIVADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_derivar\", {object: objeto}, null, main_route)
+                }
+                if(aprobar){
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': null,
+                        'firma': 'APROBADO',
+                        'estadodoc': 'APROBADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_aprorec\", {object: objeto}, null, main_route)
+                }
+                if(rechazar){ 
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': null,
+                        'firma': 'RECHAZADO',
+                        'estadodoc': 'RECHAZADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_aprorec\", {object: objeto}, null, main_route)
+                }
+                \$('#form-valid').hide();
+                \$('#form-rev').hide();
+                \$('#form-valid').modal('hide');
+                \$('#form-rev').modal('hide');
+            }
+        });
+    })
+
+    function derivar_doc() {
+        \$('.drdoc').click(function () {
+            derivar = true;
+            aprobar = false;
+            rechazar = false;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')));
+            vrep = \$('#dresponsable').val();
+            //console.log(vrep);
+            if(vrep == \"\") alert('Por favor, seleccione un responsable.');
+            else \$('#form-valid').modal('show');
+        });
+    }
+
+    function aprobar_doc() {
+        \$('.apdoc').click(function () {
+            derivar = false;
+            aprobar = true;
+            rechazar = false;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')))
+            \$('#msgv').modal('hide')
+            \$('#form-valid').modal('show')
+        });
+    }
+
+    function rechazar_doc() {
+        \$('.rcdoc').click(function () {
+            derivar = false;
+            aprobar = false;
+            rechazar = true;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')))
+            \$('#form-valid').modal('show')
+        });
+    }
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -204,8 +341,10 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
                 var self = JSON.parse(response);
                 \$('#id').val(self.id)
                 \$('#fecha').val(self.fecha)
-                \$('#responsable').val(self.responsable)
                 \$('#firma').val(self.firma)
+
+                \$('#responsable').val(self.responsable)
+                \$('#responsable').selectpicker('render')
 
                 \$('#estadodoc').val(self.estadodoc)
                 \$('#estadodoc').selectpicker('render')
@@ -233,13 +372,14 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             'fkdocs': \$('#fkdoc').val()
         })
         ajax_call_validation(\"/docprocesorev_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/docprocesorev_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
     })
     reload_form()
 </script>
 <script>
     attach_edit()
+    derivar_doc()
+    aprobar_doc()
+    rechazar_doc()
 
     let message= ''
     function docrev_prev(id) {
@@ -296,7 +436,6 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             }, 1500
         )
     })
-
 </script>
 
 ";
@@ -317,7 +456,7 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
 
     public function getDebugInfo()
     {
-        return array (  150 => 67,  144 => 66,  136 => 64,  132 => 62,  123 => 56,  107 => 42,  105 => 41,  101 => 39,  95 => 35,  93 => 34,  84 => 28,  81 => 27,  75 => 26,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  160 => 72,  154 => 71,  146 => 69,  142 => 67,  133 => 61,  117 => 47,  115 => 46,  111 => 44,  108 => 43,  102 => 39,  100 => 38,  95 => 35,  93 => 34,  84 => 28,  81 => 27,  75 => 26,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -359,6 +498,11 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
+            {% if docderiv %}
+            <button id=\"apb\" type=\"button\" class=\"btn bg-teal waves-effect\" title=\"Documentos derivados\">
+                <i class=\"material-icons\">folder</i>
+            </button>
+            {% endif %}
         {% endif %}
         </div>
     </div>
@@ -394,7 +538,10 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
 <script src=\"resources/plugins/tinymce/tinymce.js\"></script>
 
 <script>
- 
+    var derivar = false;
+    var aprobar = false;
+    var rechazar = false;
+    var idrev = 0;
     \$('#fkdoc').selectpicker({
         size: 4,
         liveSearch: true,
@@ -409,16 +556,33 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
         title: 'Seleccione una opción.'
     })
 
+    \$('#responsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
+    \$('#dresponsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
     \$('#new').click(function () {
-        \$('#responsable').val('')
-        \$('#firma').val('')
+        \$('#firma').val('Por revisar');
         
-        clean_form()
-        verif_inputs()
-        \$('#id_div').hide()
-        \$('#insert').show()
-        \$('#update').hide()
-        \$('#form').modal('show')
+        clean_form();
+        verif_inputs();
+        \$('#id_div').hide();
+        \$('#insert').show();
+        \$('#update').hide();
+        \$('#form').modal('show');
+    })
+
+    \$('#apb').click(function () {
+        \$('#form-rev').modal('show');
     })
     
     \$('#insert').click(function () {
@@ -428,11 +592,118 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             'firma': \$(\"#firma\").val(),
             'estadodoc': \$(\"#estadodoc\").val(),
             'fkdocs': \$(\"#fkdoc\").val()
-        })
-    ajax_call_validation(\"/docprocesorev_insertar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/docprocesorev_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
+        });
+        ajax_call_validation(\"/docprocesorev_insertar\", {object: objeto}, null, main_route)
     })
+
+    \$('#confirm').click(function () {
+        objeto = JSON.stringify({
+            'password': \$('#clave').val()
+        });
+        \$.ajax({
+            method: \"POST\",
+            url: \"/valid_action\",
+            data: {object : objeto},
+            async: false,
+            beforeSend: function () {
+                \$(\".plan-icon-load\").css('display', 'inline-block');
+            },
+            success: function (data, textStatus) {
+                \$(\".plan-icon-load\").css('display', 'none');
+            }
+        }).done(function (response) {
+            let message = \"\";
+            if(response == \"vacio\"){
+                message = 'Por favor ingrese su password.'; 
+                document.getElementById('msgv').innerHTML = message;
+                \$(\"#msgv\").show();
+                setTimeout(function(){ \$(\"#msgv\").fadeOut() }, 1000);
+            }
+            if(response == \"error\"){ 
+                message = 'Datos invalidos, intente de nuevo.';
+                document.getElementById('msgv').innerHTML = message;
+                \$(\"#msgv\").show();
+                setTimeout(function(){ 
+                        \$(\"#msgv\").fadeOut();
+                        \$('#clave').val(''); 
+                    }
+                , 3000);
+            }
+            if(response == \"exitoso\"){
+                if(derivar){ 
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': \$('#dresponsable').val(),
+                        'firma': 'DERIVADO',
+                        'estadodoc': 'DERIVADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_derivar\", {object: objeto}, null, main_route)
+                }
+                if(aprobar){
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': null,
+                        'firma': 'APROBADO',
+                        'estadodoc': 'APROBADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_aprorec\", {object: objeto}, null, main_route)
+                }
+                if(rechazar){ 
+                    objeto = JSON.stringify({
+                        'id': idrev,
+                        'fecha': null,
+                        'responsable': null,
+                        'firma': 'RECHAZADO',
+                        'estadodoc': 'RECHAZADO',
+                        'fkdocs': null
+                    });
+                    ajax_call_validation(\"/docprocesorev_aprorec\", {object: objeto}, null, main_route)
+                }
+                \$('#form-valid').hide();
+                \$('#form-rev').hide();
+                \$('#form-valid').modal('hide');
+                \$('#form-rev').modal('hide');
+            }
+        });
+    })
+
+    function derivar_doc() {
+        \$('.drdoc').click(function () {
+            derivar = true;
+            aprobar = false;
+            rechazar = false;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')));
+            vrep = \$('#dresponsable').val();
+            //console.log(vrep);
+            if(vrep == \"\") alert('Por favor, seleccione un responsable.');
+            else \$('#form-valid').modal('show');
+        });
+    }
+
+    function aprobar_doc() {
+        \$('.apdoc').click(function () {
+            derivar = false;
+            aprobar = true;
+            rechazar = false;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')))
+            \$('#msgv').modal('hide')
+            \$('#form-valid').modal('show')
+        });
+    }
+
+    function rechazar_doc() {
+        \$('.rcdoc').click(function () {
+            derivar = false;
+            aprobar = false;
+            rechazar = true;
+            idrev = parseInt(JSON.parse(\$(this).attr('data-json')))
+            \$('#form-valid').modal('show')
+        });
+    }
 
     function attach_edit() {
         \$('.edit').click(function () {
@@ -445,8 +716,10 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
                 var self = JSON.parse(response);
                 \$('#id').val(self.id)
                 \$('#fecha').val(self.fecha)
-                \$('#responsable').val(self.responsable)
                 \$('#firma').val(self.firma)
+
+                \$('#responsable').val(self.responsable)
+                \$('#responsable').selectpicker('render')
 
                 \$('#estadodoc').val(self.estadodoc)
                 \$('#estadodoc').selectpicker('render')
@@ -474,13 +747,14 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             'fkdocs': \$('#fkdoc').val()
         })
         ajax_call_validation(\"/docprocesorev_actualizar\", {object: objeto}, null, main_route)
-        // ajax_call(\"/docprocesorev_actualizar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
     })
     reload_form()
 </script>
 <script>
     attach_edit()
+    derivar_doc()
+    aprobar_doc()
+    rechazar_doc()
 
     let message= ''
     function docrev_prev(id) {
@@ -537,9 +811,8 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             }, 1500
         )
     })
-
 </script>
 
-{% endblock %}", "docprocesorev/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\docprocesorev\\index.html.twig");
+{% endblock %}", "docprocesorev/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\docprocesorev\\index.html.twig");
     }
 }

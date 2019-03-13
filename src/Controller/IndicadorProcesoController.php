@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 
 
 class IndicadorProcesoController extends Controller
@@ -56,11 +58,15 @@ class IndicadorProcesoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $IndicadorProceso = $this->getDoctrine()->getRepository(IndicadorProceso::class)->findBy(array('estado' => '1'));
         $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
         $UnidadMedida = $this->getDoctrine()->getRepository(UnidadMedida::class)->findBy(array('estado' => '1'));
         $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-        return $this->render('indicadorproceso/index.html.twig', array('objects' => $IndicadorProceso, 'tipo' => $FichaProcesos, 'tipo2' => $UnidadMedida, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('indicadorproceso/index.html.twig', array('objects' => $IndicadorProceso, 'tipo' => $FichaProcesos, 'tipo2' => $UnidadMedida, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

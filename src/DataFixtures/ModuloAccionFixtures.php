@@ -1427,6 +1427,154 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($recelm);
 
 
+        $tpermshm = new Modulo();
+        $tpermshm->setNombre('home_tipopermiso');
+        $tpermshm->setTitulo('Consultar');
+        $tpermshm->setRuta('');
+        $tpermshm->setIcono('home');
+        $tpermshm->setMenu(0);
+        $tpermshm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
+        $manager->persist($tpermshm);
+
+        $tpermsins = new Modulo();
+        $tpermsins->setNombre('tipopermiso_insertar');
+        $tpermsins->setTitulo('Adicionar');
+        $tpermsins->setRuta('/tipopermiso_insertar');
+        $tpermsins->setIcono('home');
+        $tpermsins->setMenu(0);
+        $tpermsins->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
+        $manager->persist($tpermsins);
+
+        $tpermsedt = new Modulo();
+        $tpermsedt->setNombre('tipopermiso_editar');
+        $tpermsedt->setTitulo('Actualizar');
+        $tpermsedt->setRuta('/tipopermiso_editar');
+        $tpermsedt->setIcono('home');
+        $tpermsedt->setMenu(0);
+        $tpermsedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
+        $manager->persist($tpermsedt);
+
+        $tpermselm = new Modulo();
+        $tpermselm->setNombre('tipopermiso_eliminar');
+        $tpermselm->setTitulo('Dar de Baja');
+        $tpermselm->setRuta('/tipopermiso_eliminar');
+        $tpermselm->setIcono('home');
+        $tpermselm->setMenu(0);
+        $tpermselm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
+        $manager->persist($tpermselm);
+
+
+        $ctvohm = new Modulo();
+        $ctvohm->setNombre('home_correlativo');
+        $ctvohm->setTitulo('Consultar');
+        $ctvohm->setRuta('');
+        $ctvohm->setIcono('home');
+        $ctvohm->setMenu(0);
+        $ctvohm->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORRELATIVO_CHILD));
+        $manager->persist($ctvohm);
+
+        $ctvoins = new Modulo();
+        $ctvoins->setNombre('correlativo_insertar');
+        $ctvoins->setTitulo('Adicionar');
+        $ctvoins->setRuta('/correlativo_insertar');
+        $ctvoins->setIcono('home');
+        $ctvoins->setMenu(0);
+        $ctvoins->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORRELATIVO_CHILD));
+        $manager->persist($ctvoins);
+
+        $ctvoedt = new Modulo();
+        $ctvoedt->setNombre('correlativo_editar');
+        $ctvoedt->setTitulo('Actualizar');
+        $ctvoedt->setRuta('/correlativo_editar');
+        $ctvoedt->setIcono('home');
+        $ctvoedt->setMenu(0);
+        $ctvoedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORRELATIVO_CHILD));
+        $manager->persist($ctvoedt);
+
+        $ctvoelm = new Modulo();
+        $ctvoelm->setNombre('correlativo_eliminar');
+        $ctvoelm->setTitulo('Dar de Baja');
+        $ctvoelm->setRuta('/correlativo_eliminar');
+        $ctvoelm->setIcono('home');
+        $ctvoelm->setMenu(0);
+        $ctvoelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORRELATIVO_CHILD));
+        $manager->persist($ctvoelm);
+
+
+        $undhm = new Modulo();
+        $undhm->setNombre('home_unidad');
+        $undhm->setTitulo('Consultar');
+        $undhm->setRuta('');
+        $undhm->setIcono('home');
+        $undhm->setMenu(0);
+        $undhm->setFkmodulo($this->getReference(ModuloChildrenFixtures::UNIDAD_CHILD));
+        $manager->persist($undhm);
+
+        $undins = new Modulo();
+        $undins->setNombre('unidad_insertar');
+        $undins->setTitulo('Adicionar');
+        $undins->setRuta('/unidad_insertar');
+        $undins->setIcono('home');
+        $undins->setMenu(0);
+        $undins->setFkmodulo($this->getReference(ModuloChildrenFixtures::UNIDAD_CHILD));
+        $manager->persist($undins);
+
+        $undedt = new Modulo();
+        $undedt->setNombre('unidad_editar');
+        $undedt->setTitulo('Actualizar');
+        $undedt->setRuta('/unidad_editar');
+        $undedt->setIcono('home');
+        $undedt->setMenu(0);
+        $undedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::UNIDAD_CHILD));
+        $manager->persist($undedt);
+
+        $undelm = new Modulo();
+        $undelm->setNombre('unidad_eliminar');
+        $undelm->setTitulo('Dar de Baja');
+        $undelm->setRuta('/unidad_eliminar');
+        $undelm->setIcono('home');
+        $undelm->setMenu(0);
+        $undelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::UNIDAD_CHILD));
+        $manager->persist($undelm);
+
+
+        $permshm = new Modulo();
+        $permshm->setNombre('home_permiso');
+        $permshm->setTitulo('Consultar');
+        $permshm->setRuta('');
+        $permshm->setIcono('home');
+        $permshm->setMenu(0);
+        $permshm->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERMISO_CHILD));
+        $manager->persist($permshm);
+
+        $permsins = new Modulo();
+        $permsins->setNombre('permiso_insertar');
+        $permsins->setTitulo('Adicionar');
+        $permsins->setRuta('/permiso_insertar');
+        $permsins->setIcono('home');
+        $permsins->setMenu(0);
+        $permsins->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERMISO_CHILD));
+        $manager->persist($permsins);
+
+        $permsedt = new Modulo();
+        $permsedt->setNombre('permiso_editar');
+        $permsedt->setTitulo('Actualizar');
+        $permsedt->setRuta('/permiso_editar');
+        $permsedt->setIcono('home');
+        $permsedt->setMenu(0);
+        $permsedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERMISO_CHILD));
+        $manager->persist($permsedt);
+
+        $permselm = new Modulo();
+        $permselm->setNombre('permiso_eliminar');
+        $permselm->setTitulo('Dar de Baja');
+        $permselm->setRuta('/permiso_eliminar');
+        $permselm->setIcono('home');
+        $permselm->setMenu(0);
+        $permselm->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERMISO_CHILD));
+        $manager->persist($permselm);
+
+
 
         $indicadorproceso = new Modulo();
         $indicadorproceso->setNombre('home_indicadorproceso');
@@ -2652,7 +2800,41 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $orgelim->setFkmodulo($this->getReference(ModuloChildrenFixtures::ORGANIGRAMA_CHILD));
         $manager->persist($orgelim);     
         
-        
+        $homrorgciacon = new Modulo();
+        $homrorgciacon->setNombre('home_organigramagerencia');
+        $homrorgciacon->setTitulo( 'Consultar');
+        $homrorgciacon->setRuta( '');
+        $homrorgciacon->setIcono('home');
+        $homrorgciacon->setMenu( 0);
+        $homrorgciacon->setFkmodulo($this->getReference(ModuloChildrenFixtures::ORGANIGRAMAGERENCIA_CHILD));
+        $manager->persist($homrorgciacon);
+
+        $orgciainadi = new Modulo();
+        $orgciainadi->setNombre('organigramagerencia_insertar');
+        $orgciainadi->setTitulo( 'Adicionar');
+        $orgciainadi->setRuta( '/organigramagerencia_insertar');
+        $orgciainadi->setIcono( 'home');
+        $orgciainadi->setMenu(0);
+        $orgciainadi->setFkmodulo($this->getReference(ModuloChildrenFixtures::ORGANIGRAMAGERENCIA_CHILD));
+        $manager->persist($orgciainadi);
+
+        $orgciaedi = new Modulo();
+        $orgciaedi->setNombre('organigramagerencia_editar');
+        $orgciaedi->setTitulo('Actualizar');
+        $orgciaedi->setRuta('/organigramagerencia_editar');
+        $orgciaedi->setIcono( 'home');
+        $orgciaedi->setMenu(0);
+        $orgciaedi->setFkmodulo($this->getReference(ModuloChildrenFixtures::ORGANIGRAMAGERENCIA_CHILD));
+        $manager->persist($orgciaedi);
+
+        $orgciaelim = new Modulo();
+        $orgciaelim->setNombre('organigramagerencia_eliminar');
+        $orgciaelim->setTitulo( 'Dar de Baja');
+        $orgciaelim->setRuta('/organigramagerencia_eliminar');
+        $orgciaelim->setIcono('home');
+        $orgciaelim->setMenu(0);
+        $orgciaelim->setFkmodulo($this->getReference(ModuloChildrenFixtures::ORGANIGRAMAGERENCIA_CHILD));
+        $manager->persist($orgciaelim);        
 
         $tpcrghm = new Modulo();
         $tpcrghm->setNombre('home_tipocargo');

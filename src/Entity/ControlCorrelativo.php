@@ -73,7 +73,7 @@ class ControlCorrelativo
     {
         return $this->id;
     }
-    public function setId(string $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
 

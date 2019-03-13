@@ -81,7 +81,7 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
         echo twig_include($this->env, $context, "organigramagerencia/form.html.twig");
         echo "
 
-    <div class=\"header bg-indigo\"><h2>Organigrama Gerencia</h2></div>
+    <div class=\"header bg-indigo\"><h2>ORGANIGRAMA POR GERENCIA</h2></div>
     <div class=\"body\">
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
@@ -148,76 +148,60 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
     <script>
     attach_validators()
 
-    function init(){
-        var rutas = document.getElementsByClassName('ruta');
-        //console.log(rutas.length)
-        for (let i = 0; i < rutas.length; i++) {
-            var ruta = rutas[i];
-            var src = ruta.getAttribute('src');
-            //console.log(src+\"\")
-            var rutaCortada = src.split('public')
-            //console.log(rutaCortada[1])
-            rutas[i].setAttribute('src',rutaCortada[1]+\"\");
-        }
-    };
-
-  
-
     \$('#new').click(function () {
-        \$('#organigramagerencia_id').hide()
-        \$( \"#organigramagerencia_id\" ).siblings().hide()
-        \$('#organigramagerencia_id').val('')
+        \$('#lnkva').remove();
+        \$('#organigrama_gerencia_id').hide()
+        \$(\"#organigrama_gerencia_id\" ).siblings().hide()
+        \$('#organigrama_gerencia_id').val('')
 
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"organigrama_gerencia_submit\").innerHTML= \"Guardar\"
+        \$('#organigrama_gerencia_id').val(0)
         \$('#form').modal('show')
-        document.getElementById(\"organigramagerencia_submit\").innerHTML= \"Guardar\"
-        \$('#organigramagerencia_id').val(0)
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ruta': \$('#ruta').val(),
-            'nombre': \$('#nombre').val()
-        })
-        ajax_call(\"/organigramagerencia\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        \$('#form').modal('hide')
-    })
+    \$(\"#organigrama_gerencia_ruta\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
 
-            \$('#organigramagerencia_id').val('')
-            \$('#organigramagerencia_id').show()
-            \$( \"#organigramagerencia_id\" ).siblings().show()
-            //\$('#organigramagerencia_id').attr('disabled', 'disabled')
+            \$('#organigrama_gerencia_id').val('')
+            \$('#organigrama_gerencia_id').show()
+            \$( \"#organigrama_gerencia_id\" ).siblings().show()
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             })
             ajax_call_get(\"/organigramagerencia_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)  
-                console.log(self)
-                
-                \$('#organigramagerencia_id').val(self.id)
-                //\$('#organigramagerencia_ruta').val(self.ruta)
-                document.getElementById('organigramagerencia_ruta').filename = self.ruta
-                document.getElementById('organigramagerencia_nombre').value = self.nombre
-                //\$('#organigramagerencia_tipo').val(self.tipo)
-                
+                var self = JSON.parse(response)
+                \$('#organigrama_gerencia_id').val(self.id)
+                document.getElementById('organigrama_gerencia_nombre').value = self.nombre
+
+                if(self.ruta != 'N/A') {
+                    \$('#lnkva').remove();
+
+                    let urlfile = self.ruta;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#organigrama_gerencia_ruta\");
+                }
+                else \$('#lnkva').hide();
             })
             clean_form()
             verif_inputs()
-            \$('#id_div').hide()
-            \$('#insert').show()
-            \$('#update').hide()
-            \$('#form').modal('show')
-            setTimeout(function(){\$('#form').modal('show')}, 1000);
-            document.getElementById(\"organigramagerencia_submit\").innerHTML = \"Modificar\"
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"organigrama_gerencia_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
@@ -302,7 +286,7 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
 
     {{ include('organigramagerencia/form.html.twig') }}
 
-    <div class=\"header bg-indigo\"><h2>Organigrama Gerencia</h2></div>
+    <div class=\"header bg-indigo\"><h2>ORGANIGRAMA POR GERENCIA</h2></div>
     <div class=\"body\">
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
@@ -343,76 +327,60 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
     <script>
     attach_validators()
 
-    function init(){
-        var rutas = document.getElementsByClassName('ruta');
-        //console.log(rutas.length)
-        for (let i = 0; i < rutas.length; i++) {
-            var ruta = rutas[i];
-            var src = ruta.getAttribute('src');
-            //console.log(src+\"\")
-            var rutaCortada = src.split('public')
-            //console.log(rutaCortada[1])
-            rutas[i].setAttribute('src',rutaCortada[1]+\"\");
-        }
-    };
-
-  
-
     \$('#new').click(function () {
-        \$('#organigramagerencia_id').hide()
-        \$( \"#organigramagerencia_id\" ).siblings().hide()
-        \$('#organigramagerencia_id').val('')
+        \$('#lnkva').remove();
+        \$('#organigrama_gerencia_id').hide()
+        \$(\"#organigrama_gerencia_id\" ).siblings().hide()
+        \$('#organigrama_gerencia_id').val('')
 
         clean_form()
         verif_inputs()
         \$('#id_div').hide()
         \$('#insert').show()
         \$('#update').hide()
+
+        document.getElementById(\"organigrama_gerencia_submit\").innerHTML= \"Guardar\"
+        \$('#organigrama_gerencia_id').val(0)
         \$('#form').modal('show')
-        document.getElementById(\"organigramagerencia_submit\").innerHTML= \"Guardar\"
-        \$('#organigramagerencia_id').val(0)
     })
 
-    \$('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ruta': \$('#ruta').val(),
-            'nombre': \$('#nombre').val()
-        })
-        ajax_call(\"/organigramagerencia\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        \$('#form').modal('hide')
-    })
+    \$(\"#organigrama_gerencia_ruta\").change(function(){
+        \$(\"#lnkva\").hide();
+    });
 
     function attach_edit() {
         \$('.edit').click(function () {
 
-            \$('#organigramagerencia_id').val('')
-            \$('#organigramagerencia_id').show()
-            \$( \"#organigramagerencia_id\" ).siblings().show()
-            //\$('#organigramagerencia_id').attr('disabled', 'disabled')
+            \$('#organigrama_gerencia_id').val('')
+            \$('#organigrama_gerencia_id').show()
+            \$( \"#organigrama_gerencia_id\" ).siblings().show()
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             })
             ajax_call_get(\"/organigramagerencia_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)  
-                console.log(self)
-                
-                \$('#organigramagerencia_id').val(self.id)
-                //\$('#organigramagerencia_ruta').val(self.ruta)
-                document.getElementById('organigramagerencia_ruta').filename = self.ruta
-                document.getElementById('organigramagerencia_nombre').value = self.nombre
-                //\$('#organigramagerencia_tipo').val(self.tipo)
-                
+                var self = JSON.parse(response)
+                \$('#organigrama_gerencia_id').val(self.id)
+                document.getElementById('organigrama_gerencia_nombre').value = self.nombre
+
+                if(self.ruta != 'N/A') {
+                    \$('#lnkva').remove();
+
+                    let urlfile = self.ruta;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                    \$(\"<a id='lnkva' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#organigrama_gerencia_ruta\");
+                }
+                else \$('#lnkva').hide();
             })
             clean_form()
             verif_inputs()
-            \$('#id_div').hide()
-            \$('#insert').show()
-            \$('#update').hide()
-            \$('#form').modal('show')
-            setTimeout(function(){\$('#form').modal('show')}, 1000);
-            document.getElementById(\"organigramagerencia_submit\").innerHTML = \"Modificar\"
+            \$('#id_div').show()
+            \$('#insert').hide()
+            \$('#update').show()
+            
+            document.getElementById(\"organigrama_gerencia_submit\").innerHTML = \"Modificar\"
+            setTimeout(function(){\$('#form').modal('show')}, 500);
         })
     }
 
@@ -448,6 +416,6 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
         })
     </script>
 
-{% endblock %}", "organigramagerencia/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\organigramagerencia\\index.html.twig");
+{% endblock %}", "organigramagerencia/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\organigramagerencia\\index.html.twig");
     }
 }

@@ -73,12 +73,21 @@
     <parameter key="container.dumper.inline_class_loader">true</parameter>
     <parameter key="env(DATABASE_URL)"></parameter>
     <parameter key="locale">en</parameter>
+    <parameter key="Directorio_proyecto">elfec_intranet_backend\public</parameter>
     <parameter key="upload_directory">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\images</parameter>
     <parameter key="Directorio_Enlaces">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\enlaces</parameter>
-    <parameter key="Directorio_Files">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\files</parameter>
+    <parameter key="Directorio_Files">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public</parameter>
     <parameter key="Directorio_Reportes">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\reportes</parameter>
     <parameter key="Directorio_LogoRep">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\resources\images\image_rep.png</parameter>
     <parameter key="Directorio_Galeria">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public</parameter>
+    <parameter key="Directorio_Correlativo">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\correlativo</parameter>
+    <parameter key="Directorio_OrganigramaGerencia">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\organigramagerencia</parameter>
+    <parameter key="Directorio_DocExtra">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\documentoextra</parameter>
+    <parameter key="Directorio_DocProceso">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\documentoproceso</parameter>
+    <parameter key="Directorio_DocFormulario">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\documentoformulario</parameter>
+    <parameter key="Directorio_Documento">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\documento</parameter>
+    <parameter key="Directorio_DocBaja">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\documentobaja</parameter>
+    <parameter key="Directorio_FichaCargo">C:\Users\CHARLY\Desktop\elfec_intranet_jan21\Elfec Github\elfec clone\Intranet-Backend\public\repositorio\fichacargo</parameter>
     <parameter key="fragment.renderer.hinclude.global_template"></parameter>
     <parameter key="fragment.path">/_fragment</parameter>
     <parameter key="kernel.secret">%env(APP_SECRET)%</parameter>
@@ -796,10 +805,25 @@
     <service id="App\Form\CorrelativoType" class="App\Form\CorrelativoType" public="false" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\DocumentoBajaType" class="App\Form\DocumentoBajaType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\DocumentoExtraType" class="App\Form\DocumentoExtraType" public="false" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\DocumentoFormularioType" class="App\Form\DocumentoFormularioType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\DocumentoProcesoType" class="App\Form\DocumentoProcesoType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\DocumentoType" class="App\Form\DocumentoType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\EnlacesType" class="App\Form\EnlacesType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\FichaCargoType" class="App\Form\FichaCargoType" public="false" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Form\FilesType" class="App\Form\FilesType" public="false" autowire="true" autoconfigure="true">
@@ -1414,8 +1438,13 @@
       </argument>
       <argument type="collection">
         <argument>App\Form\CorrelativoType</argument>
+        <argument>App\Form\DocumentoBajaType</argument>
         <argument>App\Form\DocumentoExtraType</argument>
+        <argument>App\Form\DocumentoFormularioType</argument>
+        <argument>App\Form\DocumentoProcesoType</argument>
+        <argument>App\Form\DocumentoType</argument>
         <argument>App\Form\EnlacesType</argument>
+        <argument>App\Form\FichaCargoType</argument>
         <argument>App\Form\FilesType</argument>
         <argument>App\Form\MisionType</argument>
         <argument>App\Form\OrganigramaGerenciaType</argument>
@@ -1667,7 +1696,7 @@
       <argument type="service" id="form.resolved_type_factory"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
-      <argument type="service" id=".service_locator.x1xHeTZ"/>
+      <argument type="service" id=".service_locator.HKR6PYN"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4820,10 +4849,20 @@
     <service id=".abstract.instanceof.App\DataFixtures\UsuarioModFixtures" class="App\DataFixtures\UsuarioModFixtures" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CorrelativoType" class="App\Form\CorrelativoType" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\CorrelativoType" class="App\Form\CorrelativoType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\DocumentoBajaType" class="App\Form\DocumentoBajaType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\DocumentoBajaType" class="App\Form\DocumentoBajaType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\DocumentoExtraType" class="App\Form\DocumentoExtraType" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\DocumentoExtraType" class="App\Form\DocumentoExtraType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\DocumentoFormularioType" class="App\Form\DocumentoFormularioType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\DocumentoFormularioType" class="App\Form\DocumentoFormularioType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\DocumentoProcesoType" class="App\Form\DocumentoProcesoType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\DocumentoProcesoType" class="App\Form\DocumentoProcesoType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\DocumentoType" class="App\Form\DocumentoType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\DocumentoType" class="App\Form\DocumentoType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\EnlacesType" class="App\Form\EnlacesType" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\EnlacesType" class="App\Form\EnlacesType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\FichaCargoType" class="App\Form\FichaCargoType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\FichaCargoType" class="App\Form\FichaCargoType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\FilesType" class="App\Form\FilesType" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\FilesType" class="App\Form\FilesType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\MisionType" class="App\Form\MisionType" public="false" autowire="true" abstract="true"/>
@@ -5173,7 +5212,31 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
+    <service id=".service_locator.ZlG.JCL" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".service_locator.IwxSadL" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".service_locator.lNWcz6H" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".service_locator.pUXhlf8" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".service_locator.RFFYs4U" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
     <service id=".service_locator.Knhfc0p" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".service_locator.uayCKyd" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
@@ -5185,7 +5248,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.wZE5tck" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.kXTtMpH" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccionController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5210,25 +5273,17 @@
         <argument key="App\Controller\CategoriaNoticiaController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ControlCorrelativoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ControlCorrelativoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\CorrelativoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\CorrelativoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DatoEmpresarialController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DatoEmpresarialController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocProcRevisionController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocProcRevisionController::aprorec" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocProcRevisionController::derivar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocProcRevisionController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocTipoExtraController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocTipoExtraController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoBajaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoBajaController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoExtraController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoExtraController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoFormularioController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoFormularioController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoCorrelativoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5245,8 +5300,8 @@
         <argument key="App\Controller\EstadoRiesgoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoSeguimientoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoSeguimientoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\FichaCargoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\FichaCargoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\FichaCargoController::aprobarfcgerente" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\FichaCargoController::aprobarfcjefe" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FichaProcesosController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FichaProcesosController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FortalezaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5349,25 +5404,17 @@
         <argument key="App\Controller\CategoriaNoticiaController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ControlCorrelativoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ControlCorrelativoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\CorrelativoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\CorrelativoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DatoEmpresarialController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DatoEmpresarialController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocProcRevisionController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocProcRevisionController:aprorec" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocProcRevisionController:derivar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocProcRevisionController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocTipoExtraController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocTipoExtraController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoBajaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoBajaController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoExtraController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoExtraController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoFormularioController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoFormularioController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoCorrelativoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5384,8 +5431,8 @@
         <argument key="App\Controller\EstadoRiesgoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoSeguimientoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoSeguimientoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\FichaCargoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\FichaCargoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\FichaCargoController:aprobarfcgerente" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\FichaCargoController:aprobarfcjefe" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FichaProcesosController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FichaProcesosController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\FortalezaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5525,12 +5572,17 @@
       <argument type="service" id="debug.argument_resolver.variadic.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.x1xHeTZ" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.HKR6PYN" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\CorrelativoType" type="service" id="App\Form\CorrelativoType"/>
+        <argument key="App\Form\DocumentoBajaType" type="service" id="App\Form\DocumentoBajaType"/>
         <argument key="App\Form\DocumentoExtraType" type="service" id="App\Form\DocumentoExtraType"/>
+        <argument key="App\Form\DocumentoFormularioType" type="service" id="App\Form\DocumentoFormularioType"/>
+        <argument key="App\Form\DocumentoProcesoType" type="service" id="App\Form\DocumentoProcesoType"/>
+        <argument key="App\Form\DocumentoType" type="service" id="App\Form\DocumentoType"/>
         <argument key="App\Form\EnlacesType" type="service" id="App\Form\EnlacesType"/>
+        <argument key="App\Form\FichaCargoType" type="service" id="App\Form\FichaCargoType"/>
         <argument key="App\Form\FilesType" type="service" id="App\Form\FilesType"/>
         <argument key="App\Form\MisionType" type="service" id="App\Form\MisionType"/>
         <argument key="App\Form\OrganigramaGerenciaType" type="service" id="App\Form\OrganigramaGerenciaType"/>
@@ -5672,7 +5724,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.wZE5tck"/>
+      <argument type="service" id=".service_locator.kXTtMpH"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -6282,7 +6334,7 @@
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker" public="false"/>
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.wZE5tck"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.kXTtMpH"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>

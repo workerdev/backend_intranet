@@ -13,7 +13,7 @@
         <td class="d-none">{{ tr.carpetaoperativa }}</td>
         <td class="d-none">{{ tr.nuevoactualizacion }}</td>
         <td class="d-none">{{ tr.aprobadorechazado }}</td>
-        <td class="d-none">{{ tr.aprobadopor }}</td>
+        <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
         <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d') }}</td>
         <td align="center">
         {% if 'documentoproceso_editar' in permisos %}

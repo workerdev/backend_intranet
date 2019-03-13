@@ -109,6 +109,6 @@ class __TwigTemplate_7590ff9084d50f3d9dba68665a0c6bf0e9dde35170de699395e80a2604b
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "controlcorrelativo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\controlcorrelativo\\table.html.twig");
+{% endfor %}", "controlcorrelativo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\controlcorrelativo\\table.html.twig");
     }
 }

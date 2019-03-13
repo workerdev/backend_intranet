@@ -30,6 +30,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -65,11 +67,15 @@ class GerenciaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findBy(array('estado' => '1'));
         return $this->render('gerencia/index.html.twig', 
         array('objects' => $gerencia, 
               'parents' => $parent, 
-              'children' => $child, 'permisos' => $permisos));
+              'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

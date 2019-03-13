@@ -99,6 +99,6 @@ class __TwigTemplate_f47432bf4a767afc767e7cb18ec2aa9446503b630414abe5a8284110429
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "gerencia/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\gerencia\\table.html.twig");
+{% endfor %}", "gerencia/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\gerencia\\table.html.twig");
     }
 }

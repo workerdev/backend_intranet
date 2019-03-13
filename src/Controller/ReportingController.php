@@ -668,7 +668,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Auditoria_anual_'.$fecha.'.xlsx');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -836,7 +836,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Notificacion_auditoria_'.$fecha.'.pdf');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -934,7 +934,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Auditoria_interna_'.$fecha.'.pdf');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -994,7 +994,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Eficacia_accion_'.$fecha.'.pdf');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

@@ -12,6 +12,8 @@ use App\Entity\DocProcRevision;
 use App\Entity\DocumentoProceso;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\Usuario;
+use App\Entity\FichaCargo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -59,9 +61,13 @@ class DocProcRevisionController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $responsable = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
         $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('estado' => '1'));
         $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('estado' => '1'));
-        return $this->render('docprocesorev/index.html.twig', array('objects' => $docprocrev,'tipo' => $documentoproceso,'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        return $this->render('docprocesorev/index.html.twig', array('objects' => $docprocrev,'tipo' => $documentoproceso, 'responsable' => $responsable, 'docderiv' => $docderiv, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -96,8 +102,6 @@ class DocProcRevisionController extends AbstractController
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -108,6 +112,112 @@ class DocProcRevisionController extends AbstractController
 
             $resultado = array('response'=>"El ID registrado es: ".$docprocrev->getId().".",'success' => true,
                 'message' => 'Documento en revisión agregado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/docprocesorev_derivar", methods={"POST"}, name="docprocesorev_derivar")
+     */
+    public function derivar(ValidatorInterface $validator )
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();            
+            $sx = json_decode($_POST['object'], true);
+            
+            $id = $sx['id'];
+            $fecha = $sx['fecha'];
+            $responsable = $sx['responsable'];
+            $firma = $sx['firma'];
+            $estadodoc = $sx['estadodoc'];
+            $docid = $sx['fkdocs'];
+
+            $docrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->find($id);
+            $docrev->setFirma($firma);
+            $docrev->setEstadodoc($estadodoc);
+            $cx->persist($docrev);
+            $cx->flush();
+            
+            $docprocrev = new DocProcRevision();
+            $docprocrev->setFecha(new \DateTime());
+            $docprocrev->setResponsable($responsable);
+            $docprocrev->setFirma('Por revisar');
+            $docprocrev->setEstadodoc($estadodoc);
+            $docprocrev->setEstado(1);
+
+            $docprocrev->setFkdoc($docrev->getFkdoc());
+
+            $errors = $validator->validate($docprocrev);
+            if (count($errors)>0){
+                $array = array();
+                $array['error'] = 'error';
+                foreach ($errors as $e){
+                    $array += [$e->getPropertyPath() => $e->getMessage()];
+                }
+                return  new  Response(json_encode($array)) ;
+            }
+
+            $cx->persist($docprocrev);
+            $cx->flush();
+
+            $resultado = array('response'=>"El ID registrado es: ".$docprocrev->getId().".",'success' => true,
+                'message' => 'Documento en revisión agregado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/docprocesorev_aprorec", methods={"POST"}, name="docprocesorev_aprorec")
+     */
+    public function aprorec(ValidatorInterface $validator )
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();            
+            $sx = json_decode($_POST['object'], true);
+            
+            $s_user = $this->get('session')->get('s_user');
+            $id = $sx['id'];
+            $fecha = $sx['fecha'];
+            $responsable = $s_user['id'];
+            $firma = $sx['firma'];
+            $estadodoc = $sx['estadodoc'];
+            $docid = $sx['fkdocs'];
+            
+            $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->find($id);
+            $docprocrev->setFirma($firma);
+            $docprocrev->setEstadodoc($estadodoc);
+            $docprocrev->setEstado(1);
+
+            $errors = $validator->validate($docprocrev);
+            if (count($errors)>0){
+                $array = array();
+                $array['error'] = 'error';
+                foreach ($errors as $e){
+                    $array += [$e->getPropertyPath() => $e->getMessage()];
+                }
+                return  new  Response(json_encode($array)) ;
+            }
+
+            $cx->merge($docprocrev);
+            $cx->flush();
+
+            $docproc = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($docprocrev->getFkdoc()->getId());
+            $docproc->setAprobadorechazado($estadodoc);
+            $user = $this->getDoctrine()->getRepository(Usuario::class)->find($s_user['id']);
+            $docproc->setFkaprobador($user);
+            $cx->merge($docprocrev);
+            $cx->flush();
+
+            $resultado = array('response'=>"El ID registrado es: ".$docprocrev->getId().".",'success' => true,
+                'message' => 'Documento en revisión modificado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

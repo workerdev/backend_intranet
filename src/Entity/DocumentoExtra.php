@@ -78,7 +78,6 @@ class DocumentoExtra
      * @var string
      *
      * @ORM\Column(name="cb_documento_extra_vinculoarchivo", type="text", nullable=true)
-     * @Assert\NotBlank
      */
     private $vinculoarchivo;
 
@@ -163,7 +162,7 @@ class DocumentoExtra
 
     public function setVinculoarchivo(string $vinculoarchivo): self
     {
-        $this->vinculoarchivo = $inculoarchivo;
+        $this->vinculoarchivo = $vinculoarchivo;
 
         return $this;
     }

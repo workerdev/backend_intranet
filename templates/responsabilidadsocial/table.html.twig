@@ -1,6 +1,15 @@
 {% for t in objects %}
 <tr>
-    <td><div id="row-cont">{{ t.contenido }}<div></td>
+ <td align="center">
+
+        <button id="view" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light view" title="Ver Contenido"><i class="material-icons">pageview</i></button>            
+</td>
+    {% set strategy = 'html' %}
+
+    {% autoescape 'html' %}
+        <td><div id="row-cont">{{ t.contenido|escape('html') }}<div></td>
+    {% endautoescape %}
+
     <td align="center">
     {% if 'responsabilidad_editar' in permisos %}
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

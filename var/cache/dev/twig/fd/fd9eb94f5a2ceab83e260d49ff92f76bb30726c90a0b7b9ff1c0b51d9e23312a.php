@@ -447,6 +447,6 @@ class __TwigTemplate_4a62bf6d2687d1cfb3c6251e93c8320723b5f8fd2c5246fadf592897381
     })
 </script>
 
-{% endblock %}", "fortaleza/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\fortaleza\\index.html.twig");
+{% endblock %}", "fortaleza/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\fortaleza\\index.html.twig");
     }
 }

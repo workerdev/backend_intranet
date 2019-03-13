@@ -656,6 +656,6 @@ class __TwigTemplate_bdfd7a8b7571c14f6c94d66acfdf65486989b56d1d3bc68315235393a54
         });
     </script>
 
-{% endblock %}", "fichaprocesos/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\fichaprocesos\\index.html.twig");
+{% endblock %}", "fichaprocesos/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\fichaprocesos\\index.html.twig");
     }
 }

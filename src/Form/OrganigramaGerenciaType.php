@@ -18,11 +18,19 @@ class OrganigramaGerenciaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('ruta',Filetype::class, array(
-            'label' => 'Elegir archivo',
-            'attr' => ['class' => 'form-line form-label']
-        ))
-            ->add('nombre',TextType::class)
+            ->add('id', TextType::class, array(
+                'label' => 'ID',
+                'attr' => ['class' => 'form-line form-label'],
+                'attr' => ['type' => 'hidden']
+            ))
+            ->add('ruta',Filetype::class, array(
+                'label' => 'Elegir archivo',
+                'attr' => ['class' => 'form-line form-label']
+            ))
+            ->add('nombre', TextType::class, array(
+                'label' => 'Nombre',
+                'attr' => ['class' => 'form-line form-label']
+            ))
             ->add('submit',SubmitType::class, array(
                 'label' => 'Guardar',
                 'attr' => ['class' => 'btn bg-indigo waves-effect']

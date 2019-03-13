@@ -104,6 +104,6 @@ class __TwigTemplate_4fbc105b8178552c7350de19bef11b76d987c1045d4400f12bb1eabc8a2
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "probabilidad/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\probabilidad\\table.html.twig");
+{% endfor %}", "probabilidad/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\probabilidad\\table.html.twig");
     }
 }

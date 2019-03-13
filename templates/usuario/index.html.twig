@@ -41,7 +41,6 @@
                 <tr>
                     <th class="order_by_th" data-name="names">Nombre </th>
                     <th class="order_by_th" data-name="phone">Apellido </th>                    
-                    <th class="order_by_th" data-name="phone">Ci </th>
                     <th class="order_by_th" data-name="phone">Correo </th>
                     <th class="order_by_th" data-name="phone">Username </th>
                     <th class="order_by_th" data-name="phone">Rol </th>
@@ -77,7 +76,6 @@
     $('#new').click(function () {
         $('#nombre').val('')
         $('#apellido').val('')
-        $('#ci').val('')
         $('#correo').val('')
         $('#username').val('')
         $('#password').val('')
@@ -94,7 +92,6 @@
         objeto = JSON.stringify({
             'nombre': $('#nombre').val(),
             'apellido': $('#apellido').val(),
-            'ci': $('#ci').val(),
             'correo': $('#correo').val(),
             'username': $('#username').val(),
             'password': $('#password').val(),
@@ -118,7 +115,6 @@
                 $('#id').val(self.id)
                 $('#nombre').val(self.nombre)
                 $('#apellido').val(self.apellido)
-                $('#ci').val(self.ci)
                 $('#correo').val(self.correo)
                 $('#username').val(self.username)
 
@@ -141,7 +137,6 @@
             'id': parseInt(JSON.parse($('#id').val())),
             'nombre': $('#nombre').val(),
             'apellido': $('#apellido').val(),
-            'ci': $('#ci').val(),
             'correo': $('#correo').val(),
             'username': $('#username').val(),
 

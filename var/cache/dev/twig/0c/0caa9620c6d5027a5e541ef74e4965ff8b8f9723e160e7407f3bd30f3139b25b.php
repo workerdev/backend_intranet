@@ -76,7 +76,7 @@ class __TwigTemplate_712cffc3ebe8169f8f35b817e5047f5fe12d969e422857f2b8df17032e3
             echo "</td>
         <td class=\"d-none\">";
             // line 16
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "aprobadopor", array()), "html", null, true);
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "apellido", array())), "html", null, true);
             echo "</td>
         <td class=\"d-none\">";
             // line 17
@@ -147,7 +147,7 @@ class __TwigTemplate_712cffc3ebe8169f8f35b817e5047f5fe12d969e422857f2b8df17032e3
         <td class=\"d-none\">{{ tr.carpetaoperativa }}</td>
         <td class=\"d-none\">{{ tr.nuevoactualizacion }}</td>
         <td class=\"d-none\">{{ tr.aprobadorechazado }}</td>
-        <td class=\"d-none\">{{ tr.aprobadopor }}</td>
+        <td class=\"d-none\">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
         <td class=\"d-none\">{{ tr.fechaaprobacion | date('Y-m-d') }}</td>
         <td align=\"center\">
         {% if 'documentoproceso_editar' in permisos %}
@@ -158,6 +158,6 @@ class __TwigTemplate_712cffc3ebe8169f8f35b817e5047f5fe12d969e422857f2b8df17032e3
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "documentoproceso/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\documentoproceso\\table.html.twig");
+{% endfor %}", "documentoproceso/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoproceso\\table.html.twig");
     }
 }

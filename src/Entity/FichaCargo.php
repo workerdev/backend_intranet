@@ -9,9 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * FichaCargo
- * @ORM\Table(name="cb_fc_ficha_cargo", indexes={@ORM\Index(name="cb_ficha_cargo_nombre", columns={"cb_ficha_cargo_nombre"})})
+ * @ORM\Table(name="cb_fc_ficha_cargo", indexes={@ORM\Index(name="cb_ficha_cargo_id", columns={"cb_ficha_cargo_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\FichaCargoRepository")
- *  @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */
 class FichaCargo
 {
@@ -98,12 +97,16 @@ class FichaCargo
     private $fechaaprobacion;
 
     /**
-     * @var string
+     * @var \jefeaprobador
      *
-     * @ORM\Column(name="cb_ficha_cargo_aprobadojefe", type="text", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_ficha_cargo_fkjefeaprobador", referencedColumnName="cb_usuario_id")
+     * })
      * @Assert\NotBlank
      */
-    private $aprobadojefe;
+    private $fkjefeaprobador;
+
     /**
      * @var string
      *
@@ -112,13 +115,17 @@ class FichaCargo
      */
     private $firmajefe;
 
-     /**
-     * @var string
+    /**
+     * @var \gerenteaprobador
      *
-     * @ORM\Column(name="cb_ficha_cargo_aprobadogerente", type="text", nullable=false)
-      * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_ficha_cargo_fkgerenteaprobador", referencedColumnName="cb_usuario_id")
+     * })
+     * @Assert\NotBlank
      */
-    private $aprobadogerente;
+    private $fkgerenteaprobador;
+
     /**
      * @var string
      *
@@ -126,11 +133,11 @@ class FichaCargo
      * @Assert\NotBlank
      */
     private $firmagerente;
+
     /**
      * @var string
      *
      * @ORM\Column(name="cb_ficha_cargo_hipervinculo", type="text", nullable=false)
-     * @Assert\NotBlank
      */
     private $hipervinculo;
     
@@ -258,14 +265,13 @@ class FichaCargo
         return $this;
     } 
 
-    public function getAprobadojefe(): ?string
+    public function getFkjefeaprobador(): ?Usuario
     {
-        return $this->aprobadojefe;
+        return $this->fkjefeaprobador;
     }
-
-    public function setAprobadojefe(string $aprobadojefe): self
+    public function setFkjefeaprobador(?Usuario $fkjefeaprobador): self
     {
-        $this->aprobadojefe = $aprobadojefe;
+        $this->fkjefeaprobador = $fkjefeaprobador;
 
         return $this;
     }
@@ -283,14 +289,13 @@ class FichaCargo
     }
 
     
-    public function getAprobadogerente(): ?string
+    public function getFkgerenteaprobador(): ?Usuario
     {
-        return $this->aprobadogerente;
+        return $this->fkgerenteaprobador;
     }
-
-    public function setAprobadogerente(string $aprobadogerente): self
+    public function setFkgerenteaprobador(?Usuario $fkgerenteaprobador): self
     {
-        $this->aprobadogerente = $aprobadogerente;
+        $this->fkgerenteaprobador = $fkgerenteaprobador;
 
         return $this;
     }

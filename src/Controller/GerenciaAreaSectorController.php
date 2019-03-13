@@ -28,6 +28,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 class GerenciaAreaSectorController extends AbstractController
 {  
@@ -61,12 +64,16 @@ class GerenciaAreaSectorController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         $GerenciaAreaSector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findBy(array('estado' => '1'));
         $Gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findBy(array('estado' => '1'));
         $Area = $this->getDoctrine()->getRepository(Area::class)->findBy(array('estado' => '1'));
         $Sector = $this->getDoctrine()->getRepository(Sector::class)->findBy(array('estado' => '1'));
         $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-        return $this->render('gciarsector/index.html.twig', array('objects' => $GerenciaAreaSector, 'gerencia' => $Gerencia, 'area' => $Area, 'sector' => $Sector, 'fkresponsable' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('gciarsector/index.html.twig', array('objects' => $GerenciaAreaSector, 'gerencia' => $Gerencia, 'area' => $Area, 'sector' => $Sector, 'fkresponsable' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

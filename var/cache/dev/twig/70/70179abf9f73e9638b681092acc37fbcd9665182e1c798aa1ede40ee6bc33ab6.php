@@ -36,40 +36,53 @@ class __TwigTemplate_f4ee2f8868b37d199165827e2842e0a12d88dc90ec5c83cb13a26d9c37c
             // line 4
             echo twig_escape_filter($this->env, twig_date_format_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "fechaseg", array()), "Y-m-d"), "html", null, true);
             echo "</td>
-    <td>";
+    ";
             // line 5
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "id", array()), "html", null, true);
-            echo "</td>
-    <td>";
-            // line 6
+            if ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "estado", array()) == 2)) {
+                // line 6
+                echo "        <td>";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+                echo " <b><i>";
+                echo " (Inactivo)";
+                echo "</i></b></td>
+    ";
+            } else {
+                // line 8
+                echo "        <td>";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["t"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+                echo "</td>
+    ";
+            }
+            // line 10
+            echo "    <td>";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "observaciones", array()), "html", null, true);
             echo "</td>
     <td>";
-            // line 7
+            // line 11
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "estadoseg", array()), "html", null, true);
             echo "</td>
     <td align=\"center\">
     ";
-            // line 9
-            if (twig_in_filter("seguimientocro_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 9, $this->source); })()))) {
+            // line 13
+            if (twig_in_filter("seguimientocro_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 13, $this->source); })()))) {
                 echo " 
         <button id=\"edit\" data-json=\"";
-                // line 10
+                // line 14
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
     ";
             }
-            // line 12
+            // line 16
             echo "    ";
-            if (twig_in_filter("seguimientocro_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 12, $this->source); })()))) {
+            if (twig_in_filter("seguimientocro_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 16, $this->source); })()))) {
                 echo "  
         <button id=\"delete\" data-json=\"";
-                // line 13
+                // line 17
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     ";
             }
-            // line 15
+            // line 19
             echo "    </td>
 </tr>
 ";
@@ -94,7 +107,7 @@ class __TwigTemplate_f4ee2f8868b37d199165827e2842e0a12d88dc90ec5c83cb13a26d9c37c
 
     public function getDebugInfo()
     {
-        return array (  73 => 15,  68 => 13,  63 => 12,  58 => 10,  54 => 9,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  86 => 19,  81 => 17,  76 => 16,  71 => 14,  67 => 13,  62 => 11,  57 => 10,  51 => 8,  43 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -103,7 +116,11 @@ class __TwigTemplate_f4ee2f8868b37d199165827e2842e0a12d88dc90ec5c83cb13a26d9c37c
 <tr>
     <td>{{ t.fkriesgos.descripcion }}</td>
     <td>{{ t.fechaseg | date('Y-m-d') }}</td>
-    <td>{{ t.fkresponsable.id }}</td>
+    {% if t.fkresponsable.estado == 2 %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+    {% else %}
+        <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido }}</td>
+    {% endif %}
     <td>{{ t.observaciones }}</td>
     <td>{{ t.estadoseg }}</td>
     <td align=\"center\">
@@ -115,6 +132,6 @@ class __TwigTemplate_f4ee2f8868b37d199165827e2842e0a12d88dc90ec5c83cb13a26d9c37c
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "seguimientocro/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\seguimientocro\\table.html.twig");
+{% endfor %}", "seguimientocro/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\seguimientocro\\table.html.twig");
     }
 }

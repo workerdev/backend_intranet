@@ -1,7 +1,7 @@
 {% for tr in objects %}
     <tr>
         <td>{{ tr.nombre }}</td>
-         <td><img class="ruta" style="width:12vw;height: vw;" src={{ tr.ruta }} ></td>
+         <td><a href="{{ tr.ruta }}">{{ tr.ruta }}</a></td>
         <td align="center">
         {% if 'organigramagerencia_editar' in permisos %}  
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

@@ -74,31 +74,45 @@ class __TwigTemplate_7bd78d3c31214387c8f13b406f3eb989a857048a2a031c350a4c9ad1de8
             // line 15
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fktipo", array()), "nombre", array()), "html", null, true);
             echo "</td>
-        <td>";
-            // line 16
-            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "apellido", array())), "html", null, true);
-            echo "</td>
-        <td align=\"center\">
         ";
-            // line 18
-            if (twig_in_filter("documento_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 18, $this->source); })()))) {
+            // line 16
+            if ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "estado", array()) == 2)) {
+                // line 17
+                echo "            <td>";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "apellido", array())), "html", null, true);
+                echo " <b><i>";
+                echo " (Inactivo)";
+                echo "</i></b></td>
+        ";
+            } else {
                 // line 19
+                echo "            <td>";
+                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkaprobador", array()), "apellido", array())), "html", null, true);
+                echo "</td>
+        ";
+            }
+            // line 21
+            echo "        <td align=\"center\">
+        ";
+            // line 22
+            if (twig_in_filter("documento_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 22, $this->source); })()))) {
+                // line 23
                 echo "            <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
         ";
             }
-            // line 21
+            // line 25
             echo "        ";
-            if (twig_in_filter("documento_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 21, $this->source); })()))) {
+            if (twig_in_filter("documento_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 25, $this->source); })()))) {
                 echo "  
             <button id=\"delete\" data-json=\"";
-                // line 22
+                // line 26
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
         ";
             }
-            // line 24
+            // line 28
             echo "        </td>
     </tr>
 ";
@@ -123,7 +137,7 @@ class __TwigTemplate_7bd78d3c31214387c8f13b406f3eb989a857048a2a031c350a4c9ad1de8
 
     public function getDebugInfo()
     {
-        return array (  102 => 24,  97 => 22,  92 => 21,  86 => 19,  84 => 18,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
+        return array (  116 => 28,  111 => 26,  106 => 25,  100 => 23,  98 => 22,  95 => 21,  89 => 19,  81 => 17,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -143,7 +157,11 @@ class __TwigTemplate_7bd78d3c31214387c8f13b406f3eb989a857048a2a031c350a4c9ad1de8
         <td class=\"d-none\">{{ tr.fechaPublicacion | date('Y-m-d')  }}</td>
         <td>{{ tr.fkficha.codproceso }}</td>
         <td>{{ tr.fktipo.nombre }}</td>
-        <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+        {% if tr.fkaprobador.estado == 2 %}
+            <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
+        {% else %}
+            <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+        {% endif %}
         <td align=\"center\">
         {% if 'documento_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -153,6 +171,6 @@ class __TwigTemplate_7bd78d3c31214387c8f13b406f3eb989a857048a2a031c350a4c9ad1de8
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "documento/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\documento\\table.html.twig");
+{% endfor %}", "documento/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\documento\\table.html.twig");
     }
 }

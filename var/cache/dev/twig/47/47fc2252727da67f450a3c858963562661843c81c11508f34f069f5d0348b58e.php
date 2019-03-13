@@ -32,10 +32,12 @@ class __TwigTemplate_9e34d0e3e624649f7d4e304e1f01ab0e3ed266e9bf6d1025f24882c59e3
             // line 3
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "nombre", array()), "html", null, true);
             echo "</td>
-         <td><img class=\"ruta\" style=\"width:12vw;height: vw;\" src=";
+         <td><a href=\"";
             // line 4
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), "html", null, true);
-            echo " ></td>
+            echo "\">";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), "html", null, true);
+            echo "</a></td>
         <td align=\"center\">
         ";
             // line 6
@@ -82,7 +84,7 @@ class __TwigTemplate_9e34d0e3e624649f7d4e304e1f01ab0e3ed266e9bf6d1025f24882c59e3
 
     public function getDebugInfo()
     {
-        return array (  61 => 12,  56 => 10,  51 => 9,  46 => 7,  42 => 6,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  63 => 12,  58 => 10,  53 => 9,  48 => 7,  44 => 6,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -90,7 +92,7 @@ class __TwigTemplate_9e34d0e3e624649f7d4e304e1f01ab0e3ed266e9bf6d1025f24882c59e3
         return new Twig_Source("{% for tr in objects %}
     <tr>
         <td>{{ tr.nombre }}</td>
-         <td><img class=\"ruta\" style=\"width:12vw;height: vw;\" src={{ tr.ruta }} ></td>
+         <td><a href=\"{{ tr.ruta }}\">{{ tr.ruta }}</a></td>
         <td align=\"center\">
         {% if 'organigramagerencia_editar' in permisos %}  
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -100,6 +102,6 @@ class __TwigTemplate_9e34d0e3e624649f7d4e304e1f01ab0e3ed266e9bf6d1025f24882c59e3
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "organigramagerencia/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\organigramagerencia\\table.html.twig");
+{% endfor %}", "organigramagerencia/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\organigramagerencia\\table.html.twig");
     }
 }

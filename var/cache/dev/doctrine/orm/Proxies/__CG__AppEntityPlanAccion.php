@@ -246,7 +246,7 @@ class PlanAccion extends \App\Entity\PlanAccion implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getFecha(): ?string
+    public function getFecha(): ?\DateTimeInterface
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFecha', []);
@@ -257,7 +257,7 @@ class PlanAccion extends \App\Entity\PlanAccion implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function setFecha(string $fecha): \App\Entity\PlanAccion
+    public function setFecha(\DateTimeInterface $fecha): \App\Entity\PlanAccion
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFecha', [$fecha]);

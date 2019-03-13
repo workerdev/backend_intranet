@@ -8,6 +8,7 @@ use App\Entity\Probabilidad;
 use App\Entity\Impacto;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
+use App\Entity\Rol;
 use App\Entity\Acceso;
 use App\Entity\TipoCRO;
 use App\Entity\SeguimientoCro;
@@ -16,14 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Entity\Rol;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 
 
 class RiesgosOportunidadesController extends Controller
@@ -33,8 +34,7 @@ class RiesgosOportunidadesController extends Controller
      * @Method({"GET"})
      */
     public function index()
-    {
-        $s_user = $this->get('session')->get('s_user');
+    {  $s_user = $this->get('session')->get('s_user');
         if(empty($s_user)){
             $redireccion = new RedirectResponse('/login');
             return $redireccion;
@@ -45,6 +45,8 @@ class RiesgosOportunidadesController extends Controller
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
         $mods = array();
+        $children = array();
+        $options = array();
         foreach ($accesos as $access) {
             $accdt = (object) $access;
             $item = $this->getDoctrine()->getRepository(Modulo::class)->find($accdt->getFkmodulo()->getId());
@@ -52,19 +54,26 @@ class RiesgosOportunidadesController extends Controller
         }
         $parent = $mods;
         $child = $mods;
+        $option = $mods;
+
         $permisos = array();
         foreach ($mods as $mdl) {
             $mdldt = (object) $mdl;
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
+        
         $RiesgosOportunidades = $this->getDoctrine()->getRepository(RiesgosOportunidades::class)->findBy(array('estado' => '1'));
         $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
         $TipoCRO = $this->getDoctrine()->getRepository(TipoCRO::class)->findBy(array('estado' => '1'));
         $Probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(array('estado' => '1'));
         $Impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(array('estado' => '1'));
         $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-       return $this->render('riesgosoportunidades/index.html.twig', array('objects' => $RiesgosOportunidades, 'tipo' => $FichaProcesos, 'tipo2' => $TipoCRO, 'tipo3' => $Probabilidad, 'tipo4' => $Impacto, 'tipo5' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+       return $this->render('riesgosoportunidades/index.html.twig', array('objects' => $RiesgosOportunidades, 'tipo' => $FichaProcesos, 'tipo2' => $TipoCRO, 'tipo3' => $Probabilidad, 'tipo4' => $Impacto, 'tipo5' => $Usuario, 'parents' => $parent, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr, 'children' => $child, 'options' => $option, 'permisos' => $permisos));
     }
 
     /**
@@ -219,8 +228,26 @@ class RiesgosOportunidadesController extends Controller
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $riesgosoportunidades = $this->getDoctrine()->getRepository(RiesgosOportunidades::class)->find($id);
+
+            $fimp = $riesgosoportunidades->getFecha();
+            $result = $fimp->format('Y-m-d');
+            $sendinf = [
+                "id" => $riesgosoportunidades->getId(),
+                "descripcion" => $riesgosoportunidades->getDescripcion(),
+                "origen" => $riesgosoportunidades->getOrigen(),
+                "accion" => $riesgosoportunidades->getAccion(),
+                "fecha" => $result,
+                "estadocro" => $riesgosoportunidades->getEstadocro(),
+                "analisiscausaraiz" => $riesgosoportunidades->getAnalisiscausaraiz(),
+                "fkficha" => $riesgosoportunidades->getFkficha(),
+                "fktipo" => $riesgosoportunidades->getFktipo(),
+                "fkprobabilidad" => $riesgosoportunidades->getFkprobabilidad(),
+                "fkimpacto" => $riesgosoportunidades->getFkimpacto(),
+                "fkresponsable" => $riesgosoportunidades->getFkresponsable()
+            ];
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($riesgosoportunidades, 'json');
+            $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Riesgo listado correctamente.');
             $resultado = json_encode($resultado);

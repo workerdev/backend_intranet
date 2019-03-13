@@ -251,11 +251,14 @@ class __TwigTemplate_575ce8620f987ddf6e746ef28a4822226f9229f6c9b6f454fc5bd9f289f
             obj = JSON.stringify({
             'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            ajax_call_rep(\"/accion_verif\",{
+            ajax_call_reptb(\"/accion_verif\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#new\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -561,11 +564,14 @@ class __TwigTemplate_575ce8620f987ddf6e746ef28a4822226f9229f6c9b6f454fc5bd9f289f
             obj = JSON.stringify({
             'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
-            ajax_call_rep(\"/accion_verif\",{
+            ajax_call_reptb(\"/accion_verif\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf(\"/\")+1, urlfile.length);
+                \$(\"<a id='lnkrp' class='btn bg-teal waves-effect' href='\"+urlfile+\"'>\"+vfile+\"</a>\").insertAfter(\"#new\");
+                setTimeout(function(){ \$(\"#lnkrp\").remove() }, 10000);
             })
         })
     }
@@ -678,6 +684,6 @@ class __TwigTemplate_575ce8620f987ddf6e746ef28a4822226f9229f6c9b6f454fc5bd9f289f
     });
 </script>
 
-{% endblock %}", "accion/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\accion\\index.html.twig");
+{% endblock %}", "accion/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\accion\\index.html.twig");
     }
 }

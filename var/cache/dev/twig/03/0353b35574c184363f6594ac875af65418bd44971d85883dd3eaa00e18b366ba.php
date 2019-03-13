@@ -100,6 +100,6 @@ class __TwigTemplate_19c6949c188c3b83da06580dc0b3346cc7afe5b8a19668b06f103ac5afe
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "galeria/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\galeria\\table.html.twig");
+{% endfor %}", "galeria/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\galeria\\table.html.twig");
     }
 }

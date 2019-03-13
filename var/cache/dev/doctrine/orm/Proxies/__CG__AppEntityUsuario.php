@@ -64,10 +64,10 @@ class Usuario extends \App\Entity\Usuario implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'apellido', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'ci', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'correo', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'username', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'password', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'fkrol', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'estado'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'apellido', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'correo', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'username', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'password', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'fkrol', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'estado'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'apellido', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'ci', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'correo', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'username', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'password', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'fkrol', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'estado'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'nombre', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'apellido', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'correo', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'username', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'password', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'fkrol', '' . "\0" . 'App\\Entity\\Usuario' . "\0" . 'estado'];
     }
 
     /**
@@ -219,28 +219,6 @@ class Usuario extends \App\Entity\Usuario implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setEstado', [$estado]);
 
         return parent::setEstado($estado);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCi(): ?int
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCi', []);
-
-        return parent::getCi();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setCi(int $ci): \App\Entity\Usuario
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCi', [$ci]);
-
-        return parent::setCi($ci);
     }
 
     /**

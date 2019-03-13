@@ -220,11 +220,15 @@
             obj = JSON.stringify({
                 'anio': $('#gestion').val()
             });
+
             ajax_call_rep("/aud_anual",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
             })
             $('#form_aud').modal('hide')
         })
@@ -235,12 +239,15 @@
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep("/auditoria_notif",{
+
+            ajax_call_reptb("/auditoria_notif",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
             })
         })
     }
@@ -250,12 +257,15 @@
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
-            //console.log(obj);
-            ajax_call_rep("/auditoria_rep",{
+            
+            ajax_call_reptb("/auditoria_rep",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
+                let urlfile = self.url;
+                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
             })
         })
     }

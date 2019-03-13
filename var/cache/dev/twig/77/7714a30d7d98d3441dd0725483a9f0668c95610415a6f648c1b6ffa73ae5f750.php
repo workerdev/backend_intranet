@@ -94,7 +94,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         // line 36
         if (twig_in_filter("responsabilidad_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 36, $this->source); })()))) {
             // line 37
-            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         ";
@@ -111,14 +111,16 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         <div class=\"body table-responsive\">
             <table id=\"data_table\" class=\"table table-bordered table-striped table-hover js-basic-example dataTable\">
                 <thead>
-                <tr>
-                    <th class=\"order_by_th\" data-name=\"names\">Contenido </th>
-                    <th class=\"actions_header\">Acciones </th>
+                <tr >
+                
+                    <th class=\"actions_header text-center\">Ver Contenido </th>
+                    <th class=\"order_by_th \" data-name=\"names\">Contenido </th>
+                    <th class=\"actions_header text-center\">Acciones </th>
                 </tr>
                 </thead>
                 <tbody id=\"table_content\">
                 ";
-            // line 54
+            // line 56
             echo twig_include($this->env, $context, "responsabilidadsocial/table.html.twig");
             echo "
                 </tbody>
@@ -127,11 +129,11 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
     </div>
     ";
         } else {
-            // line 60
+            // line 62
             echo "    <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
     ";
         }
-        // line 62
+        // line 64
         echo "</div>
 ";
         
@@ -139,13 +141,13 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
     }
 
-    // line 64
+    // line 66
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 65
+        // line 67
         echo "<script src=\"resources/plugins/momentjs/moment.js\"></script>
 <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
 <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -156,6 +158,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         selector: \"textarea#contenido\",
         language : \"es_MX\",
         theme: \"modern\",
+        content_style: \"img {max-width: 100%; max-height: 50%;}\",
         resize: false,
         
         height: 350,
@@ -200,9 +203,13 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
         clean_form()
         verif_inputs()
-        \$('#id_div').hide()
+        \$('#cabecera').show()
+        \$('#id').show()
+        \$('#id_div').show()
         \$('#insert').show()
         \$('#update').hide()
+         \$('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
         \$('#form').modal('show')
     })
     
@@ -222,7 +229,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
             obj = JSON.stringify({
             'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             })
-            ajax_call_get(\"/responsabilidad_editar\",{
+            ajax_call_get(\" /responsabilidad_editar\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
@@ -233,13 +240,54 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
                 clean_form()
                 verif_inputs()
+                \$('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
+                \$('#cabecera').show()
                 \$('#id_div').show()
+                \$('#id').show()
                 \$('#insert').hide()
+                
+               
+                
                 \$('#update').show()
                 \$('#form').modal('show')
             })
         })
     }
+
+        \$('.view').click(function () {
+            obj = JSON.stringify({
+            'id': parseInt(JSON.parse(\$(this).attr('data-json')))
+            })
+            ajax_call_get(\" /responsabilidad_editar\",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                \$('#id').val(self.id)
+
+                tinyMCE.get('contenido').setContent(self.contenido)
+                \$(\"#contenido\").html(self.contenido)
+
+                clean_form()
+                verif_inputs()
+                \$('#id_div').hide()
+                \$('#cabecera').hide()
+                
+                \$('#insert').hide()
+                \$('#update').hide()
+            \$('.mce-toolbar').hide(); 
+                tinymce.activeEditor.setMode('readonly');
+                \$('#id').hide()
+                \$('#form').modal('show')
+            })
+        })
+
+
+    
+    
+    
+
+   
 
     \$('#update').click(function () {
         tinyMCE.triggerSave();
@@ -293,7 +341,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
     public function getDebugInfo()
     {
-        return array (  149 => 65,  143 => 64,  135 => 62,  131 => 60,  122 => 54,  110 => 44,  108 => 43,  103 => 40,  97 => 37,  95 => 36,  86 => 30,  83 => 29,  77 => 28,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  151 => 67,  145 => 66,  137 => 64,  133 => 62,  124 => 56,  110 => 44,  108 => 43,  103 => 40,  97 => 37,  95 => 36,  86 => 30,  83 => 29,  77 => 28,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -334,7 +382,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         {% if 'responsabilidad_insertar' in permisos %}
-            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         {% endif %}   
@@ -345,9 +393,11 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         <div class=\"body table-responsive\">
             <table id=\"data_table\" class=\"table table-bordered table-striped table-hover js-basic-example dataTable\">
                 <thead>
-                <tr>
-                    <th class=\"order_by_th\" data-name=\"names\">Contenido </th>
-                    <th class=\"actions_header\">Acciones </th>
+                <tr >
+                
+                    <th class=\"actions_header text-center\">Ver Contenido </th>
+                    <th class=\"order_by_th \" data-name=\"names\">Contenido </th>
+                    <th class=\"actions_header text-center\">Acciones </th>
                 </tr>
                 </thead>
                 <tbody id=\"table_content\">
@@ -372,6 +422,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         selector: \"textarea#contenido\",
         language : \"es_MX\",
         theme: \"modern\",
+        content_style: \"img {max-width: 100%; max-height: 50%;}\",
         resize: false,
         
         height: 350,
@@ -416,9 +467,13 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
         clean_form()
         verif_inputs()
-        \$('#id_div').hide()
+        \$('#cabecera').show()
+        \$('#id').show()
+        \$('#id_div').show()
         \$('#insert').show()
         \$('#update').hide()
+         \$('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
         \$('#form').modal('show')
     })
     
@@ -438,7 +493,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
             obj = JSON.stringify({
             'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             })
-            ajax_call_get(\"/responsabilidad_editar\",{
+            ajax_call_get(\" /responsabilidad_editar\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
@@ -449,13 +504,54 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
                 clean_form()
                 verif_inputs()
+                \$('.mce-toolbar').show(); 
+                tinymce.activeEditor.setMode('design'); 
+                \$('#cabecera').show()
                 \$('#id_div').show()
+                \$('#id').show()
                 \$('#insert').hide()
+                
+               
+                
                 \$('#update').show()
                 \$('#form').modal('show')
             })
         })
     }
+
+        \$('.view').click(function () {
+            obj = JSON.stringify({
+            'id': parseInt(JSON.parse(\$(this).attr('data-json')))
+            })
+            ajax_call_get(\" /responsabilidad_editar\",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                \$('#id').val(self.id)
+
+                tinyMCE.get('contenido').setContent(self.contenido)
+                \$(\"#contenido\").html(self.contenido)
+
+                clean_form()
+                verif_inputs()
+                \$('#id_div').hide()
+                \$('#cabecera').hide()
+                
+                \$('#insert').hide()
+                \$('#update').hide()
+            \$('.mce-toolbar').hide(); 
+                tinymce.activeEditor.setMode('readonly');
+                \$('#id').hide()
+                \$('#form').modal('show')
+            })
+        })
+
+
+    
+    
+    
+
+   
 
     \$('#update').click(function () {
         tinyMCE.triggerSave();
@@ -491,6 +587,6 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
 </script>
 
-{% endblock %}", "responsabilidadsocial/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\responsabilidadsocial\\index.html.twig");
+{% endblock %}", "responsabilidadsocial/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\responsabilidadsocial\\index.html.twig");
     }
 }

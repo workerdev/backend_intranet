@@ -15,6 +15,9 @@ use App\Entity\CategoriaNoticia;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
+
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -60,12 +63,15 @@ class AccidentesController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(array('estado' => '1'));
         $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(
             ['estado' => '1'],
             ['id' => 'ASC']
         );
-        return $this->render('accidentes/index.html.twig', array('objects' => $accidentes, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
+        return $this->render('accidentes/index.html.twig', array('objects' => $accidentes, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

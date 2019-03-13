@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 <style>
-    .accion{ cursor:pointer }
+    .accion{ 
+        cursor:pointer
+    }
+    .swal2-title{
+        font-size: 16px !important;
+    }
 </style>
 <script src="resources/js/functions.js"></script>
 
@@ -120,23 +125,62 @@
     reload_form()
 </script>
 <script>
-
     attach_edit()
+
+    let message= ''
+    function tiponota_prev(id) {
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse(id))
+        });
+        ajax_call_get("/tiponota_prev",{
+            object: obj
+        },function(response){
+            message = response;
+        });
+    }
 
     $('.delete').click(function () {
         id = parseInt(JSON.parse($(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: "¿Desea dar de baja el tipo correlativo?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#004c99",
-            cancelButtonColor: "#F44336",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(function () {
-            ajax_call("/tiponota_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-        })
+        tiponota_prev(id)
+
+        setTimeout(function(){
+            let quest = message
+            enabled = false
+
+            if((quest.split(" ").length) > 8){
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+
+                })
+            }else{
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+                    ajax_call("/tiponota_eliminar", { 
+                        id, enabled,_xsrf: getCookie("_xsrf")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
+                    })
+                })
+            }
+
+            }, 1500
+        )
     })
 
 </script>

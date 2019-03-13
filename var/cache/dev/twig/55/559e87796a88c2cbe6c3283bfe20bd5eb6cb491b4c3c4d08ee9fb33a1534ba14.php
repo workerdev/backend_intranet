@@ -92,7 +92,7 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
         // line 34
         if (twig_in_filter("tipoauditoria_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 34, $this->source); })()))) {
             // line 35
-            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         ";
@@ -208,7 +208,6 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
     reload_form()
 </script>
 <script>
-
     attach_edit()
 
     let message= ''
@@ -244,7 +243,6 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
                 }).then(function () {
 
                 })
-
             }else{
                 swal({
                     title: quest,
@@ -327,7 +325,7 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         {% if 'tipoauditoria_insertar' in permisos %}
-            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
+            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
                 <i class=\"material-icons\">add</i>
             </button>
         {% endif %}
@@ -420,7 +418,6 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
     reload_form()
 </script>
 <script>
-
     attach_edit()
 
     let message= ''
@@ -456,7 +453,6 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
                 }).then(function () {
 
                 })
-
             }else{
                 swal({
                     title: quest,
@@ -482,6 +478,6 @@ class __TwigTemplate_203d05c67c26805806eda9dd07d34da3adcfe858448cf30c5a22bac5477
 
 </script>
 
-{% endblock %}", "tipoauditoria/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\tipoauditoria\\index.html.twig");
+{% endblock %}", "tipoauditoria/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\tipoauditoria\\index.html.twig");
     }
 }

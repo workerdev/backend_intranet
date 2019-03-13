@@ -148,6 +148,7 @@
             'fkresponsable': $('#fkresponsable').val(),
             'impacto': $('#fkimpacto').val()
         })
+        console.log(objeto)
         ajax_call_validation("/riesgosoportunidades_insertar", {object: objeto}, null, main_route)
         // ajax_call("/riesgosoportunidades_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
         // $('#form').modal('hide')
@@ -167,7 +168,9 @@
                 $('#origen').val(self.origen)
                 $('#accion').val(self.accion)
                 $('#fecha').val(self.fecha)
+
                 $('#estadocro').val(self.estadocro)
+                $('#estadocro').selectpicker('render')
 
                 $('#fkficha').val(self.fkficha.id)
                 $('#fkficha').selectpicker('render')

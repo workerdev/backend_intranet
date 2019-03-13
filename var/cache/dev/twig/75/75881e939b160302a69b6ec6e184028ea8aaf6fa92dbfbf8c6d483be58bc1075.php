@@ -1,6 +1,6 @@
 <?php
 
-/* TipoCargo/form.html.twig */
+/* tipocargo/form.html.twig */
 class __TwigTemplate_98d074a6a7d77f01f919870e11c83428da983541c8b806b60d1b34a40b09ea64 extends Twig_Template
 {
     private $source;
@@ -20,7 +20,7 @@ class __TwigTemplate_98d074a6a7d77f01f919870e11c83428da983541c8b806b60d1b34a40b0
     protected function doDisplay(array $context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "TipoCargo/form.html.twig"));
+        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "tipocargo/form.html.twig"));
 
         // line 1
         echo "<div id=\"form\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">
@@ -67,7 +67,7 @@ class __TwigTemplate_98d074a6a7d77f01f919870e11c83428da983541c8b806b60d1b34a40b0
 
     public function getTemplateName()
     {
-        return "TipoCargo/form.html.twig";
+        return "tipocargo/form.html.twig";
     }
 
     public function getDebugInfo()
@@ -113,6 +113,6 @@ class __TwigTemplate_98d074a6a7d77f01f919870e11c83428da983541c8b806b60d1b34a40b0
             </div>
         </div>
     </div>
-</div>", "TipoCargo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\TipoCargo\\form.html.twig");
+</div>", "tipocargo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\TipoCargo\\form.html.twig");
     }
 }
