@@ -63,7 +63,7 @@ class __TwigTemplate_811dfa0b16e73729be494435d343da01644db61963109dd980a331312ce
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
-            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, $context["t"], "apellido", array())), "html", null, true);
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
             echo "</option>
                         ";
         }
@@ -136,7 +136,7 @@ class __TwigTemplate_811dfa0b16e73729be494435d343da01644db61963109dd980a331312ce
 
                     <select id=\"fkpersonal\" class=\"form-control\">
                         {% for t in personal %}
-                            <option value=\"{{t.id}}\">{{t.nombre ~ ' ' ~ t.apellido}}</option>
+                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
                         {% endfor %}
                     </select>
                         </br>
@@ -149,6 +149,6 @@ class __TwigTemplate_811dfa0b16e73729be494435d343da01644db61963109dd980a331312ce
             </div>
         </div>
     </div>
-</div>", "turno/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\turno\\form.html.twig");
+</div>", "turno/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\turno\\form.html.twig");
     }
 }

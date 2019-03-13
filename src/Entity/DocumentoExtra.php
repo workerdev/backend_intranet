@@ -163,7 +163,7 @@ class DocumentoExtra
 
     public function setVinculoarchivo(string $vinculoarchivo): self
     {
-        $this->vinculoarchivo = $vinculoarchivo;
+        $this->vinculoarchivo = $inculoarchivo;
 
         return $this;
     }

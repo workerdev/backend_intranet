@@ -456,6 +456,6 @@ class __TwigTemplate_ba5a102f32f4bdb963883c8d85ad2fe5fff00f88d45a4793cdc065b07a9
         })
     </script>
 
-{% endblock %}", "seguimientoindicador/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\seguimientoindicador\\index.html.twig");
+{% endblock %}", "seguimientoindicador/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\seguimientoindicador\\index.html.twig");
     }
 }

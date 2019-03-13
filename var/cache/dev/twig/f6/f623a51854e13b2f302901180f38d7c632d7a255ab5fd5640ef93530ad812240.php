@@ -113,6 +113,6 @@ class __TwigTemplate_38e14a5b23ad77c2339b14d27474109e9abccb4e48647eee96660d26cdc
             </div>
         </div>
     </div>
-</div>", "estadoriesgo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\estadoriesgo\\form.html.twig");
+</div>", "estadoriesgo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\estadoriesgo\\form.html.twig");
     }
 }

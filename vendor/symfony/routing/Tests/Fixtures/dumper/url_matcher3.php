@@ -15,11 +15,10 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
         $this->context = $context;
     }
 
-    public function match($pathinfo)
+    public function match($rawPathinfo)
     {
-        $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode($pathinfo) ?: '/';
-        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
+        $allow = $allowSchemes = array();
+        $pathinfo = rawurldecode($rawPathinfo) ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
@@ -27,29 +26,32 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
             $canonicalMethod = 'GET';
         }
 
-        switch ($trimmedPathinfo) {
+        switch ($trimmedPathinfo = '/' !== $pathinfo && '/' === $pathinfo[-1] ? substr($pathinfo, 0, -1) : $pathinfo) {
             case '/with-condition':
                 // with-condition
-                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
+                if ('/' !== $pathinfo && '/' === $pathinfo[-1]) {
                     goto not_withcondition;
                 }
 
                 if (($context->getMethod() == "GET")) {
-                    return ['_route' => 'with-condition'];
+                    return array('_route' => 'with-condition');
                 }
                 not_withcondition:
                 break;
             default:
-                $routes = [
-                    '/rootprefix/test' => [['_route' => 'static'], null, null, null, false],
-                ];
+                $routes = array(
+                    '/rootprefix/test' => array(array('_route' => 'static'), null, null, null, false),
+                );
 
                 if (!isset($routes[$trimmedPathinfo])) {
                     break;
                 }
                 list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$trimmedPathinfo];
-                if ('/' !== $pathinfo && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
-                    break;
+
+                if ('/' !== $pathinfo) {
+                    if ($hasTrailingSlash !== ('/' === $pathinfo[-1])) {
+                        break;
+                    }
                 }
 
                 $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
@@ -68,28 +70,34 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
         }
 
         $matchedPathinfo = $pathinfo;
-        $regexList = [
+        $regexList = array(
             0 => '{^(?'
                     .'|/rootprefix/([^/]++)(*:27)'
-                .')/?$}sD',
-        ];
+                .')(?:/?)$}sD',
+        );
 
         foreach ($regexList as $offset => $regex) {
             while (preg_match($regex, $matchedPathinfo, $matches)) {
                 switch ($m = (int) $matches['MARK']) {
                     default:
-                        $routes = [
-                            27 => [['_route' => 'dynamic'], ['var'], null, null, false, true],
-                        ];
+                        $routes = array(
+                            27 => array(array('_route' => 'dynamic'), array('var'), null, null, false),
+                        );
 
-                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
+                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$m];
 
-                        $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
-                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
-                            break;
-                        }
-                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
-                            $matches = $n;
+                        if ('/' !== $pathinfo) {
+                            if ('/' === $pathinfo[-1]) {
+                                if (preg_match($regex, substr($pathinfo, 0, -1), $n) && $m === (int) $n['MARK']) {
+                                    $matches = $n;
+                                } else {
+                                    $hasTrailingSlash = true;
+                                }
+                            }
+
+                            if ($hasTrailingSlash !== ('/' === $pathinfo[-1])) {
+                                break;
+                            }
                         }
 
                         foreach ($vars as $i => $v) {

@@ -88,7 +88,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         // line 30
         if (twig_in_filter("documentoextra_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 30, $this->source); })()))) {
             echo "    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             ";
@@ -112,13 +112,12 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                             <th class=\"order_by_th\" data-name=\"phone\">Tipo de documento extra </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Fecha de publicación </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Vigente </th>
-                            <th class=\"order_by_th\" data-name=\"phone\">Vínculo archivo </th>
                             <th class=\"actions_header\">Acciones </th>
                         </tr>
                         </thead>
                         <tbody id=\"table_content\">
                         ";
-            // line 54
+            // line 53
             echo twig_include($this->env, $context, "documentoextra/table.html.twig");
             echo "
                         </tbody>
@@ -127,11 +126,11 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             </div>
         ";
         } else {
-            // line 60
+            // line 59
             echo "            <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
         ";
         }
-        // line 62
+        // line 61
         echo "    </div>
 ";
         
@@ -139,13 +138,13 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
 
     }
 
-    // line 64
+    // line 63
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 65
+        // line 64
         echo "    <script src=\"resources/plugins/momentjs/moment.js\"></script>
     <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
     <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -166,19 +165,11 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         liveSearchPlaceholder: 'Buscar documento tipo extra.',
         title: 'Seleccione un documento tipo extra.'
     })
-
-    \$('#vigente').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
     
     \$('#new').click(function () {
         \$('#codigo').val('')
         \$('#titulo').val('')
         \$('#fechapublicacion').val('')
-        \$('#vinculoarchivo').val('')
         
         clean_form()
         verif_inputs()
@@ -194,7 +185,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             'titulo': \$('#titulo').val(),
             'fechapublicacion': \$('#fechapublicacion').val(),
             'vigente': \$('#vigente').val(),
-            'vinculoarchivo': \$('#vinculoarchivo').val(),
             'proceso': \$('#fkproceso').val(),
             'tipo': \$('#fktipo').val()
         })
@@ -216,10 +206,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                 \$('#codigo').val(self.codigo)
                 \$('#titulo').val(self.titulo)
                 \$('#fechapublicacion').val(self.fechapublicacion)
-                \$('#vinculoarchivo').val(self.vinculoarchivo)
-
                 \$('#vigente').val(self.vigente)
-                \$('#vigente').selectpicker('render')
 
                 \$('#fkproceso').val(self.fkproceso.id)
                 \$('#fkproceso').selectpicker('render')
@@ -244,7 +231,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             'titulo': \$('#titulo').val(),
             'fechapublicacion': \$('#fechapublicacion').val(),
             'vigente': \$('#vigente').val(),
-            'vinculoarchivo': \$('#vinculoarchivo').val(),
             'proceso': \$('#fkproceso').val(),
             'tipo': \$('#fktipo').val()
         })
@@ -292,7 +278,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
 
     public function getDebugInfo()
     {
-        return array (  149 => 65,  143 => 64,  135 => 62,  131 => 60,  122 => 54,  104 => 38,  102 => 37,  97 => 34,  89 => 30,  80 => 24,  77 => 23,  71 => 22,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  148 => 64,  142 => 63,  134 => 61,  130 => 59,  121 => 53,  104 => 38,  102 => 37,  97 => 34,  89 => 30,  80 => 24,  77 => 23,  71 => 22,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -327,7 +313,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             {% if 'documentoextra_insertar' in permisos %}    
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             {% endif %}   
@@ -345,7 +331,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                             <th class=\"order_by_th\" data-name=\"phone\">Tipo de documento extra </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Fecha de publicación </th>
                             <th class=\"order_by_th\" data-name=\"phone\">Vigente </th>
-                            <th class=\"order_by_th\" data-name=\"phone\">Vínculo archivo </th>
                             <th class=\"actions_header\">Acciones </th>
                         </tr>
                         </thead>
@@ -381,19 +366,11 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         liveSearchPlaceholder: 'Buscar documento tipo extra.',
         title: 'Seleccione un documento tipo extra.'
     })
-
-    \$('#vigente').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
     
     \$('#new').click(function () {
         \$('#codigo').val('')
         \$('#titulo').val('')
         \$('#fechapublicacion').val('')
-        \$('#vinculoarchivo').val('')
         
         clean_form()
         verif_inputs()
@@ -409,7 +386,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             'titulo': \$('#titulo').val(),
             'fechapublicacion': \$('#fechapublicacion').val(),
             'vigente': \$('#vigente').val(),
-            'vinculoarchivo': \$('#vinculoarchivo').val(),
             'proceso': \$('#fkproceso').val(),
             'tipo': \$('#fktipo').val()
         })
@@ -431,10 +407,7 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
                 \$('#codigo').val(self.codigo)
                 \$('#titulo').val(self.titulo)
                 \$('#fechapublicacion').val(self.fechapublicacion)
-                \$('#vinculoarchivo').val(self.vinculoarchivo)
-
                 \$('#vigente').val(self.vigente)
-                \$('#vigente').selectpicker('render')
 
                 \$('#fkproceso').val(self.fkproceso.id)
                 \$('#fkproceso').selectpicker('render')
@@ -459,7 +432,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
             'titulo': \$('#titulo').val(),
             'fechapublicacion': \$('#fechapublicacion').val(),
             'vigente': \$('#vigente').val(),
-            'vinculoarchivo': \$('#vinculoarchivo').val(),
             'proceso': \$('#fkproceso').val(),
             'tipo': \$('#fktipo').val()
         })
@@ -489,6 +461,6 @@ class __TwigTemplate_b612f76896afa5243480af1d37aea1a3486b71ef541bd5284bdc883e46b
         })
     </script>
 
-{% endblock %}", "documentoextra/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoextra\\index.html.twig");
+{% endblock %}", "documentoextra/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\documentoextra\\index.html.twig");
     }
 }

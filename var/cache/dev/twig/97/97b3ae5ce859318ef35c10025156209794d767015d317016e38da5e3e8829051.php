@@ -51,7 +51,12 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
                             <label class=\"form-label\">Apellido</label>
                         </div>
                     </div>
-                    
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"ci\" name=\"ci\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Ci</label>
+                        </div>
+                    </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"correo\" name=\"correo\" type=\"text\" class=\"form-control\">
@@ -74,11 +79,11 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
                     <label>Rol</label>
                         <select id=\"rol\" class=\"form-control\">
                         ";
-        // line 51
+        // line 56
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["rol"]) || array_key_exists("rol", $context) ? $context["rol"] : (function () { throw new Twig_Error_Runtime('Variable "rol" does not exist.', 51, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["rol"]) || array_key_exists("rol", $context) ? $context["rol"] : (function () { throw new Twig_Error_Runtime('Variable "rol" does not exist.', 56, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["tr"]) {
-            // line 52
+            // line 57
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
             echo "\">";
@@ -89,14 +94,14 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['tr'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 54
+        // line 59
         echo "                        </select>
                         </br>
                         </br> 
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -152,7 +157,7 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
 
     public function getDebugInfo()
     {
-        return array (  93 => 54,  82 => 52,  78 => 51,  26 => 1,);
+        return array (  98 => 59,  87 => 57,  83 => 56,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -185,7 +190,12 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
                             <label class=\"form-label\">Apellido</label>
                         </div>
                     </div>
-                    
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"ci\" name=\"ci\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Ci</label>
+                        </div>
+                    </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"correo\" name=\"correo\" type=\"text\" class=\"form-control\">
@@ -215,8 +225,8 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
                         </br> 
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -254,6 +264,6 @@ class __TwigTemplate_186f02ca319407cc08fb891006c468563b063471e5c09607802f2beb776
             </div>
         </div>
     </div>
-</div>", "usuario/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\usuario\\form.html.twig");
+</div>", "usuario/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\usuario\\form.html.twig");
     }
 }

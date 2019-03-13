@@ -148,6 +148,6 @@ class __TwigTemplate_a515ce8e06140ab8c4507e3dae0bcd520625f939702d6c7c09f3e9ac374
             </div>
         </div>
     </div>
-</div>", "noticiacategoria/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\noticiacategoria\\form.html.twig");
+</div>", "noticiacategoria/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\noticiacategoria\\form.html.twig");
     }
 }

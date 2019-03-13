@@ -41,7 +41,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Ldap\Exception\ConnectionException;
 
 use Symfony\Component\Ldap\Ldap;
 
@@ -56,7 +55,7 @@ class ServiciosController extends AbstractController
         try {
             $cx = $this->getDoctrine()->getManager();
             $enlace = $cx->getRepository(Enlaces::class)->findBy(array('estado' => '1'));
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array      ('json' => new JsonEncoder()));
             $data = $serializer->serialize($enlace, 'json');
 
             return new jsonResponse(json_decode($data));
@@ -2247,50 +2246,6 @@ class ServiciosController extends AbstractController
         catch(Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
             return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
-        }
-    }
-
-    /**
-     * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
-    */
-    public function info(Request $request)
-    {
-        //$sx = json_decode($_POST['object'], true);
-        $sx = json_decode($request->getContent(), true);
-        $user = $sx['user'];
-        $password = $sx['password'];
-        $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
-    
-        $ldap = Ldap::create('ext_ldap', array(
-            'host' => '192.168.0.10',
-            //'host' => '172.17.2.10',
-            'encryption' => 'none',
-            'port' => '389',
-        ));
-    
-        try {
-            $attributes = ['cn','givenName','title','sn'];
-            $ldap->bind($dn, $password);
-            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
-    
-            $results = $query->execute()->toArray();
-    
-            if(!empty($results)){
-                $mensaje = $results;
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $data2 = $serializer->serialize($mensaje, 'json');
-    
-                $resultado1 = $data2;
-                return new Response($resultado1);
-            }
-        }
-        catch (ConnectionException $ce) {
-            $mensaje = "error";
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-        //    $resultado = array('response'=>$mensaje,'success' => true,
-        //`      'message' => 'Failed.');
-            $resultado1 = json_encode($mensaje);
-            return new Response($resultado1);
         }
     }
 

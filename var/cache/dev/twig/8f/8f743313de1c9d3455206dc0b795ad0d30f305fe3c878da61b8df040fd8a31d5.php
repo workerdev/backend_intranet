@@ -60,12 +60,20 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
                             <label class=\"form-label\">Apellido</label>
                         </div>
                     </div>
-                   
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"ci\" name=\"ci\" type=\"text\" value=\"";
+        // line 31
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 31, $this->source); })()), "ci", array()), "html", null, true);
+        echo "\" class=\"form-control text\">
+                            <label class=\"form-label\">Ci</label>
+                        </div>
+                    </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"correo\" name=\"correo\" type=\"text\" value=\"";
-        // line 32
-        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 32, $this->source); })()), "correo", array()), "html", null, true);
+        // line 37
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 37, $this->source); })()), "correo", array()), "html", null, true);
         echo "\" class=\"form-control text\">
                             <label class=\"form-label\">Correo</label>
                         </div>
@@ -73,8 +81,8 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"username\" name=\"username\" type=\"text\" value=\"";
-        // line 38
-        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 38, $this->source); })()), "username", array()), "html", null, true);
+        // line 43
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 43, $this->source); })()), "username", array()), "html", null, true);
         echo "\" class=\"form-control text\">
                             <label class=\"form-label\">Username</label>
                         </div>
@@ -82,12 +90,12 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"rol\" type=\"hidden\" class=\"form-control\" value=\"";
-        // line 44
-        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 44, $this->source); })()), "fkrol", array()), "id", array()), "html", null, true);
+        // line 49
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 49, $this->source); })()), "fkrol", array()), "id", array()), "html", null, true);
         echo "\">
                             <input id=\"password\" name=\"password\" type=\"password\" value=\"";
-        // line 45
-        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 45, $this->source); })()), "password", array()), "html", null, true);
+        // line 50
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, (isset($context["profile"]) || array_key_exists("profile", $context) ? $context["profile"] : (function () { throw new Twig_Error_Runtime('Variable "profile" does not exist.', 50, $this->source); })()), "password", array()), "html", null, true);
         echo "\" class=\"form-control\">
                             <label class=\"form-label\">Password</label>
                         </div>
@@ -117,7 +125,7 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
 
     public function getDebugInfo()
     {
-        return array (  90 => 45,  86 => 44,  77 => 38,  68 => 32,  58 => 25,  49 => 19,  40 => 13,  26 => 1,);
+        return array (  98 => 50,  94 => 49,  85 => 43,  76 => 37,  67 => 31,  58 => 25,  49 => 19,  40 => 13,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -150,7 +158,12 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
                             <label class=\"form-label\">Apellido</label>
                         </div>
                     </div>
-                   
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"ci\" name=\"ci\" type=\"text\" value=\"{{ profile.ci }}\" class=\"form-control text\">
+                            <label class=\"form-label\">Ci</label>
+                        </div>
+                    </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                             <input id=\"correo\" name=\"correo\" type=\"text\" value=\"{{ profile.correo }}\" class=\"form-control text\">
@@ -177,6 +190,6 @@ class __TwigTemplate_b6e7d4b96e453498d5d05e17fe5e309d181c9c58d62badbf8e3b618a35f
             </div>
         </div>
     </div>
-</div>", "perfil/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\perfil\\form.html.twig");
+</div>", "perfil/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\perfil\\form.html.twig");
     }
 }

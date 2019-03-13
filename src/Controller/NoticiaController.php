@@ -26,8 +26,6 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Rol;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 
 class NoticiaController extends AbstractController
@@ -62,14 +60,9 @@ class NoticiaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
         $categorias = $this->getDoctrine()->getRepository(CategoriaNoticia::class)->findBy(array('estado' => '1'));
         $noticia = $this->getDoctrine()->getRepository(Noticia::class)->findBy(array('estado' => '1'));
-        return $this->render('noticia/index.html.twig', array('objects' => $noticia, 'categorias' => $categorias,'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('noticia/index.html.twig', array('objects' => $noticia, 'categorias' => $categorias,'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
 

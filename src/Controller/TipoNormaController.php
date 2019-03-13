@@ -23,8 +23,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 
 class TipoNormaController extends AbstractController
@@ -59,12 +57,8 @@ class TipoNormaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
         $tiponorma = $this->getDoctrine()->getRepository(TipoNorma::class)->findBy(array('estado' => '1'));
-        return $this->render('tiponorma/index.html.twig', array('objects' => $tiponorma, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('tiponorma/index.html.twig', array('objects' => $tiponorma, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
 

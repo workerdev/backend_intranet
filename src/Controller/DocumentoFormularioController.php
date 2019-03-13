@@ -13,8 +13,6 @@ use App\Entity\Documento;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -62,10 +60,7 @@ class DocumentoFormularioController extends AbstractController
         }
         $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->findBy(array('estado' => '1'));
         $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('documentoformulario/index.html.twig', array('objects' => $DocumentoFormulario, 'documento' => $Documento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('documentoformulario/index.html.twig', array('objects' => $DocumentoFormulario, 'documento' => $Documento, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
 
@@ -195,7 +190,7 @@ class DocumentoFormularioController extends AbstractController
             $id = $sx['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
             $fpb = $DocumentoFormulario->getFechaPublicacion();
-            if($fpb != null) $result = $fpb->format('Y-m-d'); else $result = $fpb;
+            $result = $fpb->format('Y-m-d');
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),
                 "codigo" => $DocumentoFormulario->getCodigo(),

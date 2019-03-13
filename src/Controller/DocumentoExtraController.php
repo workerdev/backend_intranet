@@ -8,7 +8,6 @@ use App\Entity\DocTipoExtra;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
-use App\Form\DocumentoExtraType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +21,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 
 class DocumentoExtraController extends Controller
@@ -32,7 +29,7 @@ class DocumentoExtraController extends Controller
      * @Route("/documentoextra", name="documentoextra_listar")
      * @Method({"GET"})
      */
-    public function index(DocumentoExtra $docextra = null, Request $request)
+    public function index()
     {
         $s_user = $this->get('session')->get('s_user');
         if(empty($s_user)){
@@ -58,65 +55,10 @@ class DocumentoExtraController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-
-        $form = $this->createForm(DocumentoExtraType::class, null);
-        $form ->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){ 
-            $datosDocumento = $form->getData();
-            
-            if($datosDocumento->getId() == 0 ){
-                $docextra = new DocumentoExtra();
-            }else{
-                $docextra = $this->getDoctrine()->getRepository(DocumentoExtra::class)->find($datosDocumento->getId());
-            }            
-            $cx = $this->getDoctrine()->getManager(); 
-
-            if(empty($form['vinculoarchivo']->getData())){
-                if($docextra->getVinculoarchivo() == null){
-                    $docextra->setVinculoarchivo("N/A");
-                }
-            }else{
-                $file = $form['vinculoarchivo']->getData();
-                $fileName = $file->getClientOriginalName();             
-                $file->move($this->getParameter('Directorio_DocExtra'), $fileName);
-                $ruta = $this->getParameter('Directorio_DocExtra').'\\'.$fileName;
-                $docextra->setVinculoarchivo($ruta);
-            }
-
-            $docextra->setCodigo($datosDocumento->getCodigo());
-            $docextra->setTitulo($datosDocumento->getTitulo());
-            $docextra->setFechapublicacion($datosDocumento->getFechapublicacion());
-            $docextra->setVigente($datosDocumento->getVigente());
-            
-            $proceso = new FichaProcesos();
-            $proceso = $datosDocumento->getFkproceso();
-            $docextra->setFkproceso($proceso);
-
-            $tipo = new DocTipoiExtra();
-            $tipo = $datosDocumento->getFktipo();
-            $docextra->setFktipo($tipo);
-
-            if($datosDocumento->getId() == 0){
-                $cx->persist($docextra);
-                $cx->flush();
-                unset($docextra);
-                unset($datosDocumento);
-            }else{
-                $cx->merge($docextra);
-                $cx->flush();
-                unset($docextra);
-                unset($datosDocumento);
-            }
-            $redireccion = new RedirectResponse('/documentoextra');
-            return $redireccion;
-        }
-
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
         $DocumentoExtra = $this->getDoctrine()->getRepository(DocumentoExtra::class)->findBy(array('estado' => '1'));
-        return $this->render('documentoextra/index.html.twig', array('objects' => $DocumentoExtra, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
+        $Tipo = $this->getDoctrine()->getRepository(DocTipoExtra::class)->findBy(array('estado' => '1'));
+        return $this->render('documentoextra/index.html.twig', array('objects' => $DocumentoExtra, 'proceso' => $FichaProcesos, 'tipo' => $Tipo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**
@@ -135,15 +77,12 @@ class DocumentoExtraController extends Controller
             $tipo = $sx['tipo'];
             $fechapublicacion = $sx['fechapublicacion'];
             $vigente = $sx['vigente'];
-            $vinculoarchivo = $sx['vinculoarchivo'];
 
             $documentoextra = new DocumentoExtra();
             $documentoextra->setCodigo($codigo);
             $documentoextra->setTitulo($titulo);
             $documentoextra->setFechapublicacion(new \DateTime($fechapublicacion));
             $documentoextra->setVigente($vigente);
-            $documentoextra->setVinculoarchivo($vinculoarchivo);
-            
             $documentoextra->setEstado(1);
             trim($proceso);
             $proceso != '' ? $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($proceso) : $proceso=null;
@@ -195,7 +134,6 @@ class DocumentoExtraController extends Controller
             $tipo = $sx['tipo'];
             $fechapublicacion = $sx['fechapublicacion'];
             $vigente = $sx['vigente'];
-            $vinculoarchivo = $sx['vinculoarchivo'];
 
             $documentoextra = $this->getDoctrine()->getRepository(DocumentoExtra::class)->find($id);
             $documentoextra->setId($id);
@@ -203,7 +141,6 @@ class DocumentoExtraController extends Controller
             $documentoextra->setTitulo($titulo);
             $documentoextra->setFechapublicacion(new \DateTime($fechapublicacion));
             $documentoextra->setVigente($vigente);
-            $documentoextra->setVinculoarchivo($vinculoarchivo);
             $documentoextra->setEstado(1);
 
             trim($proceso);
@@ -255,8 +192,7 @@ class DocumentoExtraController extends Controller
                 "fkproceso" => $documentoextra->getFkproceso(),
                 "fktipo" => $documentoextra->getFktipo(),
                 "fechapublicacion" => $result,
-                "vigente" => $documentoextra->getVigente(),
-                "vinculoarchivo" => $documentoextra->getVinculoarchivo()
+                "vigente" => $documentoextra->getVigente()
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($sendinf, 'json');

@@ -35,12 +35,12 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
 ";
         // line 11
         $this->displayBlock('body', $context, $blocks);
-        // line 292
+        // line 288
         echo "
 ";
-        // line 293
+        // line 289
         $this->displayBlock('javascripts', $context, $blocks);
-        // line 295
+        // line 291
         echo "  ";
         
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->leave($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof);
@@ -441,21 +441,11 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
             <tr class=\"spacer\"> <td> </td></tr>
             <tr>
                 <th colspan=\"1\" scope=\"colgroup\">Fecha de Revisión de Informe:\t</th>
-                ";
+                <td class=\"text-normal\"> ";
             // line 258
-            if ((twig_length_filter($this->env, (isset($context["hlzg"]) || array_key_exists("hlzg", $context) ? $context["hlzg"] : (function () { throw new Twig_Error_Runtime('Variable "hlzg" does not exist.', 258, $this->source); })())) > 0)) {
-                // line 259
-                echo "                    <td class=\"text-normal\"> ";
-                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["hlzg"]) || array_key_exists("hlzg", $context) ? $context["hlzg"] : (function () { throw new Twig_Error_Runtime('Variable "hlzg" does not exist.', 259, $this->source); })()), 0, array(), "array"), "cb_accion_eficacia_fecha", array()), "html", null, true);
-                echo " </td>
-                ";
-            } else {
-                // line 261
-                echo "                    <td class=\"text-normal\"> </td>
-                ";
-            }
-            // line 263
-            echo "                <th colspan=\"1\" scope=\"colgroup\"></th>
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["hlzg"]) || array_key_exists("hlzg", $context) ? $context["hlzg"] : (function () { throw new Twig_Error_Runtime('Variable "hlzg" does not exist.', 258, $this->source); })()), 0, array(), "array"), "cb_accion_eficacia_fecha", array()), "html", null, true);
+            echo " </td>
+                <th colspan=\"1\" scope=\"colgroup\"></th>
             </tr>
     </table>
     
@@ -480,7 +470,7 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
     </div>
     ";
         } else {
-            // line 287
+            // line 283
             echo "        <div class=\"m-2 p-3\">
             <p>No se encontraron registros de esta gestión.</p>
         </div>
@@ -491,13 +481,13 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
 
     }
 
-    // line 293
+    // line 289
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 294
+        // line 290
         echo "    <script src=\"resources/bootstrap4/js/bootstrap.min.js\"></script>
 ";
         
@@ -512,7 +502,7 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
 
     public function getDebugInfo()
     {
-        return array (  501 => 294,  495 => 293,  484 => 287,  458 => 263,  454 => 261,  448 => 259,  446 => 258,  433 => 248,  418 => 235,  409 => 232,  405 => 231,  401 => 230,  398 => 229,  394 => 228,  374 => 210,  363 => 205,  360 => 204,  356 => 203,  340 => 190,  328 => 180,  319 => 177,  315 => 176,  311 => 175,  308 => 174,  304 => 173,  278 => 150,  261 => 136,  246 => 123,  240 => 122,  234 => 120,  231 => 119,  227 => 118,  219 => 112,  208 => 107,  205 => 106,  201 => 105,  181 => 88,  169 => 79,  161 => 74,  153 => 69,  142 => 60,  133 => 58,  129 => 57,  108 => 39,  99 => 32,  97 => 31,  76 => 12,  70 => 11,  57 => 3,  51 => 2,  44 => 295,  42 => 293,  39 => 292,  37 => 11,  34 => 10,  32 => 2,  29 => 1,);
+        return array (  491 => 290,  485 => 289,  474 => 283,  446 => 258,  433 => 248,  418 => 235,  409 => 232,  405 => 231,  401 => 230,  398 => 229,  394 => 228,  374 => 210,  363 => 205,  360 => 204,  356 => 203,  340 => 190,  328 => 180,  319 => 177,  315 => 176,  311 => 175,  308 => 174,  304 => 173,  278 => 150,  261 => 136,  246 => 123,  240 => 122,  234 => 120,  231 => 119,  227 => 118,  219 => 112,  208 => 107,  205 => 106,  201 => 105,  181 => 88,  169 => 79,  161 => 74,  153 => 69,  142 => 60,  133 => 58,  129 => 57,  108 => 39,  99 => 32,  97 => 31,  76 => 12,  70 => 11,  57 => 3,  51 => 2,  44 => 291,  42 => 289,  39 => 288,  37 => 11,  34 => 10,  32 => 2,  29 => 1,);
     }
 
     public function getSourceContext()
@@ -774,11 +764,7 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
             <tr class=\"spacer\"> <td> </td></tr>
             <tr>
                 <th colspan=\"1\" scope=\"colgroup\">Fecha de Revisión de Informe:\t</th>
-                {% if hlzg|length > 0 %}
-                    <td class=\"text-normal\"> {{hlzg[0].cb_accion_eficacia_fecha}} </td>
-                {% else %}
-                    <td class=\"text-normal\"> </td>
-                {% endif %}
+                <td class=\"text-normal\"> {{hlzg[0].cb_accion_eficacia_fecha}} </td>
                 <th colspan=\"1\" scope=\"colgroup\"></th>
             </tr>
     </table>
@@ -811,6 +797,6 @@ class __TwigTemplate_f32928bb5db3ec1438ec18e262631d3c4a28e151e8cab1c525b18a491d7
 
 {% block javascripts %}
     <script src=\"resources/bootstrap4/js/bootstrap.min.js\"></script>
-{% endblock %}  ", "reporting/auditoriaint.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\reporting\\auditoriaint.html.twig");
+{% endblock %}  ", "reporting/auditoriaint.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\reporting\\auditoriaint.html.twig");
     }
 }

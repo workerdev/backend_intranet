@@ -1,11 +1,6 @@
 {% for t in objects %}
 <tr>
-    {% set strategy = 'html' %}
-
-    {% autoescape 'html' %}
-        <td><div id="row-cont">{{ t.contenido|escape('html') }}<div></td>
-    {% endautoescape %}
-
+    <td><div id="row-cont">{{ t.contenido }}<div></td>
     <td align="center">
     {% if 'responsabilidad_editar' in permisos %}
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

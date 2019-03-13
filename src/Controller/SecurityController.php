@@ -50,8 +50,7 @@ class SecurityController extends AbstractController
         $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
        
         $ldap = Ldap::create('ext_ldap', array(
-            'host' => '192.168.0.50',
-            //'host' => '172.17.2.10',
+            'host' => '172.17.2.10',
             'encryption' => 'none',
             'port' => '389',
         ));
@@ -65,8 +64,7 @@ class SecurityController extends AbstractController
                 $resultado = json_encode($resultado);
                 return new Response($mensaje);
             }
-            $attributes = ['givenName', 'sn', 'mail','name', 'physicalDeliveryOfficeName','cn'];
-
+            $attributes = ['givenName', 'sn', 'mail','name', 'physicalDeliveryOfficeName'];
             $ldap->bind($dn, $password);
             $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
            
@@ -76,7 +74,7 @@ class SecurityController extends AbstractController
 
             $serializer = new Serializer($normalizers, $encoders);
             $data = $serializer->normalize($results, null);
-            
+
             $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username'=>$user));
             $cx = $this->getDoctrine()->getManager();
 
@@ -85,71 +83,30 @@ class SecurityController extends AbstractController
 
             $serializer = new Serializer($normalizers, $encoders);
 
-
-      
             if(empty($usuario)){
                 $usuario = new Usuario();
-                if(isset($data[0]['attributes']['givenName'][0]))
-                {
-                    $usuario->setNombre($data[0]['attributes']['givenName'][0]);
-                }
-                else{
-                $usuario->setNombre('S/N');
-                }
-                if(isset($data[0]['attributes']['sn'][0]))
-                {
-                    $usuario->setApellido($data[0]['attributes']['sn'][0]);
-                }
-                else{
-                $usuario->setApellido('S/A');
-                }
-                if(isset($data[0]['attributes']['mail'][0]))
-                {
-                    $usuario->setCorreo($data[0]['attributes']['mail'][0]);
-                }
-                else{
-                $usuario->setCorreo('S/Correo');
-                }
-                if($data[0]['attributes']['name'][0])
-                {
-                    $usuario->setUsername($data[0]['attributes']['name'][0]);
-                }                
-              else
-              {
-                $usuario->setUsername('Sin login');
-              }
+                $usuario->setNombre($data[0]['attributes']['givenName'][0]);
+                $usuario->setApellido($data[0]['attributes']['sn'][0]);
+                $usuario->setCi(452136);
+                $usuario->setCorreo($data[0]['attributes']['mail'][0]);
+                $usuario->setUsername($data[0]['attributes']['name'][0]);
                 
-              if($data[0]['attributes']['cn'][0]== 'Administrador' )
-                {   
-                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Administrador'));
-                }
-                else
-                {
-                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario'));
-                }
                 //  $encoder = base64_encode($password);
                 // $usuario->setPassword($encoder);
                 $usuario->setEstado(1); 
 
-                
+                $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Administrador'));
                 $usuario->setFkrol($rol[0]);
                 $cx->persist($usuario);
                 $cx->flush(); 
                 
                 $duser = $serializer->normalize($usuario, null);
             }else{
-                
-                if(isset($data[0]['attributes']['givenName'][0])){$usuario[0]->setNombre($data[0]['attributes']['givenName'][0]);}
-                else{$usuario[0]->setNombre('S/N');}
-                if(isset($data[0]['attributes']['sn'][0])){$usuario[0]->setApellido($data[0]['attributes']['sn'][0]);}
-                else{$usuario[0]->setApellido('S/Apellido');}
-                if(isset($data[0]['attributes']['mail'][0])){$usuario[0]->setCorreo($data[0]['attributes']['mail'][0]);}
-                else{$usuario[0]->setCorreo('S/Correo');}
-                if(isset($data[0]['attributes']['name'][0])){ $usuario[0]->setUsername($data[0]['attributes']['name'][0]);}
-                else{ $usuario[0]->setUsername('S/Login');}
-                
-             //   $usuario[0]->setCi(452136);
-                
+                $usuario[0]->setNombre($data[0]['attributes']['givenName'][0]);
+                $usuario[0]->setApellido($data[0]['attributes']['sn'][0]);
+                $usuario[0]->setCi(452136);
+                $usuario[0]->setCorreo($data[0]['attributes']['mail'][0]);
+                $usuario[0]->setUsername($data[0]['attributes']['name'][0]);
 
                 //$encoder = base64_encode($password);
                 //$usuario[0]->setPassword($encoder);
@@ -193,60 +150,5 @@ class SecurityController extends AbstractController
     public function logout() {
         $this->get('session')->invalidate();
         return $this->render('security/login.html.twig');
-    }
-
-    /**
-     * @Route("/valid_action", methods={"POST"}, name="valid_action")
-     */
-    public function action()
-    {   
-        $sx = json_decode($_POST['object'], true);
-        
-        $s_user = $this->get('session')->get('s_user');
-        $user = $s_user['username'];
-        $password = $sx['password'];
-        $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
-       
-        $ldap = Ldap::create('ext_ldap', array(
-            'host' => '192.168.0.10',
-            //'host' => '172.17.2.10',
-            'encryption' => 'none',
-            'port' => '389',
-        ));
-
-        try {
-            if(empty($user) || empty($password)) {
-                $mensaje = "vacio";
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $resultado = array('response'=>$mensaje,'success' => true,
-                    'message' => 'Ingrese los datos requeridos.');
-                $resultado = json_encode($resultado);
-                return new Response($mensaje);
-            }
-
-            $attributes = ['cn'];
-            
-            $ldap->bind($dn, $password);
-            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
-           
-            $results = $query->execute()->toArray();
-
-            if(!empty($results)){
-                $mensaje = "exitoso";
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $resultado = array('response'=>$mensaje,'success' => true,
-                    'message' => 'sesion exitosa.');
-                $resultado = json_encode($resultado);
-                return new Response($mensaje);
-            }
-        }
-        catch (ConnectionException $ce) {
-            $mensaje = "error";
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $resultado = array('response'=>$mensaje,'success' => true,
-                'message' => 'Failed.');
-            $resultado = json_encode($resultado);
-            return new Response($mensaje);
-        }
     }
 }

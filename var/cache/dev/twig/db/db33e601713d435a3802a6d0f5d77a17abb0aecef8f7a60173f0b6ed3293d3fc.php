@@ -99,6 +99,6 @@ class __TwigTemplate_19c05382475ba1b168b3391bfc73b96a8df7ffe634961ea4d9a64c4dc19
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "impacto/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\impacto\\table.html.twig");
+{% endfor %}", "impacto/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\impacto\\table.html.twig");
     }
 }

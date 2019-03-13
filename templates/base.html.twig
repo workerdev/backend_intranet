@@ -27,11 +27,11 @@
                 padding: 2px;
                 width: auto;
             }
+
         </style>
         {% endblock %}
     </head>
     <body class="theme-indigo" onload="init()">
-
     <div class="page-loader-wrapper">
         <div class="loader">
             <div class="preloader">
@@ -43,9 +43,7 @@
             <p>Por favor espere.</p>
         </div>
     </div>
-
     <div class="overlay"></div>
-
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -57,45 +55,15 @@
                     </center>
                 </a>
             </div>
-
             <div id="right-options" class="more-options">
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
-                        {% if docderiv %}
-                            <a href="/docprocesorev"><i class="material-icons" style="font-size: 18px" title="Documentos derivados">folder</i> <span class="new badge" style="padding: 2px 4px; font-size: 10px; background-color: #26a69a;">{{ docderiv|length }}</span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                        {% endif %}
-                        {% if fcaprobgr %}
-                            <a href="/fichacargo"><i class="material-icons" style="font-size: 18px" title="Fichas por aprobar - Gerente">assignment</i> <span class="new badge" style="padding: 2px 4px; font-size: 10px; background-color: #00bcd4;">{{ fcaprobgr|length }}</span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                        {% endif %}
-                        {% if fcaprobjf %}
-                            <a href="/fichacargo"><i class="material-icons" style="font-size: 18px" title="Fichas por aprobar - Jefe">assignment_turned_in</i> <span class="new badge" style="padding: 2px 4px; font-size: 10px; background-color: #00bcd4;">{{ fcaprobjf|length }}</span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                        {% endif %}
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        <a href=""><i class="material-icons"> </i></span></a>
-                        {% if 'perfil' in permisos %}
-                            <a href="/perfil"><i class="material-icons" title="Perfil de usuario">account_circle</i></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                            <a href=""><i class="material-icons"> </i></span></a>
-                        {% endif %}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" onclick="salir()" title="Cerrar sesión">
                             <i class="material-icons">power_settings_new</i>
                         </a>
                     </li>
                 </ul>  
             </div>
-        </div>
     </nav>
     
     <section>
@@ -115,7 +83,7 @@
                         </a>
                         <ul class="ml-menu">
                         {% for child in children %}
-                            {% if child.fkmodulo != null and mods.id == child.fkmodulo.id and child.nombre != 'perfil' %}
+                            {% if child.fkmodulo != null and mods.id == child.fkmodulo.id %}
                                 <li>
                                     <a href="{{child.ruta}}" class="">
                                         <i class="material-icons">{{child.icono}}</i>

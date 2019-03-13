@@ -182,6 +182,6 @@ class __TwigTemplate_82300a5e6de99757e26c569ba4a1d786386f80b08f501dc9c0d2b440eb3
             </div>
         </div>
     </div>
-</div>", "fortaleza/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\fortaleza\\form.html.twig");
+</div>", "fortaleza/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\fortaleza\\form.html.twig");
     }
 }

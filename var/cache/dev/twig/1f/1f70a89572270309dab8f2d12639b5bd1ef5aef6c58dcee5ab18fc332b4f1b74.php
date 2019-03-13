@@ -183,6 +183,6 @@ class __TwigTemplate_3a50ac25469b77ee75d1f946257cb4a469bd5f69389e4a798f6bddf3c3c
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "hallazgo/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\hallazgo\\table.html.twig");
+{% endfor %}", "hallazgo/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\hallazgo\\table.html.twig");
     }
 }

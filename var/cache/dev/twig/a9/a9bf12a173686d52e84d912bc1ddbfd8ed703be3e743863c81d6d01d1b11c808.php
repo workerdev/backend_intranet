@@ -78,45 +78,31 @@ class __TwigTemplate_763aed400bdd91535618941b3cb2bddc012b20d81518f1d1813faa4067b
             // line 16
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkimpacto", array()), "nombre", array()), "html", null, true);
             echo "</td>
-        ";
+        <td class=\"d-none\">";
             // line 17
-            if ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "estado", array()) == 2)) {
-                // line 18
-                echo "            <td class=\"d-none\">";
-                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
-                echo " <b><i>";
-                echo " (Inactivo)";
-                echo "</i></b></td>
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+            echo "</td>
+        <td align=\"center\">
         ";
-            } else {
+            // line 19
+            if (twig_in_filter("riesgosoportunidades_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 19, $this->source); })()))) {
                 // line 20
-                echo "            <td class=\"d-none\">";
-                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
-                echo "</td>
-        ";
-            }
-            // line 22
-            echo "        <td align=\"center\">
-        ";
-            // line 23
-            if (twig_in_filter("riesgosoportunidades_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 23, $this->source); })()))) {
-                // line 24
                 echo "            <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
         ";
             }
-            // line 26
+            // line 22
             echo "        ";
-            if (twig_in_filter("riesgosoportunidades_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 26, $this->source); })()))) {
+            if (twig_in_filter("riesgosoportunidades_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 22, $this->source); })()))) {
                 echo "  
             <button id=\"delete\" data-json=\"";
-                // line 27
+                // line 23
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
         ";
             }
-            // line 29
+            // line 25
             echo "        </td>
     </tr>
 ";
@@ -141,7 +127,7 @@ class __TwigTemplate_763aed400bdd91535618941b3cb2bddc012b20d81518f1d1813faa4067b
 
     public function getDebugInfo()
     {
-        return array (  120 => 29,  115 => 27,  110 => 26,  104 => 24,  102 => 23,  99 => 22,  93 => 20,  85 => 18,  83 => 17,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
+        return array (  106 => 25,  101 => 23,  96 => 22,  90 => 20,  88 => 19,  83 => 17,  79 => 16,  75 => 15,  71 => 14,  67 => 13,  63 => 12,  59 => 11,  55 => 10,  51 => 9,  47 => 8,  43 => 7,  39 => 6,  34 => 4,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -162,11 +148,7 @@ class __TwigTemplate_763aed400bdd91535618941b3cb2bddc012b20d81518f1d1813faa4067b
         <td>{{ tr.fktipo.nombre }}</td>
         <td>{{ tr.fkprobabilidad.nombre }}</td>
         <td>{{ tr.fkimpacto.nombre }}</td>
-        {% if tr.fkresponsable.estado == 2 %}
-            <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
-        {% else %}
-            <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
-        {% endif %}
+        <td class=\"d-none\">{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
         <td align=\"center\">
         {% if 'riesgosoportunidades_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -176,6 +158,6 @@ class __TwigTemplate_763aed400bdd91535618941b3cb2bddc012b20d81518f1d1813faa4067b
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "riesgosoportunidades/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\riesgosoportunidades\\table.html.twig");
+{% endfor %}", "riesgosoportunidades/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\riesgosoportunidades\\table.html.twig");
     }
 }

@@ -87,9 +87,9 @@ class __TwigTemplate_2032e47f4b975b78d5905cfe040e89352c3db9421095109837435fec8a9
         // line 29
         if (twig_in_filter("menu_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 29, $this->source); })()))) {
             // line 30
-            echo "                    <!--button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            echo "                    <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                         <i class=\"material-icons\">add</i>
-                    </button-->
+                    </button>
                 ";
         }
         // line 34
@@ -281,9 +281,9 @@ class __TwigTemplate_2032e47f4b975b78d5905cfe040e89352c3db9421095109837435fec8a9
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
                 {% if 'menu_insertar' in permisos %}
-                    <!--button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                    <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                         <i class=\"material-icons\">add</i>
-                    </button-->
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -403,6 +403,6 @@ class __TwigTemplate_2032e47f4b975b78d5905cfe040e89352c3db9421095109837435fec8a9
 {% endblock %}
 
 
-", "menu/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\menu\\index.html.twig");
+", "menu/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\menu\\index.html.twig");
     }
 }

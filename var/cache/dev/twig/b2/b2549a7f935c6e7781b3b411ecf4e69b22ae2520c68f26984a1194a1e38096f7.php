@@ -143,6 +143,6 @@ class __TwigTemplate_31d03872fc00e9da1b7340a8d02acbb49eb1edf18918a747f48fb3cc687
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "fichaprocesos/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\fichaprocesos\\table.html.twig");
+{% endfor %}", "fichaprocesos/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\fichaprocesos\\table.html.twig");
     }
 }

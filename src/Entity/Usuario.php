@@ -38,12 +38,12 @@ class Usuario implements UserInterface, \Serializable
      */
     private $apellido;
 
-//    /**
- //    * @var int
- //    *
- //    * @ORM\Column(name="cb_usuario_ci", type="integer", nullable=false)
- //    */
- //   private $ci;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cb_usuario_ci", type="integer", nullable=false)
+     */
+    private $ci;
 
      /**
      * @var string
@@ -104,17 +104,17 @@ class Usuario implements UserInterface, \Serializable
 
         return $this;
     }
-    //public function getCi(): ?int
-    //{
-    //    return $this->ci;
-    //}
-//
-    //public function setCi(int $ci): self
-    //{
-    //    $this->ci = $ci;
-//
-    //    return $this;
-   // }
+    public function getCi(): ?int
+    {
+        return $this->ci;
+    }
+
+    public function setCi(int $ci): self
+    {
+        $this->ci = $ci;
+
+        return $this;
+    }
     
     public function getNombre(): ?string
     {
@@ -195,6 +195,7 @@ class Usuario implements UserInterface, \Serializable
     public function serialize() {
         return serialize([
             $this->id,
+            $this->ci,
             $this->nombre,
             $this->apellido,
             $this->correo,
@@ -208,6 +209,7 @@ class Usuario implements UserInterface, \Serializable
     public function unserialize($string){
         list(
             $this->id,
+            $this->ci,
             $this->nombre,
             $this->apellido,
             $this->correo,

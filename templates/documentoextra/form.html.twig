@@ -8,7 +8,62 @@
             </div>
             <div class="modal-body">
                 <div id="cliente_form_body" class="box-body">
-                    {{ form(form) }}
+                    <div id="id_div" class="form-group">
+                        <div class="form-line">
+                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <label class="form-label">Documento extra ID</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="codigo" name="codigo" type="text" class="form-control">
+                            <label class="form-label">Código</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="titulo" name="titulo" type="text" class="form-control">
+                            <label class="form-label">Título</label>
+                        </div>
+                    </div>
+                    
+                    <label>Tipo de proceso</label>
+                        <select id="fkproceso" class="form-control">
+                        {% for t in proceso %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+                    
+                    <label>Tipo de documento extra</label>
+                        <select id="fktipo" class="form-control">
+                        {% for t in tipo %}
+                            <option value="{{t.id}}">{{t.tipo}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>    
+                    
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <label class="form-label">Fecha Publicación</label><br>
+                            <input id="fechapublicacion" name="fechapublicacion" type="date" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <label>Vigente</label>
+                        <select id="vigente" class="form-control">
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+                        </br>
+                        </br>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
                 </div>
             </div>
         </div>

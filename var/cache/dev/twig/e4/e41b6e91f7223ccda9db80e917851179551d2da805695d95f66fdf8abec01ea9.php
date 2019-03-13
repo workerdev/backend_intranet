@@ -275,7 +275,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
     \$('#new').click(function () {
         \$('#nombre').val('')
         \$('#descripcion').val('')
-        \$(\"#cont-mods input[type=radio]\").prop( \"checked\", false);
         \$(\"#cont-mods input[type=checkbox]\").prop( \"checked\", false);
 
         clean_form()
@@ -288,19 +287,8 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
 
     function check_all(e){
         if(\$(e).is(':checked')){
-            \$(\"#usl-all\").prop( \"checked\", false);
             \$(\"input[type=checkbox]\").each(function (index) {
 \t\t\t    \$(\".padre\").prop( \"checked\", true);
-                check_content(this);
-            });
-\t\t}
-\t}
-
-    function uncheck_all(e){
-        if(\$(e).is(':checked')){
-            \$(\"#slt-all\").prop( \"checked\", false);
-            \$(\"input[type=checkbox]\").each(function (index) {
-\t\t\t    \$(\".padre\").prop( \"checked\", false);
                 check_content(this);
             });
 \t\t}
@@ -379,7 +367,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
 
     function attach_edit() {
         \$('.edit').click(function () {
-            \$(\"#cont-mods input[type=radio]\").prop( \"checked\", false);
             \$(\"#cont-mods input[type=checkbox]\").prop( \"checked\", false);
             
             obj = JSON.stringify({
@@ -710,7 +697,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
     \$('#new').click(function () {
         \$('#nombre').val('')
         \$('#descripcion').val('')
-        \$(\"#cont-mods input[type=radio]\").prop( \"checked\", false);
         \$(\"#cont-mods input[type=checkbox]\").prop( \"checked\", false);
 
         clean_form()
@@ -723,19 +709,8 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
 
     function check_all(e){
         if(\$(e).is(':checked')){
-            \$(\"#usl-all\").prop( \"checked\", false);
             \$(\"input[type=checkbox]\").each(function (index) {
 \t\t\t    \$(\".padre\").prop( \"checked\", true);
-                check_content(this);
-            });
-\t\t}
-\t}
-
-    function uncheck_all(e){
-        if(\$(e).is(':checked')){
-            \$(\"#slt-all\").prop( \"checked\", false);
-            \$(\"input[type=checkbox]\").each(function (index) {
-\t\t\t    \$(\".padre\").prop( \"checked\", false);
                 check_content(this);
             });
 \t\t}
@@ -814,7 +789,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
 
     function attach_edit() {
         \$('.edit').click(function () {
-            \$(\"#cont-mods input[type=radio]\").prop( \"checked\", false);
             \$(\"#cont-mods input[type=checkbox]\").prop( \"checked\", false);
             
             obj = JSON.stringify({
@@ -929,6 +903,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
 
 </script>
 
-{% endblock %}", "rol/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\rol\\index.html.twig");
+{% endblock %}", "rol/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\rol\\index.html.twig");
     }
 }

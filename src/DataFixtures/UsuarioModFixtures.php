@@ -35,6 +35,7 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
 
 
         $useradm = new Usuario();
+        $useradm->setCi(9614523);
         $useradm->setNombre('Admin');
         $useradm->setApellido('Super-user');
         $useradm->setCorreo('admin@gmail.com');
@@ -47,6 +48,7 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($useradm);
 
         $user = new Usuario();
+        $user->setCi(6541892);
         $user->setNombre('Usuario');
         $user->setApellido('rol-user');
         $user->setCorreo('user@gmail.com');

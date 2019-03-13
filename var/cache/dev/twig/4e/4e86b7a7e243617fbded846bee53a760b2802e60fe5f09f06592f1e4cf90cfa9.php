@@ -49,7 +49,7 @@ class __TwigTemplate_919d0e76c633bbddbc1e241f1b31121935334fce2eacf2961a20050f35d
             }
             // line 9
             echo "    ";
-            if ((twig_in_filter("rol_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 9, $this->source); })())) && !twig_in_filter(twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), array(0 => "Administrador", 1 => "Usuario")))) {
+            if (twig_in_filter("rol_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 9, $this->source); })()))) {
                 echo "    
         <button id=\"delete\" data-json=\"";
                 // line 10
@@ -95,11 +95,11 @@ class __TwigTemplate_919d0e76c633bbddbc1e241f1b31121935334fce2eacf2961a20050f35d
     {% if 'rol_editar' in permisos %} 
         <button id=\"edit\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
     {% endif %}
-    {% if 'rol_eliminar' in permisos and t.nombre not in ['Administrador', 'Usuario'] %}    
+    {% if 'rol_eliminar' in permisos %}    
         <button id=\"delete\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "rol/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\rol\\table.html.twig");
+{% endfor %}", "rol/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\rol\\table.html.twig");
     }
 }

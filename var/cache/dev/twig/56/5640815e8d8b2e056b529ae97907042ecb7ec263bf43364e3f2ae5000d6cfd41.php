@@ -230,8 +230,7 @@ class __TwigTemplate_edbf9b52f48eead7c05dda00490e5cb16d256355bf9613c5e0fe8341427
             ajax_call_get(\"/indicadorproceso_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)   
-                console.log(self)             
+                var self = JSON.parse(response)                
                 \$('#id').val(self.id)
                 \$('#descripcion').val(self.descripcion)
                 \$('#formula').val(self.formula)
@@ -239,9 +238,8 @@ class __TwigTemplate_edbf9b52f48eead7c05dda00490e5cb16d256355bf9613c5e0fe8341427
                 \$('#metamensual').val(self.metamensual)
                 \$('#codigo').val(self.codigo)
                 \$('#objetivo').val(self.objetivo)
-
                 \$('#vigente').val(self.vigente)
-                \$('#vigente').selectpicker('render')
+
 
                 \$('#fkficha').val(self.fkficha.id)
                 \$('#fkficha').selectpicker('render')
@@ -568,8 +566,7 @@ class __TwigTemplate_edbf9b52f48eead7c05dda00490e5cb16d256355bf9613c5e0fe8341427
             ajax_call_get(\"/indicadorproceso_editar\",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)   
-                console.log(self)             
+                var self = JSON.parse(response)                
                 \$('#id').val(self.id)
                 \$('#descripcion').val(self.descripcion)
                 \$('#formula').val(self.formula)
@@ -577,9 +574,8 @@ class __TwigTemplate_edbf9b52f48eead7c05dda00490e5cb16d256355bf9613c5e0fe8341427
                 \$('#metamensual').val(self.metamensual)
                 \$('#codigo').val(self.codigo)
                 \$('#objetivo').val(self.objetivo)
-
                 \$('#vigente').val(self.vigente)
-                \$('#vigente').selectpicker('render')
+
 
                 \$('#fkficha').val(self.fkficha.id)
                 \$('#fkficha').selectpicker('render')
@@ -734,6 +730,6 @@ class __TwigTemplate_edbf9b52f48eead7c05dda00490e5cb16d256355bf9613c5e0fe8341427
         });
     </script>
 
-{% endblock %}", "indicadorproceso/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\indicadorproceso\\index.html.twig");
+{% endblock %}", "indicadorproceso/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\indicadorproceso\\index.html.twig");
     }
 }

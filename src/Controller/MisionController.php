@@ -17,8 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 
 class MisionController extends AbstractController
@@ -53,12 +51,6 @@ class MisionController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
-        
         $mision = new Mision();
         $form = $this->createForm(MisionType::class,$mision);
         $form ->handleRequest($request);
@@ -73,6 +65,6 @@ class MisionController extends AbstractController
             return $this->render('mision/index.html.twig', array('form' => $form->createView()));
         }
 
-        return $this->render('mision/index.html.twig', array('form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('mision/index.html.twig', array('form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 }

@@ -107,6 +107,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
                 <tr>
                     <th class=\"order_by_th\" data-name=\"names\">Nombre </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Apellido </th>                    
+                    <th class=\"order_by_th\" data-name=\"phone\">Ci </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Correo </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Username </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Rol </th>
@@ -115,7 +116,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
                 </thead>
                 <tbody id=\"table_content\">
                 ";
-            // line 51
+            // line 52
             echo twig_include($this->env, $context, "usuario/table.html.twig");
             echo "
                 </tbody>
@@ -124,11 +125,11 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
     </div>
     ";
         } else {
-            // line 57
+            // line 58
             echo "    <div class=\"col-xs-9 col-sm-10 col-md-10 col-lg-10\"></div>
     ";
         }
-        // line 59
+        // line 60
         echo "</div>
 ";
         
@@ -136,13 +137,13 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
 
     }
 
-    // line 61
+    // line 62
     public function block_javascripts($context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 62
+        // line 63
         echo "<script src=\"resources/plugins/momentjs/moment.js\"></script>
 <script src=\"resources/plugins/momentjs/locale/es.js\"></script>
 <script src=\"resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js\"></script>
@@ -160,6 +161,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
     \$('#new').click(function () {
         \$('#nombre').val('')
         \$('#apellido').val('')
+        \$('#ci').val('')
         \$('#correo').val('')
         \$('#username').val('')
         \$('#password').val('')
@@ -176,6 +178,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
         objeto = JSON.stringify({
             'nombre': \$('#nombre').val(),
             'apellido': \$('#apellido').val(),
+            'ci': \$('#ci').val(),
             'correo': \$('#correo').val(),
             'username': \$('#username').val(),
             'password': \$('#password').val(),
@@ -199,6 +202,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
                 \$('#id').val(self.id)
                 \$('#nombre').val(self.nombre)
                 \$('#apellido').val(self.apellido)
+                \$('#ci').val(self.ci)
                 \$('#correo').val(self.correo)
                 \$('#username').val(self.username)
 
@@ -221,6 +225,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
             'id': parseInt(JSON.parse(\$('#id').val())),
             'nombre': \$('#nombre').val(),
             'apellido': \$('#apellido').val(),
+            'ci': \$('#ci').val(),
             'correo': \$('#correo').val(),
             'username': \$('#username').val(),
 
@@ -353,7 +358,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
 
     public function getDebugInfo()
     {
-        return array (  146 => 62,  140 => 61,  132 => 59,  128 => 57,  119 => 51,  103 => 37,  101 => 36,  96 => 33,  88 => 29,  79 => 23,  76 => 22,  70 => 21,  46 => 3,  40 => 2,  15 => 1,);
+        return array (  147 => 63,  141 => 62,  133 => 60,  129 => 58,  120 => 52,  103 => 37,  101 => 36,  96 => 33,  88 => 29,  79 => 23,  76 => 22,  70 => 21,  46 => 3,  40 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -401,6 +406,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
                 <tr>
                     <th class=\"order_by_th\" data-name=\"names\">Nombre </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Apellido </th>                    
+                    <th class=\"order_by_th\" data-name=\"phone\">Ci </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Correo </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Username </th>
                     <th class=\"order_by_th\" data-name=\"phone\">Rol </th>
@@ -436,6 +442,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
     \$('#new').click(function () {
         \$('#nombre').val('')
         \$('#apellido').val('')
+        \$('#ci').val('')
         \$('#correo').val('')
         \$('#username').val('')
         \$('#password').val('')
@@ -452,6 +459,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
         objeto = JSON.stringify({
             'nombre': \$('#nombre').val(),
             'apellido': \$('#apellido').val(),
+            'ci': \$('#ci').val(),
             'correo': \$('#correo').val(),
             'username': \$('#username').val(),
             'password': \$('#password').val(),
@@ -475,6 +483,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
                 \$('#id').val(self.id)
                 \$('#nombre').val(self.nombre)
                 \$('#apellido').val(self.apellido)
+                \$('#ci').val(self.ci)
                 \$('#correo').val(self.correo)
                 \$('#username').val(self.username)
 
@@ -497,6 +506,7 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
             'id': parseInt(JSON.parse(\$('#id').val())),
             'nombre': \$('#nombre').val(),
             'apellido': \$('#apellido').val(),
+            'ci': \$('#ci').val(),
             'correo': \$('#correo').val(),
             'username': \$('#username').val(),
 
@@ -611,6 +621,6 @@ class __TwigTemplate_75688be0c7e95d089203f0387e162b99899a938bca453f76f369c18f36a
     })
 </script>
 
-{% endblock %}", "usuario/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\usuario\\index.html.twig");
+{% endblock %}", "usuario/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\usuario\\index.html.twig");
     }
 }

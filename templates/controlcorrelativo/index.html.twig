@@ -1,12 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <style>
-        .accion{ 
-            cursor:pointer 
-        }
-        .swal2-title{
-            font-size: 16px !important;
-        }
+        .accion{ cursor:pointer }
     </style>
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -28,7 +23,7 @@
 
     {{ include('controlcorrelativo/form.html.twig') }}
 
-    <div class="header bg-indigo"><h2>CENTRO DE CONTROL CORRELATIVO</h2></div>
+    <div class="header bg-indigo"><h2>CONTROL CORRELATIVO</h2></div>
     <div class="body">
         <div class="row clearfix">
             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
@@ -149,42 +144,20 @@
     <script>
         attach_edit()
 
-        let message= ''
-        function ctrlcorrelativo_prev(id) {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse(id))
-            });
-            ajax_call_get("/ctrlcorrelativo_prev",{
-                object: obj
-            },function(response){
-                message = response;
-            });
-        }
-
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
-            ctrlcorrelativo_prev(id)
-            setTimeout(function(){
-                let quest = message + " ¿Está seguro en dar de baja los datos del control correlativo?" 
-                enabled = false
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/controlcorrelativo_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
-                })
-                }, 1000
-            )
+            enabled = false
+            swal({
+                title: "¿Desea dar de baja el control correlativo?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/controlcorrelativo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            })
         })
     </script>
 

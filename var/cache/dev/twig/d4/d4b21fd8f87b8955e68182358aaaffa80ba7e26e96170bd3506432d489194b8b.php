@@ -28,7 +28,7 @@ class __TwigTemplate_b97d606fa7a2f93aeae6b237db27f600c52b3f01f71a42d3c3608c536b5
         <div class=\"modal-content\">
             <div class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                <h3 id=\"cliente_tittle\" class=\"modal-title\">Centro de Control Correlativo</h3>
+                <h3 id=\"cliente_tittle\" class=\"modal-title\">Control Correlativo</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
             </div>
             <div class=\"modal-body\">
@@ -36,7 +36,7 @@ class __TwigTemplate_b97d606fa7a2f93aeae6b237db27f600c52b3f01f71a42d3c3608c536b5
                     <div id=\"id_div\" class=\"form-group\">
                         <div class=\"form-line\">
                             <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
-                            <label class=\"form-label\">ID</label>
+                            <label class=\"form-label\">Control Correlativo ID</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
@@ -116,7 +116,7 @@ class __TwigTemplate_b97d606fa7a2f93aeae6b237db27f600c52b3f01f71a42d3c3608c536b5
         <div class=\"modal-content\">
             <div class=\"modal-header\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                <h3 id=\"cliente_tittle\" class=\"modal-title\">Centro de Control Correlativo</h3>
+                <h3 id=\"cliente_tittle\" class=\"modal-title\">Control Correlativo</h3>
                 <h4 id=\"cliente_enable\" class=\"\"></h4>
             </div>
             <div class=\"modal-body\">
@@ -124,7 +124,7 @@ class __TwigTemplate_b97d606fa7a2f93aeae6b237db27f600c52b3f01f71a42d3c3608c536b5
                     <div id=\"id_div\" class=\"form-group\">
                         <div class=\"form-line\">
                             <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
-                            <label class=\"form-label\">ID</label>
+                            <label class=\"form-label\">Control Correlativo ID</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
@@ -162,6 +162,6 @@ class __TwigTemplate_b97d606fa7a2f93aeae6b237db27f600c52b3f01f71a42d3c3608c536b5
             </div>
         </div>
     </div>
-</div>", "controlcorrelativo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\controlcorrelativo\\form.html.twig");
+</div>", "controlcorrelativo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\controlcorrelativo\\form.html.twig");
     }
 }

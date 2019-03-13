@@ -33,10 +33,90 @@ class __TwigTemplate_2907c533e5298e3d330913fba9d0725ea6ee6795c17b1cec280b508dbe1
             </div>
             <div class=\"modal-body\">
                 <div id=\"cliente_form_body\" class=\"box-body\">
-                    ";
-        // line 11
-        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new Twig_Error_Runtime('Variable "form" does not exist.', 11, $this->source); })()), 'form');
-        echo "
+                    <div id=\"id_div\" class=\"form-group\">
+                        <div class=\"form-line\">
+                            <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
+                            <label class=\"form-label\">Documento extra ID</label>
+                        </div>
+                    </div>
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"codigo\" name=\"codigo\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Código</label>
+                        </div>
+                    </div>
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"titulo\" name=\"titulo\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Título</label>
+                        </div>
+                    </div>
+                    
+                    <label>Tipo de proceso</label>
+                        <select id=\"fkproceso\" class=\"form-control\">
+                        ";
+        // line 32
+        $context['_parent'] = $context;
+        $context['_seq'] = twig_ensure_traversable((isset($context["proceso"]) || array_key_exists("proceso", $context) ? $context["proceso"] : (function () { throw new Twig_Error_Runtime('Variable "proceso" does not exist.', 32, $this->source); })()));
+        foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
+            // line 33
+            echo "                            <option value=\"";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
+            echo "\">";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "nombre", array()), "html", null, true);
+            echo "</option>
+                        ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 35
+        echo "                        </select>
+                        </br>
+                        </br>
+                    
+                    <label>Tipo de documento extra</label>
+                        <select id=\"fktipo\" class=\"form-control\">
+                        ";
+        // line 41
+        $context['_parent'] = $context;
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo"]) || array_key_exists("tipo", $context) ? $context["tipo"] : (function () { throw new Twig_Error_Runtime('Variable "tipo" does not exist.', 41, $this->source); })()));
+        foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
+            // line 42
+            echo "                            <option value=\"";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
+            echo "\">";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "tipo", array()), "html", null, true);
+            echo "</option>
+                        ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 44
+        echo "                        </select>
+                        </br>
+                        </br>    
+                    
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <label class=\"form-label\">Fecha Publicación</label><br>
+                            <input id=\"fechapublicacion\" name=\"fechapublicacion\" type=\"date\" class=\"form-control\">
+                        </div>
+                    </div>
+                    
+                    <label>Vigente</label>
+                        <select id=\"vigente\" class=\"form-control\">
+                            <option value=\"Si\">Si</option>
+                            <option value=\"No\">No</option>
+                        </select>
+                        </br>
+                        </br>
+
+                </div>
+                <div class=\"modal-footer\">
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">save</i></button>
                 </div>
             </div>
         </div>
@@ -59,7 +139,7 @@ class __TwigTemplate_2907c533e5298e3d330913fba9d0725ea6ee6795c17b1cec280b508dbe1
 
     public function getDebugInfo()
     {
-        return array (  38 => 11,  26 => 1,);
+        return array (  97 => 44,  86 => 42,  82 => 41,  74 => 35,  63 => 33,  59 => 32,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -74,11 +154,66 @@ class __TwigTemplate_2907c533e5298e3d330913fba9d0725ea6ee6795c17b1cec280b508dbe1
             </div>
             <div class=\"modal-body\">
                 <div id=\"cliente_form_body\" class=\"box-body\">
-                    {{ form(form) }}
+                    <div id=\"id_div\" class=\"form-group\">
+                        <div class=\"form-line\">
+                            <input id=\"id\" type=\"text\" class=\"form-control\" disabled=\"disabled\">
+                            <label class=\"form-label\">Documento extra ID</label>
+                        </div>
+                    </div>
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"codigo\" name=\"codigo\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Código</label>
+                        </div>
+                    </div>
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <input id=\"titulo\" name=\"titulo\" type=\"text\" class=\"form-control\">
+                            <label class=\"form-label\">Título</label>
+                        </div>
+                    </div>
+                    
+                    <label>Tipo de proceso</label>
+                        <select id=\"fkproceso\" class=\"form-control\">
+                        {% for t in proceso %}
+                            <option value=\"{{t.id}}\">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+                    
+                    <label>Tipo de documento extra</label>
+                        <select id=\"fktipo\" class=\"form-control\">
+                        {% for t in tipo %}
+                            <option value=\"{{t.id}}\">{{t.tipo}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>    
+                    
+                    <div class=\"form-group form-float\">
+                        <div class=\"form-line\">
+                            <label class=\"form-label\">Fecha Publicación</label><br>
+                            <input id=\"fechapublicacion\" name=\"fechapublicacion\" type=\"date\" class=\"form-control\">
+                        </div>
+                    </div>
+                    
+                    <label>Vigente</label>
+                        <select id=\"vigente\" class=\"form-control\">
+                            <option value=\"Si\">Si</option>
+                            <option value=\"No\">No</option>
+                        </select>
+                        </br>
+                        </br>
+
+                </div>
+                <div class=\"modal-footer\">
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">save</i></button>
                 </div>
             </div>
         </div>
     </div>
-</div>", "documentoextra/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoextra\\form.html.twig");
+</div>", "documentoextra/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\documentoextra\\form.html.twig");
     }
 }

@@ -123,6 +123,6 @@ class __TwigTemplate_0fd8dcc8f0727db153a4208ad291cc9717fcbeb477c6f3a34ca8a224a26
             </div>
         </div>
     </div>
-</div>", "personalcargo/form_asignar_cargo", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\personalcargo\\form_asignar_cargo");
+</div>", "personalcargo/form_asignar_cargo", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\personalcargo\\form_asignar_cargo");
     }
 }

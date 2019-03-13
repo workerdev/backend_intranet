@@ -4619,17 +4619,17 @@
     },
     {
         "name": "symfony/routing",
-        "version": "v4.1.11",
-        "version_normalized": "4.1.11.0",
+        "version": "v4.1.9",
+        "version_normalized": "4.1.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/routing.git",
-            "reference": "da122c1ee55cf15bf9784e739b2251dec638f9cc"
+            "reference": "cda9b423e3457b5915687f8dab5679c1fd03fd80"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/routing/zipball/da122c1ee55cf15bf9784e739b2251dec638f9cc",
-            "reference": "da122c1ee55cf15bf9784e739b2251dec638f9cc",
+            "url": "https://api.github.com/repos/symfony/routing/zipball/cda9b423e3457b5915687f8dab5679c1fd03fd80",
+            "reference": "cda9b423e3457b5915687f8dab5679c1fd03fd80",
             "shasum": ""
         },
         "require": {
@@ -4657,7 +4657,7 @@
             "symfony/http-foundation": "For using a Symfony Request object",
             "symfony/yaml": "For using the YAML loader"
         },
-        "time": "2019-01-29T09:39:33+00:00",
+        "time": "2018-12-03T21:38:57+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

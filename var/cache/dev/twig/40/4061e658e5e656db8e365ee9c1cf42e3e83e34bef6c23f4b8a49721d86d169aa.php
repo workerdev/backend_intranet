@@ -41,20 +41,20 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"descripcion\">Descripción</label>
-                            <textarea id=\"descripcion\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"descripcion\" name=\"descripcion\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Descripción</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"origen\">Origen</label>
-                            <textarea id=\"origen\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"origen\" name=\"origen\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Origen</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"accion\">Acción</label>
-                            <textarea id=\"accion\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"accion\" name=\"accion\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Acción</label>
                         </div>
                     </div>
 
@@ -67,6 +67,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                         <label class=\"form-label\">Fecha</label>
+                        </br>
                         </br>
                             <input id=\"fecha\" name=\"fecha\" type=\"date\" class=\"form-control\">
                         </div>
@@ -85,11 +86,11 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                     <label>Tipo de ficha de procesos</label>
                         <select id=\"fkficha\" class=\"form-control\">
                         ";
-        // line 62
+        // line 63
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo"]) || array_key_exists("tipo", $context) ? $context["tipo"] : (function () { throw new Twig_Error_Runtime('Variable "tipo" does not exist.', 62, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo"]) || array_key_exists("tipo", $context) ? $context["tipo"] : (function () { throw new Twig_Error_Runtime('Variable "tipo" does not exist.', 63, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 63
+            // line 64
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
@@ -100,7 +101,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 65
+        // line 66
         echo "                        </select>
                         </br>
                         </br>
@@ -108,11 +109,11 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                         <label>Tipo de riesgo</label>
                         <select id=\"fktipo\" class=\"form-control\">
                         ";
-        // line 71
+        // line 72
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo2"]) || array_key_exists("tipo2", $context) ? $context["tipo2"] : (function () { throw new Twig_Error_Runtime('Variable "tipo2" does not exist.', 71, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo2"]) || array_key_exists("tipo2", $context) ? $context["tipo2"] : (function () { throw new Twig_Error_Runtime('Variable "tipo2" does not exist.', 72, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 72
+            // line 73
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
@@ -123,18 +124,18 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 74
+        // line 75
         echo "                        </select>
                         </br>
                         </br>
                         <label>Tipo de probabilidad</label>
                         <select id=\"fkprobabilidad\" class=\"form-control\">
                         ";
-        // line 79
+        // line 80
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo3"]) || array_key_exists("tipo3", $context) ? $context["tipo3"] : (function () { throw new Twig_Error_Runtime('Variable "tipo3" does not exist.', 79, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo3"]) || array_key_exists("tipo3", $context) ? $context["tipo3"] : (function () { throw new Twig_Error_Runtime('Variable "tipo3" does not exist.', 80, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 80
+            // line 81
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
@@ -145,7 +146,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 82
+        // line 83
         echo "                        </select>
                         </br>
                         </br>
@@ -153,11 +154,11 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                         <label>Tipo de impacto</label>
                         <select id=\"fkimpacto\" class=\"form-control\">
                         ";
-        // line 88
+        // line 89
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo4"]) || array_key_exists("tipo4", $context) ? $context["tipo4"] : (function () { throw new Twig_Error_Runtime('Variable "tipo4" does not exist.', 88, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo4"]) || array_key_exists("tipo4", $context) ? $context["tipo4"] : (function () { throw new Twig_Error_Runtime('Variable "tipo4" does not exist.', 89, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 89
+            // line 90
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
@@ -168,7 +169,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 91
+        // line 92
         echo "                        </select>
                         </br>
                         </br>
@@ -177,11 +178,11 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                         <label>Responsable</label>
                         <select id=\"fkresponsable\" class=\"form-control\">
                         ";
-        // line 98
+        // line 99
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["tipo5"]) || array_key_exists("tipo5", $context) ? $context["tipo5"] : (function () { throw new Twig_Error_Runtime('Variable "tipo5" does not exist.', 98, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["tipo5"]) || array_key_exists("tipo5", $context) ? $context["tipo5"] : (function () { throw new Twig_Error_Runtime('Variable "tipo5" does not exist.', 99, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
-            // line 99
+            // line 100
             echo "                            <option value=\"";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
             echo "\">";
@@ -192,7 +193,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['t'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 101
+        // line 102
         echo "                        </select>
                         </br>
                         </br>
@@ -222,7 +223,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
 
     public function getDebugInfo()
     {
-        return array (  196 => 101,  185 => 99,  181 => 98,  172 => 91,  161 => 89,  157 => 88,  149 => 82,  138 => 80,  134 => 79,  127 => 74,  116 => 72,  112 => 71,  104 => 65,  93 => 63,  89 => 62,  26 => 1,);
+        return array (  197 => 102,  186 => 100,  182 => 99,  173 => 92,  162 => 90,  158 => 89,  150 => 83,  139 => 81,  135 => 80,  128 => 75,  117 => 73,  113 => 72,  105 => 66,  94 => 64,  90 => 63,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -245,20 +246,20 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"descripcion\">Descripción</label>
-                            <textarea id=\"descripcion\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"descripcion\" name=\"descripcion\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Descripción</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"origen\">Origen</label>
-                            <textarea id=\"origen\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"origen\" name=\"origen\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Origen</label>
                         </div>
                     </div>
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
-                            <label for=\"accion\">Acción</label>
-                            <textarea id=\"accion\" class=\"materialize-textarea\" data-length=\"120\"></textarea>
+                            <input id=\"accion\" name=\"accion\" type=\"text\" class=\"form-control text\">
+                            <label class=\"form-label\">Acción</label>
                         </div>
                     </div>
 
@@ -271,6 +272,7 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
                     <div class=\"form-group form-float\">
                         <div class=\"form-line\">
                         <label class=\"form-label\">Fecha</label>
+                        </br>
                         </br>
                             <input id=\"fecha\" name=\"fecha\" type=\"date\" class=\"form-control\">
                         </div>
@@ -338,6 +340,6 @@ class __TwigTemplate_07c40f57e2c8e69277280f853f05ab98bfc1f787b57a41864de1cad4c05
             </div>
         </div>
     </div>
-</div>", "riesgosoportunidades/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\riesgosoportunidades\\form.html.twig");
+</div>", "riesgosoportunidades/form.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\riesgosoportunidades\\form.html.twig");
     }
 }

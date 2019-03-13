@@ -124,6 +124,6 @@ class __TwigTemplate_3dafc97656d9952227dbab300c31e607ec7b0bd2d2daeffeadb42ed84bd
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "accioneficacia/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\accioneficacia\\table.html.twig");
+{% endfor %}", "accioneficacia/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\accioneficacia\\table.html.twig");
     }
 }

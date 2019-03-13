@@ -231,7 +231,6 @@ class __TwigTemplate_973c86694c5a1fda10b679aaf4ac0e3dcc34cfb0ae7103f6dc87b9cb54c
             'fkresponsable': \$('#fkresponsable').val(),
             'impacto': \$('#fkimpacto').val()
         })
-        console.log(objeto)
         ajax_call_validation(\"/riesgosoportunidades_insertar\", {object: objeto}, null, main_route)
         // ajax_call(\"/riesgosoportunidades_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
         // \$('#form').modal('hide')
@@ -251,9 +250,7 @@ class __TwigTemplate_973c86694c5a1fda10b679aaf4ac0e3dcc34cfb0ae7103f6dc87b9cb54c
                 \$('#origen').val(self.origen)
                 \$('#accion').val(self.accion)
                 \$('#fecha').val(self.fecha)
-
                 \$('#estadocro').val(self.estadocro)
-                \$('#estadocro').selectpicker('render')
 
                 \$('#fkficha').val(self.fkficha.id)
                 \$('#fkficha').selectpicker('render')
@@ -585,7 +582,6 @@ class __TwigTemplate_973c86694c5a1fda10b679aaf4ac0e3dcc34cfb0ae7103f6dc87b9cb54c
             'fkresponsable': \$('#fkresponsable').val(),
             'impacto': \$('#fkimpacto').val()
         })
-        console.log(objeto)
         ajax_call_validation(\"/riesgosoportunidades_insertar\", {object: objeto}, null, main_route)
         // ajax_call(\"/riesgosoportunidades_insertar\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
         // \$('#form').modal('hide')
@@ -605,9 +601,7 @@ class __TwigTemplate_973c86694c5a1fda10b679aaf4ac0e3dcc34cfb0ae7103f6dc87b9cb54c
                 \$('#origen').val(self.origen)
                 \$('#accion').val(self.accion)
                 \$('#fecha').val(self.fecha)
-
                 \$('#estadocro').val(self.estadocro)
-                \$('#estadocro').selectpicker('render')
 
                 \$('#fkficha').val(self.fkficha.id)
                 \$('#fkficha').selectpicker('render')
@@ -766,6 +760,6 @@ class __TwigTemplate_973c86694c5a1fda10b679aaf4ac0e3dcc34cfb0ae7103f6dc87b9cb54c
         });
     </script>
 
-{% endblock %}", "riesgosoportunidades/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\riesgosoportunidades\\index.html.twig");
+{% endblock %}", "riesgosoportunidades/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\riesgosoportunidades\\index.html.twig");
     }
 }

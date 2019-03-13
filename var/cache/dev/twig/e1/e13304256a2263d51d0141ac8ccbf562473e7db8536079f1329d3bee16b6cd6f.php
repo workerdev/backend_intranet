@@ -48,45 +48,31 @@ class __TwigTemplate_3585cf6b1b02756c2b504681dc37f10e96120cfd22dd9c3611c59976818
             // line 7
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkindicador", array()), "codigo", array()), "html", null, true);
             echo "</td>
-        ";
+        <td>";
             // line 8
-            if ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "estado", array()) == 2)) {
-                // line 9
-                echo "            <td>";
-                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
-                echo " <b><i>";
-                echo " (Inactivo)";
-                echo "</i></b></td>
+            echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
+            echo "</td>
+        <td align=\"center\">
         ";
-            } else {
+            // line 10
+            if (twig_in_filter("seguimientoindicador_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 10, $this->source); })()))) {
                 // line 11
-                echo "            <td>";
-                echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "nombre", array()) . " ") . twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["tr"], "fkresponsable", array()), "apellido", array())), "html", null, true);
-                echo "</td>
-        ";
-            }
-            // line 13
-            echo "        <td align=\"center\">
-        ";
-            // line 14
-            if (twig_in_filter("seguimientoindicador_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 14, $this->source); })()))) {
-                // line 15
                 echo "            <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
         ";
             }
-            // line 17
+            // line 13
             echo "        ";
-            if (twig_in_filter("seguimientoindicador_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 17, $this->source); })()))) {
+            if (twig_in_filter("seguimientoindicador_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 13, $this->source); })()))) {
                 echo "  
             <button id=\"delete\" data-json=\"";
-                // line 18
+                // line 14
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
         ";
             }
-            // line 20
+            // line 16
             echo "        </td>
     </tr>
 ";
@@ -111,7 +97,7 @@ class __TwigTemplate_3585cf6b1b02756c2b504681dc37f10e96120cfd22dd9c3611c59976818
 
     public function getDebugInfo()
     {
-        return array (  90 => 20,  85 => 18,  80 => 17,  74 => 15,  72 => 14,  69 => 13,  63 => 11,  55 => 9,  53 => 8,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  76 => 16,  71 => 14,  66 => 13,  60 => 11,  58 => 10,  53 => 8,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -123,11 +109,7 @@ class __TwigTemplate_3585cf6b1b02756c2b504681dc37f10e96120cfd22dd9c3611c59976818
         <td>{{ tr.valor }}</td>
         <td>{{ tr.observacion }}</td>
         <td>{{ tr.fkindicador.codigo }}</td>
-        {% if tr.fkresponsable.estado == 2 %}
-            <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido}} <b><i>{{' (Inactivo)' }}</i></b></td>
-        {% else %}
-            <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
-        {% endif %}
+        <td>{{ tr.fkresponsable.nombre ~ ' ' ~ tr.fkresponsable.apellido }}</td>
         <td align=\"center\">
         {% if 'seguimientoindicador_editar' in permisos %}
             <button id=\"edit\" data-json=\"{{tr.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -137,6 +119,6 @@ class __TwigTemplate_3585cf6b1b02756c2b504681dc37f10e96120cfd22dd9c3611c59976818
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "seguimientoindicador/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\seguimientoindicador\\table.html.twig");
+{% endfor %}", "seguimientoindicador/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\seguimientoindicador\\table.html.twig");
     }
 }

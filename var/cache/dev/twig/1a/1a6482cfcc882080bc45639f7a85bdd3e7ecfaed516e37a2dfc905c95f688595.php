@@ -139,6 +139,6 @@ class __TwigTemplate_10b2cba0d1be9a0bf5f2069aaf19670e01df198edc04a310d2d462315e8
             </div>
         </div>
     </div>
-</div>", "planaccion/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\planaccion\\form.html.twig");
+</div>", "planaccion/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\planaccion\\form.html.twig");
     }
 }

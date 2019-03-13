@@ -10,8 +10,6 @@ use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\AccionReprograma;
 use App\Entity\AccionEficacia;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,10 +60,7 @@ class AccionController extends Controller
         
         $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(array('estado' => '1'));
         $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('accion/index.html.twig', array('objects' => $accion, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('accion/index.html.twig', array('objects' => $accion, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

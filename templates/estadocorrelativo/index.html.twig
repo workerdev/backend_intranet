@@ -1,12 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 <style>
-    .accion{ 
-        cursor:pointer
-    }
-    .swal2-title{
-        font-size: 16px !important;
-    }
+    .accion{ cursor:pointer }
 </style>
 <script src="resources/js/functions.js"></script>
 
@@ -125,62 +120,23 @@
     reload_form()
 </script>
 <script>
-    attach_edit()
 
-    let message= ''
-    function estadocrtv_prev(id) {
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse(id))
-        });
-        ajax_call_get("/estadocrtv_prev",{
-            object: obj
-        },function(response){
-            message = response;
-        });
-    }
+    attach_edit()
 
     $('.delete').click(function () {
         id = parseInt(JSON.parse($(this).attr('data-json')))
-        estadocrtv_prev(id)
-
-        setTimeout(function(){
-            let quest = message
-            enabled = false
-
-            if((quest.split(" ").length) > 8){
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-
-                })
-            }else{
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/estadocorrelativo_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
-                })
-            }
-
-            }, 1500
-        )
+        enabled = false
+        swal({
+            title: "¿Desea dar de baja el estado correlativo?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#004c99",
+            cancelButtonColor: "#F44336",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(function () {
+            ajax_call("/estadocorrelativo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+        })
     })
 
 </script>

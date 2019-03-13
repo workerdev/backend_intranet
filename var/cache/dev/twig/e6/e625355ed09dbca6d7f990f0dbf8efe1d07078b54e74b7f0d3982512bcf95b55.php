@@ -107,6 +107,6 @@ class __TwigTemplate_758a03943ede09eb87624fdef137979d03e20d3caad681af0d8f3a252cf
             </div>
         </div>
     </div>
-</div>", "accidentes/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\accidentes\\form.html.twig");
+</div>", "accidentes/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\accidentes\\form.html.twig");
     }
 }

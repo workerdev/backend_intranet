@@ -99,6 +99,6 @@ class __TwigTemplate_ed3b796a4afe528ed94dae60c9d96e432b5c91571c39ce78bc2dc342efc
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "tipohallazgo/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\tipohallazgo\\table.html.twig");
+{% endfor %}", "tipohallazgo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tipohallazgo\\table.html.twig");
     }
 }

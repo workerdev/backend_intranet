@@ -147,8 +147,7 @@
             ajax_call_get("/indicadorproceso_editar",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response)   
-                console.log(self)             
+                var self = JSON.parse(response)                
                 $('#id').val(self.id)
                 $('#descripcion').val(self.descripcion)
                 $('#formula').val(self.formula)
@@ -156,9 +155,8 @@
                 $('#metamensual').val(self.metamensual)
                 $('#codigo').val(self.codigo)
                 $('#objetivo').val(self.objetivo)
-
                 $('#vigente').val(self.vigente)
-                $('#vigente').selectpicker('render')
+
 
                 $('#fkficha').val(self.fkficha.id)
                 $('#fkficha').selectpicker('render')

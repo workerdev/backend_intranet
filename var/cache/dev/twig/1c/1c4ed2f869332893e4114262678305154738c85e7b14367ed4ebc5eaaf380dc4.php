@@ -161,12 +161,12 @@ class __TwigTemplate_0138ab3d3854ad57587d910eac5dfe753f646701b7a61d26777db0a02a1
                 </div>
             </div>
         </div>
-        <!--div class=\"row clearfix\">
+        <div class=\"row clearfix\">
             <div class=\"col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5\">
                 <button type=\"button\" class=\"btn btn-primary m-t-15 waves-effect\" onclick=\"Modificar_Perfil();\">GUARDAR</button>
                 <button type=\"button\" class=\"btn btn-primary m-t-15 waves-effect\" onclick=\"Open_Modal_Pass();\">MODIFICAR CONTRASEÑA</button>
             </div>
-        </div-->
+        </div>
     </form>
 </div>
 
@@ -422,12 +422,12 @@ class __TwigTemplate_0138ab3d3854ad57587d910eac5dfe753f646701b7a61d26777db0a02a1
                 </div>
             </div>
         </div>
-        <!--div class=\"row clearfix\">
+        <div class=\"row clearfix\">
             <div class=\"col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5\">
                 <button type=\"button\" class=\"btn btn-primary m-t-15 waves-effect\" onclick=\"Modificar_Perfil();\">GUARDAR</button>
                 <button type=\"button\" class=\"btn btn-primary m-t-15 waves-effect\" onclick=\"Open_Modal_Pass();\">MODIFICAR CONTRASEÑA</button>
             </div>
-        </div-->
+        </div>
     </form>
 </div>
 
@@ -561,6 +561,6 @@ class __TwigTemplate_0138ab3d3854ad57587d910eac5dfe753f646701b7a61d26777db0a02a1
     reload_form()
 </script>
 
-{% endblock %}", "perfil/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\perfil\\index.html.twig");
+{% endblock %}", "perfil/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\perfil\\index.html.twig");
     }
 }

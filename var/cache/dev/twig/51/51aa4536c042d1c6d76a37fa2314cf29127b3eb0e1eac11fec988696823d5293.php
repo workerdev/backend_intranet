@@ -88,7 +88,7 @@ class __TwigTemplate_5f4fd6ff245e2f77192db04f43e1265e90a488f0d4e262fc7cf423e0bee
         // line 30
         if (twig_in_filter("normadocumento_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 30, $this->source); })()))) {
             // line 31
-            echo "                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            echo "                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             ";
@@ -300,7 +300,7 @@ class __TwigTemplate_5f4fd6ff245e2f77192db04f43e1265e90a488f0d4e262fc7cf423e0bee
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             {% if 'normadocumento_insertar' in permisos %}
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             {% endif %}
@@ -436,6 +436,6 @@ class __TwigTemplate_5f4fd6ff245e2f77192db04f43e1265e90a488f0d4e262fc7cf423e0bee
         })
     </script>
 
-{% endblock %}", "normadocumento/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\normadocumento\\index.html.twig");
+{% endblock %}", "normadocumento/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\normadocumento\\index.html.twig");
     }
 }

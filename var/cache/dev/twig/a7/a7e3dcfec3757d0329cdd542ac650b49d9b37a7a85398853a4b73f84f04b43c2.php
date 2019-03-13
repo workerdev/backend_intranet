@@ -132,7 +132,7 @@ class __TwigTemplate_fa498f33568e00b6d838473b1f5f90d47170cf075122f618d7535db2412
                 ";
             } else {
                 // line 62
-                echo "                    <button id=\"reset\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                echo "                    <button id=\"reset\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                         INICIAR
                     </button>
                 ";
@@ -336,7 +336,7 @@ class __TwigTemplate_fa498f33568e00b6d838473b1f5f90d47170cf075122f618d7535db2412
                         REINICIAR
                     </button>
                 {% else %}
-                    <button id=\"reset\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                    <button id=\"reset\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                         INICIAR
                     </button>
                 {% endif %}
@@ -427,6 +427,6 @@ class __TwigTemplate_fa498f33568e00b6d838473b1f5f90d47170cf075122f618d7535db2412
     })
 </script>
 
-{% endblock %}", "accidentes/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\accidentes\\index.html.twig");
+{% endblock %}", "accidentes/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\accidentes\\index.html.twig");
     }
 }

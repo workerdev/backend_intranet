@@ -28,39 +28,30 @@ class __TwigTemplate_9c3ecff0f54ea30daa3a36b541c372f17f1b1a5d29679a8f8d4d550fb55
         foreach ($context['_seq'] as $context["_key"] => $context["t"]) {
             // line 2
             echo "<tr>
-    ";
+    <td><div id=\"row-cont\">";
             // line 3
-            $context["strategy"] = "html";
-            // line 4
-            echo "
-    ";
-            // line 6
-            echo "        <td><div id=\"row-cont\">";
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "contenido", array()), "html");
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "contenido", array()), "html", null, true);
             echo "<div></td>
-    ";
-            // line 8
-            echo "
     <td align=\"center\">
     ";
-            // line 10
-            if (twig_in_filter("responsabilidad_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 10, $this->source); })()))) {
-                // line 11
+            // line 5
+            if (twig_in_filter("responsabilidad_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 5, $this->source); })()))) {
+                // line 6
                 echo "        <button id=\"edit\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
     ";
             }
-            // line 13
+            // line 8
             echo "    ";
-            if (twig_in_filter("responsabilidad_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 13, $this->source); })()))) {
-                // line 14
+            if (twig_in_filter("responsabilidad_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 8, $this->source); })()))) {
+                // line 9
                 echo "        <button id=\"delete\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     ";
             }
-            // line 16
+            // line 11
             echo "    </td>
 </tr>
 ";
@@ -85,19 +76,14 @@ class __TwigTemplate_9c3ecff0f54ea30daa3a36b541c372f17f1b1a5d29679a8f8d4d550fb55
 
     public function getDebugInfo()
     {
-        return array (  64 => 16,  58 => 14,  55 => 13,  49 => 11,  47 => 10,  43 => 8,  38 => 6,  35 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  55 => 11,  49 => 9,  46 => 8,  40 => 6,  38 => 5,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
     {
         return new Twig_Source("{% for t in objects %}
 <tr>
-    {% set strategy = 'html' %}
-
-    {% autoescape 'html' %}
-        <td><div id=\"row-cont\">{{ t.contenido|escape('html') }}<div></td>
-    {% endautoescape %}
-
+    <td><div id=\"row-cont\">{{ t.contenido }}<div></td>
     <td align=\"center\">
     {% if 'responsabilidad_editar' in permisos %}
         <button id=\"edit\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
@@ -107,6 +93,6 @@ class __TwigTemplate_9c3ecff0f54ea30daa3a36b541c372f17f1b1a5d29679a8f8d4d550fb55
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "responsabilidadsocial/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\responsabilidadsocial\\table.html.twig");
+{% endfor %}", "responsabilidadsocial/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\responsabilidadsocial\\table.html.twig");
     }
 }

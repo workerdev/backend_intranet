@@ -1359,6 +1359,6 @@ class __TwigTemplate_bec89042bf7bf5bb1d4f40d6920784da67d83c23cbeb0e5fb4ffdf35678
         }
     </script>
 {% endblock %}
-", "personalcargo/organigrama.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\personalcargo\\organigrama.html.twig");
+", "personalcargo/organigrama.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\personalcargo\\organigrama.html.twig");
     }
 }

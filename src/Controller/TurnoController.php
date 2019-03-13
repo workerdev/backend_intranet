@@ -7,8 +7,6 @@ use App\Entity\Turno;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,10 +56,7 @@ class TurnoController extends Controller
         }
         $Turno = $this->getDoctrine()->getRepository(Turno::class)->findBy(array('estado' => '1'));
         $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('turno/index.html.twig', array('objects' => $Turno, 'personal' => $Personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('turno/index.html.twig', array('objects' => $Turno, 'personal' => $Personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

@@ -6,7 +6,6 @@
         <td>{{ tr.fktipo.tipo }}</td>
         <td>{{ tr.fechapublicacion | date('Y-m-d') }}</td>
         <td>{{ tr.vigente }}</td>
-        <td>{{ tr.vinculoarchivo }}</td>
         <td align="center">
         {% if 'documentoextra_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

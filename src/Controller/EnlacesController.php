@@ -25,10 +25,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
-
-
 use App\Entity\Rol;
 
 class EnlacesController extends AbstractController
@@ -97,15 +93,12 @@ class EnlacesController extends AbstractController
                 unset($enlaces);
                 unset($datosEnlaces);
             }
-            $redireccion = new RedirectResponse('/enlaces');
-            return $redireccion;
+            $Enlaces = $this->getDoctrine()->getRepository(Enlaces::class)->findBy(array('estado' => '1'));
+            return $this->render('enlaces/index.html.twig', array('objects' => $Enlaces,'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos)); 
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
 
         $Enlaces = $this->getDoctrine()->getRepository(Enlaces::class)->findBy(array('estado' => '1'));
-        return $this->render('enlaces/index.html.twig', array('objects' => $Enlaces, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));          
+        return $this->render('enlaces/index.html.twig', array('objects' => $Enlaces, 'form' => $form->createView(), 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));          
     }
 
             

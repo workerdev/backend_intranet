@@ -87,7 +87,7 @@ class __TwigTemplate_5ef1650e72cd264f275f0cb0a5ba90f26aa9ab6484770c540e75176b92a
         // line 29
         if (twig_in_filter("registromejora_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 29, $this->source); })()))) {
             // line 30
-            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                 <i class=\"material-icons\">add</i>
             </button>
         ";
@@ -336,7 +336,7 @@ class __TwigTemplate_5ef1650e72cd264f275f0cb0a5ba90f26aa9ab6484770c540e75176b92a
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         {% if 'registromejora_insertar' in permisos %}
-            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                 <i class=\"material-icons\">add</i>
             </button>
         {% endif %}
@@ -510,6 +510,6 @@ class __TwigTemplate_5ef1650e72cd264f275f0cb0a5ba90f26aa9ab6484770c540e75176b92a
 
 </script>
 
-{% endblock %}", "registromejora/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\registromejora\\index.html.twig");
+{% endblock %}", "registromejora/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\registromejora\\index.html.twig");
     }
 }

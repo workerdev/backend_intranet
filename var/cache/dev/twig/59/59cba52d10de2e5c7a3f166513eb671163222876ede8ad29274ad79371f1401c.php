@@ -35,8 +35,8 @@ class __TwigTemplate_b4ff0697f2d400a19a653a34fc31594cca27ebd8b499206d660c081c4e7
                 echo "            <td>
                 ";
                 // line 6
-                echo "                <img class=\"rutas\" style=\"width:12vw;height: vw;\" src=";
-                echo twig_escape_filter($this->env, twig_slice($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), 29, null), "html", null, true);
+                echo "                <img class=\"ruta\" style=\"width:12vw;height: vw;\" src=";
+                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), "html", null, true);
                 echo " >
             </td>
         ";
@@ -45,8 +45,8 @@ class __TwigTemplate_b4ff0697f2d400a19a653a34fc31594cca27ebd8b499206d660c081c4e7
                 echo "            <td>
                 ";
                 // line 11
-                echo "                <video style=\"width:12vw;height: 8vw;\" class=\"rutas\" src=";
-                echo twig_escape_filter($this->env, twig_slice($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), 29, null), "html", null, true);
+                echo "                <video style=\"width:12vw;height: 8vw;\" class=\"ruta\" src=";
+                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["tr"], "ruta", array()), "html", null, true);
                 echo " controls>
                     Your browser does not support the video tag.
                 </video>
@@ -117,12 +117,12 @@ class __TwigTemplate_b4ff0697f2d400a19a653a34fc31594cca27ebd8b499206d660c081c4e7
         {% if tr.tipo == 'imagen' %}
             <td>
                 {#<input class=\"ruta\" value={{ tr.ruta }} />#}
-                <img class=\"rutas\" style=\"width:12vw;height: vw;\" src={{ tr.ruta[29:] }} >
+                <img class=\"ruta\" style=\"width:12vw;height: vw;\" src={{ tr.ruta }} >
             </td>
         {% else %}
             <td>
                 {#<input class=\"ruta\" value={{ tr.ruta }} />#}
-                <video style=\"width:12vw;height: 8vw;\" class=\"rutas\" src={{ tr.ruta[29:] }} controls>
+                <video style=\"width:12vw;height: 8vw;\" class=\"ruta\" src={{ tr.ruta }} controls>
                     Your browser does not support the video tag.
                 </video>
             </td>
@@ -138,6 +138,6 @@ class __TwigTemplate_b4ff0697f2d400a19a653a34fc31594cca27ebd8b499206d660c081c4e7
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "files/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\files\\table.html.twig");
+{% endfor %}", "files/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\files\\table.html.twig");
     }
 }

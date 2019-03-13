@@ -94,7 +94,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
         // line 36
         if (twig_in_filter("responsabilidad_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 36, $this->source); })()))) {
             // line 37
-            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            echo "            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                 <i class=\"material-icons\">add</i>
             </button>
         ";
@@ -334,7 +334,7 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
     <div class=\"row clearfix\">
         <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
         {% if 'responsabilidad_insertar' in permisos %}
-            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                 <i class=\"material-icons\">add</i>
             </button>
         {% endif %}   
@@ -491,6 +491,6 @@ class __TwigTemplate_5cba9ca00417373c95e4c7bd7a66219f938971d002d0d8002a6d2cba6b7
 
 </script>
 
-{% endblock %}", "responsabilidadsocial/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\responsabilidadsocial\\index.html.twig");
+{% endblock %}", "responsabilidadsocial/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\responsabilidadsocial\\index.html.twig");
     }
 }

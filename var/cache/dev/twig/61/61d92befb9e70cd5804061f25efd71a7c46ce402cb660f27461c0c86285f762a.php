@@ -113,6 +113,6 @@ class __TwigTemplate_0e0088e3ae124da0a77e7a33bfcd59f59388e8d7f3bb289e4df53fe0619
             </div>
         </div>
     </div>
-</div>", "tipoauditoria/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\tipoauditoria\\form.html.twig");
+</div>", "tipoauditoria/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tipoauditoria\\form.html.twig");
     }
 }

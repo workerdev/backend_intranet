@@ -158,6 +158,6 @@ class __TwigTemplate_712cffc3ebe8169f8f35b817e5047f5fe12d969e422857f2b8df17032e3
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "documentoproceso/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\documentoproceso\\table.html.twig");
+{% endfor %}", "documentoproceso/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\documentoproceso\\table.html.twig");
     }
 }

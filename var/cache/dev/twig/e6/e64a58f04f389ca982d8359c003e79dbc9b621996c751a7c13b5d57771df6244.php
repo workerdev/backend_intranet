@@ -104,6 +104,6 @@ class __TwigTemplate_984abcba87b5472de049c898bb03bdb3ab3bc9e808ad88705e07baacb6c
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "auditoriaequipo/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\auditoriaequipo\\table.html.twig");
+{% endfor %}", "auditoriaequipo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\auditoriaequipo\\table.html.twig");
     }
 }

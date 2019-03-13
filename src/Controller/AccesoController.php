@@ -1,5 +1,6 @@
 <?php
 namespace App\Controller;
+//////////////////////////////PRBANDO PULLLL
 use App\Entity\EstadoPlan;
 use App\Entity\PlanAccion;
 use App\Entity\Acceso;
@@ -12,8 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\Rol;
 
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -52,14 +51,10 @@ class AccesoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $acceso = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('estado' => '1'));
         $Rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1'));
         $Modulo = $this->getDoctrine()->getRepository(Modulo::class)->findBy(array('estado' => '1'));
-        return $this->render('acceso/index.html.twig', array('objects' => $acceso, 'rol' => $Rol, 'modulo' => $Modulo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('acceso/index.html.twig', array('objects' => $acceso, 'rol' => $Rol, 'modulo' => $Modulo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

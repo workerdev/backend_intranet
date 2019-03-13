@@ -19,8 +19,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Rol;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 
 class SeguimientoMejoraController extends Controller
@@ -37,7 +35,7 @@ class SeguimientoMejoraController extends Controller
             return $redireccion;
         }
         
-        $vid = $s_user['fkrol']['id'];
+        $vid = $s_user[0]['fkrol']['id'];
         $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('id' => $vid, 'estado' => '1'));
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
@@ -55,13 +53,9 @@ class SeguimientoMejoraController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
         $SeguimientoMejora = $this->getDoctrine()->getRepository(SeguimientoMejora::class)->findBy(array('estado' => '1'));
         $RegistroMejora = $this->getDoctrine()->getRepository(RegistroMejora::class)->findBy(array('estado' => '1'));
-        return $this->render('seguimientomejora/index.html.twig', array('objects' => $SeguimientoMejora, 'tipo' => $RegistroMejora, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('seguimientomejora/index.html.twig', array('objects' => $SeguimientoMejora, 'tipo' => $RegistroMejora, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

@@ -88,7 +88,7 @@ class __TwigTemplate_093a1e38e013b6da59922fb95d051b7de6ce5ebedb07bd4e7dcbd364143
         // line 30
         if (twig_in_filter("accionseguimiento_insertar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 30, $this->source); })()))) {
             // line 31
-            echo "                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+            echo "                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             ";
@@ -316,7 +316,7 @@ class __TwigTemplate_093a1e38e013b6da59922fb95d051b7de6ce5ebedb07bd4e7dcbd364143
         <div class=\"row clearfix\">
             <div class=\"col-xs-3 col-sm-2 col-md-2 col-lg-2\">
             {% if 'accionseguimiento_insertar' in permisos %}
-                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\" title=\"Nuevo\">
+                <button id=\"new\" type=\"button\" class=\"btn bg-indigo waves-effect\">
                     <i class=\"material-icons\">add</i>
                 </button>
             {% endif %}
@@ -468,6 +468,6 @@ class __TwigTemplate_093a1e38e013b6da59922fb95d051b7de6ce5ebedb07bd4e7dcbd364143
         })
     </script>
 
-{% endblock %}", "accionseguimiento/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\accionseguimiento\\index.html.twig");
+{% endblock %}", "accionseguimiento/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\accionseguimiento\\index.html.twig");
     }
 }

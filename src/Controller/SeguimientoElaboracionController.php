@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -39,7 +37,7 @@ class SeguimientoElaboracionController extends Controller
             return $redireccion;
         }
         
-        $vid = $s_user['fkrol']['id'];
+        $vid = $s_user[0]['fkrol']['id'];
         $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('id' => $vid, 'estado' => '1'));
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
@@ -57,15 +55,11 @@ class SeguimientoElaboracionController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        
         $SeguimientoElaboracion = $this->getDoctrine()->getRepository(SeguimientoElaboracion::class)->findBy(array('estado' => '1'));
         $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
         $EstadoSeguimiento = $this->getDoctrine()->getRepository(EstadoSeguimiento::class)->findBy(array('estado' => '1'));
         $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-        return $this->render('seguimientoelaboracion/index.html.twig', array('objects' => $SeguimientoElaboracion, 'tipo' => $Documento, 'tipo2' => $EstadoSeguimiento, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('seguimientoelaboracion/index.html.twig', array('objects' => $SeguimientoElaboracion, 'tipo' => $Documento, 'tipo2' => $EstadoSeguimiento, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

@@ -632,6 +632,6 @@ class __TwigTemplate_d2aae74ea98f8116a696f6ed81a586c1f15f11227acc7a97a2114424c02
 {% block javascripts %}
 <script src=\"resources/bootstrap4/js/bootstrap.min.js\"></script>
 {% endblock %}
-", "reporting/auditoriasig.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\reporting\\auditoriasig.html.twig");
+", "reporting/auditoriasig.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\reporting\\auditoriasig.html.twig");
     }
 }

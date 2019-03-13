@@ -480,6 +480,6 @@ class __TwigTemplate_5533e7f27ddca27ce8aa8a5231596a516f9717b82687c1508a65def35b9
 
 </script>
 
-{% endblock %}", "tipodocumento/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\tipodocumento\\index.html.twig");
+{% endblock %}", "tipodocumento/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\tipodocumento\\index.html.twig");
     }
 }

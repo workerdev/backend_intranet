@@ -104,6 +104,6 @@ class __TwigTemplate_ec1066c3d077ffc6a7ce276a9fd77c75ad790b4640a35f5df132867140a
         {% endif %}
         </td>
     </tr>
-{% endfor %}", "normadocumento/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\normadocumento\\table.html.twig");
+{% endfor %}", "normadocumento/table.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\normadocumento\\table.html.twig");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/* tipocargo/table.html.twig */
+/* TipoCargo/table.html.twig */
 class __TwigTemplate_2fcb93f7a1ab38e39d552f09ab8efcc6e541622543f7fddd064e64cb66993815 extends Twig_Template
 {
     private $source;
@@ -20,7 +20,7 @@ class __TwigTemplate_2fcb93f7a1ab38e39d552f09ab8efcc6e541622543f7fddd064e64cb669
     protected function doDisplay(array $context, array $blocks = array())
     {
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "tipocargo/table.html.twig"));
+        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "TipoCargo/table.html.twig"));
 
         // line 1
         $context['_parent'] = $context;
@@ -71,7 +71,7 @@ class __TwigTemplate_2fcb93f7a1ab38e39d552f09ab8efcc6e541622543f7fddd064e64cb669
 
     public function getTemplateName()
     {
-        return "tipocargo/table.html.twig";
+        return "TipoCargo/table.html.twig";
     }
 
     public function isTraitable()
@@ -99,6 +99,6 @@ class __TwigTemplate_2fcb93f7a1ab38e39d552f09ab8efcc6e541622543f7fddd064e64cb669
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "tipocargo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\TipoCargo\\table.html.twig");
+{% endfor %}", "TipoCargo/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\TipoCargo\\table.html.twig");
     }
 }

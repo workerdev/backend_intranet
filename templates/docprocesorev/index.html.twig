@@ -35,11 +35,6 @@
             <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                 <i class="material-icons">add</i>
             </button>
-            {% if docderiv %}
-            <button id="apb" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
-                <i class="material-icons">folder</i>
-            </button>
-            {% endif %}
         {% endif %}
         </div>
     </div>
@@ -75,10 +70,7 @@
 <script src="resources/plugins/tinymce/tinymce.js"></script>
 
 <script>
-    var derivar = false;
-    var aprobar = false;
-    var rechazar = false;
-    var idrev = 0;
+ 
     $('#fkdoc').selectpicker({
         size: 4,
         liveSearch: true,
@@ -93,33 +85,16 @@
         title: 'Seleccione una opción.'
     })
 
-    $('#responsable').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar responsable.',
-        title: 'Seleccione un responsable.'
-    })
-
-    $('#dresponsable').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar responsable.',
-        title: 'Seleccione un responsable.'
-    })
-
     $('#new').click(function () {
-        $('#firma').val('Por revisar');
+        $('#responsable').val('')
+        $('#firma').val('')
         
-        clean_form();
-        verif_inputs();
-        $('#id_div').hide();
-        $('#insert').show();
-        $('#update').hide();
-        $('#form').modal('show');
-    })
-
-    $('#apb').click(function () {
-        $('#form-rev').modal('show');
+        clean_form()
+        verif_inputs()
+        $('#id_div').hide()
+        $('#insert').show()
+        $('#update').hide()
+        $('#form').modal('show')
     })
     
     $('#insert').click(function () {
@@ -129,114 +104,11 @@
             'firma': $("#firma").val(),
             'estadodoc': $("#estadodoc").val(),
             'fkdocs': $("#fkdoc").val()
-        });
-        ajax_call_validation("/docprocesorev_insertar", {object: objeto}, null, main_route)
+        })
+    ajax_call_validation("/docprocesorev_insertar", {object: objeto}, null, main_route)
+        // ajax_call("/docprocesorev_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        // $('#form').modal('hide')
     })
-
-    $('#confirm').click(function () {
-        objeto = JSON.stringify({
-            'password': $('#clave').val()
-        });
-        $.ajax({
-            method: "POST",
-            url: "/valid_action",
-            data: {object : objeto},
-            async: false,
-            beforeSend: function () {
-                $(".plan-icon-load").css('display', 'inline-block');
-            },
-            success: function (data, textStatus) {
-                $(".plan-icon-load").css('display', 'none');
-                $('#form-valid').hide();
-                $('#form-rev').hide();
-                $('#form-valid').modal('hide');
-                $('#form-rev').modal('hide');
-            }
-        }).done(function (response) {
-            let message = ''
-            if(response == "vacio"){ 
-                message = 'Por favor ingrese su password.';
-                document.getElementById('msgv').innerHTML = message;
-                $("#msgv").show();
-                setTimeout(function(){ $("#msgv").fadeOut() }, 3000);
-            }
-            if(response == "error"){ 
-                message = 'Datos invalidos, intente de nuevo.';
-                document.getElementById('msgv').innerHTML = message;
-                $("#msgv").show();
-                setTimeout(function(){ $("#msgv").fadeOut() }, 3000);
-            }
-            if(response == "exitoso"){
-                if(derivar){ 
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': $('#dresponsable').val(),
-                        'firma': 'DERIVADO',
-                        'estadodoc': 'DERIVADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_derivar", {object: objeto}, null, main_route)
-                }
-                if(aprobar){
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': null,
-                        'firma': 'APROBADO',
-                        'estadodoc': 'APROBADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
-                }
-                if(rechazar){ 
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': null,
-                        'firma': 'RECHAZADO',
-                        'estadodoc': 'RECHAZADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
-                }
-            }
-        });
-    })
-
-    function derivar_doc() {
-        $('.drdoc').click(function () {
-            derivar = true;
-            aprobar = false;
-            rechazar = false;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')));
-            vrep = $('#dresponsable').val();
-            //console.log(vrep);
-            if(vrep == "") alert('Por favor, seleccione un responsable.');
-            else $('#form-valid').modal('show');
-        });
-    }
-
-    function aprobar_doc() {
-        $('.apdoc').click(function () {
-            derivar = false;
-            aprobar = true;
-            rechazar = false;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')))
-            $('#msgv').modal('hide')
-            $('#form-valid').modal('show')
-        });
-    }
-
-    function rechazar_doc() {
-        $('.rcdoc').click(function () {
-            derivar = false;
-            aprobar = false;
-            rechazar = true;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')))
-            $('#form-valid').modal('show')
-        });
-    }
 
     function attach_edit() {
         $('.edit').click(function () {
@@ -249,10 +121,8 @@
                 var self = JSON.parse(response);
                 $('#id').val(self.id)
                 $('#fecha').val(self.fecha)
-                $('#firma').val(self.firma)
-
                 $('#responsable').val(self.responsable)
-                $('#responsable').selectpicker('render')
+                $('#firma').val(self.firma)
 
                 $('#estadodoc').val(self.estadodoc)
                 $('#estadodoc').selectpicker('render')
@@ -280,14 +150,13 @@
             'fkdocs': $('#fkdoc').val()
         })
         ajax_call_validation("/docprocesorev_actualizar", {object: objeto}, null, main_route)
+        // ajax_call("/docprocesorev_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        // $('#form').modal('hide')
     })
     reload_form()
 </script>
 <script>
     attach_edit()
-    derivar_doc()
-    aprobar_doc()
-    rechazar_doc()
 
     let message= ''
     function docrev_prev(id) {
@@ -344,6 +213,7 @@
             }, 1500
         )
     })
+
 </script>
 
 {% endblock %}

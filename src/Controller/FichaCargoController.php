@@ -7,8 +7,6 @@ use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\GerenciaAreaSector;
 use App\Entity\DocumentosAso;
-use App\Entity\DocProcRevision;
-use App\Entity\Usuario;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +20,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-
 
 class FichaCargoController extends Controller
 {
@@ -56,16 +53,11 @@ class FichaCargoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-
         $FichaCargo = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('estado' => '1'));
         $Area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findBy(array('estado' => '1'));
-        $responsable = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));    
-        return $this->render('fichacargo/index.html.twig', array('objects' => $FichaCargo, 'tipo' => $Area, 'responsable' => $responsable, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+            
+        return $this->render('fichacargo/index.html.twig', array('objects' => $FichaCargo, 'tipo' => $Area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
-
 
     /**
      * @Route("/fichacargo_insertar", methods={"POST"}, name="fichacargo_insertar")
@@ -117,6 +109,8 @@ class FichaCargoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
+                    // dd($e->getMessage());
+                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -131,7 +125,6 @@ class FichaCargoController extends Controller
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-
 
     /**
      * @Route("/fichacargo_actualizar", methods={"POST"}, name="fichacargo_actualizar")
@@ -185,6 +178,8 @@ class FichaCargoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
+                    // dd($e->getMessage());
+                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -199,7 +194,6 @@ class FichaCargoController extends Controller
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-
 
     /**
      * @Route("/fichacargo_editar", methods={"POST"}, name="fichacargo_editar")
@@ -271,7 +265,6 @@ class FichaCargoController extends Controller
         }
     }
 
-
     /**
      * @Route("/fichacargo_eliminar", methods={"POST"}, name="fichacargo_eliminar")
      */
@@ -288,82 +281,6 @@ class FichaCargoController extends Controller
 
             $resultado = array('response'=>"El ID modificado es: ".$fichacargo->getId().".",'success' => true,
                 'message' => 'Ficha de cargo dado de baja correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
-
-
-    /**
-     * @Route("/fichacargo_aprobarfcjefe", methods={"POST"}, name="fichacargo_aprobarfcjefe")
-     */
-    public function aprobarfcjefe(ValidatorInterface $validator )
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();            
-            $sx = json_decode($_POST['object'], true);
-            
-            $id = $sx['id'];
-            $firmajefe = $sx['firmajefe'];
-            
-            $fichacargo = $this->getDoctrine()->getRepository(FichaCargo::class)->find($id);
-            $fichacargo->setFirmajefe($firmajefe);
-
-            $errors = $validator->validate($fichacargo);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return  new  Response(json_encode($array)) ;
-            }
-
-            $cx->merge($fichacargo);
-            $cx->flush();
-
-            $resultado = array('response'=>"El ID registrado es: ".$fichacargo->getId().".",'success' => true,
-                'message' => 'Ficha de cargo modificada correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
-
-
-    /**
-     * @Route("/fichacargo_aprobarfcgerente", methods={"POST"}, name="fichacargo_aprobarfcgerente")
-     */
-    public function aprobarfcgerente(ValidatorInterface $validator )
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();            
-            $sx = json_decode($_POST['object'], true);
-            
-            $id = $sx['id'];
-            $firmagerente = $sx['firmagerente'];
-            
-            $fichacargo = $this->getDoctrine()->getRepository(FichaCargo::class)->find($id);
-            $fichacargo->setFirmagerente($firmagerente);
-
-            $errors = $validator->validate($fichacargo);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return  new  Response(json_encode($array)) ;
-            }
-
-            $cx->merge($fichacargo);
-            $cx->flush();
-
-            $resultado = array('response'=>"El ID registrado es: ".$fichacargo->getId().".",'success' => true,
-                'message' => 'Ficha de cargo modificada correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

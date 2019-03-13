@@ -20,9 +20,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
-
 
 
 class DetalleAuditorController extends Controller
@@ -57,14 +54,10 @@ class DetalleAuditorController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-       
         $DetalleAuditor = $this->getDoctrine()->getRepository(DetalleAuditor::class)->findBy(array('estado' => '1'));
         $Auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
         $Auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(array('estado' => '1'));
-        return $this->render('detalleauditor/index.html.twig', array('objects' => $DetalleAuditor, 'tipo' => $Auditoria, 'tipo2' => $Auditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('detalleauditor/index.html.twig', array('objects' => $DetalleAuditor, 'tipo' => $Auditoria, 'tipo2' => $Auditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
     /**

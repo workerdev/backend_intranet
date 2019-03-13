@@ -58,38 +58,34 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                     <ul class=\"tree-container\" id=\"cont-mods\" style=\"\">
                         <div class=\"form-group form-float\">
                             <label class=\"containerdbt\">Marcar todos
-                                <input id=\"slt-all\" type=\"radio\" onclick=\"check_all(this)\">
-                                <span class=\"checkmarkrdbt\"></span>
-                            </label>
-                            <label class=\"containerdbt\">Desmarcar todos
-                                <input id=\"usl-all\" type=\"radio\" onclick=\"uncheck_all(this)\">
+                                <input type=\"radio\" onclick=\"check_all(this)\">
                                 <span class=\"checkmarkrdbt\"></span>
                             </label>
                         </div>
                         ";
-        // line 44
+        // line 40
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["fparents"]) || array_key_exists("fparents", $context) ? $context["fparents"] : (function () { throw new Twig_Error_Runtime('Variable "fparents" does not exist.', 44, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["fparents"]) || array_key_exists("fparents", $context) ? $context["fparents"] : (function () { throw new Twig_Error_Runtime('Variable "fparents" does not exist.', 40, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["mods"]) {
-            // line 45
+            // line 41
             echo "                            ";
             if ((twig_get_attribute($this->env, $this->source, $context["mods"], "fkmodulo", array()) == null)) {
-                // line 46
+                // line 42
                 echo "                                <li id=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()), "html", null, true);
                 echo "\">
                                     <i class=\"material-icons\">";
-                // line 47
+                // line 43
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "icono", array()), "html", null, true);
                 echo "</i>
                                     <input id=\"";
-                // line 48
+                // line 44
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "nombre", array()), "html", null, true);
                 echo "\" type=\"checkbox\" class=\"padre chk-col-deep-purple\" data-id=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()), "html", null, true);
                 echo "\" data-parent=\"0\" onchange=\"check_mod(this)\">
                                     <label id=\"tmd\" for=\"";
-                // line 49
+                // line 45
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "nombre", array()), "html", null, true);
                 echo "\" data-id=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()), "html", null, true);
@@ -98,25 +94,25 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                 echo "</label>
                                 
                                 ";
-                // line 51
+                // line 47
                 $context['_parent'] = $context;
-                $context['_seq'] = twig_ensure_traversable((isset($context["fchildren"]) || array_key_exists("fchildren", $context) ? $context["fchildren"] : (function () { throw new Twig_Error_Runtime('Variable "fchildren" does not exist.', 51, $this->source); })()));
+                $context['_seq'] = twig_ensure_traversable((isset($context["fchildren"]) || array_key_exists("fchildren", $context) ? $context["fchildren"] : (function () { throw new Twig_Error_Runtime('Variable "fchildren" does not exist.', 47, $this->source); })()));
                 foreach ($context['_seq'] as $context["_key"] => $context["child"]) {
-                    // line 52
+                    // line 48
                     echo "                                    ";
                     if (((twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()) != null) && (twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()) == twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["child"], "fkmodulo", array()), "id", array())))) {
-                        // line 53
+                        // line 49
                         echo "                                    <ul class=\"tree-menu\">
                                         <li id=\"";
-                        // line 54
+                        // line 50
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "id", array()), "html", null, true);
                         echo "\">
                                             <i class=\"material-icons\">";
-                        // line 55
+                        // line 51
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "icono", array()), "html", null, true);
                         echo "</i>
                                             <input id=\"";
-                        // line 56
+                        // line 52
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "nombre", array()), "html", null, true);
                         echo "\" type=\"checkbox\" class=\"hijo chk-col-deep-purple\" data-id=\"";
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "id", array()), "html", null, true);
@@ -124,7 +120,7 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["mods"], "id", array()), "html", null, true);
                         echo "\" onchange=\"check_content(this);\">
                                             <label for=\"";
-                        // line 57
+                        // line 53
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "nombre", array()), "html", null, true);
                         echo "\" data-id=\"";
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "id", array()), "html", null, true);
@@ -133,25 +129,25 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                         echo "</label>
                                             
                                         ";
-                        // line 59
+                        // line 55
                         $context['_parent'] = $context;
-                        $context['_seq'] = twig_ensure_traversable((isset($context["foptions"]) || array_key_exists("foptions", $context) ? $context["foptions"] : (function () { throw new Twig_Error_Runtime('Variable "foptions" does not exist.', 59, $this->source); })()));
+                        $context['_seq'] = twig_ensure_traversable((isset($context["foptions"]) || array_key_exists("foptions", $context) ? $context["foptions"] : (function () { throw new Twig_Error_Runtime('Variable "foptions" does not exist.', 55, $this->source); })()));
                         foreach ($context['_seq'] as $context["_key"] => $context["option"]) {
-                            // line 60
+                            // line 56
                             echo "                                            <ul class=\"tree-menu\">
                                             ";
-                            // line 61
+                            // line 57
                             if (((twig_get_attribute($this->env, $this->source, $context["option"], "fkmodulo", array()) != null) && (twig_get_attribute($this->env, $this->source, $context["child"], "id", array()) == twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["option"], "fkmodulo", array()), "id", array())))) {
-                                // line 62
+                                // line 58
                                 echo "                                            <li id=\"";
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "id", array()), "html", null, true);
                                 echo "\">
                                                 <i class=\"material-icons\">";
-                                // line 63
+                                // line 59
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "icono", array()), "html", null, true);
                                 echo "</i>
                                                 <input id=\"";
-                                // line 64
+                                // line 60
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "nombre", array()), "html", null, true);
                                 echo "\" type=\"checkbox\" class=\"accion chk-col-deep-purple\" data-id=\"";
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "id", array()), "html", null, true);
@@ -159,7 +155,7 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["child"], "id", array()), "html", null, true);
                                 echo "\" onchange=\"check_action(this);\">
                                                 <label for=\"";
-                                // line 65
+                                // line 61
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "nombre", array()), "html", null, true);
                                 echo "\" data-id=\"";
                                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["option"], "id", array()), "html", null, true);
@@ -169,37 +165,37 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                                             </li>
                                             ";
                             }
-                            // line 68
+                            // line 64
                             echo "                                            </ul>
                                         ";
                         }
                         $_parent = $context['_parent'];
                         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['option'], $context['_parent'], $context['loop']);
                         $context = array_intersect_key($context, $_parent) + $_parent;
-                        // line 70
+                        // line 66
                         echo "                                        </li>
                                     </ul>
                                     ";
                     }
-                    // line 72
+                    // line 68
                     echo "      
                                 ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_iterated'], $context['_key'], $context['child'], $context['_parent'], $context['loop']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 74
+                // line 70
                 echo "                                </li>
                             ";
             }
-            // line 75
+            // line 71
             echo "      
                         ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['mods'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 77
+        // line 73
         echo "                    </ul>
                     </div>
                 </div>
@@ -211,8 +207,8 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                 </div>
 
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -235,7 +231,7 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
 
     public function getDebugInfo()
     {
-        return array (  203 => 77,  196 => 75,  192 => 74,  185 => 72,  180 => 70,  173 => 68,  163 => 65,  155 => 64,  151 => 63,  146 => 62,  144 => 61,  141 => 60,  137 => 59,  128 => 57,  120 => 56,  116 => 55,  112 => 54,  109 => 53,  106 => 52,  102 => 51,  93 => 49,  87 => 48,  83 => 47,  78 => 46,  75 => 45,  71 => 44,  26 => 1,);
+        return array (  199 => 73,  192 => 71,  188 => 70,  181 => 68,  176 => 66,  169 => 64,  159 => 61,  151 => 60,  147 => 59,  142 => 58,  140 => 57,  137 => 56,  133 => 55,  124 => 53,  116 => 52,  112 => 51,  108 => 50,  105 => 49,  102 => 48,  98 => 47,  89 => 45,  83 => 44,  79 => 43,  74 => 42,  71 => 41,  67 => 40,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -275,11 +271,7 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                     <ul class=\"tree-container\" id=\"cont-mods\" style=\"\">
                         <div class=\"form-group form-float\">
                             <label class=\"containerdbt\">Marcar todos
-                                <input id=\"slt-all\" type=\"radio\" onclick=\"check_all(this)\">
-                                <span class=\"checkmarkrdbt\"></span>
-                            </label>
-                            <label class=\"containerdbt\">Desmarcar todos
-                                <input id=\"usl-all\" type=\"radio\" onclick=\"uncheck_all(this)\">
+                                <input type=\"radio\" onclick=\"check_all(this)\">
                                 <span class=\"checkmarkrdbt\"></span>
                             </label>
                         </div>
@@ -327,12 +319,12 @@ class __TwigTemplate_951c94c561bc4002adda414bc4ac8a5936cdf102dc451084ff590d4ec92
                 </div>
 
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
     </div>
-</div>", "rol/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\rol\\form.html.twig");
+</div>", "rol/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\rol\\form.html.twig");
     }
 }

@@ -12,10 +12,6 @@ use App\Entity\EstadoCorrelativo;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
-use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
-use App\Entity\Correlativo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -24,6 +20,9 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Entity\Rol;
 
 
 class EstadoCorrelativoController extends AbstractController
@@ -45,8 +44,6 @@ class EstadoCorrelativoController extends AbstractController
         $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
 
         $mods = array();
-        $children = array();
-        $options = array();
         foreach ($accesos as $access) {
             $accdt = (object) $access;
             $item = $this->getDoctrine()->getRepository(Modulo::class)->find($accdt->getFkmodulo()->getId());
@@ -54,20 +51,14 @@ class EstadoCorrelativoController extends AbstractController
         }
         $parent = $mods;
         $child = $mods;
-        $option = $mods;
-
         $permisos = array();
         foreach ($mods as $mdl) {
             $mdldt = (object) $mdl;
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        
         $estadocorrelativo = $this->getDoctrine()->getRepository(EstadoCorrelativo::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
-        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadojefe' => $s_user['nombre'].' '.$s_user['apellido'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
-        $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('aprobadogerente' => $s_user['nombre'].' '.$s_user['apellido'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('estadocorrelativo/index.html.twig', array('objects' => $estadocorrelativo, 'parents' => $parent, 'children' => $child, 'options' => $option, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('estadocorrelativo/index.html.twig', array('objects' => $estadocorrelativo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
     }
 
 
@@ -193,34 +184,6 @@ class EstadoCorrelativoController extends AbstractController
             $resultado = array('response'=>"El ID modificado es: ".$estadocorrelativo->getId().".",'success' => true,
                 'message' => 'Estado correlativo dado de baja correctamente.');
             $resultado = json_encode($resultado);
-            return new Response($resultado);
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
-    
-
-    /**
-     * @Route("/estadocrtv_prev", methods={"POST"}, name="estadocrtv_prev")
-     */
-    public function estadocrtv_prev()
-    {
-        try {
-            $info = "";
-            $sx = json_decode($_POST['object'], true);
-            $id = $sx['id'];
-            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findBy(array('fkestado' => $id, 'estado' => '1'));
-            
-            if(sizeof($correlativo) == 0){
-                $info = array('response'=>"¿Desea dar de baja el estado correlativo?", 'success' => true,
-                'message' => 'Baja estado correlativo.');
-            }else{
-                if(sizeof($correlativo) > 0) $vr = " correlativo";
-
-                $info = array('response'=>"El estado correlativo no se puede eliminar, debido a que tiene relación con los datos de".$vr, 'success' => false,
-                'message' => 'Se eliminarán todos los registros asociados al estado correlativo.');
-            }
-            $resultado = json_encode($info);
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

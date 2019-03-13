@@ -121,6 +121,6 @@ class __TwigTemplate_4f314fd698a68e8d589799981e08842e9e977e75d6dad89038b3d9b1210
             </div>
         </div>
     </div>
-</div>", "tipohallazgo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\tipohallazgo\\form.html.twig");
+</div>", "tipohallazgo/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\tipohallazgo\\form.html.twig");
     }
 }

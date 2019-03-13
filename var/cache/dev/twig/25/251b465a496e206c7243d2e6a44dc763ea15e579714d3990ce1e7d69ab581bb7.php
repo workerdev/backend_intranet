@@ -800,6 +800,6 @@ class __TwigTemplate_95cafa459a2c9fecfd96e7134f96428067e719a611f2899f19eeba59114
     });
 </script>
 
-{% endblock %}", "hallazgo/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\hallazgo\\index.html.twig");
+{% endblock %}", "hallazgo/index.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\hallazgo\\index.html.twig");
     }
 }

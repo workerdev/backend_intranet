@@ -156,6 +156,6 @@ class __TwigTemplate_125b5aabb92c36d8bd1b37600f0cef620eb8c2bf8f2361e87ebdce0a6e5
             </div>
         </div>
     </div>
-</div>", "detalleauditor/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\detalleauditor\\form.html.twig");
+</div>", "detalleauditor/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\detalleauditor\\form.html.twig");
     }
 }

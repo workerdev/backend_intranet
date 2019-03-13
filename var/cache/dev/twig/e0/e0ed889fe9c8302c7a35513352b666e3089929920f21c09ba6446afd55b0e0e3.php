@@ -155,8 +155,8 @@ class __TwigTemplate_8e60256441aaacf63800318b0001a2db7487611ed723ee92890407f1f25
                     </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -187,7 +187,7 @@ class __TwigTemplate_8e60256441aaacf63800318b0001a2db7487611ed723ee92890407f1f25
                             <img src='resources/images/rolling.gif' style='height:100%; width:auto;'/>
                         </div>
                     </div>
-                    <!--button id=\"pro_rep\" type=\"button\" class=\"btn bg-red waves-effect prorep\" title=\"PDF\"> <i class=\"material-icons\">picture_as_pdf</i></button-->
+                    <button id=\"pro_rep\" type=\"button\" class=\"btn bg-red waves-effect prorep\" title=\"PDF\"> <i class=\"material-icons\">picture_as_pdf</i></button>
                     <button id=\"aud_yrep\" type=\"button\" class=\"btn bg-teal waves-effect proxrep\" title=\"Excel\"> <i class=\"material-icons\">grid_on</i></button>
                 </div>
             </div>
@@ -320,8 +320,8 @@ class __TwigTemplate_8e60256441aaacf63800318b0001a2db7487611ed723ee92890407f1f25
                     </div>
                 </div>
                 <div class=\"modal-footer\">
-                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar <i class=\"material-icons\">save</i></button>
-                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar <i class=\"material-icons\">refresh</i></button>
+                    <button id=\"insert\" type=\"button\" class=\"btn bg-indigo waves-effect\">Guardar<i class=\"material-icons\">save</i></button>
+                    <button id=\"update\" type=\"button\" class=\"btn bg-indigo waves-effect\">Modificar<i class=\"material-icons\">refresh</i></button>
                 </div>
             </div>
         </div>
@@ -352,12 +352,12 @@ class __TwigTemplate_8e60256441aaacf63800318b0001a2db7487611ed723ee92890407f1f25
                             <img src='resources/images/rolling.gif' style='height:100%; width:auto;'/>
                         </div>
                     </div>
-                    <!--button id=\"pro_rep\" type=\"button\" class=\"btn bg-red waves-effect prorep\" title=\"PDF\"> <i class=\"material-icons\">picture_as_pdf</i></button-->
+                    <button id=\"pro_rep\" type=\"button\" class=\"btn bg-red waves-effect prorep\" title=\"PDF\"> <i class=\"material-icons\">picture_as_pdf</i></button>
                     <button id=\"aud_yrep\" type=\"button\" class=\"btn bg-teal waves-effect proxrep\" title=\"Excel\"> <i class=\"material-icons\">grid_on</i></button>
                 </div>
             </div>
         </div>
     </div>
-</div>", "auditoria/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\auditoria\\form.html.twig");
+</div>", "auditoria/form.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\auditoria\\form.html.twig");
     }
 }

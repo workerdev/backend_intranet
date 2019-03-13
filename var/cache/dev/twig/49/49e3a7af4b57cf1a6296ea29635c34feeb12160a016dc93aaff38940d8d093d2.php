@@ -197,13 +197,12 @@ class __TwigTemplate_781ca483b3b82914808684735d8e2183790a16ee2cc95fb8df039869f71
     function attach_edit() {
         \$('.edit').click(function () {
             obj = JSON.stringify({
-                'id': parseInt(JSON.parse(\$(this).attr('data-json')))
+            'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
             ajax_call_get(\"/documentoformulario_editar\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(self)
                 
                 \$('#id').val(self.id)
                 \$('#codigo').val(self.codigo)
@@ -409,13 +408,12 @@ class __TwigTemplate_781ca483b3b82914808684735d8e2183790a16ee2cc95fb8df039869f71
     function attach_edit() {
         \$('.edit').click(function () {
             obj = JSON.stringify({
-                'id': parseInt(JSON.parse(\$(this).attr('data-json')))
+            'id': parseInt(JSON.parse(\$(this).attr('data-json')))
             });
             ajax_call_get(\"/documentoformulario_editar\",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(self)
                 
                 \$('#id').val(self.id)
                 \$('#codigo').val(self.codigo)
@@ -483,6 +481,6 @@ class __TwigTemplate_781ca483b3b82914808684735d8e2183790a16ee2cc95fb8df039869f71
 
 </script>
 
-{% endblock %}", "documentoformulario/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\documentoformulario\\index.html.twig");
+{% endblock %}", "documentoformulario/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\elfec_intranet_backend\\templates\\documentoformulario\\index.html.twig");
     }
 }

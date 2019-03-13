@@ -555,6 +555,6 @@ class __TwigTemplate_f067bd92bd99740c5807612719fb42c4cc46698f7e7dcb0e6d9f5c26cc3
 
 {% block javascripts %}
     <script src=\"resources/bootstrap4/js/bootstrap.min.js\"></script>
-{% endblock %}", "reporting/notificacionaud.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\reporting\\notificacionaud.html.twig");
+{% endblock %}", "reporting/notificacionaud.html.twig", "H:\\Elfec\\back_end\\1st_version\\elfec_intranet_backend\\templates\\reporting\\notificacionaud.html.twig");
     }
 }
