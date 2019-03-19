@@ -106,8 +106,6 @@
             'revisor': $('#fkrevisor').val()
         })
         ajax_call_validation("/seguimientoelaboracion_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientoelaboracion_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -120,7 +118,6 @@
             },function(response){
                 var self = JSON.parse(response)                
                 $('#id').val(self.id)
-             
 
                 $('#fkdocumento').val(self.fkdocumento.id)
                 $('#fkdocumento').selectpicker('render')
@@ -149,8 +146,6 @@
             'revisor': $('#fkrevisor').val()
         })
         ajax_call_validation("/seguimientoelaboracion_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientoelaboracion_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
     </script>

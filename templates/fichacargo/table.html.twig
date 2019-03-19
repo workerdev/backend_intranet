@@ -1,5 +1,6 @@
 {% for tr in objects %}
     <tr>
+        {% set firmas = ['APROBADO', 'RECHAZADO'] %}
         <td class="details-control">
             <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'fc' ~ tr.id}}"></i>
         </td>
@@ -20,7 +21,9 @@
         <td class="d-none">{{ tr.hipervinculo }}</td>
         <td align="center">
         {% if 'fichacargo_editar' in permisos %}
-            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+            {% if tr.firmajefe not in firmas and tr.firmagerente not in firmas %}
+                <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+            {% endif %}
         {% endif %}
         {% if 'fichacargo_eliminar' in permisos %}  
             <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>

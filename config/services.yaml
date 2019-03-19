@@ -5,10 +5,10 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    Directorio_proyecto: 'elfec_intranet_backend\public'
+    Directorio_proyecto: '%kernel.project_dir%\public'
     upload_directory: '%kernel.project_dir%\public\images'
     Directorio_Enlaces: '%kernel.project_dir%\public\enlaces'
-    Directorio_Files: '%kernel.project_dir%\public'
+    Directorio_Files: '%kernel.project_dir%\public\files'
     Directorio_Reportes: '%kernel.project_dir%\public\reportes'
     Directorio_LogoRep: '%kernel.project_dir%\public\resources\images\image_rep.png'
     Directorio_Galeria: '%kernel.project_dir%\public'

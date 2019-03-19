@@ -118,7 +118,7 @@ class SeguimientoMejoraController extends Controller
             $seguimientomejora->setEstado(1);
 
 
-            $tipo = $this->getDoctrine()->getRepository(RegistroMejora::class)->find($mejora);
+            $mejora = $this->getDoctrine()->getRepository(RegistroMejora::class)->find($mejora);
             $seguimientomejora->setFkmejora($mejora);      
 
             $cx->merge($seguimientomejora);

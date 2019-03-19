@@ -88,6 +88,7 @@
 
     function attach_edit() {
         $('.edit').click(function () {
+            $("#organigrama_gerencia_id").attr("readonly", "readonly")
 
             $('#organigrama_gerencia_id').val('')
             $('#organigrama_gerencia_id').show()

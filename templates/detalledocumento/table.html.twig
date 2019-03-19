@@ -1,6 +1,6 @@
 {% for tr in objects %}
     <tr>
-        <td>{{ tr.fkauditoria.alcance }}</td>
+        <td>{{ tr.fkauditoria.codigo }}</td>
         <td>{{ tr.fkdocumento.codigo }}</td>
         <td align="center">
         {% if 'detalledocumento_editar' in permisos %}

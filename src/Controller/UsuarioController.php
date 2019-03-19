@@ -131,11 +131,17 @@ class UsuarioController extends AbstractController
             $nombre = $sx['nombre'];
             $correo = $sx['correo'];
 
+            $rol = $sx['rol'];
+
             $cx = $this->getDoctrine()->getManager();
             $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($id);
             $usuario->setNombre($nombre);
             $usuario->setApellido($apellido);
             $usuario->setCorreo($correo);
+
+            $rol = $this->getDoctrine()->getRepository(Rol::class)->find($rol);
+            $usuario->setFkrol($rol);
+
             $cx->persist($usuario);
             $cx->flush();
 

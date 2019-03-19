@@ -75,8 +75,8 @@ class DetalleDocumentoController extends Controller
             $cx = $this->getDoctrine()->getManager();
 
             $sx = json_decode($_POST['object'], true);
-            $nombre = $sx['auditoria'];
-            $descripcion = $sx['documento'];
+            $auditoria = $sx['auditoria'];
+            $documento = $sx['documento'];
 
             $detalledocumento = new DetalleDocumento();
             $detalledocumento->setEstado(1);
@@ -108,8 +108,8 @@ class DetalleDocumentoController extends Controller
 
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
-            $nombre = $sx['auditoria'];
-            $descripcion = $sx['documento'];
+            $auditoria = $sx['auditoria'];
+            $documento = $sx['documento'];
 
             $detalledocumento = new DetalleDocumento();
             $detalledocumento->setId($id);

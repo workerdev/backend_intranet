@@ -84,10 +84,10 @@
     function attach_edit() {
         $('.edit').click(function () {
             $('#enlaces_id').show()
-            $( "#enlaces_id" ).siblings().show()
-            //$('#enlaces_id').attr('disabled', 'disabled')
+            $("#enlaces_id").siblings().show()
+            $("#enlaces_id").attr("readonly", "readonly")
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/enlaces_editar",{
                 object: obj

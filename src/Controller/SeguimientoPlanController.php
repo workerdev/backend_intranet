@@ -191,6 +191,8 @@ class SeguimientoPlanController extends Controller
                 "responsable" => $seguimientoplan->getResponsable(),
                 "fecha" => $result,
                 "observaciones" => $seguimientoplan->getObservaciones(),
+                "fkplan" => $seguimientoplan->getFkplan(),
+                "fkestado" => $seguimientoplan->getFkestado(),
                 "fechaimplementacion" => $reimp
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));

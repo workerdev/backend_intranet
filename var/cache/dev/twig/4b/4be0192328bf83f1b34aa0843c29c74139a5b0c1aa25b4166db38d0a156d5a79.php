@@ -92,13 +92,16 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
                             <input type=\"text\" class=\"form-control\" id=\"usuario\" name=\"usuario\" placeholder=\"Nombre de usuario\" required autofocus>
                         </div>
                     </div>
-                    <div class=\"input-group\">
+                    <div class=\"input-group\" id=\"bf-btn\">
                         <span class=\"input-group-addon\">
                             <i class=\"material-icons\">lock</i>
                         </span>
                         <div class=\"form-line\">
                             <input type=\"password\" class=\"form-control\" id=\"password\" name=\"password\" placeholder=\"Contraseña\" required>
                         </div>
+                        <span class=\"input-group-addon\" id=\"see-pass\" style=\"cursor: pointer;\" title=\"Mostrar\">
+                            <i class=\"material-icons\" style=\"color: grey\" id=\"ic-pass\">visibility</i>
+                        </span>
                     </div>
                     <div class=\"row\">
                         <div class=\"col-xs-4\">
@@ -137,25 +140,42 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
         objeto = JSON.stringify({
             'user': \$('#usuario').val(),
             'password': \$('#password').val()
-          
         })
-      //  ajax_call_validation( \"/login\" , {object: objeto}, null, main_route)
-        // ajax_call(\"/login\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
+
         \$.ajax({
-        method: \"POST\",
-        url: \"/sesion\",
-        data: {object : objeto},
-        async: false
+            method: \"POST\",
+            url: \"/sesion\",
+            data: {object : objeto},
+            async: false,
+            beforeSend: function () {
+                \$(\"<div id='spn-ld' style='text-align: center; margin:auto;width:100%; height:65px;'>\"+
+                    \"<div style='margin:auto;display:block; height:55px;'>\"+
+                        \"<img src='resources/images/espiral.gif' style='height:100%; width:auto;'/>\"+
+                    \"</div>\"+
+                \"</div>\").insertAfter(\"#bf-btn\");
+            },
+            success: function (data, textStatus) {
+                \$(\"#spn-ld\").fadeOut(800);
+            }
         }).done(function (response) {
             if(response == \"error\" || response == \"vacio\"){
-                \$('#lgfail').show()
+                \$('#lgfail').fadeIn(2000)
+               setTimeout(function(){ \$('#lgfail').fadeOut(2000) }, 4000)
             }else{
                setTimeout(function(){window.location=\"/\"}, 500)
             }
-            //console.log(response)
         });
     })
+
+    \$('#see-pass').mousedown(function(){
+        \$(\"#ic-pass\").css(\"color\", \"lightgrey\");
+        \$(\"#password\").prop(\"type\", \"text\");
+    });
+    
+    \$(\"#see-pass\").mouseup(function(){
+        \$(\"#ic-pass\").css(\"color\", \"grey\");
+        \$(\"#password\").prop(\"type\", \"password\");
+    });
 </script>
 
 </html>";
@@ -194,7 +214,7 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
 
     public function getDebugInfo()
     {
-        return array (  180 => 27,  168 => 8,  61 => 28,  59 => 27,  37 => 8,  28 => 1,);
+        return array (  200 => 27,  188 => 8,  61 => 28,  59 => 27,  37 => 8,  28 => 1,);
     }
 
     public function getSourceContext()
@@ -260,13 +280,16 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
                             <input type=\"text\" class=\"form-control\" id=\"usuario\" name=\"usuario\" placeholder=\"Nombre de usuario\" required autofocus>
                         </div>
                     </div>
-                    <div class=\"input-group\">
+                    <div class=\"input-group\" id=\"bf-btn\">
                         <span class=\"input-group-addon\">
                             <i class=\"material-icons\">lock</i>
                         </span>
                         <div class=\"form-line\">
                             <input type=\"password\" class=\"form-control\" id=\"password\" name=\"password\" placeholder=\"Contraseña\" required>
                         </div>
+                        <span class=\"input-group-addon\" id=\"see-pass\" style=\"cursor: pointer;\" title=\"Mostrar\">
+                            <i class=\"material-icons\" style=\"color: grey\" id=\"ic-pass\">visibility</i>
+                        </span>
                     </div>
                     <div class=\"row\">
                         <div class=\"col-xs-4\">
@@ -305,27 +328,44 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
         objeto = JSON.stringify({
             'user': \$('#usuario').val(),
             'password': \$('#password').val()
-          
         })
-      //  ajax_call_validation( \"/login\" , {object: objeto}, null, main_route)
-        // ajax_call(\"/login\", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // \$('#form').modal('hide')
+
         \$.ajax({
-        method: \"POST\",
-        url: \"/sesion\",
-        data: {object : objeto},
-        async: false
+            method: \"POST\",
+            url: \"/sesion\",
+            data: {object : objeto},
+            async: false,
+            beforeSend: function () {
+                \$(\"<div id='spn-ld' style='text-align: center; margin:auto;width:100%; height:65px;'>\"+
+                    \"<div style='margin:auto;display:block; height:55px;'>\"+
+                        \"<img src='resources/images/espiral.gif' style='height:100%; width:auto;'/>\"+
+                    \"</div>\"+
+                \"</div>\").insertAfter(\"#bf-btn\");
+            },
+            success: function (data, textStatus) {
+                \$(\"#spn-ld\").fadeOut(800);
+            }
         }).done(function (response) {
             if(response == \"error\" || response == \"vacio\"){
-                \$('#lgfail').show()
+                \$('#lgfail').fadeIn(2000)
+               setTimeout(function(){ \$('#lgfail').fadeOut(2000) }, 4000)
             }else{
                setTimeout(function(){window.location=\"/\"}, 500)
             }
-            //console.log(response)
         });
     })
+
+    \$('#see-pass').mousedown(function(){
+        \$(\"#ic-pass\").css(\"color\", \"lightgrey\");
+        \$(\"#password\").prop(\"type\", \"text\");
+    });
+    
+    \$(\"#see-pass\").mouseup(function(){
+        \$(\"#ic-pass\").css(\"color\", \"grey\");
+        \$(\"#password\").prop(\"type\", \"password\");
+    });
 </script>
 
-</html>", "security/login.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\security\\login.html.twig");
+</html>", "security/login.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\security\\login.html.twig");
     }
 }

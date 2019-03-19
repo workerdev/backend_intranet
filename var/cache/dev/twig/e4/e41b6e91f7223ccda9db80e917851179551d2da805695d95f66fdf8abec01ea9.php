@@ -491,7 +491,6 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
             }, 1500
         )
     })
-
 </script>
 
 ";
@@ -926,9 +925,8 @@ class __TwigTemplate_f462a50879d908719abd12726113e54ed5abb520d337553d3fcbc3d97eb
             }, 1500
         )
     })
-
 </script>
 
-{% endblock %}", "rol/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\rol\\index.html.twig");
+{% endblock %}", "rol/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\rol\\index.html.twig");
     }
 }

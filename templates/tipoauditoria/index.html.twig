@@ -85,8 +85,6 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/tipoauditoria_insertar"  , {object: objeto}, null, main_route)
-        // ajax_call("/tipoauditoria_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -119,8 +117,6 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/tipoauditoria_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/tipoauditoria_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
@@ -179,7 +175,7 @@
                 })
             }
 
-            }, 1500
+            }, 2000
         )
     })
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Rol
@@ -26,6 +27,7 @@ class Rol
      * @var string
      *
      * @ORM\Column(name="cb_rol_nombre", type="string", length=50, nullable=false)
+     * @Assert\NotBlank
      */
     private $nombre;
 
@@ -33,6 +35,7 @@ class Rol
      * @var string
      *
      * @ORM\Column(name="cb_rol_descripcion", type="string", length=200, nullable=false)
+     * @Assert\NotBlank
      */
     private $descripcion;
     

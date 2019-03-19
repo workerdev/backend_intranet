@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 /**
  * SeguimientoElaboracion
  * @ORM\Table(name="cb_gest_seg_elaboracion", indexes={@ORM\Index(name="cb_seguimiento_elaboracion_id", columns={"cb_seguimiento_elaboracion_id"})})
@@ -22,6 +24,7 @@ class SeguimientoElaboracion
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
     /**
      * @var \documento
      *
@@ -49,13 +52,11 @@ class SeguimientoElaboracion
      *
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_seguimiento_elaboracion_fkestado", referencedColumnName="cb_usuario_id")
+     *   @ORM\JoinColumn(name="cb_seguimiento_elaboracion_fkrevisor", referencedColumnName="cb_usuario_id")
      * })
      * @Assert\NotBlank
      */
     private $fkrevisor;
-
-
 
     /**
      * @var int
@@ -63,9 +64,6 @@ class SeguimientoElaboracion
      * @ORM\Column(name="cb_seguimiento_elaboracion_estado", type="integer", nullable=false)
      */
     private $estado;
-
-
-   
 
 
     public function getId(): ?int
@@ -114,8 +112,6 @@ class SeguimientoElaboracion
         return $this;
     }
 
-  
-
     public function getEstado(): ?int
     {
         return $this->estado;
@@ -127,6 +123,4 @@ class SeguimientoElaboracion
 
         return $this;
     }
-
-   
 }

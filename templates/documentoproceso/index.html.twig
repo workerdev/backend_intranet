@@ -154,9 +154,10 @@
     });
 
     function attach_edit() {
-        $('.edit').click(function () {
+            $("#documento_proceso_id").attr("readonly", "readonly")
+            $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/documentoproceso_editar",{
                 object: obj

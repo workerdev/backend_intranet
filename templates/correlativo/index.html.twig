@@ -143,7 +143,8 @@
     
     $('#new').click(function () {
         $('#correlativo_id').hide()
-        $( "#correlativo_id" ).siblings().hide()
+        $("#correlativo_id").siblings().hide()
+        $("#correlativo_id").attr("readonly", "readonly")
 
         $('#correlativo_numcorrelativo').val('')
         $('#correlativo_fechareg').val('')

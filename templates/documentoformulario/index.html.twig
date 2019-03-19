@@ -133,7 +133,7 @@
 
     function attach_edit() {
         $('.edit').click(function () {
-                console.log('into')
+            $("#documento_formulario_id").attr("readonly", "readonly")
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             });

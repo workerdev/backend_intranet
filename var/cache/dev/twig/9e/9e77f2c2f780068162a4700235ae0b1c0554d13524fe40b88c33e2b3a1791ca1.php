@@ -171,6 +171,7 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
 
     function attach_edit() {
         \$('.edit').click(function () {
+            \$(\"#organigrama_gerencia_id\").attr(\"readonly\", \"readonly\")
 
             \$('#organigrama_gerencia_id').val('')
             \$('#organigrama_gerencia_id').show()
@@ -350,6 +351,7 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
 
     function attach_edit() {
         \$('.edit').click(function () {
+            \$(\"#organigrama_gerencia_id\").attr(\"readonly\", \"readonly\")
 
             \$('#organigrama_gerencia_id').val('')
             \$('#organigrama_gerencia_id').show()
@@ -416,6 +418,6 @@ class __TwigTemplate_2c7dc4ec17d0cee5cc034736e842408a2c1704025b61417f1c38ac2332f
         })
     </script>
 
-{% endblock %}", "organigramagerencia/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\organigramagerencia\\index.html.twig");
+{% endblock %}", "organigramagerencia/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\organigramagerencia\\index.html.twig");
     }
 }

@@ -79,60 +79,37 @@ function ajax_call_validation(url, data, render, callback) {
 
                     field.parentElement.insertAdjacentElement("afterend", labelError)
 
-// field.parent().addClass('error');
-
-// field.parent().next('label').text(key\[1\]);
-
+                    // field.parent().addClass('error');
+                    // field.parent().next('label').text(key\[1\]);
                     c++
-
                 }
-
             })
-
         }
 
         if (render != null) {
-
             $(render).html(response)
-
         } else {
-
             dictionary = JSON.parse(response)
-
             console.log(dictionary);
 
             if ("message" in dictionary && dictionary.message != '') {
-
                 if (dictionary.success) {
                     showMessage(dictionary.message, "success", "ok");
                     $('#form').modal('hide');
                     setTimeout(function () {
-                                            window.location = callback
-                                        }, 1500)
-
+                        window.location = callback
+                    }, 1500)
                 } else {
-
                     showMessage(dictionary.message, "danger", "remove")
-
                 }
-
             }
-
-
         }
-
-// if(callback != null){
-
-// callback(response)
-
-// }
-
+    // if(callback != null){
+    // callback(response)
+    // }
     }).fail(function () {
-
         console.log('Error Ajax')
-
     })
-
 }
 
 function getCookie(name) {
@@ -264,10 +241,14 @@ function ajax_call_rol(url, data, render, callback) {
         data: data,
         async: false,
         beforeSend: function () {
-            $(".plan-icon-load").css('display', 'inline-block');
+            $("<div id='spn-md' style='text-align: center; margin:auto;width:100%; height:65px;'>"+
+                "<div style='margin:auto;display:block; height:55px;'>"+
+                    "<img src='resources/images/carga.gif' style='height:100%; width:auto;'/>"+
+                "</div>"+
+            "</div>").insertBefore("#rl-acn");
         },
         success: function (data, textStatus) {
-            $(".plan-icon-load").css('display', 'none');
+            $("#spn-md").fadeOut(800);
         }
     }).done(function (response) {
         if (render != null) {
@@ -295,18 +276,14 @@ function ajax_call_rep(url, data, callback) {
         data: data,
         async: false,
         beforeSend: function() {
-            $('html, body').animate({
-                scrollTop: $(".header").offset().top
-            }, 1000);
-            //location.href = ".header";
-            $(".plan-icon-load").css('display', 'inline-block');
+            $("<div id='spn-adrp' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
+                "<div style='margin:auto;display:block; height:55px;'>"+
+                    "<img src='resources/images/rolling.gif' style='height:100%; width:auto;'/>"+
+                "</div>"+
+            "</div>").insertAfter("#rep_form_body");
         },
         success:function (data, textStatus) {
-            $(".plan-icon-load").css('display', 'none');
-            /*
-            document.getElementById('msg-rep').innerHTML = data;
-            $('#msg-rep').show();
-            $("#msg-rep").fadeToggle(5000);*/
+            $("#spn-adrp").fadeOut(800);
         }
     }).done(function (response) {
         dictionary = JSON.parse(response)
@@ -333,16 +310,11 @@ function ajax_call_reptb(url, data, callback) {
             $('html, body').animate({
                 scrollTop: $(".header").offset().top
             }, 1000);
-            //location.href = ".header";
             $(".plan-icon-load").css('display', 'inline-block');
             $('html, body').animate({scrollTop: 0}, 'slow');
         },
         success:function (data, textStatus) {
             $(".plan-icon-load").css('display', 'none');
-            /*
-            document.getElementById('msg-rep').innerHTML = data;
-            $('#msg-rep').show();
-            $("#msg-rep").fadeToggle(5000);*/
         }
     }).done(function (response) {
         dictionary = JSON.parse(response)

@@ -32,7 +32,7 @@ class OrganigramaGerencia
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_organigramagerencia_nombre", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_organigramagerencia_nombre", type="text", nullable=false)
      */
     private $nombre;
      

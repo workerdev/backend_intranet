@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use Symfony\Component\Ldap\Entry;
 use App\Entity\ResponsabilidadSocial;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -103,25 +103,25 @@ class ServiciosController extends AbstractController
     public function enviarcorreo(Request $request)
     {   
         try {
-            // $transport = (new \Swift_SmtpTransport('smtp.live.com', 465,'ssl'))
-
-            //*$transport = (new \Swift_SmtpTransport('smtp-mail.outlook.com', 'tls', 587))
-            $transport = (new \Swift_SmtpTransport('smtp.live.com',587 ,'tls'))
-            ->setUsername('charly_90_6@hotmail.com')->setPassword('ankrus123');
-            $mailer =(new \ Swift_Mailer($transport));
 
             $sx = json_decode($request->getContent(), true);
             $asunto = $sx['asunto'];
             $cuerpo = $sx['cuerpo'];
-            //$mail = $sx['mail'];
+
+            /*$transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+            ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
+            $mailer =(new \ Swift_Mailer($transport));*/
 
             $message = (new \Swift_Message())
-            ->setSubject($asunto)
-            ->setTo('quismam@gmail.com')
-            ->setFrom('charly_90_6@hotmail.com')
-            ->setBody($cuerpo)
-            ->setContentType('text/html');
-            $result = $mailer -> send($message);     
+            /*->setSubject($asunto)
+            ->setTo('sum.ghost4@gmail.com')*/
+            ->setFrom('cloud4resources@gmail.com')
+            ->setTo('sum.ghost4@gmail.com')
+            ->setBody($cuerpo, 'text/html');
+            //->setContentType('text/html');
+
+            $this->get('mailer')->send($message);
+            //$result = $mailer -> send($message);     
 
             $resultado = 'OK';
             return new Response($resultado);
@@ -140,8 +140,8 @@ class ServiciosController extends AbstractController
             // $transport = (new \Swift_SmtpTransport('smtp.live.com', 465,'ssl'))
 
             //*$transport = (new \Swift_SmtpTransport('smtp-mail.outlook.com', 'tls', 587))
-            $transport = (new \Swift_SmtpTransport('smtp.live.com',587 ,'tls'))
-            ->setUsername('charly_90_6@hotmail.com')->setPassword('ankrus123');
+            $transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+            ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
             $mailer =(new \ Swift_Mailer($transport));
 
             $sx = json_decode($request->getContent(), true);
@@ -151,8 +151,8 @@ class ServiciosController extends AbstractController
 
             $message = (new \Swift_Message())
             ->setSubject($asunto)
-            ->setTo('quismam@gmail.com')
-            ->setFrom('charly_90_6@hotmail.com')
+            ->setTo('sum.ghost4@gmail.com')
+            ->setFrom('cloud4resources@gmail.com')
             ->setBody($cuerpo)
             ->setContentType('text/html');
             $result = $mailer -> send($message);
@@ -183,7 +183,7 @@ class ServiciosController extends AbstractController
             concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
             END AS NAME,
             CARGO.cb_cargo_nombre AS title,
-            CASE		
+            CASE        
             WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
             CARGO.cb_cargo_id 
             WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
@@ -1438,11 +1438,11 @@ class ServiciosController extends AbstractController
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, cb_documento_formulario_titulo AS titulo_formulario,
                         cb_documento_formulario_vinculofiledig AS vinculo_archivo, cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
-                        cb_documento_formulario_fechapublicacion AS f_publicacion, cb_documento_formulario_aprobadopor AS aprobado_por, cb_tipo_documento_nombre AS tipo_doc_relacionado,
+                        cb_documento_formulario_fechapublicacion AS f_publicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS aprobado_por, cb_tipo_documento_nombre AS tipo_doc_relacionado,
                         cb_documento_codigo AS doc_relacionado
-                    FROM cb_gestion_documento, cb_procesos_ficha_procesos, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_gest_doc_formulario, cb_gestion_tipo_documento
-                    WHERE cb_documento_fkficha=cb_ficha_procesos_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id 
-                        AND cb_gas_fkarea=cb_area_id AND cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_estado=1
+                    FROM cb_gestion_documento, cb_procesos_ficha_procesos, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_gest_doc_formulario, cb_gestion_tipo_documento, cb_usuario_usuario
+                    WHERE cb_documento_fkficha=cb_ficha_procesos_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND 
+                        cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id
                     ORDER BY 1, 2, 3";
 
             $stmt = $cx->prepare($sql);
@@ -1477,11 +1477,11 @@ class ServiciosController extends AbstractController
     $cx = $this->getDoctrine()->getEntityManager()->getConnection();
     $sql="SELECT cb_documento_formulario_id AS ID_FORMULARIO, cb_documento_codigo AS COD_DOCUMENTO, cb_documento_formulario_codigo AS COD_FORMULARIO,
             cb_documento_formulario_titulo AS TITULO_FORMULARIO, cb_documento_formulario_versionVigente AS VERSION_VIGENTE_FORMULARIO,
-            cb_documento_formulario_fechaPublicacion AS FECHA_PUBLICACION_FORMULARIO, cb_documento_formulario_aprobadoPor AS APROBADO_POR,
+            cb_documento_formulario_fechaPublicacion AS FECHA_PUBLICACION_FORMULARIO, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR,
             cb_documento_formulario_vinculoFileDig AS VINCULO_ARCHIVO_DIGITAL, cb_documento_formulario_vinculoFileDesc AS VINCULO_ARCHIVO_DESCARGA
-        FROM cb_gest_doc_formulario, cb_gestion_documento, cb_gestion_tipo_documento
-        WHERE cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND
-            cb_documento_formulario_codigo=:id AND cb_documento_codigo=:documento AND cb_documento_formulario_estado=1";
+        FROM cb_gest_doc_formulario, cb_gestion_documento, cb_gestion_tipo_documento, cb_usuario_usuario
+        WHERE cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_codigo=:id AND 
+        cb_documento_codigo=:documento AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id";
     $stmt = $cx->prepare($sql);
     $stmt->execute(['id' => ($id), 'documento' => ($documento)]);
     $FORMULARIO = $stmt->fetchAll();
@@ -1565,47 +1565,21 @@ class ServiciosController extends AbstractController
     public function documentosenproceso(Request $request)
     {
         try{
-            $encoders = array(new XmlEncoder(), new JsonEncoder());
-            $normalizers = array(new DateTimeNormalizer(),new ObjectNormalizer());
-            $serializer = new Serializer($normalizers, $encoders);
-            $cx = $this->getDoctrine()->getManager();
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $dqlDoc = "SELECT dp.id AS ID, dp.nuevoactualizacion AS NUEVO_O_ACTUALIZACION, doc.codigo AS COD_DOCUMENTO, proc.codproceso AS COD_PROCESO,
-                            ti.nombre AS TIPO_DOCUMENTO, dp.titulo AS TITULO, dp.versionvigente AS VERSION, dp.vinculoarchivo AS VINCULO_ARCHIVO_DIGITAL,
-                            dp.carpetaoperativa AS CARPETA_OPERATIVA, dp.aprobadorechazado AS APROBADO_O_RECHAZADO,
-                            dp.aprobadopor AS APROBADO_POR, dp.fechaaprobacion AS FECHA_APROBACION
-                        FROM App\Entity\DocumentoProceso dp
-                        JOIN dp.fkdocumento doc
-                        JOIN dp.fkproceso proc
-                        JOIN dp.fktipo ti ";
-            $query = $cx->createQuery($dqlDoc);
-            $indicador = $query->getResult();
-            $format = "Y-m-d";
-            foreach($indicador as $key => $value) {
- //
-                $fechaAprobacion = $indicador[$key]['FECHA_APROBACION'];
-                if ($fechaAprobacion != null) {
-                    $fechaAprobacion = $indicador[$key]['FECHA_APROBACION']->format('Y-m-d');
-                    $indicador[$key]['FECHA_APROBACION'] = $fechaAprobacion;
-                }
-                $dqlDetalleDocProceso = "SELECT IDENTITY(dpr.fkdoc) AS ID , dpr.fecha AS FECHA_RECIBIDO, dpr.responsable AS RESPONSABLE_REVISION, 
-                                            dpr.estadodoc AS ESTADO, dpr.firma AS FIRMA_ELECTRONICA
-                                        FROM App\Entity\DocProcRevision dpr
-                                        WHERE dpr.fkdoc=:id";
-                $queryDetalleProceso = $cx->createQuery($dqlDetalleDocProceso);
-                $queryDetalleProceso->setParameter('id', $indicador[$key]['ID']);
-                $resultadoDetalleProceso = $queryDetalleProceso->getResult();
-                $indicador[$key]['DETALLE'] = $resultadoDetalleProceso;
-                foreach ($indicador[$key]['DETALLE'] as $de => $valueDeta){
-                    $fechaRecibido = $indicador[$key]['DETALLE'][$de]['FECHA_RECIBIDO'];
-                    if ($fechaRecibido != null) {
-                        $fechaRecibido = $indicador[$key]['DETALLE'][$de]['FECHA_RECIBIDO']->format('Y-m-d');
-                        $indicador[$key]['DETALLE'][$de]['FECHA_RECIBIDO'] = $fechaRecibido;
-                    }
-                }
-            }
-            $data2 = $serializer->serialize($indicador, 'json');
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $sql="SELECT cb_documento_proceso_id AS \"ID\", cb_documento_proceso_nuevoactualizacion AS \"NUEVO_O_ACTUALIZACION\", cb_documento_codigo AS \"COD_DOCUMENTO\", cb_ficha_procesos_codproceso AS \"COD_PROCESO\",
+                    cb_tipo_documento_nombre AS \"TIPO_DOCUMENTO\", cb_documento_proceso_titulo AS \"TITULO\", cb_documento_proceso_versionvigente AS \"VERSION\", cb_documento_proceso_vinculoarchivo AS \"VINCULO_ARCHIVO_DIGITAL\",
+                    cb_documento_proceso_carpetaoperativa AS \"CARPETA_OPERATIVA\", cb_documento_proceso_aprobadorechazado AS \"APROBADO_O_RECHAZADO\",
+                    (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS \"APROBADO_POR\", cb_documento_proceso_fechaaprobacion AS \"FECHA_APROBACION\"
+                FROM cb_gest_doc_proceso, cb_gestion_documento, cb_procesos_ficha_procesos, cb_usuario_usuario, cb_gestion_tipo_documento
+                WHERE cb_documento_proceso_fkaprobador=cb_usuario_id AND cb_documento_proceso_fkdocumento=cb_documento_id AND cb_documento_proceso_fkproceso=cb_ficha_procesos_id AND
+                    cb_documento_proceso_fktipo=cb_tipo_documento_id AND cb_documento_proceso_estado=1";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $docproceso = $stmt->fetchAll();   
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($docproceso, 'json');
             return new Response($data2);
         }catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
@@ -1666,17 +1640,17 @@ class ServiciosController extends AbstractController
                         tbr.cb_bajadocumento_fechapublicacion AS fecha_publicacion, tbr.cb_bajadocumento_aprobadopor AS aprobado_por, tbr.cb_bajadocumento_carpetaoperativa AS carpeta_operativa, 
                         tbr.cb_bajadocumento_vinculoarchivo AS vinculo_archivo_digital, tbr.cb_ficha_procesos_codproceso AS codigo_proceso 
                     FROM (SELECT cb_bajadocumento_id ,cb_bajadocumento_codigo, cb_tipo_documento_nombre, cb_bajadocumento_titulo, cb_bajadocumento_versionvigente,
-                        cb_bajadocumento_fechapublicacion, cb_bajadocumento_aprobadopor, cb_bajadocumento_carpetaoperativa, 
+                        cb_bajadocumento_fechapublicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS cb_bajadocumento_aprobadopor, cb_bajadocumento_carpetaoperativa, 
                         cb_bajadocumento_vinculoarchivo, cb_ficha_procesos_codproceso
-                    FROM cb_gest_bajadocumento, cb_procesos_ficha_procesos, cb_gestion_tipo_documento
+                    FROM cb_gest_bajadocumento, cb_procesos_ficha_procesos, cb_gestion_tipo_documento, cb_usuario_usuario
                     WHERE cb_bajadocumento_fkproceso=cb_ficha_procesos_id AND cb_bajadocumento_fktipo=cb_tipo_documento_id
-                        AND cb_bajadocumento_estado=1
+                        AND cb_bajadocumento_estado=1 AND cb_bajadocumento_fkaprobador=cb_usuario_id
                     UNION    
                     SELECT cb_bajadocumento_id ,cb_bajadocumento_codigo, cb_tipo_documento_nombre, cb_bajadocumento_titulo, cb_bajadocumento_versionvigente,
-                        cb_bajadocumento_fechapublicacion, cb_bajadocumento_aprobadopor, cb_bajadocumento_carpetaoperativa, 
+                        cb_bajadocumento_fechapublicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS cb_bajadocumento_aprobadopor, cb_bajadocumento_carpetaoperativa, 
                         cb_bajadocumento_vinculoarchivo, '' AS cb_ficha_procesos_codproceso
-                    FROM cb_gest_bajadocumento, cb_gestion_tipo_documento
-                    WHERE cb_bajadocumento_fktipo=cb_tipo_documento_id AND cb_bajadocumento_estado=1 AND cb_bajadocumento_id NOT IN
+                    FROM cb_gest_bajadocumento, cb_gestion_tipo_documento, cb_usuario_usuario
+                    WHERE cb_bajadocumento_fktipo=cb_tipo_documento_id AND cb_bajadocumento_estado=1 AND cb_bajadocumento_fkaprobador=cb_usuario_id AND cb_bajadocumento_id NOT IN
                         (SELECT cb_bajadocumento_id
                         FROM cb_gest_bajadocumento, cb_procesos_ficha_procesos, cb_gestion_tipo_documento
                         WHERE cb_bajadocumento_fkproceso=cb_ficha_procesos_id AND cb_bajadocumento_fktipo=cb_tipo_documento_id
@@ -1764,16 +1738,16 @@ class ServiciosController extends AbstractController
             $sql = "SELECT cb_ficha_cargo_nombre AS id_cargo, cb_gas_codigo AS id_area, cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_sector_nombre AS sector,
                         cb_ficha_cargo_objetivo AS objetivo_cargo, cb_ficha_cargo_responsabilidades AS responsabilidades, cb_ficha_cargo_experiencia AS experiencia,
                         cb_ficha_cargo_conocimientos AS conocimientos, cb_ficha_cargo_formacion AS formacion, cb_ficha_cargo_caracteristicas AS caracteristicas_pers,
-                        cb_ficha_cargo_fechaaprobacion AS fecha_aprobacion, cb_ficha_cargo_aprobadojefe AS aprobado_jefe, cb_ficha_cargo_firmajefe AS firma_electronica_jefe,
-                        cb_ficha_cargo_aprobadogerente AS aprobado_gerente, cb_ficha_cargo_firmagerente AS firma_electronica_gerente, cb_ficha_cargo_hipervinculo AS vinculo_archivo_ficha_cargo
-                    FROM cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_configuracion_sector, cb_fc_ficha_cargo
+                        cb_ficha_cargo_fechaaprobacion AS fecha_aprobacion, (jf.cb_usuario_nombre || ' ' || jf.cb_usuario_apellido) AS aprobado_jefe, cb_ficha_cargo_firmajefe AS firma_electronica_jefe,
+                        (gr.cb_usuario_nombre || ' ' || gr.cb_usuario_apellido) AS aprobado_gerente, cb_ficha_cargo_firmagerente AS firma_electronica_gerente, cb_ficha_cargo_hipervinculo AS vinculo_archivo_ficha_cargo
+                    FROM cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_configuracion_sector, cb_fc_ficha_cargo, cb_usuario_usuario jf, cb_usuario_usuario gr
                     WHERE cb_ficha_cargo_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_gas_fksector=cb_sector_id 
-                        AND cb_ficha_cargo_estado=1 AND cb_ficha_cargo_id=:id";
+                        AND cb_ficha_cargo_estado=1 AND cb_ficha_cargo_fkjefeaprobador=jf.cb_usuario_id AND cb_ficha_cargo_fkgerenteaprobador=gr.cb_usuario_id AND cb_ficha_cargo_id=:id";
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id)]);
             $fcargo = $stmt->fetchAll();
 
-            $sql2 = "SELECT cb_tipo_documento_nombre AS tipo_doc, cb_documento_codigo AS codigo_doc, cb_documento_titulo AS titulo_doc, cb_ficha_cargo_hipervinculo AS archivo
+            $sql2 = "SELECT cb_tipo_documento_nombre AS tipo_doc, cb_documento_codigo AS codigo_doc, cb_documento_titulo AS titulo_doc, cb_documento_vinculoarchivodig AS archivo
                     FROM cb_fc_ficha_cargo, cb_gestion_documento, cb_fc_documentosaso, cb_gestion_tipo_documento
                     WHERE cb_documentosaso_fkfichacargo=cb_ficha_cargo_id AND cb_documentosaso_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id 
                         AND cb_documentosaso_estado=1 AND cb_ficha_cargo_id=:id; ";
@@ -2255,7 +2229,7 @@ class ServiciosController extends AbstractController
     }
 
 
-    /**
+      /**
      * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
     */
     public function info(Request $request)
@@ -2267,7 +2241,7 @@ class ServiciosController extends AbstractController
     
         $ldap = Ldap::create('ext_ldap', array(
             'host' => '172.17.1.150',
-            //'host' => '192.168.4.100',
+            //'host' => '192.168.0.20',
             'encryption' => 'none',
             'port' => '389',
         ));
@@ -2292,9 +2266,34 @@ class ServiciosController extends AbstractController
                 $serializer = new Serializer($normalizers, $encoders);
                 $data = $serializer->normalize($results, null);
                 
-                $Nombre=$data[0]['attributes']['givenName'][0];
-                $Apellido=$data[0]['attributes']['sn'][0];
-                $Cargo=$data[0]['attributes']['title'][0];
+               
+                if($ayudanombre= array_key_exists("givenName",$data[0]['attributes']))
+                {
+                    
+                    $Nombre=$data[0]['attributes']['givenName'][0];
+                }
+                    else{
+                        $Nombre='Sin\Nombre';
+            }
+                if( $ayudaApe= array_key_exists("sn",$data[0]['attributes']))
+                {   
+                    $Apellido=$data[0]['attributes']['sn'][0];
+
+                }
+                    else
+                    {
+                        $Apellido='Sin\Apellido';
+                    }
+
+
+                if($ayudaApe= array_key_exists("title",$data[0]['attributes']))
+                {
+                    $Cargo=$data[0]['attributes']['title'][0];
+                }
+                else
+                {
+                    $Cargo='Sin\Cargo';
+                }
                 $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo);
                 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -2516,6 +2515,44 @@ class ServiciosController extends AbstractController
             $data = $serializer->serialize($mensaje, 'json');
 
             return new Response($data);
+        }
+    }
+
+
+    /**
+     * @Route("/listar_cobertura", name="listar_cobertura")
+     * @Method({"POST"})
+     */
+    public function listar_cobertura()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            
+            $sql = "SELECT cb_tipo_cobertura_id AS id, cb_tipo_cobertura_nombre AS nombre, cb_tipo_cobertura_descripcion AS descripcion
+                    FROM cb_ind_tipo_cobertura 
+                    WHERE cb_tipo_cobertura_estado=1";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $tipo = $stmt->fetchAll();
+
+            $sql2 = "SELECT cb_cobertura_id AS id, cb_cobertura_fktipo AS fktipo, cb_cobertura_unidad AS unidad, cb_cobertura_anio AS anio, cb_cobertura_mes AS mes, cb_cobertura_valor AS valor
+                    FROM cb_ind_cobertura 
+                    WHERE cb_cobertura_estado=1";
+
+            $stmt = $cx->prepare($sql2);
+            $stmt->execute();
+            $cobertura = $stmt->fetchAll();
+            
+            $elementos = array('tipo'=>$tipo, 'cobertura'=>$cobertura);
+            
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($elementos, 'json');
+            
+            return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
         }
     }
 }

@@ -16,13 +16,13 @@
                     </div>
                     <div class="form-group form-float">
                         <div class="form-line">
-                            <input id="nombre" name="nombre" type="text" class="form-control text">
+                            <input id="nombre" name="nombre" type="text" class="form-control text" required>
                             <label class="form-label">Nombre</label>
                         </div>
                     </div>
                     <div class="form-group form-float">
                         <div class="form-line">
-                            <input id="descripcion" name="descripcion" type="text" class="form-control text">
+                            <input id="descripcion" name="descripcion" type="text" class="form-control text" required>
                             <label class="form-label">Descripción</label>
                         </div>
                     </div>
@@ -41,9 +41,49 @@
                                 <span class="checkmarkrdbt"></span>
                             </label>
                         </div>
-                        {% for mods in fparents %}
+                    </ul>
+                    </div>
+                </div>
+
+                <div class="container" id="md-opt">
+                    {% set hb = 0 %}
+                    {% set i = 0 %}
+
+                    <ul class="nav nav-tabs nav-tabs-responsive" style="overflow-x: auto; width: 48%;">
+                    {% for mods in fparents %}
+                        {% if mods.fkmodulo == null %}
+                            {% if hb == 0 %}
+                                <li class="active">
+                                {% set hb = 1 %}
+                            {% else %}
+                                <li>
+                            {% endif %}
+                            
+                            <a data-toggle="tab" href="{{ '#p' ~ mods.nombre}}" title="{{mods.titulo}}">
+                                <i class="material-icons">{{mods.icono}}</i>
+                            </a>
+                        </li>
+                        {% endif %}  
+                    {% endfor %}
+                    </ul>
+
+                    <div class="tab-content">
+                    {% for mods in fparents %}
+                        {% if mods.fkmodulo == null %}
+                            {% if i == 0 %}
+                                <div id="{{'p' ~ mods.nombre}}" class="tab-pane fade in active">
+                                {% set i = 1 %}
+                            {% else %}
+                                <div id="{{'p' ~ mods.nombre}}" class="tab-pane fade">
+                            {% endif %}
+                            <h3>
+                                <a href="#rl-acn" title="Desplazar abajo" class="btn bg-blue-grey waves-effect" style="padding:2px 4px; margin: 0;">
+                                    <i class="material-icons">arrow_downward</i>
+                                </a>
+                                {{ mods.titulo|upper }}
+                            </h3>
                             {% if mods.fkmodulo == null %}
-                                <li id="{{mods.id}}">
+                                <li id="{{mods.id}}" class="list-unstyled">
                                     <i class="material-icons">{{mods.icono}}</i>
                                     <input id="{{mods.nombre}}" type="checkbox" class="padre chk-col-deep-purple" data-id="{{mods.id}}" data-parent="0" onchange="check_mod(this)">
                                     <label id="tmd" for="{{mods.nombre}}" data-id="{{mods.id}}" >{{mods.titulo}}</label>
@@ -58,7 +98,7 @@
                                             
                                         {% for option in foptions %}
                                             <ul class="tree-menu">
-                                            {% if  option.fkmodulo != null and child.id == option.fkmodulo.id %}
+                                            {% if  option.fkmodulo != null and child.id == option.fkmodulo.id and option.nombre not in ['usuario_insertar', 'usuario_eliminar'] %}
                                             <li id="{{option.id}}">
                                                 <i class="material-icons">{{option.icono}}</i>
                                                 <input id="{{option.nombre}}" type="checkbox" class="accion chk-col-deep-purple" data-id="{{option.id}}" data-parent="{{child.id}}" onchange="check_action(this);">
@@ -73,18 +113,13 @@
                                 {% endfor %}
                                 </li>
                             {% endif %}      
-                        {% endfor %}
-                    </ul>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin:auto;width:100%;height:55px;">
-                    <div class="plan-icon-load progress" style='margin:auto;display:none;height:55px;'>
-                        <img src='resources/images/carga.gif' style='height:100%;width:auto;'/>
+                        </div>
+                        {% endif %}  
+                    {% endfor %}
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer" id="rl-acn">
                     <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
                     <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
                 </div>

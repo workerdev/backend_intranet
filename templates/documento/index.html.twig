@@ -132,8 +132,9 @@
 
     function attach_edit() {
         $('.edit').click(function () {
+            $("#documento_id").attr("readonly", "readonly")
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/documento_editar",{
                 object: obj

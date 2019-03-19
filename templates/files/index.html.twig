@@ -41,7 +41,7 @@
                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                         <tr>
-                            <th class="order_by_th" data-name="names">Ruta </th>
+                            <th class="order_by_th" data-name="names">Archivo </th>
                             <th class="order_by_th" data-name="phone">Tipo </th>
                             <th class="order_by_th" data-name="phone">Galería </th>
                             <th class="actions_header">Acciones </th>
@@ -67,7 +67,7 @@
     attach_validators()
 
     function init(){
-        var rutas = document.getElementsByClassName('ruta');
+        /*var rutas = document.getElementsByClassName('ruta');
         //console.log(rutas.length)
         for (let i = 0; i < rutas.length; i++) {
             var ruta = rutas[i];
@@ -76,7 +76,7 @@
             var rutaCortada = src.split('public')
             //console.log(rutaCortada[1])
             rutas[i].setAttribute('src',rutaCortada[1]+"");
-        }
+        }*/
     };
 
     $('#files_galeria').selectpicker({
@@ -120,6 +120,7 @@
 
     function attach_edit() {
         $('.edit').click(function () {
+            $("#files_id").attr("readonly", "readonly")
 
             $('#files_id').val('')
             $('#files_id').show()

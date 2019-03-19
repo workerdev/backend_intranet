@@ -85,8 +85,6 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/area_insertar", {object: objeto}, null,main_route)
-        // ajax_call("/area_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -119,8 +117,6 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/area_actualizar", {object: objeto}, null,main_route)
-        // ajax_call("/area_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>

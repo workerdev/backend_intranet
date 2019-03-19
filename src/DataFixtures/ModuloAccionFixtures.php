@@ -1687,6 +1687,80 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($unidadmedidadel);
 
 
+        $tipocob = new Modulo();
+        $tipocob->setNombre('home_tipocobertura');
+        $tipocob->setTitulo('Consultar');
+        $tipocob->setRuta( '');
+        $tipocob->setIcono('home');
+        $tipocob->setMenu(0);
+        $tipocob->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOCOBERTURA_CHILD));
+        $manager->persist($tipocob);
+
+        $tipocobins = new Modulo();
+        $tipocobins->setNombre('tipocobertura_insertar');
+        $tipocobins->setTitulo('Adicionar');
+        $tipocobins->setRuta( '/tipocobertura_insertar');
+        $tipocobins->setIcono('home');
+        $tipocobins->setMenu(0);
+        $tipocobins->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOCOBERTURA_CHILD));
+        $manager->persist($tipocobins);
+
+        $tipocobupd = new Modulo();
+        $tipocobupd->setNombre('tipocobertura_editar');
+        $tipocobupd->setTitulo('Actualizar');
+        $tipocobupd->setRuta( '/tipocobertura_editar');
+        $tipocobupd->setIcono('home');
+        $tipocobupd->setMenu(0);
+        $tipocobupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOCOBERTURA_CHILD));
+        $manager->persist($tipocobupd);
+
+        $tipocobdel = new Modulo();
+        $tipocobdel->setNombre('tipocobertura_eliminar');
+        $tipocobdel->setTitulo('Dar de Baja');
+        $tipocobdel->setRuta('/tipocobertura_eliminar');
+        $tipocobdel->setIcono( 'home');
+        $tipocobdel->setMenu(0);
+        $tipocobdel->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOCOBERTURA_CHILD));
+        $manager->persist($tipocobdel);
+
+
+        $cobertura = new Modulo();
+        $cobertura->setNombre('home_cobertura');
+        $cobertura->setTitulo('Consultar');
+        $cobertura->setRuta( '');
+        $cobertura->setIcono('home');
+        $cobertura->setMenu(0);
+        $cobertura->setFkmodulo($this->getReference(ModuloChildrenFixtures::COBERTURA_CHILD));
+        $manager->persist($cobertura);
+
+        $coberturains = new Modulo();
+        $coberturains->setNombre('cobertura_insertar');
+        $coberturains->setTitulo('Adicionar');
+        $coberturains->setRuta( '/cobertura_insertar');
+        $coberturains->setIcono('home');
+        $coberturains->setMenu(0);
+        $coberturains->setFkmodulo($this->getReference(ModuloChildrenFixtures::COBERTURA_CHILD));
+        $manager->persist($coberturains);
+
+        $coberturaupd = new Modulo();
+        $coberturaupd->setNombre('cobertura_editar');
+        $coberturaupd->setTitulo('Actualizar');
+        $coberturaupd->setRuta( '/cobertura_editar');
+        $coberturaupd->setIcono('home');
+        $coberturaupd->setMenu(0);
+        $coberturaupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::COBERTURA_CHILD));
+        $manager->persist($coberturaupd);
+
+        $coberturadel = new Modulo();
+        $coberturadel->setNombre('cobertura_eliminar');
+        $coberturadel->setTitulo('Dar de Baja');
+        $coberturadel->setRuta('/cobertura_eliminar');
+        $coberturadel->setIcono( 'home');
+        $coberturadel->setMenu(0);
+        $coberturadel->setFkmodulo($this->getReference(ModuloChildrenFixtures::COBERTURA_CHILD));
+        $manager->persist($coberturadel);
+
+
 
         $planeacion = new Modulo();
         $planeacion->setNombre('home_planaccion');

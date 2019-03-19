@@ -76,13 +76,20 @@ class EnlacesController extends AbstractController
             }    
                     
             $cx = $this->getDoctrine()->getManager();   
-            $file = $datosEnlaces->getRuta();
-            $fileName = $file->getClientOriginalName();                
-            $file->move($this->getParameter('Directorio_Enlaces'),$fileName);
-            $ruta1 = $this->getParameter('Directorio_Enlaces').'/'.$fileName;
+            if(empty($form['ruta']->getData())){
+                if($enlaces->getRuta() == null){
+                    $enlaces->setRuta("N/A");
+                }
+            }else{
+                $file = $form['ruta']->getData();
+                $fileName = $file->getClientOriginalName();             
+                $file->move($this->getParameter('Directorio_Enlaces'), $fileName);
+                $ruta = $this->getParameter('Directorio_Enlaces').'\\'.$fileName;
+                $enlaces->setRuta($ruta);
+            }
+            
             $enlaces->setNombre($datosEnlaces->getNombre());
             $enlaces->setDescripcion($datosEnlaces->getDescripcion());
-            $enlaces->setRuta($ruta1); 
             $enlaces->setLink($datosEnlaces->getLink());              
             $enlaces->setEstado(1);
             

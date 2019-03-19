@@ -230,6 +230,16 @@ class RolController extends AbstractController
             $id = $_POST['id'];
             $rol = $this->getDoctrine()->getRepository(Rol::class)->find($id);
 
+            $acceso = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $id));
+            $accesos = (array) $acceso;
+            if(isset($accesos[0])){
+                foreach ($acceso as $acs) {
+                    $acsdt = (object) $acs;
+                    $cx->remove($acsdt);
+                    $cx->flush();
+                }
+            }
+
             $rol->setEstado(0);
             $cx->persist($rol);
             $cx->flush();

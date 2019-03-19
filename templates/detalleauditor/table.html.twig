@@ -1,6 +1,6 @@
 {% for tr in objects %}
     <tr>
-        <td>{{ tr.fkauditoria.alcance }}</td>
+        <td>{{ tr.fkauditoria.codigo }}</td>
         <td>{{ tr.fkauditor.apellidosnombres }}</td>
         <td align="center">
         {% if 'detalleauditor_editar' in permisos %}

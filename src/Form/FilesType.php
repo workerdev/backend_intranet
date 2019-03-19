@@ -27,6 +27,7 @@ class FilesType extends AbstractType
             ))
             ->add('ruta',Filetype::class, array(
                 'label' => 'Elegir archivo',
+                'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('tipo', ChoiceType::class, array(

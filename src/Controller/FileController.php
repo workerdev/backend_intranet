@@ -73,18 +73,32 @@ class FileController extends Controller
                 $files = $this->getDoctrine()->getRepository(Files::class)->find($datosFiles->getId());
             }            
             $cx = $this->getDoctrine()->getManager(); 
+
             $galeriav = new Galeria();
             $galeriav = $datosFiles->getFkgaleria();
             $galeriadesc =$galeriav->getNombre();
+
             $file = $datosFiles->getRuta();
             $directorio=$this->getParameter('Directorio_Files');
             $directorioproyec=$this->getParameter('Directorio_proyecto');
-            $fileName = $file->getClientOriginalName();
-           // $fileName2 = $file->getPathname(); direcion de xamp
-          //  $fileName3 = $file->getClientOriginalExtension(); .jpg               
-            $file->move($directorio.'\\'.$galeriadesc,$fileName);
-            $ruta1 = $directorioproyec.'\\'.$galeriadesc.'\\'.$fileName;
-            $files->setRuta($ruta1);
+            //$fileName = $file->getClientOriginalName();             
+            //$file->move($directorio.'\\'.$galeriadesc, $fileName);
+            //$ruta1 = $directorioproyec.'\\'.$galeriadesc.'\\'.$fileName;
+            //$files->setRuta($ruta1);
+
+            if(empty($form['ruta']->getData())){
+                if($files->getRuta() == null){
+                    $files->setRuta("N/A");
+                }
+            }else{
+                $file = $form['ruta']->getData();
+                $fileName = $file->getClientOriginalName();             
+                //$file->move($this->getParameter('Directorio_Files'), $fileName);
+                $file->move($directorioproyec.'\\'.$galeriadesc, $fileName);
+                $ruta = '\\'.$galeriadesc.'\\'.$fileName;
+                $files->setRuta($ruta);
+            }
+            
             $files->setTipo($datosFiles->getTipo());
             $files->setFkgaleria($galeriav);
             $files->setEstado(1);

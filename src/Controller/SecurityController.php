@@ -51,7 +51,7 @@ class SecurityController extends AbstractController
        
         $ldap = Ldap::create('ext_ldap', array(
             //'host' => '192.168.0.20',
-            'host' => '172.17.0.20',
+            'host' => '172.17.1.150',
             'encryption' => 'none',
             'port' => '389',
         ));
@@ -196,7 +196,8 @@ class SecurityController extends AbstractController
        
         $ldap = Ldap::create('ext_ldap', array(
             //'host' => '192.168.0.20',
-            'host' => '172.17.0.20',
+            'host' => '172.17.1.150',
+            
             'encryption' => 'none',
             'port' => '389',
         ));

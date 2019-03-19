@@ -178,10 +178,31 @@
         $("#lnkha").hide();
     });
 
+    $('#cjf-pass').mousedown(function(){
+        $("#ic-jfpass").css("color", "lightgrey");
+        $("#clavejf").prop("type", "text");
+    });
+    
+    $("#cjf-pass").mouseup(function(){
+        $("#ic-jfpass").css("color", "grey");
+        $("#clavejf").prop("type", "password");
+    });
+
+    $('#cgr-pass').mousedown(function(){
+        $("#ic-grpass").css("color", "lightgrey");
+        $("#clavegr").prop("type", "text");
+    });
+    
+    $("#cgr-pass").mouseup(function(){
+        $("#ic-grpass").css("color", "grey");
+        $("#clavegr").prop("type", "password");
+    });
+
     function attach_edit() {
         $('.edit').click(function () {
+            $("#ficha_cargo_id").attr("readonly", "readonly")
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/fichacargo_editar",{
                 object: obj
@@ -304,10 +325,14 @@
                 data: {object : objeto},
                 async: false,
                 beforeSend: function () {
-                    $(".plan-icon-load").css('display', 'inline-block');
+                    $("<div id='spn-vljf' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
+                        "<div style='margin:auto;display:block; height:55px;'>"+
+                            "<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>"+
+                        "</div>"+
+                    "</div>").insertAfter("#cnfjf_form_body");
                 },
                 success: function (data, textStatus) {
-                    $(".plan-icon-load").css('display', 'none');
+                    $("#spn-vljf").fadeOut(800);
                 }
             }).done(function (response) {
                 let message = ''
@@ -360,10 +385,14 @@
                 data: {object : objeto},
                 async: false,
                 beforeSend: function () {
-                    $(".plan-icon-load").css('display', 'inline-block');
+                    $("<div id='spn-vlgr' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
+                        "<div style='margin:auto;display:block; height:55px;'>"+
+                            "<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>"+
+                        "</div>"+
+                    "</div>").insertAfter("#cnfgr_form_body");
                 },
                 success: function (data, textStatus) {
-                    $(".plan-icon-load").css('display', 'none');
+                    $("#spn-vlgr").fadeOut(800);
                 }
             }).done(function (response) {
                 let message = ''

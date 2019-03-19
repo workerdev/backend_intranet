@@ -66,6 +66,8 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const INDICADORPROC_CHILD = 'child-indproc';
     public const INDICADORSEG_CHILD = 'child-indseg';
     public const UNIDADMEDIDA_CHILD = 'child-undmd';
+    public const TIPOCOBERTURA_CHILD = 'child-tpcob';
+    public const COBERTURA_CHILD = 'child-cob';
     
     /** MODULO DE AUDITORIA **/
     public const PLANACCION_CHILD = 'child-plnac';
@@ -540,6 +542,24 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $segindprt->setFkmodulo($this->getReference(ModuloFixtures::INDICADOR_MOD));
         $manager->persist($segindprt);
 
+        $tpcobprt = new Modulo();
+        $tpcobprt->setNombre('tipocobertura');
+        $tpcobprt->setTitulo('Tipo de cobertura');
+        $tpcobprt->setRuta('/tipocobertura');
+        $tpcobprt->setIcono('business');
+        $tpcobprt->setMenu(1);
+        $tpcobprt->setFkmodulo($this->getReference(ModuloFixtures::INDICADOR_MOD));
+        $manager->persist($tpcobprt);
+
+        $cobprt = new Modulo();
+        $cobprt->setNombre('cobertura');
+        $cobprt->setTitulo('Cobertura');
+        $cobprt->setRuta('/cobertura');
+        $cobprt->setIcono('business');
+        $cobprt->setMenu(1);
+        $cobprt->setFkmodulo($this->getReference(ModuloFixtures::INDICADOR_MOD));
+        $manager->persist($cobprt);
+
 
         /** MODULO DE AUDITORIA **/
         $plnaccprt = new Modulo();
@@ -946,7 +966,9 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::INDICADORPROC_CHILD, $indprcprt);
         $this->addReference(self::INDICADORSEG_CHILD, $segindprt);
         $this->addReference(self::UNIDADMEDIDA_CHILD, $undmedprt);
-
+        $this->addReference(self::TIPOCOBERTURA_CHILD, $tpcobprt);
+        $this->addReference(self::COBERTURA_CHILD, $cobprt);
+        
         $this->addReference(self::PLANACCION_CHILD, $plnaccprt);
         $this->addReference(self::ESTADOPLAN_CHILD, $estplnprt);
         $this->addReference(self::TIPOAUDITORIA_CHILD, $tpadtraprt);
