@@ -209,6 +209,16 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
     \$('#apb').click(function () {
         \$('#form-rev').modal('show');
     })
+
+    \$('#cdc-pass').mousedown(function(){
+        \$(\"#ic-dpass\").css(\"color\", \"lightgrey\");
+        \$(\"#clave\").prop(\"type\", \"text\");
+    });
+    
+    \$(\"#cdc-pass\").mouseup(function(){
+        \$(\"#ic-dpass\").css(\"color\", \"grey\");
+        \$(\"#clave\").prop(\"type\", \"password\");
+    });
     
     \$('#insert').click(function () {
         objeto = JSON.stringify({
@@ -231,10 +241,14 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             data: {object : objeto},
             async: false,
             beforeSend: function () {
-                \$(\".plan-icon-load\").css('display', 'inline-block');
+                \$(\"<div id='spn-vld' style='text-align: center; margin:auto;width:100%; height:60px;'>\"+
+                    \"<div style='margin:auto;display:block; height:55px;'>\"+
+                        \"<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>\"+
+                    \"</div>\"+
+                \"</div>\").insertAfter(\"#cnfdc_form_body\");
             },
             success: function (data, textStatus) {
-                \$(\".plan-icon-load\").css('display', 'none');
+                \$(\"#spn-vld\").fadeOut(800);
             }
         }).done(function (response) {
             let message = \"\";
@@ -584,6 +598,16 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
     \$('#apb').click(function () {
         \$('#form-rev').modal('show');
     })
+
+    \$('#cdc-pass').mousedown(function(){
+        \$(\"#ic-dpass\").css(\"color\", \"lightgrey\");
+        \$(\"#clave\").prop(\"type\", \"text\");
+    });
+    
+    \$(\"#cdc-pass\").mouseup(function(){
+        \$(\"#ic-dpass\").css(\"color\", \"grey\");
+        \$(\"#clave\").prop(\"type\", \"password\");
+    });
     
     \$('#insert').click(function () {
         objeto = JSON.stringify({
@@ -606,10 +630,14 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
             data: {object : objeto},
             async: false,
             beforeSend: function () {
-                \$(\".plan-icon-load\").css('display', 'inline-block');
+                \$(\"<div id='spn-vld' style='text-align: center; margin:auto;width:100%; height:60px;'>\"+
+                    \"<div style='margin:auto;display:block; height:55px;'>\"+
+                        \"<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>\"+
+                    \"</div>\"+
+                \"</div>\").insertAfter(\"#cnfdc_form_body\");
             },
             success: function (data, textStatus) {
-                \$(\".plan-icon-load\").css('display', 'none');
+                \$(\"#spn-vld\").fadeOut(800);
             }
         }).done(function (response) {
             let message = \"\";
@@ -813,6 +841,6 @@ class __TwigTemplate_7c80e19018d39643bddf6739230ab61ea11448aea6f11c67c4cb1e1dc70
     })
 </script>
 
-{% endblock %}", "docprocesorev/index.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\docprocesorev\\index.html.twig");
+{% endblock %}", "docprocesorev/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\docprocesorev\\index.html.twig");
     }
 }

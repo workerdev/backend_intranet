@@ -45,8 +45,12 @@ class SecurityController extends AbstractController
     {   
         $sx = json_decode($_POST['object'], true);
         
-        $user = $sx['user'];
-        $password = $sx['password'];
+        $user ='Administrador'; 
+        $password ='P@ssw0rd';
+
+        $usuario = $sx['user'];
+        $pass = $sx['password'];
+
         $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
        
         $ldap = Ldap::create('ext_ldap', array(
@@ -55,121 +59,125 @@ class SecurityController extends AbstractController
             'encryption' => 'none',
             'port' => '389',
         ));
+    
+        $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'samAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
 
-        try {
-            if(empty($user) || empty($password)) {
-                $mensaje = "vacio";
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $resultado = array('response'=>$mensaje,'success' => true,
-                    'message' => 'sesion exitosa.');
-                $resultado = json_encode($resultado);
-                return new Response($mensaje);
-            }
-            $attributes = ['givenName', 'sn', 'mail','name', 'physicalDeliveryOfficeName','cn'];
+        $ldap->bind($dn, $password);
+        $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
+       
+        $results = $query->execute();
+        try{
+            foreach ($results as $entry) {
+                $entry;  // Do something with the results
+                $encoders = [new XmlEncoder(), new JsonEncoder()];
+                $normalizers = [new ObjectNormalizer()];
 
-            $ldap->bind($dn, $password);
-            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
-           
-            $results = $query->execute()->toArray();
-            $encoders = [new XmlEncoder(), new JsonEncoder()];
-            $normalizers = [new ObjectNormalizer()];
-
-            $serializer = new Serializer($normalizers, $encoders);
-            $data = $serializer->normalize($results, null);
-            
-            $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username'=>$user));
-            $cx = $this->getDoctrine()->getManager();
-
-            $encoders = [new XmlEncoder(), new JsonEncoder()];
-            $normalizers = [new ObjectNormalizer()];
-
-            $serializer = new Serializer($normalizers, $encoders);
-      
-            if(empty($usuario)){
-                $usuario = new Usuario();
-                if(isset($data[0]['attributes']['givenName'][0]))
-                {
-                    $usuario->setNombre($data[0]['attributes']['givenName'][0]);
-                }
-                else{
-                $usuario->setNombre('S/N');
-                }
-                if(isset($data[0]['attributes']['sn'][0]))
-                {
-                    $usuario->setApellido($data[0]['attributes']['sn'][0]);
-                }
-                else{
-                $usuario->setApellido('S/A');
-                }
-                if(isset($data[0]['attributes']['mail'][0]))
-                {
-                    $usuario->setCorreo($data[0]['attributes']['mail'][0]);
-                }
-                else{
-                $usuario->setCorreo('S/Correo');
-                }
-                if($data[0]['attributes']['name'][0])
-                {
-                    $usuario->setUsername($data[0]['attributes']['name'][0]);
-                }                
-              else
-              {
-                $usuario->setUsername('Sin login');
-              }
+                $serializer = new Serializer($normalizers, $encoders);
+                $data = $serializer->normalize($entry, null);
                 
-              if($data[0]['attributes']['cn'][0]== 'Administrador' )
-                {   
-                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Administrador'));
-                }
-                else
-                {
-                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario'));
-                }
-                $usuario->setEstado(1); 
-             
-                $usuario->setFkrol($rol[0]);
-                $cx->persist($usuario);
-                $cx->flush(); 
-                
-                $duser = $serializer->normalize($usuario, null);
-            }else{
-                
-                if(isset($data[0]['attributes']['givenName'][0])){$usuario[0]->setNombre($data[0]['attributes']['givenName'][0]);}
-                else{$usuario[0]->setNombre('S/N');}
-                if(isset($data[0]['attributes']['sn'][0])){$usuario[0]->setApellido($data[0]['attributes']['sn'][0]);}
-                else{$usuario[0]->setApellido('S/Apellido');}
-                if(isset($data[0]['attributes']['mail'][0])){$usuario[0]->setCorreo($data[0]['attributes']['mail'][0]);}
-                else{$usuario[0]->setCorreo('S/Correo');}
-                if(isset($data[0]['attributes']['name'][0])){ $usuario[0]->setUsername($data[0]['attributes']['name'][0]);}
-                else{ $usuario[0]->setUsername('S/Login');}
-                
-                $usuario[0]->setEstado(1);  
-                $cx->persist($usuario[0]);
-                $cx->flush(); 
-                
-                $duser = $serializer->normalize($usuario[0], null);
-            }
-        
-            $session = new Session();
-            $session->set('s_user', $duser);
-            
-            $s_user = $session->get('s_user');
+                if($ayudanombre= array_key_exists("sAMAccountName",$data['attributes'])) { 
+                    if($usuario==$data['attributes']['sAMAccountName'][0]) {
+                        $dn=$data['dn'];
+                        $ldap->bind($dn, $pass);
+                        
+                        $usuariob = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username'=>$usuario));
+                        $cx = $this->getDoctrine()->getManager();
 
-            $mensaje = "exitoso";
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $resultado = array('response'=>$mensaje,'success' => true,
-                'message' => 'sesion exitosa.');
-            $resultado = json_encode($resultado);
-            return new Response($mensaje);
-        }
-        catch (ConnectionException $ce) {
+                        $encoders = [new XmlEncoder(), new JsonEncoder()];
+                        $normalizers = [new ObjectNormalizer()];
+                        $serializer = new Serializer($normalizers, $encoders);
+                        
+
+                        if(empty($usuariob)) {
+                            $usuariob = new Usuario();
+                            if(isset($data['attributes']['givenName'][0])) {
+                                $usuariob->setNombre($data['attributes']['givenName'][0]);
+                            }else {
+                                $usuariob->setNombre('S/N');
+                            }
+                            if(isset($data['attributes']['sn'][0])) {
+                                $usuariob->setApellido($data['attributes']['sn'][0]);
+                            }else{
+                                $usuariob->setApellido('S/A');
+                            }
+                            if(isset($data['attributes']['mail'][0])) {
+                                $usuariob->setCorreo($data['attributes']['mail'][0]);
+                            }else{
+                                $usuariob->setCorreo('S/Correo');
+                            }
+                            if($data['attributes']['name'][0]) {
+                                $usuariob->setUsername($data['attributes']['name'][0]);
+                            }else {
+                                $usuariob->setUsername('Sin login');
+                            }
+                        
+                            if( $ayudanombre= array_key_exists("cn",$data['attributes'] ))  {   
+                                if($data['attributes']['cn'][0]== 'Administrador') {
+                                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Administrador'));
+                                }else{
+                                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario')); 
+                                }
+                            }else {
+                                $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario'));
+                            }
+                            $usuariob->setEstado(1); 
+                        
+                            $usuariob->setFkrol($rol[0]);
+                            $cx->persist($usuariob);
+                            $cx->flush(); 
+                            
+                            $duser = $serializer->normalize($usuariob, null);
+                        }else {
+                            if(isset($data['attributes']['givenName'][0])){
+                                $usuariob[0]->setNombre($data['attributes']['givenName'][0]);
+                            }else {
+                                $usuariob[0]->setNombre('S/N');
+                            }
+                            if(isset($data['attributes']['sn'][0])){
+                                $usuariob[0]->setApellido($data['attributes']['sn'][0]);
+                            }else {
+                                $usuariob[0]->setApellido('S/Apellido');
+                            }
+                            if(isset($data['attributes']['mail'][0])){
+                                $usuariob[0]->setCorreo($data['attributes']['mail'][0]);
+                            }else {
+                                $usuariob[0]->setCorreo('S/Correo');
+                            }
+                            if(isset($data['attributes']['name'][0])){ 
+                                $usuariob[0]->setUsername($data['attributes']['name'][0]);
+                            }else{ 
+                                $usuariob[0]->setUsername('S/Login');
+                            }
+                            
+                            $usuariob[0]->setEstado(1);  
+                            $cx->persist($usuariob[0]);
+                            $cx->flush(); 
+                            
+                            $duser = $serializer->normalize($usuariob[0], null);
+                        }
+                        $session = new Session();
+                        $session->set('s_user', $duser);
+                        
+                        $s_user = $session->get('s_user');
+
+                        $mensaje = "exitoso";
+                        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                        $resultado = array('response'=>$mensaje,'success' => true,
+                            'message' => 'sesion exitosa.');
+                        $resultado = json_encode($resultado);
+                        return new Response($mensaje);
+                    }
+                }
+            }   
+        }catch(ConnectionException $ce){
             $mensaje = "error";
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $resultado = array('response'=>$mensaje,'success' => true,
-                'message' => 'sesion exitosa.');
+            $resultado = array('response'=>$mensaje,'success' => false,
+                'message' => 'error');
             $resultado = json_encode($resultado);
-            return new Response($mensaje);
-        }
+            
+            return new Response($mensaje);       
+        }  
     }
 
 
@@ -182,16 +190,23 @@ class SecurityController extends AbstractController
     }
     
 
+    
+    
+    
     /**
      * @Route("/valid_action", methods={"POST"}, name="valid_action")
      */
     public function action()
     {   
         $sx = json_decode($_POST['object'], true);
+
+        $user ='Administrador'; 
+        $password ='P@ssw0rd';
         
         $s_user = $this->get('session')->get('s_user');
-        $user = $s_user['username'];
-        $password = $sx['password'];
+        $usuario = $s_user['username'];
+        $pass = $sx['password'];
+
         $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
        
         $ldap = Ldap::create('ext_ldap', array(
@@ -203,7 +218,7 @@ class SecurityController extends AbstractController
         ));
 
         try {
-            if(empty($user) || empty($password)) {
+            if(empty($usuario) || empty($pass)) {
                 $mensaje = "vacio";
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                 $resultado = array('response'=>$mensaje,'success' => true,
@@ -211,22 +226,41 @@ class SecurityController extends AbstractController
                 $resultado = json_encode($resultado);
                 return new Response($mensaje);
             }
-
-            $attributes = ['cn'];
-            
             $ldap->bind($dn, $password);
-            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
-           
-            $results = $query->execute()->toArray();
 
-            if(!empty($results)){
-                $mensaje = "exitoso";
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $resultado = array('response'=>$mensaje,'success' => true,
-                    'message' => 'sesion exitosa.');
-                $resultado = json_encode($resultado);
-                return new Response($mensaje);
-            }
+            $attributes = ['dn','sAMAccountName'];
+            $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
+            $results = $query->execute();
+
+            foreach ($results as $entry) {
+                $entry;  // Do something with the results
+                $encoders = [new XmlEncoder(), new JsonEncoder()];
+                $normalizers = [new ObjectNormalizer()];
+
+                $serializer = new Serializer($normalizers, $encoders);
+                $data = $serializer->normalize($entry, null);
+                
+                if($ayudanombre= array_key_exists("sAMAccountName",$data['attributes'])) { 
+                    if($usuario==$data['attributes']['sAMAccountName'][0]) {
+                        $dn=$data['dn'];
+                        $ldap->bind($dn, $pass);
+                        $mensaje = "exitoso";
+                        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                        $resultado = array('response'=>$mensaje,'success' => true,
+                            'message' => 'sesion exitosa.');
+                        $resultado = json_encode($resultado);
+                        return new Response($mensaje);
+                    }
+                }
+            }            
+            $mensaje = "error";
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $resultado = array('response'=>$mensaje,'success' => true,
+                'message' => 'Failed.');
+            $resultado = json_encode($resultado);
+            return new Response($mensaje);
+            
+         
         }
         catch (ConnectionException $ce) {
             $mensaje = "error";

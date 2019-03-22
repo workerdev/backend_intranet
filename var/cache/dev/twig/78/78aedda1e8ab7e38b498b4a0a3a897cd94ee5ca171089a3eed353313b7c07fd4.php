@@ -52,23 +52,29 @@ class __TwigTemplate_02969025c4036e30f569e3c17db150cd087da40be659b809b4ae398cc1a
     ";
             // line 9
             if (twig_in_filter("docprocesorev_editar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 9, $this->source); })()))) {
-                // line 10
-                echo "        <button id=\"edit\" data-json=\"";
-                echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
-                echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
-    ";
-            }
-            // line 12
-            echo "    ";
-            if (twig_in_filter("docprocesorev_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 12, $this->source); })()))) {
                 echo "  
-        <button id=\"delete\" data-json=\"";
+        ";
+                // line 10
+                if (!twig_in_filter(twig_get_attribute($this->env, $this->source, $context["t"], "firma", array()), array(0 => "APROBADO", 1 => "RECHAZADO"))) {
+                    // line 11
+                    echo "            <button id=\"edit\" data-json=\"";
+                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
+                    echo "\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
+        ";
+                }
                 // line 13
+                echo "    ";
+            }
+            // line 14
+            echo "    ";
+            if (twig_in_filter("docprocesorev_eliminar", (isset($context["permisos"]) || array_key_exists("permisos", $context) ? $context["permisos"] : (function () { throw new Twig_Error_Runtime('Variable "permisos" does not exist.', 14, $this->source); })()))) {
+                // line 15
+                echo "        <button id=\"delete\" data-json=\"";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["t"], "id", array()), "html", null, true);
                 echo "\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     ";
             }
-            // line 15
+            // line 17
             echo "    </td>
 </tr>
 ";
@@ -93,7 +99,7 @@ class __TwigTemplate_02969025c4036e30f569e3c17db150cd087da40be659b809b4ae398cc1a
 
     public function getDebugInfo()
     {
-        return array (  72 => 15,  67 => 13,  62 => 12,  56 => 10,  54 => 9,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
+        return array (  78 => 17,  72 => 15,  69 => 14,  66 => 13,  60 => 11,  58 => 10,  54 => 9,  49 => 7,  45 => 6,  41 => 5,  37 => 4,  33 => 3,  30 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -106,14 +112,16 @@ class __TwigTemplate_02969025c4036e30f569e3c17db150cd087da40be659b809b4ae398cc1a
     <td>{{ t.estadodoc }}</td>
     <td>{{ t.fkdoc.titulo }}</td>
     <td align=\"center\">
-    {% if 'docprocesorev_editar' in permisos %}
-        <button id=\"edit\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
+    {% if 'docprocesorev_editar' in permisos %}  
+        {% if t.firma not in ['APROBADO', 'RECHAZADO'] %}
+            <button id=\"edit\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-indigo waves-effect waves-light edit\" title=\"Editar\"><i class=\"material-icons\">create</i></button>
+        {% endif %}
     {% endif %}
-    {% if 'docprocesorev_eliminar' in permisos %}  
+    {% if 'docprocesorev_eliminar' in permisos %}
         <button id=\"delete\" data-json=\"{{t.id}}\" type=\"button\" class=\"btn bg-red waves-effect waves-light delete\" title=\"Eliminar\"><i class=\"material-icons\">clear</i></button>
     {% endif %}
     </td>
 </tr>
-{% endfor %}", "docprocesorev/table.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\docprocesorev\\table.html.twig");
+{% endfor %}", "docprocesorev/table.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\docprocesorev\\table.html.twig");
     }
 }

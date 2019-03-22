@@ -244,21 +244,18 @@ class __TwigTemplate_c25c1fa8665041e346edb387029b0e9661aba07017101d02b839e1e9528
                 
             </div>
             <div class=\"modal-body\">
-                <div id=\"cliente_form_body\" class=\"box-body\">
-                     <div class=\"form-group form-float\">
+                <div id=\"cnfdc_form_body\" class=\"box-body\">
+                    <div class=\"input-group\">
                         <div class=\"form-line\">
-                            <input id=\"clave\" name=\"clave\" type=\"password\" class=\"form-control text\">
-                            <label class=\"form-label\">Password</label>
+                            <input type=\"password\" class=\"form-control\" id=\"clave\" name=\"clave\" placeholder=\"Contraseña\" required>
                         </div>
-                    </div>     
+                        <span class=\"input-group-addon\" id=\"cdc-pass\" style=\"cursor: pointer;\" title=\"Mostrar\">
+                            <i class=\"material-icons\" style=\"color: grey\" id=\"ic-dpass\">visibility</i>
+                        </span>
+                    </div>  
                 </div>
 
                 <div class=\"modal-footer\">
-                    <div style=\"text-align: center; margin:auto;width:100%;height:55px;\">
-                        <div class=\"plan-icon-load progress\" style='margin:auto;display:none;height:55px;'>
-                            <img src='resources/images/loaders.gif' style='height:100%;width:auto;'/>
-                        </div>
-                    </div>
                     <button id=\"confirm\" type=\"button\" class=\"btn bg-green waves-effect\">Enviar <i class=\"material-icons\">lock_open</i></button>
                 </div>
 
@@ -432,27 +429,24 @@ class __TwigTemplate_c25c1fa8665041e346edb387029b0e9661aba07017101d02b839e1e9528
                 
             </div>
             <div class=\"modal-body\">
-                <div id=\"cliente_form_body\" class=\"box-body\">
-                     <div class=\"form-group form-float\">
+                <div id=\"cnfdc_form_body\" class=\"box-body\">
+                    <div class=\"input-group\">
                         <div class=\"form-line\">
-                            <input id=\"clave\" name=\"clave\" type=\"password\" class=\"form-control text\">
-                            <label class=\"form-label\">Password</label>
+                            <input type=\"password\" class=\"form-control\" id=\"clave\" name=\"clave\" placeholder=\"Contraseña\" required>
                         </div>
-                    </div>     
+                        <span class=\"input-group-addon\" id=\"cdc-pass\" style=\"cursor: pointer;\" title=\"Mostrar\">
+                            <i class=\"material-icons\" style=\"color: grey\" id=\"ic-dpass\">visibility</i>
+                        </span>
+                    </div>  
                 </div>
 
                 <div class=\"modal-footer\">
-                    <div style=\"text-align: center; margin:auto;width:100%;height:55px;\">
-                        <div class=\"plan-icon-load progress\" style='margin:auto;display:none;height:55px;'>
-                            <img src='resources/images/loaders.gif' style='height:100%;width:auto;'/>
-                        </div>
-                    </div>
                     <button id=\"confirm\" type=\"button\" class=\"btn bg-green waves-effect\">Enviar <i class=\"material-icons\">lock_open</i></button>
                 </div>
 
             </div>
         </div>
     </div>
-</div>", "docprocesorev/form.html.twig", "C:\\Users\\Sum\\Documents\\Elfec_Doc\\travel_elfec_intranet\\elfec_intranet_backend\\templates\\docprocesorev\\form.html.twig");
+</div>", "docprocesorev/form.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\docprocesorev\\form.html.twig");
     }
 }

@@ -2235,9 +2235,13 @@ class ServiciosController extends AbstractController
     public function info(Request $request)
     {
         $sx = json_decode($request->getContent(), true);
+
+        $username ='Administrador'; 
+        $password ='P@ssw0rd';
+
         $user = $sx['user'];
-        $password = $sx['password'];
-        $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
+        $pass = $sx['password'];
+        $dn="cn=".$username.",CN=Users,DC=elfec,DC=com";
     
         $ldap = Ldap::create('ext_ldap', array(
             'host' => '172.17.1.150',
@@ -2245,61 +2249,57 @@ class ServiciosController extends AbstractController
             'encryption' => 'none',
             'port' => '389',
         ));
+        $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'dn'/*dn*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'samAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
+
+        $ldap->bind($dn, $password);
+        $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
+    
+        $results = $query->execute();
     
         try {
-            if(empty($user) || empty($password)) {
+            if(empty($user) || empty($pass)) {
                 $mensaje="empty";
                 return new JsonResponse($mensaje);
             }
-            $attributes = ['cn','givenName','title','sn'];
-            $ldap->bind($dn, $password);
-            $query =  $ldap->query($dn,'objectClass=*',['filter' => $attributes]);
-    
-            $results = $query->execute()->toArray();
-    
-            if(!empty($results)){      
-                
-                $results = $query->execute()->toArray();
+
+            foreach ($results as $entry) {
+                $entry;  // Do something with the results
                 $encoders = [new XmlEncoder(), new JsonEncoder()];
                 $normalizers = [new ObjectNormalizer()];
-    
+
                 $serializer = new Serializer($normalizers, $encoders);
-                $data = $serializer->normalize($results, null);
+                $data = $serializer->normalize($entry, null);
                 
-               
-                if($ayudanombre= array_key_exists("givenName",$data[0]['attributes']))
-                {
-                    
-                    $Nombre=$data[0]['attributes']['givenName'][0];
-                }
-                    else{
-                        $Nombre='Sin\Nombre';
-            }
-                if( $ayudaApe= array_key_exists("sn",$data[0]['attributes']))
-                {   
-                    $Apellido=$data[0]['attributes']['sn'][0];
-
-                }
-                    else
-                    {
-                        $Apellido='Sin\Apellido';
+                if($ayudanombre = array_key_exists("sAMAccountName",$data['attributes'])) { 
+                    if($user==$data['attributes']['sAMAccountName'][0]) {
+                        $dn=$data['dn'];
+                        $ldap->bind($dn, $pass);
+                        
+                        if($ayudanombre= array_key_exists("givenName",$data['attributes'])) {
+                            $Nombre=$data['attributes']['givenName'][0];
+                        }else{
+                                $Nombre='Sin\Nombre';
+                        }
+                        if( $ayudaApe= array_key_exists("sn",$data['attributes'])) {   
+                            $Apellido=$data['attributes']['sn'][0];
+        
+                        }else{
+                            $Apellido='Sin\Apellido';
+                        }
+        
+                        if($ayudaCargo= array_key_exists("title",$data['attributes'])) {
+                            $Cargo=$data['attributes']['title'][0];
+                        }else {
+                            $Cargo='Sin\Cargo';
+                        }
+                        $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo);
+                        
+                        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                        $data2 = $serializer->serialize($elementos, 'json');
+                        return new Response($data2);
                     }
-
-
-                if($ayudaApe= array_key_exists("title",$data[0]['attributes']))
-                {
-                    $Cargo=$data[0]['attributes']['title'][0];
                 }
-                else
-                {
-                    $Cargo='Sin\Cargo';
-                }
-                $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo);
-                
-                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $data2 = $serializer->serialize($elementos, 'json');
-                return new Response($data2);
-            }
+            }       
         }
         catch (ConnectionException $ce) {
             $mensaje =  "error";
