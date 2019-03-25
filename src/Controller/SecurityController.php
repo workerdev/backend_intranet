@@ -45,7 +45,7 @@ class SecurityController extends AbstractController
     {   
         $sx = json_decode($_POST['object'], true);
         
-        $user ='Administrador'; 
+        $user ='charly campos'; 
         $password ='P@ssw0rd';
 
         $usuario = $sx['user'];
@@ -60,11 +60,13 @@ class SecurityController extends AbstractController
             'port' => '389',
         ));
     
+        $aux;
         $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'samAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
-
+  
         $ldap->bind($dn, $password);
-        $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
-       
+        
+        $query =  $ldap->query('DC=elfec,DC=com', 'samaccountname='.$usuario, ['filter' => $attributes]);
+        
         $results = $query->execute();
         try{
             foreach ($results as $entry) {
@@ -165,18 +167,26 @@ class SecurityController extends AbstractController
                         $resultado = array('response'=>$mensaje,'success' => true,
                             'message' => 'sesion exitosa.');
                         $resultado = json_encode($resultado);
-                        return new Response($mensaje);
+                        return new Response($resultado);
                     }
                 }
-            }   
+            } 
+            $mensaje = "error";
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $resultado = array('response'=>$mensaje,'success' => false,
+                'message' => 'error', 'info'=>$aux);
+            $resultado = json_encode($resultado);
+            
+            return new Response($resultado);       
+
         }catch(ConnectionException $ce){
             $mensaje = "error";
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $resultado = array('response'=>$mensaje,'success' => false,
-                'message' => 'error');
+                'message' => 'error', 'info'=>$aux);
             $resultado = json_encode($resultado);
             
-            return new Response($mensaje);       
+            return new Response($resultado);       
         }  
     }
 

@@ -158,7 +158,10 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
                 \$(\"#spn-ld\").fadeOut(800);
             }
         }).done(function (response) {
-            if(response == \"error\" || response == \"vacio\"){
+            console.log('vlogin');
+            var self = JSON.parse(response);
+            console.log(self);
+            if(self.response == \"error\" || self.response == \"vacio\"){
                 \$('#lgfail').fadeIn(2000)
                setTimeout(function(){ \$('#lgfail').fadeOut(2000) }, 4000)
             }else{
@@ -214,7 +217,7 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
 
     public function getDebugInfo()
     {
-        return array (  200 => 27,  188 => 8,  61 => 28,  59 => 27,  37 => 8,  28 => 1,);
+        return array (  203 => 27,  191 => 8,  61 => 28,  59 => 27,  37 => 8,  28 => 1,);
     }
 
     public function getSourceContext()
@@ -346,7 +349,10 @@ class __TwigTemplate_4b9c257ef5dc5fdc9f590bbc4ef04d0b3e6daf913e42434b82bfb2a9c0a
                 \$(\"#spn-ld\").fadeOut(800);
             }
         }).done(function (response) {
-            if(response == \"error\" || response == \"vacio\"){
+            console.log('vlogin');
+            var self = JSON.parse(response);
+            console.log(self);
+            if(self.response == \"error\" || self.response == \"vacio\"){
                 \$('#lgfail').fadeIn(2000)
                setTimeout(function(){ \$('#lgfail').fadeOut(2000) }, 4000)
             }else{

@@ -125,7 +125,8 @@
                 $("#spn-ld").fadeOut(800);
             }
         }).done(function (response) {
-            if(response == "error" || response == "vacio"){
+            var self = JSON.parse(response);
+            if(self.response == "error" || self.response == "vacio"){
                 $('#lgfail').fadeIn(2000)
                setTimeout(function(){ $('#lgfail').fadeOut(2000) }, 4000)
             }else{
