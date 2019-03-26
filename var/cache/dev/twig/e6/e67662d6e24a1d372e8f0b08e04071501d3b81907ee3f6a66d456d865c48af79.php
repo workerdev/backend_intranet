@@ -106,6 +106,6 @@ class __TwigTemplate_a61b8e5eb7183dfacfefa403a309fa7465ffe3da9583cf5e43acf1771b8
         </div>
     </div>
 {% endblock %}
-", "index/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\index\\index.html.twig");
+", "index/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\index\\index.html.twig");
     }
 }

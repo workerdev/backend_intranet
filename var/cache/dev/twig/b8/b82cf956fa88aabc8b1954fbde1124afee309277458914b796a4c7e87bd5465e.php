@@ -482,6 +482,6 @@ class __TwigTemplate_b23307cfffbdd39ee6179b851b872fda8e65f49f117de7df2efab15552d
 
 </script>
 
-{% endblock %}", "tipocargo/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec_intranet_backend\\templates\\TipoCargo\\index.html.twig");
+{% endblock %}", "tipocargo/index.html.twig", "C:\\Users\\CHARLY\\Desktop\\elfec_intranet_jan21\\Elfec Github\\elfec Backend\\Intranet-Backend\\templates\\TipoCargo\\index.html.twig");
     }
 }
