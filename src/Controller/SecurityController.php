@@ -61,11 +61,11 @@ class SecurityController extends AbstractController
         ));
     
         $aux;
-        $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'samAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
+        $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'sAMAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
   
         $ldap->bind($dn, $password);
         
-        $query =  $ldap->query('DC=elfec,DC=com', 'samaccountname='.$usuario, ['filter' => $attributes]);
+        $query =  $ldap->query('DC=elfec,DC=com', 'sAMAccountName='.$usuario, ['filter' => $attributes]);
         
         $results = $query->execute();
         try{
@@ -107,8 +107,8 @@ class SecurityController extends AbstractController
                             }else{
                                 $usuariob->setCorreo('S/Correo');
                             }
-                            if($data['attributes']['name'][0]) {
-                                $usuariob->setUsername($data['attributes']['name'][0]);
+                            if($data['attributes']['sAMAccountName'][0]) {
+                                $usuariob->setUsername($data['attributes']['sAMAccountName'][0]);
                             }else {
                                 $usuariob->setUsername('Sin login');
                             }
@@ -145,8 +145,8 @@ class SecurityController extends AbstractController
                             }else {
                                 $usuariob[0]->setCorreo('S/Correo');
                             }
-                            if(isset($data['attributes']['name'][0])){ 
-                                $usuariob[0]->setUsername($data['attributes']['name'][0]);
+                            if(isset($data['attributes']['sAMAccountName'][0])){ 
+                                $usuariob[0]->setUsername($data['attributes']['sAMAccountName'][0]);
                             }else{ 
                                 $usuariob[0]->setUsername('S/Login');
                             }
@@ -239,7 +239,7 @@ class SecurityController extends AbstractController
             $ldap->bind($dn, $password);
 
             $attributes = ['dn','sAMAccountName'];
-            $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
+            $query =  $ldap->query('DC=elfec,DC=com', 'sAMAccountName='.$usuario, ['filter' => $attributes]);
             $results = $query->execute();
 
             foreach ($results as $entry) {
