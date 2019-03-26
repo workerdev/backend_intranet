@@ -64,12 +64,14 @@ class RegistroMejoraController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
+        $responsable = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
+        $responsablei = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
         $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
         $TipoNovedad = $this->getDoctrine()->getRepository(TipoNovedad::class)->findBy(array('estado' => '1'));
         $TipoNorma = $this->getDoctrine()->getRepository(TipoNorma::class)->findBy(array('estado' => '1'));
         $EstadoNovedad = $this->getDoctrine()->getRepository(EstadoNovedad::class)->findBy(array('estado' => '1'));
         $RegistroMejora = $this->getDoctrine()->getRepository(RegistroMejora::class)->findBy(array('estado' => '1'));
-        return $this->render('registromejora/index.html.twig', array('objects' => $RegistroMejora, 'tipo' => $FichaProcesos, 'tipo2' => $TipoNovedad, 'tipo3' => $TipoNorma, 'tipo4' => $EstadoNovedad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('registromejora/index.html.twig', array('objects' => $RegistroMejora, 'tipo' => $FichaProcesos, 'tipo2' => $TipoNovedad, 'tipo3' => $TipoNorma, 'tipo4' => $EstadoNovedad, 'responsable' => $responsable, 'responsablei' => $responsablei, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

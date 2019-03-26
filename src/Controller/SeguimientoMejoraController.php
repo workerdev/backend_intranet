@@ -59,9 +59,10 @@ class SeguimientoMejoraController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
+        $responsable = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
         $SeguimientoMejora = $this->getDoctrine()->getRepository(SeguimientoMejora::class)->findBy(array('estado' => '1'));
         $RegistroMejora = $this->getDoctrine()->getRepository(RegistroMejora::class)->findBy(array('estado' => '1'));
-        return $this->render('seguimientomejora/index.html.twig', array('objects' => $SeguimientoMejora, 'tipo' => $RegistroMejora, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('seguimientomejora/index.html.twig', array('objects' => $SeguimientoMejora, 'tipo' => $RegistroMejora, 'responsable' => $responsable, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
