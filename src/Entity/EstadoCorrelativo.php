@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * EstadoCorrelativo
- * @ORM\Table(name="cb_proc_estado_correlativo", uniqueConstraints={@ORM\UniqueConstraint(name="cb_estado_correlativo_nombre", columns={"cb_estado_correlativo_nombre"})})
+ * @ORM\Table(name="cb_correlativo_estado_correlativo", uniqueConstraints={@ORM\UniqueConstraint(name="cb_estado_correlativo_nombre", columns={"cb_estado_correlativo_nombre"})})
  * @ORM\Entity(repositoryClass="App\Repository\EstadoCorrelativoRepository")
  * @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */

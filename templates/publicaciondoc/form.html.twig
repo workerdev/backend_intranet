@@ -1,0 +1,47 @@
+<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Envío de correo</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    <div class="body table-responsive">
+                        <table id="table_docs" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <thead>
+                            <tr>
+                                <th class="order_by_th" data-name="phone">TIPO </th>
+                                <th class="order_by_th" data-name="phone">ÁREA </th>
+                                <th class="order_by_th" data-name="phone">CÓDIGO </th>
+                                <th class="order_by_th" data-name="phone">TÍTULO </th>
+                                <th class="order_by_th" data-name="names">VERSIÓN </th>
+                                <th class="order_by_th" data-name="names">VÍNCULO </th>
+                            </tr>
+                            </thead>
+                            <tbody id="docs_content">
+
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+                    <div class="card padding-own">
+                    <p>Seleccione los grupos para el envío.</p>
+                    {% for g in grupo %}
+                    <li class="list-unstyled">
+                        <i class="material-icons">group</i>
+                        <input id="{{g.id}}" type="checkbox" name="gp-check" class="mail chk-col-deep-purple" data-id="{{g.id}}">
+                        <label id="tmd" for="{{g.id}}" data-id="{{g.id}}" >{{g.nombre}}</label> 
+                    </li>
+                    {% endfor %}
+                    </div>
+                
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-publicar" type="button" class="btn bg-indigo waves-effect">Publicar <i class="material-icons">mail</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

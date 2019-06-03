@@ -1,0 +1,8 @@
+{% for t in objects %}
+<tr>
+    <td>{{ t.asunto }}</td>
+    <td>{{ t.mensaje }}</td>
+    <td>{{ t.fkusuario.nombre ~ ' ' ~ t.fkusuario.apellido }}</td>
+    <td>{{ t.tipo }}</td>
+</tr>
+{% endfor %}

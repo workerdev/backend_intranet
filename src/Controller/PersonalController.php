@@ -9,6 +9,8 @@ use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\DocProcRevision;
 use App\Entity\FichaCargo;
+use App\Entity\Sector;
+use App\Entity\Area;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,12 +64,14 @@ class PersonalController extends Controller
             $permisos[] = $item;
         }
         $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1'));
+        $sector = $this->getDoctrine()->getRepository(Sector::class)->findBy(array('estado' => '1'));
+        $area = $this->getDoctrine()->getRepository(Area::class)->findBy(array('estado' => '1'));
         $ProcesosCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(array('estado' => '1'));
         $EstadoPersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('personal/index.html.twig', array('objects' => $Personal, 'tipo' => $ProcesosCargo, 'tipo2' => $EstadoPersonal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('personal/index.html.twig', array('objects' => $Personal, 'tipo' => $ProcesosCargo, 'tipo2' => $EstadoPersonal, 'sector' => $sector, 'area' => $area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -88,6 +92,8 @@ class PersonalController extends Controller
             $fnac = $sx['fnac'];
             $procesoscargo = $sx['personalcargo'];
             $estadopersonal = $sx['estadopersonal'];
+            $sector = $sx['sector'];
+            $area = $sx['area'];
 
             $personal = new Personal();
             $personal->setNombre($nombre);
@@ -98,8 +104,12 @@ class PersonalController extends Controller
             $personal->setFnac(new \DateTime($fnac));
             $procesoscargo != '' ? $procesoscargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($procesoscargo): $procesoscargo =null;
             $estadopersonal != '' ? $estadopersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->find($estadopersonal): $estadopersonal=null;
+            $sector != '' ? $sector = $this->getDoctrine()->getRepository(Sector::class)->find($sector): $sector =null;
+            $area != '' ? $area = $this->getDoctrine()->getRepository(Area::class)->find($area):$area=null;
             $personal->setFkPersonalCargo($procesoscargo); 
-            $personal->setFkestadopersonal($estadopersonal);                
+            $personal->setFkestadopersonal($estadopersonal);   
+            $personal->setFksector($sector);    
+            $personal->setFkarea($area);                 
             $personal->setEstado(1);
             $errors = $validator->validate($personal);
             if (count($errors)>0){
@@ -141,6 +151,8 @@ class PersonalController extends Controller
             $fnac = $sx['fnac'];
             $procesoscargo = $sx['personalcargo'];
             $estadopersonal = $sx['estadopersonal'];
+            $sector = $sx['sector'];
+            $area = $sx['area'];
 
             $personal = $this->getDoctrine()->getRepository(Personal::class)->find($id);
             $personal->setId($id);
@@ -154,8 +166,12 @@ class PersonalController extends Controller
 
             $procesoscargo != '' ? $procesoscargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($procesoscargo): $procesoscargo =null;
             $estadopersonal != '' ? $estadopersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->find($estadopersonal): $estadopersonal=null;
+            $sector != '' ? $sector = $this->getDoctrine()->getRepository(Sector::class)->find($sector): $sector =null;
+            $area != '' ? $area = $this->getDoctrine()->getRepository(Area::class)->find($area):$area=null;
             $personal->setFkPersonalCargo($procesoscargo);
-            $personal->setFkestadopersonal($estadopersonal);
+            $personal->setFkestadopersonal($estadopersonal);   
+            $personal->setFksector($sector);    
+            $personal->setFkarea($area);
             $personal->setEstado(1);
             $errors = $validator->validate($personal);
             if (count($errors)>0){
@@ -201,7 +217,9 @@ class PersonalController extends Controller
                 "ci"=> $personal->getCi(),
                 "correo" => $personal->getCorreo(),
                 "fkprocesoscargo" => $personal->getFkPersonalCargo(),
-                "fkestadopersonal"=> $personal->getFkestadopersonal()
+                "fkestadopersonal"=> $personal->getFkestadopersonal(),
+                "fksector"=> $personal->getFksector(),
+                "fkarea"=> $personal->getFkarea()
 
             ];
             $json = $serializer->serialize($sendinf, 'json');

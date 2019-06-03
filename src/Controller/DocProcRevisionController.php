@@ -64,7 +64,7 @@ class DocProcRevisionController extends AbstractController
         $responsable = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
         $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('estado' => '1'));
         $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         return $this->render('docprocesorev/index.html.twig', array('objects' => $docprocrev,'tipo' => $documentoproceso, 'responsable' => $responsable, 'docderiv' => $docderiv, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
@@ -105,8 +105,6 @@ class DocProcRevisionController extends AbstractController
                 }
                 return  new  Response(json_encode($array)) ;
             }
-
-
             $cx->persist($docprocrev);
             $cx->flush();
 
@@ -123,33 +121,44 @@ class DocProcRevisionController extends AbstractController
     /**
      * @Route("/docprocesorev_derivar", methods={"POST"}, name="docprocesorev_derivar")
      */
-    public function derivar(ValidatorInterface $validator )
+    public function derivar(ValidatorInterface $validator, \Swift_Mailer $mailer)
     {
         try {
+            $s_user = $this->get('session')->get('s_user');
+            $idu = $s_user['id'];
             $cx = $this->getDoctrine()->getManager();            
             $sx = json_decode($_POST['object'], true);
             
             $id = $sx['id'];
-            $fecha = $sx['fecha'];
             $responsable = $sx['responsable'];
             $firma = $sx['firma'];
             $estadodoc = $sx['estadodoc'];
-            $docid = $sx['fkdocs'];
-
-            $docrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->find($id);
-            $docrev->setFirma($firma);
-            $docrev->setEstadodoc($estadodoc);
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("Y-m-d");
+            $responsable != '' ? $responsable = $this->getDoctrine()->getRepository(Usuario::class)->find($responsable) : $responsable = null;
+            
+            $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->findOneBy(['id'=>$id, 'fkresponsable'=>$idu, 'estado'=>'1']);
+            $docprocrev->setFirma($firma);
+            $docprocrev->setEstadodoc($estadodoc);
+            
+            $docrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->findOneBy(['fkdoc'=>$docprocrev->getFkdoc()->getId(), 'fkresponsable'=>$responsable->getId(), 'estado'=>'1']);
+            $docrev->setFirma('Por firmar');
+            $docrev->setFecha(new \DateTime($fecha));
             $cx->persist($docrev);
             $cx->flush();
-            
-            $docprocrev = new DocProcRevision();
-            $docprocrev->setFecha(new \DateTime());
-            $docprocrev->setResponsable($responsable);
-            $docprocrev->setFirma('Por revisar');
-            $docprocrev->setEstadodoc($estadodoc);
-            $docprocrev->setEstado(1);
 
-            $docprocrev->setFkdoc($docrev->getFkdoc());
+            $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findOneBy(['id'=>$docrev->getFkdoc()->getId(), 'estado'=>'1']);
+            $message = (new \Swift_Message('ELFEC - Documento a revisar'))
+                ->setFrom('intranet@elfec.bo')
+                ->setTo($responsable->getCorreo())
+                ->setBody($this->renderView('mail/notificacion.html.twig', 
+                    array(
+                        'docproceso' => $documentoproceso, 
+                        'adicional' => array('fecha'=>$fecha, 'dominio'=>$_SERVER['HTTP_HOST'], 'logo'=>'/resources/images/h_color_lg.png')
+                    )
+                ), 'text/html');
+
+            $mailer->send($message);
 
             $errors = $validator->validate($docprocrev);
             if (count($errors)>0){
@@ -177,7 +186,7 @@ class DocProcRevisionController extends AbstractController
     /**
      * @Route("/docprocesorev_aprorec", methods={"POST"}, name="docprocesorev_aprorec")
      */
-    public function aprorec(ValidatorInterface $validator )
+    public function aprorec(ValidatorInterface $validator)
     {
         try {
             $cx = $this->getDoctrine()->getManager();            
@@ -185,16 +194,12 @@ class DocProcRevisionController extends AbstractController
             
             $s_user = $this->get('session')->get('s_user');
             $id = $sx['id'];
-            $fecha = $sx['fecha'];
-            $responsable = $s_user['id'];
             $firma = $sx['firma'];
             $estadodoc = $sx['estadodoc'];
-            $docid = $sx['fkdocs'];
             
             $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->find($id);
             $docprocrev->setFirma($firma);
             $docprocrev->setEstadodoc($estadodoc);
-            $docprocrev->setEstado(1);
 
             $errors = $validator->validate($docprocrev);
             if (count($errors)>0){
@@ -209,12 +214,17 @@ class DocProcRevisionController extends AbstractController
             $cx->merge($docprocrev);
             $cx->flush();
 
-            $docproc = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($docprocrev->getFkdoc()->getId());
-            $docproc->setAprobadorechazado($estadodoc);
-            $user = $this->getDoctrine()->getRepository(Usuario::class)->find($s_user['id']);
-            $docproc->setFkaprobador($user);
-            $cx->merge($docprocrev);
-            $cx->flush();
+            if($estadodoc == 'RECHAZADO'){
+                $docproc = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($docprocrev->getFkdoc()->getId());
+                $docproc->setAprobadorechazado($estadodoc);
+                $user = $this->getDoctrine()->getRepository(Usuario::class)->find($s_user['id']);
+                $docproc->setFkaprobador($user);
+                date_default_timezone_set('America/La_Paz');
+                $fecha = date("Y-m-d");
+                $docproc->setFechaaprobacion(new \DateTime($fecha));
+                $cx->merge($docprocrev);
+                $cx->flush();
+            }
 
             $resultado = array('response'=>"El ID registrado es: ".$docprocrev->getId().".",'success' => true,
                 'message' => 'Documento en revisión modificado correctamente.');
@@ -302,6 +312,43 @@ class DocProcRevisionController extends AbstractController
             $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Documento en revisión listado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/docprocrevision_editar", methods={"POST"}, name="docprocrevision_editar")
+     */
+    public function editar_rev()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $dprocrevision = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(['fkdoc'=>$id, 'estado'=>'1'], ['id'=>'ASC']);
+            $docs = array();
+            foreach ($dprocrevision as $docprocrev){
+                $fpb = $docprocrev->getFecha(); 
+                if($fpb != null) $result = $fpb->format('Y-m-d');
+                else $result = $fpb;
+                $sendinf = [
+                    "id" => $docprocrev->getId(),
+                    "fecha" => $result,
+                    "fkresponsable" => $docprocrev->getFkresponsable(),
+                    "firma" => $docprocrev->getFirma(),
+                    "estadodoc" => $docprocrev->getEstadodoc(),
+                    "fkdoc" => $docprocrev->getFkdoc()
+                ];
+                $docs[] = $sendinf;
+            }
+            
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($docs, 'json');
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Documentos en revisión listado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

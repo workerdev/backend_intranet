@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Permiso
- * @ORM\Table(name="cb_proc_permiso", uniqueConstraints={@ORM\UniqueConstraint(name="cb_permiso_id", columns={"cb_permiso_id"})})
+ * @ORM\Table(name="cb_correlativo_permiso", uniqueConstraints={@ORM\UniqueConstraint(name="cb_permiso_id", columns={"cb_permiso_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\PermisoRepository")
  */
 
@@ -26,22 +26,22 @@ class Permiso
     private $id;
 
     /**
-     * @var int
+     * @var \usuario
      *
-     * @ORM\Column(name="cb_permiso_item", type="integer", nullable=false)
-     */
-    private $item;
-
-    /**
-     * @var \tipo
-     *
-     * @ORM\ManyToOne(targetEntity="TipoPermiso")
+     * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_permiso_fktipo", referencedColumnName="cb_tipo_permiso_id")
+     *   @ORM\JoinColumn(name="cb_permiso_fkusuario", referencedColumnName="cb_usuario_id")
      * })
      * @Assert\NotBlank
      */
-    private $fktipo;
+    private $fkusuario;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_permiso_tipo", type="string", length=200, nullable=false)
+     */
+    private $tipo;
     
     /**
      * @var \unidad
@@ -74,28 +74,29 @@ class Permiso
         return $this;
     }
 
-    public function getItem(): ?int
+    public function getFkusuario(): ?Usuario
     {
-        return $this->item;
+        return $this->fkusuario;
     }
-    public function setItem(int $item): self
+
+    public function setFkusuario(?Usuario $fkusuario): self
     {
-        $this->item = $item;
+        $this->fkusuario = $fkusuario;
 
         return $this;
     }
-
-    public function getFktipo(): ?TipoPermiso
+    
+    public function getTipo(): ?string
     {
-        return $this->fktipo;
+        return $this->tipo;
     }
 
-    public function setFktipo(?TipoPermiso $fktipo): self
+    public function setTipo(string $tipo): self
     {
-        $this->fktipo = $fktipo;
+        $this->tipo = $tipo;
 
         return $this;
-    }  
+    }
 
     public function getFkunidad(): ?Unidad
     {

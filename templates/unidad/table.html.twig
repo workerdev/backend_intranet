@@ -1,7 +1,12 @@
 {% for tr in objects %}
     <tr>
         <td>{{ tr.nombre }}</td>
-        <td>{{ tr.fkcorrelativo.nombre }}</td>
+         {% if tr.fkcorrelativo != null %}
+           <td>{{ tr.fkcorrelativo.nombre }}</td>
+         {% else %}
+           <td></td>
+         {% endif %}
+      
         {% if tr.fksuperior != null %}
             <td>{{ tr.fksuperior.nombre }}</td>
         {% else %}

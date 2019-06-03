@@ -20,21 +20,27 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const ENLACES_CHILD = 'child-enl';
     public const CATALOGO_CHILD = 'child-catlg';
     public const ACCIDENTE_CHILD = 'child-accdn';
+    public const SIG_CHILD = 'child-sig';
+    public const CORREO_CHILD = 'child-mail';
 
     /** MODULO DE GESTION **/
-    public const DOCUMENTO_CHILD = 'child-doc';
     public const DOCEXTRA_CHILD = 'child-dcext';
     public const NORMA_CHILD = 'child-nrm';
     public const TIPODOC_CHILD = 'child-tpdoc';
     public const TIPONORMA_CHILD = 'child-tpnrm';
     public const BAJADOC_CHILD = 'child-bjdoc';
-    public const DOCPROCESO_CHILD = 'child-dcproc';
-    public const DOCPROCREV_CHILD = 'child-dcprorv';
     public const DOCFORM_CHILD = 'child-dcfrm';
     public const DOCTIPOEXT_CHILD = 'child-dctpext';
     public const ESTADODOC_CHILD = 'child-estdoc';
     public const ESTADOSEG_CHILD = 'child-estseg';
     public const SEGUIMIENTOELAB_CHILD = 'child-segelb';
+
+    /** MODULO DE DOCUMENTOS **/
+    public const DOCPROCESO_CHILD = 'child-dcproc';
+    public const DOCPROCREV_CHILD = 'child-dcprorv';
+    public const DOCUMENTO_CHILD = 'child-doc';
+    public const PUBLICACIONDOC_CHILD = 'child-pubdoc';
+    public const GRUPOCORREO_CHILD = 'child-gpmail';
 
     /** MODULO DE PROCESOS **/
     public const GERENCIA_CHILD = 'child-grc';
@@ -49,17 +55,15 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const SEGUIMIENTORSOP_CHILD = 'child-segrsgop';
     public const GCIARSECTOR_CHILD = 'child-gciarsector';
     public const RECURSONEC_CHILD = 'child-rcnec';
-    public const CONTROLCRTLVO_CHILD = 'child-ctrlctvo';
     public const GRUPORIESGO_CHILD = 'child-grprsg';
     public const ESTADORIESGO_CHILD = 'child-estrsg';
-
-    public const TIPONOTA_CHILD = 'child-tpnota';
-    public const ESTADOCRLTVO_CHILD = 'child-estctvo';
     public const TIPORECURSO_CHILD = 'child-tprec';
-
+    
+    /** MODULO DE CORRELATIVOS **/
+    public const CONTROLCRTLVO_CHILD = 'child-ctrlctvo';
+    public const TIPONOTA_CHILD = 'child-tpnota';
     public const CORRELATIVO_CHILD = 'child-crtv';
     public const UNIDAD_CHILD = 'child-und';
-    public const TIPOPERMISO_CHILD = 'child-tperms';
     public const PERMISO_CHILD = 'child-perms';
 
     /** MODULO DE INDICADORES **/
@@ -194,6 +198,24 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $tsaccprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
         $manager->persist($tsaccprt);
 
+        $sigprt = new Modulo();
+        $sigprt->setNombre('sig');
+        $sigprt->setTitulo('Sistema integrado de gestión');
+        $sigprt->setRuta('/sig');
+        $sigprt->setIcono('library_books');
+        $sigprt->setMenu(1);
+        $sigprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
+        $manager->persist($sigprt);
+
+        $mailprt = new Modulo();
+        $mailprt->setNombre('correo');
+        $mailprt->setTitulo('Correos');
+        $mailprt->setRuta('/correo');
+        $mailprt->setIcono('contact_mail');
+        $mailprt->setMenu(1);
+        $mailprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
+        $manager->persist($mailprt);
+
         
         /** MODULO DE GESTION **/
         $tpdocprt = new Modulo();
@@ -204,15 +226,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $tpdocprt->setMenu(1);
         $tpdocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
         $manager->persist($tpdocprt);
-
-        $dctoprt = new Modulo();
-        $dctoprt->setNombre('documento');
-        $dctoprt->setTitulo('Documento');
-        $dctoprt->setRuta('/documento');
-        $dctoprt->setIcono('business');
-        $dctoprt->setMenu(1);
-        $dctoprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($dctoprt);
 
         $doctpexprt = new Modulo();
         $doctpexprt->setNombre('doctipoextra');
@@ -249,24 +262,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $nrmdocprt->setMenu(1);
         $nrmdocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
         $manager->persist($nrmdocprt);
-
-        $docprocprt = new Modulo();
-        $docprocprt->setNombre('documentoproceso');
-        $docprocprt->setTitulo('Documento en proceso');
-        $docprocprt->setRuta('/documentoproceso');
-        $docprocprt->setIcono('business');
-        $docprocprt->setMenu(1);
-        $docprocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($docprocprt);
-
-        $dcprorvprt = new Modulo();
-        $dcprorvprt->setNombre('docprocesorev');
-        $dcprorvprt->setTitulo('Documento en proceso de revisión');
-        $dcprorvprt->setRuta('/docprocesorev');
-        $dcprorvprt->setIcono('business');
-        $dcprorvprt->setMenu(1);
-        $dcprorvprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($dcprorvprt);
 
         $bajadocprt = new Modulo();
         $bajadocprt->setNombre('bajadocumento');
@@ -312,6 +307,53 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $segelbprt->setMenu(1);
         $segelbprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
         $manager->persist($segelbprt);
+
+        
+        /** MODULO DE DOCUMENTOS **/
+        $docprocprt = new Modulo();
+        $docprocprt->setNombre('documentoproceso');
+        $docprocprt->setTitulo('Documento en proceso');
+        $docprocprt->setRuta('/documentoproceso');
+        $docprocprt->setIcono('business');
+        $docprocprt->setMenu(1);
+        $docprocprt->setFkmodulo($this->getReference(ModuloFixtures::DOCUMENTO_MOD));
+        $manager->persist($docprocprt);
+
+        $dcprorvprt = new Modulo();
+        $dcprorvprt->setNombre('docprocesorev');
+        $dcprorvprt->setTitulo('Documento en proceso de revisión');
+        $dcprorvprt->setRuta('/docprocesorev');
+        $dcprorvprt->setIcono('business');
+        $dcprorvprt->setMenu(1);
+        $dcprorvprt->setFkmodulo($this->getReference(ModuloFixtures::DOCUMENTO_MOD));
+        $manager->persist($dcprorvprt);
+
+        $pubdocprt = new Modulo();
+        $pubdocprt->setNombre('publicaciondoc');
+        $pubdocprt->setTitulo('Publicación de documento');
+        $pubdocprt->setRuta('/publicaciondoc');
+        $pubdocprt->setIcono('business');
+        $pubdocprt->setMenu(1);
+        $pubdocprt->setFkmodulo($this->getReference(ModuloFixtures::DOCUMENTO_MOD));
+        $manager->persist($pubdocprt);
+
+        $dctoprt = new Modulo();
+        $dctoprt->setNombre('documento');
+        $dctoprt->setTitulo('Documento');
+        $dctoprt->setRuta('/documento');
+        $dctoprt->setIcono('business');
+        $dctoprt->setMenu(1);
+        $dctoprt->setFkmodulo($this->getReference(ModuloFixtures::DOCUMENTO_MOD));
+        $manager->persist($dctoprt);
+
+        $gpmailprt = new Modulo();
+        $gpmailprt->setNombre('grupocorreo');
+        $gpmailprt->setTitulo('Grupo de correo');
+        $gpmailprt->setRuta('/grupocorreo');
+        $gpmailprt->setIcono('contact_mail');
+        $gpmailprt->setMenu(1);
+        $gpmailprt->setFkmodulo($this->getReference(ModuloFixtures::DOCUMENTO_MOD));
+        $manager->persist($gpmailprt);
 
 
         /** MODULO DE PROCESOS **/
@@ -449,24 +491,26 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $recnecprt->setMenu(1);
         $recnecprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
         $manager->persist($recnecprt);
-        
+
+
+        /** MODULO DE CORRELATIVOS **/
         $ctlctvoprt = new Modulo();
         $ctlctvoprt->setNombre('controlcorrelativo');
         $ctlctvoprt->setTitulo('Control correlativo');
         $ctlctvoprt->setRuta('/controlcorrelativo');
         $ctlctvoprt->setIcono('business');
         $ctlctvoprt->setMenu(1);
-        $ctlctvoprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $ctlctvoprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($ctlctvoprt);
         
-        $estctvoprt = new Modulo();
+        /*$estctvoprt = new Modulo();
         $estctvoprt->setNombre('estadocorrelativo');
         $estctvoprt->setTitulo('Estado correlativo');
         $estctvoprt->setRuta('/estadocorrelativo');
         $estctvoprt->setIcono('business');
         $estctvoprt->setMenu(1);
-        $estctvoprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
-        $manager->persist($estctvoprt);
+        $estctvoprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
+        $manager->persist($estctvoprt);*/
         
         $tpnotaprt = new Modulo();
         $tpnotaprt->setNombre('tiponota');
@@ -474,17 +518,8 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $tpnotaprt->setRuta('/tiponota');
         $tpnotaprt->setIcono('business');
         $tpnotaprt->setMenu(1);
-        $tpnotaprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $tpnotaprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($tpnotaprt);
-        
-        $tpermsprt = new Modulo();
-        $tpermsprt->setNombre('tipopermiso');
-        $tpermsprt->setTitulo('Tipo de permiso');
-        $tpermsprt->setRuta('/tipopermiso');
-        $tpermsprt->setIcono('business');
-        $tpermsprt->setMenu(1);
-        $tpermsprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
-        $manager->persist($tpermsprt);
         
         $ctvoprt = new Modulo();
         $ctvoprt->setNombre('correlativo');
@@ -492,7 +527,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $ctvoprt->setRuta('/correlativo');
         $ctvoprt->setIcono('business');
         $ctvoprt->setMenu(1);
-        $ctvoprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $ctvoprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($ctvoprt);
         
         $undprt = new Modulo();
@@ -501,7 +536,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $undprt->setRuta('/unidad');
         $undprt->setIcono('business');
         $undprt->setMenu(1);
-        $undprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $undprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($undprt);
         
         $permsprt = new Modulo();
@@ -510,7 +545,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $permsprt->setRuta('/permiso');
         $permsprt->setIcono('business');
         $permsprt->setMenu(1);
-        $permsprt->setFkmodulo($this->getReference(ModuloFixtures::PROCESO_MOD));
+        $permsprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($permsprt);
 
 
@@ -925,14 +960,13 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::ENLACES_CHILD, $enlcprt);
         $this->addReference(self::CATALOGO_CHILD, $catlgprt);
         $this->addReference(self::ACCIDENTE_CHILD, $tsaccprt);
+        $this->addReference(self::SIG_CHILD, $sigprt);
+        $this->addReference(self::CORREO_CHILD, $mailprt);
 
-        $this->addReference(self::DOCUMENTO_CHILD, $dctoprt);
         $this->addReference(self::DOCEXTRA_CHILD, $docaddprt);
         $this->addReference(self::TIPODOC_CHILD, $tpdocprt);
         $this->addReference(self::NORMA_CHILD, $nrmdocprt);
         $this->addReference(self::TIPONORMA_CHILD, $tpnrmprt);
-        $this->addReference(self::DOCPROCESO_CHILD, $docprocprt);
-        $this->addReference(self::DOCPROCREV_CHILD, $dcprorvprt);
         $this->addReference(self::BAJADOC_CHILD, $bajadocprt);
         $this->addReference(self::DOCFORM_CHILD, $docfrmprt);
         $this->addReference(self::DOCTIPOEXT_CHILD, $doctpexprt);
@@ -940,6 +974,12 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::ESTADOSEG_CHILD, $estsegprt);
         $this->addReference(self::SEGUIMIENTOELAB_CHILD, $segelbprt);
 
+        $this->addReference(self::DOCPROCESO_CHILD, $docprocprt);
+        $this->addReference(self::DOCPROCREV_CHILD, $dcprorvprt);
+        $this->addReference(self::DOCUMENTO_CHILD, $dctoprt);
+        $this->addReference(self::PUBLICACIONDOC_CHILD, $pubdocprt);
+        $this->addReference(self::GRUPOCORREO_CHILD, $gpmailprt);
+        
         $this->addReference(self::GERENCIA_CHILD, $grciaprt);
         $this->addReference(self::AREA_CHILD, $areaprt);
         $this->addReference(self::SECTOR_CHILD, $sectprt);
@@ -956,9 +996,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::GRUPORIESGO_CHILD, $grprsgprt);
         $this->addReference(self::ESTADORIESGO_CHILD, $estrsgprt);
         $this->addReference(self::TIPONOTA_CHILD, $tpnotaprt);
-        $this->addReference(self::ESTADOCRLTVO_CHILD, $estctvoprt);
-        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt);       
-        $this->addReference(self::TIPOPERMISO_CHILD, $tpermsprt);
+        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt);   
         $this->addReference(self::CORRELATIVO_CHILD, $ctvoprt);
         $this->addReference(self::UNIDAD_CHILD, $undprt);
         $this->addReference(self::PERMISO_CHILD, $permsprt);

@@ -14,8 +14,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class DocProcRevision
 {
-
-
      /**
      * @var int
      *
@@ -39,35 +37,33 @@ class DocProcRevision
    /**
     * @var date
     *
-    * @ORM\Column(name="cb_docprocrevision_fecha", type="date", nullable=false)
-    * @Assert\NotBlank
+    * @ORM\Column(name="cb_docprocrevision_fecha", type="date", nullable=true, nullable=true, options={"default":null})
     */
     private $fecha;
 
     /**
-     * @var string
+     * @var \responsable
      *
-     * @ORM\Column(name="cb_docprocrevision_responsable", type="string", length=50, nullable=false)
-     * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_docprocrevision_fkresponsable", referencedColumnName="cb_usuario_id", nullable=true)
+     * })
      */
-    private $responsable;
+    private $fkresponsable;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_docprocrevision_firma", type="string", length=50, nullable=false)
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_docprocrevision_firma", type="string", length=50, nullable=true)
      */
     private $firma;
 
          /**
      * @var string
      *
-     * @ORM\Column(name="cb_docprocrevision_estadodoc", type="string", length=50, nullable=false)
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_docprocrevision_estadodoc", type="string", length=50, nullable=true)
      */
     private $estadodoc;
-
 
     /**
      * @var int
@@ -99,7 +95,6 @@ class DocProcRevision
         return $this;
     }
 
-
     public function setFecha(\DateTimeInterface $fecha): self
     {
         $this->fecha = $fecha;
@@ -110,15 +105,15 @@ class DocProcRevision
     public function getFecha(): ?\DateTimeInterface
     {
         return $this->fecha;
-    }
-    public function getResponsable(): ?string
-    {
-        return $this->responsable;
-    }
+    } 
 
-    public function setResponsable(string $responsable): self
+    public function getFkresponsable(): ?Usuario
     {
-        $this->responsable = $responsable;
+        return $this->fkresponsable;
+    }
+    public function setFkresponsable(?Usuario $fkresponsable): self
+    {
+        $this->fkresponsable = $fkresponsable;
 
         return $this;
     }
@@ -133,8 +128,6 @@ class DocProcRevision
 
         return $this;
     }
-
-
 
     public function getEstadodoc(): ?string
     {

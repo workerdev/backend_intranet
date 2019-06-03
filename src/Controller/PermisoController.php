@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Permiso;
-use App\Entity\TipoPermiso;
 use App\Entity\Unidad;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
@@ -60,13 +59,13 @@ class PermisoController extends Controller
             $permisos[] = $item;
         }
         
-        $tipo = $this->getDoctrine()->getRepository(TipoPermiso::class)->findBy(array('estado' => '1'));
         $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('estado' => '1'));
         $permiso = $this->getDoctrine()->getRepository(Permiso::class)->findBy(array('estado' => '1'));
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('permiso/index.html.twig', array('objects' => $permiso, 'tipo' => $tipo, 'unidad' => $unidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('permiso/index.html.twig', array('objects' => $permiso, 'unidad' => $unidad, 'usuario' => $usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -79,16 +78,16 @@ class PermisoController extends Controller
             $cx = $this->getDoctrine()->getManager();
 
             $sx = json_decode($_POST['object'], true);
-            $item = $sx['item'];
+            $usuario = $sx['usuario'];
             $tipo = $sx['tipo'];
             $unidad = $sx['unidad'];
 
-            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoPermiso::class)->find($tipo) : $tipo=null;
+            $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
 
             $permiso = new Permiso();
-            $permiso->setItem($item);
-            $permiso->setFktipo($tipo);
+            $permiso->setFkusuario($usuario);
+            $permiso->setTipo($tipo);
             $permiso->setFkunidad($unidad);
             $permiso->setEstado(1);
             
@@ -124,17 +123,17 @@ class PermisoController extends Controller
 
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
-            $item = $sx['item'];
+            $usuario = $sx['usuario'];
             $tipo = $sx['tipo'];
             $unidad = $sx['unidad'];
 
-            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoPermiso::class)->find($tipo) : $tipo=null;
+            $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
 
             $permiso = new Permiso();
             $permiso->setId($id);
-            $permiso->setItem($item);
-            $permiso->setFktipo($tipo);
+            $permiso->setFkusuario($usuario);
+            $permiso->setTipo($tipo);
             $permiso->setFkunidad($unidad);
             $permiso->setEstado(1);
             

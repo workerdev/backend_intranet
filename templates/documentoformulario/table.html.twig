@@ -9,7 +9,11 @@
     <td>{{ t.versionVigente }}</td>
     <td>{{ t.fechaPublicacion | date('Y-m-d')  }}</td>
     <td class="d-none">{{ t.fkaprobador.nombre ~ ' ' ~ t.fkaprobador.apellido }}</td>
+    {% if t.fkdocumento != null %} 
     <td>{{ t.fkdocumento.codigo }}</td>
+    {% else %} 
+    <td></td>
+    {% endif %}
     <td class="d-none">{{ t.vinculofiledig }}</td>
     <td class="d-none">{{ t.vinculofiledesc }}</td>
     <td align="center">

@@ -33,7 +33,7 @@
     <div class="body">
         <div class="row clearfix">
             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'documento_insertar' in permisos %}
+            {% if 'documentos_insertar' in permisos %}
                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                     <i class="material-icons">add</i>
                 </button>
@@ -96,6 +96,12 @@
         liveSearchPlaceholder: 'Buscar tipo de aprobador.',
         title: 'Seleccione un tipo de aprobador.'
     })
+
+    /*$('#documento_submit').click(function () {
+        var vf = $('#documento_fechaPublicacion').val();
+        alert(vf);
+        console.log(vf);
+    })*/
     
     $('#new').click(function () {
         $('#lnkva').remove();
@@ -140,6 +146,7 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response)
+                console.log(self)
                              
                 $('#documento_id').val(self.id)
                 $('#documento_codigo').val(self.codigo)

@@ -39,7 +39,7 @@ class ConfiguracionModFixtures extends Fixture
         $manager->persist($menu4);
 
         $menu5 = new Menu();
-        $menu5->setNombre('Documentación');
+        $menu5->setNombre('Informacion SIG');
         $menu5->setIcono('/images/Elfec07.png'); $menu5->getEstado( 1);
         $menu5->setEstado(1);
         $manager->persist($menu5);
@@ -55,6 +55,12 @@ class ConfiguracionModFixtures extends Fixture
         $menu7->setIcono('/images/Elfec09.png'); $menu7->getEstado( 1);
         $menu7->setEstado(1);
         $manager->persist($menu7);
+
+        $menu8 = new Menu();
+        $menu8->setNombre('Correlativo');
+        $menu8->setIcono('/images/Elfec11.png'); $menu8->getEstado( 1);
+        $menu8->setEstado(1);
+        $manager->persist($menu8);
 
 
         /* TODO: inicio enlaces Externos*/

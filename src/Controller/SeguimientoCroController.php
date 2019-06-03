@@ -60,7 +60,7 @@ class SeguimientoCroController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
@@ -91,6 +91,12 @@ class SeguimientoCroController extends AbstractController
             $seguimientocro->setObservaciones($observaciones);
             $seguimientocro->setEstadoSeg($estadoseg);
             $riesgos != '' ? $riesgos = $this->getDoctrine()->getRepository(RiesgosOportunidades::class)->find($riesgos): $riesgos = null;
+         
+            if($estadoseg =='CERRADO'){
+            $riesgos->setEstadocro($estadoseg);
+            $cx->merge($riesgos);
+            $cx->flush();
+        }
             $seguimientocro->setFkriesgos($riesgos);
             $fkresponsable != '' ? $fkresponsable = $this->getDoctrine()->getRepository(Usuario::class)->find($fkresponsable):$fkresponsable = null;
             $seguimientocro->setFkresponsable($fkresponsable);
@@ -142,6 +148,11 @@ class SeguimientoCroController extends AbstractController
             $seguimientocro->setObservaciones($observaciones);
             $seguimientocro->setEstadoSeg($estadoseg);
             $riesgos != '' ? $riesgos = $this->getDoctrine()->getRepository(RiesgosOportunidades::class)->find($riesgos): $riesgos = null;
+            if($estadoseg =='CERRADO'){
+                $riesgos->setEstadocro($estadoseg);
+                $cx->merge($riesgos);
+                $cx->flush();
+            }
             $seguimientocro->setFkriesgos($riesgos);
             $fkresponsable != '' ? $fkresponsable = $this->getDoctrine()->getRepository(Usuario::class)->find($fkresponsable): $fkresponsable = null;
             $seguimientocro->setFkresponsable($fkresponsable);

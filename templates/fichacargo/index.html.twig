@@ -150,10 +150,18 @@
         
         $('#ficha_cargo_fkjefeaprobador').val('')
         $('#ficha_cargo_fkgerenteaprobador').val('')
-        $('#ficha_cargo_firmajefe').val('Por aprobar')
+
+
         $('#ficha_cargo_firmajefe').selectpicker('render')
-        $('#ficha_cargo_firmagerente').val('Por aprobar')
+        $('#ficha_cargo_firmajefe').val('Por aprobar')          
+        document.getElementById('ficha_cargo_firmajefe').disabled=true
+        $('#ficha_cargo_firmajefe').selectpicker('refresh')        
+      
         $('#ficha_cargo_firmagerente').selectpicker('render')
+        $('#ficha_cargo_firmagerente').val('Por aprobar')   
+        
+        document.getElementById('ficha_cargo_firmagerente').disabled=true     
+        $('#ficha_cargo_firmagerente').selectpicker('refresh')
 
         clean_form()
         verif_inputs()
@@ -228,10 +236,11 @@
 
                 $('#ficha_cargo_fkgerenteaprobador').val(self.fkgerenteaprobador.id)
                 $('#ficha_cargo_fkgerenteaprobador').selectpicker('render')
-
+		document.getElementById('ficha_cargo_firmajefe').disabled=false
                 $('#ficha_cargo_firmajefe').val(self.firmajefe)
                 $('#ficha_cargo_firmajefe').selectpicker('render')
-
+		
+		document.getElementById('ficha_cargo_firmagerente').disabled=false
                 $('#ficha_cargo_firmagerente').val(self.firmagerente)
                 $('#ficha_cargo_firmagerente').selectpicker('render')
                 

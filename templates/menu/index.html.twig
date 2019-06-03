@@ -97,11 +97,13 @@
                 ajax_call_get("/menu_editar",{
                     object: obj
                 },function(response){
+                   console.log(response)
                     var self = JSON.parse(response);
                     $('#id').val(self.id)
                     $('#nombre').val(self.nombre)
                     $('#menupick').val(self.icono)
-                    console.log(response)
+                     $('#menupick').text(self.icono)
+                   
 
                     clean_form()
                     verif_inputs()
@@ -117,7 +119,7 @@
             objeto = JSON.stringify({
                 'id': parseInt(JSON.parse($('#id').val())),
                 'nombre': $('#nombre').val(),
-                'icono': $('#menupick').val()
+                'icono': $('#menupick').text()
             })
             console.log(objeto)
             ajax_call("/menu_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})

@@ -32,7 +32,7 @@
 <div class="body">
     <div class="row clearfix">
         <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'documentoformulario_insertar' in permisos %}    
+        {% if 'documentosformulario_insertar' in permisos %}    
             <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                 <i class="material-icons">add</i>
             </button>
@@ -229,12 +229,12 @@
 
         if(urldown != 'N/A'){
             html += '<tr>'+
-                '<td class="bold">Vínculo diagrama flujo:</td>'+
+                '<td class="bold">Vínculo archivo de descarga:</td>'+
                 '<td><a href="' + urldown +'">' + vdown + '</a></td>'+
             '</tr>';
         }else{
             html += '<tr>'+
-                '<td class="bold">Vínculo diagrama flujo:</td>'+
+                '<td class="bold">Vínculo archivo de descarga:</td>'+
                 '<td>' + urldown + '</td>'+
             '</tr>';
         }     

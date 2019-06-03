@@ -1,7 +1,7 @@
 {% for tr in objects %}
     <tr>
-        <td>{{ tr.item }}</td>
-        <td>{{ tr.fktipo.nombre }}</td>
+        <td>{{ tr.fkusuario.nombre ~ ' ' ~ tr.fkusuario.apellido }}</td>
+        <td>{{ tr.tipo }}</td>
         <td>{{ tr.fkunidad.nombre }}</td>
         <td align="center">
         {% if 'permiso_editar' in permisos %}

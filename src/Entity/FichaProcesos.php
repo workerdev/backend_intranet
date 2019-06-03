@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * FichaProcesos
- * @ORM\Table(name="cb_procesos_ficha_procesos", indexes={@ORM\Index(name="cb_ficha_procesos_nombre", columns={"cb_ficha_procesos_nombre"})})
+ * @ORM\Table(name="cb_procesos_ficha_procesos", indexes={@ORM\Index(name="cb_ficha_procesos_id", columns={"cb_ficha_procesos_nombre"})})
  * @ORM\Entity(repositoryClass="App\Repository\FichaProcesosRepository")
  */
 class FichaProcesos
@@ -105,7 +105,7 @@ class FichaProcesos
     private $estado;
 
    
-    private $fkusuario;
+    
 
 
     public function getId(): ?int

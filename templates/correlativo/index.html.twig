@@ -33,13 +33,28 @@
     <div class="body">
         <div class="row clearfix">
             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'correlativo_insertar' in permisos %}    
+            {% set cn = 0 %}
+            {% for p in permissions %}
+                {% if 'Completo' in p or 'Crear' in p %}
+                    {% set cn = cn + 1 %}
+                {% endif %}
+            {% endfor %}
+
+            {% if 'correlativo_insertar' in permisos %}  
+                {% if cn > 0 %}  
                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                     <i class="material-icons">add</i>
                 </button>
+                {% endif %}
             {% endif %}   
             </div>
         </div>
+        {% for message in app.flashes('success') %}
+            <div id="e-msg" class="flash-notice alert bg-teal alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ message }}
+            </div>
+        {% endfor %}
         {% if 'home_correlativo' in permisos and objects %}
             <div class="row">
                 <div class="body table-responsive">
@@ -86,12 +101,6 @@
     <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
     <script>
-    $('#correlativo_fksolicitante').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar solicitante.',
-        title: 'Seleccione un solicitante.'
-    })
     $('#correlativo_fkcorrelativo').selectpicker({
         size: 4,
         liveSearch: true,
@@ -104,12 +113,7 @@
         liveSearchPlaceholder: 'Buscar tipo de nota.',
         title: 'Seleccione un tipo de nota.'
     })
-    $('#correlativo_fkestado').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar estado.',
-        title: 'Seleccione un estado.'
-    })
+  
     $('#correlativo_fkunidad').selectpicker({
         size: 4,
         liveSearch: true,
@@ -117,48 +121,39 @@
         title: 'Seleccione una unidad.'
     })
 
-    $("#correlativo_fktiponota").change(function(){
-        obj = JSON.stringify({
-            'tipo': $(this).val()
-        })
-        //console.log(obj)
-        ajax_call_get("/correlativo_numerar",{
-            object: obj
-        },function(response){ 
-            //console.log(response)
-            var self = JSON.parse(response) 
-            $('#correlativo_numcorrelativo').val(self.numcorrelativo)
-        })
-    });
-
-    function init(){
-        var rutas = document.getElementsByClassName('ruta');
-        for (let i = 0; i < rutas.length; i++) {
-            var ruta = rutas[i];
-            var href = ruta.getAttribute('href');
-            var rutaCortada = href.split('public')
-            rutas[i].setAttribute('href', rutaCortada[1] + "");
-        }
-    };
+    function init(){ };
     
     $('#new').click(function () {
+        combo_unidad()
+        $('#correlativo_numcorrelativo').siblings().remove()
+        $('#correlativo_ip').siblings().remove()
+
+        var label = $("label[for='" + $('#correlativo_fksolicitante').attr('id') + "']")
+        label.remove()
+
         $('#correlativo_id').hide()
         $("#correlativo_id").siblings().hide()
         $("#correlativo_id").attr("readonly", "readonly")
 
-        $('#correlativo_numcorrelativo').val('')
+        var labelu = $("label[for='" + $('#correlativo_fkunidad').attr('id') + "']")
+        labelu.attr('id', 'lbl-unit')
+        labelu.siblings().remove()
+
         $('#correlativo_fechareg').val('')
         $('#correlativo_redactor').val('')
         $('#correlativo_destinatario').val('')
         $('#correlativo_referencia').val('')
         $('#correlativo_equipo').val('')
-        $('#correlativo_ip').val('')
         $('#correlativo_url').val('')
         $('#correlativo_antecedente').val('')
         $('#correlativo_item').val('')
         $('#correlativo_urleditable').val('')
         $('#correlativo_entrega').val('')
         $('#correlativo_urlorigen').val('')
+
+        $('#lnk').remove();
+        $('#lnke').remove();
+        $('#lnko').remove();
 
         clean_form()
         verif_inputs()
@@ -168,39 +163,59 @@
         document.getElementById("correlativo_submit").innerHTML= "Guardar"
         $('#correlativo_id').val(0)
 
-        obj = JSON.stringify({
-            'tipo': document.getElementById('correlativo_fktiponota').value
-        })
-        //console.log(obj)
-        ajax_call_get("/correlativo_numerar",{
-            object: obj
-        },function(response){ 
-            //console.log(response)
-            var self = JSON.parse(response) 
-            $('#correlativo_numcorrelativo').val(self.numcorrelativo)
-        })
         setTimeout(function(){ 
+            $('#correlativo_fkunidad').selectpicker({
+                size: 4,
+                liveSearch: true,
+                liveSearchPlaceholder: 'Buscar unidad.',
+                title: 'Seleccione una unidad.'
+            })
             $('#form').modal('show')
             }, 2000
         )
     })
+
+    $("#correlativo_url").change(function(){
+        $("#lnk").hide();
+    });
+
+    $("#correlativo_urleditable").change(function(){
+        $("#lnke").hide();
+    });
+
+    $("#correlativo_urlorigen").change(function(){
+        $("#lnko").hide();
+    });
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
+            var fu = 0
             ajax_call_get("/correlativo_editar",{
                 object: obj
-            },function(response){ 
-                
+            },function(response){
+                var labelu = $("label[for='" + $('#correlativo_fkunidad').attr('id') + "']")
+                labelu.attr('id', 'lbl-unit')
+                labelu.siblings().remove()
+                combo_unidad()
+
                 var self = JSON.parse(response)    
-                console.log(self)        
+                console.log(self)  
+                $('#correlativo_id').show()
+                $("#correlativo_id").siblings().show()
+                $("#correlativo_id").attr("readonly", "readonly")
+
+                $('#correlativo_numcorrelativo').siblings().remove()
+                $('#correlativo_ip').siblings().remove()
+                var label = $("label[for='" + $('#correlativo_fksolicitante').attr('id') + "']")
+                label.remove()
+            
                 $('#correlativo_id').val(self.id)
                 $('#correlativo_antecedente').val(self.antecedente)
                 $('#correlativo_item').val(self.item)
                 $('#correlativo_entrega').val(self.entrega)
-                $('#correlativo_numcorrelativo').val(self.numcorrelativo)
                 $('#correlativo_fechareg').val(self.fechareg)
                
                 $('#correlativo_redactor').val(self.redactor)
@@ -208,16 +223,6 @@
                 $('#correlativo_destinatario').val(self.destinatario)
                 $('#correlativo_referencia').val(self.referencia)
                 $('#correlativo_equipo').val(self.equipo)
-                $('#correlativo_ip').val(self.ip)
-                // console.log('1.1')
-                // $('#correlativo_url').val(self.url)
-                //console.log('1.2')
-                //   $('#correlativo_urleditable').val(self.urleditable)
-                // console.log('1.3')
-                // $('#correlativo_urlorigen').val(self.urlorigen)
-
-                document.getElementById('correlativo_fksolicitante').value = self.fksolicitante.id
-                $('#correlativo_fksolicitante').selectpicker('render')
     
                 document.getElementById('correlativo_fkcorrelativo').value = self.fkcorrelativo.id
                 $('#correlativo_fkcorrelativo').selectpicker('render')
@@ -225,26 +230,83 @@
                 document.getElementById('correlativo_fktiponota').value = self.fktiponota.id
                 $('#correlativo_fktiponota').selectpicker('render')
 
-                document.getElementById('correlativo_fkestado').value = self.fkestado.id
-                $('#correlativo_fkestado').selectpicker('render')
-
-                document.getElementById('correlativo_fkunidad').value = self.fkunidad.id
-                $('#correlativo_fkunidad').selectpicker('render')
+                document.getElementById('correlativo_estadocorrelativo').value = self.estadocorrelativo
+                $('#correlativo_estadocorrelativo').selectpicker('render')
           
+                if(self.url != 'N/A' && self.url != null) {
+                    $('#lnk').remove();
+                    let urlfile = self.url;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnk' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#correlativo_url");
+                }
+                else $('#lnk').remove();
+
+                if(self.urleditable != 'N/A' && self.urleditable != null) {
+                    $('#lnke').remove();
+                    let urldown = self.urleditable;
+                    let vdown = urldown.substring(urldown.lastIndexOf("/")+1, urldown.length);
+                    $("<a id='lnke' href='"+urldown+"'>"+vdown+"</a>").insertAfter("#correlativo_urleditable");
+                }
+                else $('#lnke').remove();
+
+                if(self.urlorigen != 'N/A' && self.urlorigen != null) {
+                    $('#lnko').remove();
+                    let urlnot = self.urlorigen;
+                    let vnot = urlnot.substring(urlnot.lastIndexOf("/")+1, urlnot.length);
+                    $("<a id='lnko' href='"+urlnot+"'>"+vnot+"</a>").insertAfter("#correlativo_urlorigen");
+                }
+                else $('#lnko').remove();
+                
+                fu = self.fkunidad.id
             })
             clean_form()
             verif_inputs()
             $('#id_div').show()
             $('#insert').hide()
             $('#update').show()
-            //$('#form').modal('show')
+            
             document.getElementById("correlativo_submit").innerHTML = "Modificar"
-            setTimeout(function(){$('#form').modal('show')}, 500);
+            setTimeout(function(){
+                $('#correlativo_fkunidad').selectpicker({
+                    size: 4,
+                    liveSearch: true,
+                    liveSearchPlaceholder: 'Buscar unidad.',
+                    title: 'Seleccione una unidad.'
+                })
+
+                document.getElementById('correlativo_fkunidad').value = fu
+                $('#correlativo_fkunidad').selectpicker('render')
+                $('#form').modal('show')
+            }, 2000);
         })
+    }
+
+    function combo_unidad() {
+        //$('.edit').click(function () {
+            obj = JSON.stringify({
+                'id': 0
+            })
+            ajax_call_get("/obtener_unidad",{
+                object: obj
+            },function(response){ 
+                var self = JSON.parse(response)    
+                console.log(self)  
+                html = "<div class='btn-group bootstrap-select form-line form-label form-control'>"+
+                    "<select id='correlativo_fkunidad' name='correlativo[fkunidad]' class='form-line form-label form-control' tabindex='-98'>"
+                for (var i = 0; i < self.length; i++) {
+                    html += "<option value='"+self[i].id+"'>"+self[i].nombre+"</option>"
+                    console.log(self[i].id+"_"+self[i].nombre)
+                }
+                html += "</select>"+
+                    "</div>"
+                $(html).insertAfter('#lbl-unit')
+            })
+        //})
     }
     </script>
     <script>
         attach_edit()
+        //combo_unidad()
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
@@ -338,6 +400,8 @@
                 }
             });
         });
+        $('.flash-notice').fadeOut(8000);
+        if($('#e-msg').css("display") == "none") $('#e-msg').remove();
     </script>
 
 {% endblock %}

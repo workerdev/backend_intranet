@@ -14,3 +14,307 @@
         </div>
     </div>
 </div>
+
+
+
+<div id="form-revision" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Documento en proceso</h3>
+            </div>
+            <div class="modal-body">
+                <div class="card pd-own">
+                <div id="cliente_form_body" class="box-body">
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">ID Revisión</label>
+                                        <input id="idrev" name="idrev" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-5">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Nuevo o actualización</label>
+                                        <input id="nuevooactualizacion" name="nuevooactualizacion" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Código del documento</label>
+                                        <input id="codigodocumento" name="codigodocumento" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-md-center">
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Código de proceso</label>
+                                        <input id="codigoproceso" name="codigoproceso" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-5">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Título</label>
+                                        <input id="titulodoc" name="titulodoc" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Tipo de documento</label>
+                                        <input id="tipodocumento" name="tipodocumento" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-md-center">
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Versión</label>
+                                        <input id="versiondoc" name="versiondoc" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-5">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Vínculo archivo digital</label>
+                                        <input id="vinculoarchivodig" name="vinculoarchivodig" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Carpeta operativa</label>
+                                        <input id="carpetaop" name="carpetaop" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-md-center">
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Aprobado o rechazado</label>
+                                        <input id="aproborec" name="aproborec" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-5">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Aprobado por</label>
+                                        <select id="aprobadordoc" name="aprobadordoc" class="form-control" autofocus required>
+                                        {% for tr in aprobador %}
+                                            <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-3">
+                                <div class="form-group form-float">
+                                    <div class="">
+                                        <label class="form-label">Fecha aprobación</label>
+                                        <input id="faprobacion" name="faprobacion" type="text" class="form-control" readonly autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="card pd-own">
+                <button id="new-rev" type="button" class="btn bg-teal waves-effect" title="Agregar revisión">
+                    <i class="material-icons">assignment_ind</i>
+                </button>
+                
+                <h4 id="cliente_enable" class="">Detalle en Proceso de Revisión</h4>
+                <table id="table_revision" class="table table-bordered table-striped table-hover js-basic-example dataTable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID. Revisión</th>
+                            <th>Fecha Recibido</th>
+                            <th>Responsable Revisión</th>
+                            <th>Estado</th>
+                            <th>Firma Electrónica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                </div>
+
+                <div class="modal-footer">
+                    {% if 'documentoproceso_aprobar' in permisos %}
+                        <button id="aprobar-rev" type="button" class="btn bg-blue waves-effect">APROBADO <i class="material-icons">assignment_turned_in</i></button>
+                    {% endif %}
+                    <button id="insert-rev" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="form-rev" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-validate" role="document">
+        <div class="modal-content">
+            {% if docderiv %}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Documentos derivados</h3>
+                <h4 id="cliente_enable" class=""></h4>
+                <div id="cmb-drv" class="form-group form-float">
+                    
+                </div> 
+            </div>
+            <div class="modal-body">
+                <div class="body table-responsive">
+                    <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                        <tr>
+                            <th class="order_by_th" data-name="phone">Fecha </th>
+                            <th class="order_by_th" data-name="phone">Nuevo/Actualización </th>
+                            <th class="order_by_th" data-name="phone">Código </th>
+                            <th class="order_by_th" data-name="phone">Tipo </th>
+                            <th class="order_by_th" data-name="names">Documento en proceso </th>
+                            <th class="actions_header">Acciones </th>
+                        </tr>
+                        </thead>
+                        <tbody id="table_content">
+                            {% for v in docderiv %}
+                                <tr>
+                                    <td>{{ v.fecha | date('d-m-Y') }}</td>
+                                    <td>{{ v.fkdoc.nuevoactualizacion }}</td>
+                                    {% if v.fkdoc.fkdocumento != null %}
+                                        <td>{{ v.fkdoc.fkdocumento.codigo }}</td>
+                                    {% else %}
+                                        {% if v.fkdoc.fkformulario != null %}
+                                            <td>{{ v.fkdoc.fkformulario.codigo }}</td>
+                                        {% else %}
+                                            <td>{{ v.fkdoc.codigonuevo }}</td>
+                                        {% endif %}
+                                    {% endif %}
+                                    <td>{{ v.fkdoc.fktipo.nombre }}</td>
+                                    <td>{{ v.fkdoc.titulo }}</td>
+                                    <td align="center">
+                                    {% if v.fkdoc.fkaprobador.id == profile.id %}
+                                        <button id="apdoc" data-json="{{v.id}}" type="button" class="btn bg-cyan waves-effect waves-light apdoc" title="Aprobar"><i class="material-icons">done</i></button> 
+                                    {% else %}
+                                        <button id="drdoc" data-json="{{v.id}}" type="button" class="btn bg-light-green waves-effect waves-light drdoc" title="Derivar"><i class="material-icons">send</i></button>
+                                    {% endif %}
+                                        <button id="rcdoc" data-json="{{v.id}}" type="button" class="btn bg-blue waves-effect waves-light rcdoc" title="Rechazar"><i class="material-icons">clear</i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Documentos derivados</h3>
+                <h4 id="cliente_enable" class=""></h4>
+                </div>
+                <div class="modal-body">No tiene documentos derivados.</div>
+                <div class="modal-footer"> </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<div id="form-valid" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Confirmar acción</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert" id="msgv">
+                
+            </div>
+            <div class="modal-body">
+                <div id="cnfdc_form_body" class="box-body">
+                    <div class="input-group">
+                        <div class="form-line">
+                            <input type="password" class="form-control" id="clave" name="clave" placeholder="Contraseña" required>
+                        </div>
+                        <span class="input-group-addon" id="cdc-pass" style="cursor: pointer;" title="Mostrar">
+                            <i class="material-icons" style="color: grey" id="ic-dpass">visibility_off</i>
+                        </span>
+                    </div>  
+                </div>
+
+                <div class="modal-footer">
+                    <button id="confirm" type="button" class="btn bg-green waves-effect">Enviar <i class="material-icons">lock_open</i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="form-register" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Documento Aprobado</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert" id="msgv">
+                
+            </div>
+            <div class="modal-body">
+                <div id="cnfdc_form_body" class="box-body">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="vinculodiagf" name="vinculodiagf" type="text" class="form-control text">
+                            <label class="form-label">Vínculo diagrama flujo</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <label="form-label">Código de documento</label>
+                            <select id="documento" name="documento" class="form-control" autofocus required>
+                            {% for d in documento %}
+                                <option value="{{d.id}}">{{d.codigo}}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>  
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btn-rgaprob" type="button" class="btn bg-teal waves-effect">Aprobar <i class="material-icons">check_circle</i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

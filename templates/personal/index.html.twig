@@ -53,6 +53,8 @@
                             <th class="order_by_th" data-name="phone">Fecha de Nacimiento </th>
                             <th class="order_by_th" data-name="phone">Procesos Cargo </th>
                             <th class="order_by_th" data-name="phone">Estado de Personal </th>
+                            <th class="order_by_th" data-name="phone">Sector </th>
+                            <th class="order_by_th" data-name="phone">Área </th>
                             <th class="actions_header">Acciones </th>
                         </tr>
                         </thead>
@@ -87,6 +89,18 @@
         liveSearchPlaceholder: 'Buscar tipo de estado.',
         title: 'Seleccione un tipo de estado.'
     })
+     $('#fksector').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar sector.',
+        title: 'Seleccione un sector.'
+    })
+     $('#fkarea').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar área.',
+        title: 'Seleccione un área.'
+    })
     
     $('#new').click(function () {
         $('#nombre').val('')
@@ -113,7 +127,9 @@
             'telefono': $('#telefono').val(),
             'fnac': $('#fnac').val(),
             'personalcargo': $('#fkprocesoscargo').val(),
-            'estadopersonal': $('#fkestadopersonal').val()
+            'estadopersonal': $('#fkestadopersonal').val(),
+            'sector': $('#fksector').val(),
+            'area': $('#fkarea').val()
         })
         ajax_call_validation("/personal_insertar", {object: objeto}, null, main_route)
         // ajax_call("/personal_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
@@ -144,6 +160,15 @@
                 $('#fkprocesoscargo').selectpicker('render')
                 $('#fkestadopersonal').selectpicker('render')
 
+                if(self.fksector != null){
+                    $('#fksector').val(self.fksector.id)
+                    $('#fksector').selectpicker('render')
+                }
+                if(self.fkarea != null){
+                    $('#fkarea').val(self.fkarea.id)
+                    $('#fkarea').selectpicker('render')
+                }
+
                 clean_form()
                 verif_inputs()
                 $('#id_div').show()
@@ -164,7 +189,9 @@
             'telefono': $('#telefono').val(),
             'fnac': $('#fnac').val(),
             'personalcargo': $('#fkprocesoscargo').val(),
-            'estadopersonal': $('#fkestadopersonal').val()
+            'estadopersonal': $('#fkestadopersonal').val(),
+            'sector': $('#fksector').val(),
+            'area': $('#fkarea').val()
         })
        ajax_call_validation("/personal_actualizar", {object: objeto}, null, main_route)
         // ajax_call("/personal_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})

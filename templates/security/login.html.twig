@@ -67,7 +67,7 @@
                             <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
                         </div>
                         <span class="input-group-addon" id="see-pass" style="cursor: pointer;" title="Mostrar">
-                            <i class="material-icons" style="color: grey" id="ic-pass">visibility</i>
+                            <i class="material-icons" style="color: grey" id="ic-pass">visibility_off</i>
                         </span>
                     </div>
                     <div class="row">
@@ -115,6 +115,7 @@
             data: {object : objeto},
             async: false,
             beforeSend: function () {
+                $("#spn-ld").remove();
                 $("<div id='spn-ld' style='text-align: center; margin:auto;width:100%; height:65px;'>"+
                     "<div style='margin:auto;display:block; height:55px;'>"+
                         "<img src='resources/images/espiral.gif' style='height:100%; width:auto;'/>"+
@@ -138,11 +139,13 @@
     $('#see-pass').mousedown(function(){
         $("#ic-pass").css("color", "lightgrey");
         $("#password").prop("type", "text");
+        $("#ic-pass").html("visibility");
     });
     
     $("#see-pass").mouseup(function(){
         $("#ic-pass").css("color", "grey");
         $("#password").prop("type", "password");
+        $("#ic-pass").html("visibility_off");
     });
 </script>
 

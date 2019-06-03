@@ -1,0 +1,23 @@
+{% for tr in objects %}
+    <tr>
+        <td>{{ tr.titulo }}</td>
+        {% if tr.ruta not in [null, '', 'N/A'] %}
+            <td><a href="{{ tr.ruta }}">{{ tr.ruta|slice(5) }}</a></td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if tr.fksuperior not in [null, ''] %}
+            <td>{{ tr.fksuperior.titulo }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        <td align="center">
+        {% if 'sig_editar' in permisos %}  
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+        {% endif %}
+        {% if 'sig_eliminar' in permisos %}  
+            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+        {% endif %}
+        </td>
+    </tr>
+{% endfor %}

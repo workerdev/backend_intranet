@@ -74,9 +74,10 @@
                 <thead>
                 <tr>
                     <th class="order_by_th" data-name="names">Fecha Inicio</th>
-                    <th class="order_by_th" data-name="phone">Fecha Fin</th>
+                    <th class="order_by_th" data-name="names">Fecha Fin</th>
                     <th class="order_by_th" data-name="phone">Tipo</th>
                     <th class="order_by_th" data-name="phone">Días</th>
+                    <th class="actions_header">Acciones </th>
                 </tr>
                 </thead>
                 <tbody id="table_content">
@@ -125,13 +126,47 @@
     $('#reset').click(function () {
         var objeto = {{ objects|json_encode }};
         if( objeto == undefined || objeto == null || objeto.length <= 0 ){
-            console.log('first');
+           
             ajax_call("/accidentes_reset", {tipo: ''}, null, function () {})
             setTimeout(function(){window.location=main_route}, 1000);
         }else{
             ajax_call("/accidentes_reset", {tipo: $('#tipo').val()+""}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         }
     });
+    
+      function attach_edit() {
+        $('.edit').click(function () {
+              $('#form').modal('show')
+            obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+            });
+            ajax_call_get("/accidentes_editar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                $('#id').val(self.id)
+                $('#fechainicio').val(self.fechainicio)
+
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                $('#form').modal('show')
+            })
+        })
+    }
+    attach_edit()
+    $('#update').click(function () {
+        console.log('asdsadad')
+        objeto = JSON.stringify({
+            'id':'1',
+            'fechainicio': '2020-01-25'
+        })
+      //  ajax_call_validation("/accidentes_actualizar", {object: objeto}, null, main_route)
+         ajax_call("/accidentes_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+         $('#form').modal('hide')
+    })
 
     $('.delete').click(function(){
         id = parseInt(JSON.parse($(this).attr('data-json')))

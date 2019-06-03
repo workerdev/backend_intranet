@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<div class="card">
+    <div class="card-tabs">
+        <div class="card-content grey lighten-4">
+            <span id="subject" class="card-title grey-text text-darken-4">DOCUMENTOS EN VIGENCIA</span>
+        </div>
+    </div>
+    <div class="card-content">
+        <p>Señores Destinatarios:</p>
+        <div>Para su conocimiento, se detalla a continuación los siguientes documentos en vigencia:</div>
+        <p id="message" class="card-subtitle grey-text text-darken-2">
+            <table class="bordered striped centered">
+                <thead>
+                    <tr>
+                        <th>TIPO</th>
+                        <th>ÁREA</th>
+                        <th>CÓDIGO</th>
+                        <th>TÍTULO</th>
+                        <th>VERSIÓN</th>
+                        <th>VINCULO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in doclist %}
+                    <tr>
+                        {% if d.isform == 'true' %}
+                            <td>Formulario</td>
+                            <td>{{ d.fkdocumento.fkficha.fkareagerenciasector.fkarea.nombre}}</td>
+                            <td>{{ d.codigo }}</td>
+                            <td>{{ d.titulo }}</td>
+                            <td>{{ d.versionvigente }}</td>
+                            {% if d.vinculofiledig not in ['N/A', null] %}
+                                <td><a href="{{ 'http://' ~ adicional.dominio ~ d.vinculofiledig }}">{{ d.vinculofiledig }}</a></td>
+                            {% else %}
+                                <td>{{ d.vinculofiledig }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ d.fktipo.nombre }}</td>
+                            <td>{{ d.fkficha.fkareagerenciasector.fkarea.nombre}}</td>
+                            <td>{{ d.codigo }}</td>
+                            <td>{{ d.titulo }}</td>
+                            <td>{{ d.versionvigente }}</td>
+                            {% if d.vinculoarchivodig not in ['N/A', null] %}
+                                <td><a href="{{ 'http://' ~ adicional.dominio ~ d.vinculoarchivodig }}">{{ d.vinculoarchivodig }}</a></td>
+                            {% else %}
+                                <td>{{ d.vinculoarchivodig }}</td>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </p>
+        <div>
+            <p>Documentos que se encuentran disponibles en la INTRANET.</p>
+            <p>Atte.</p>
+            <p style="color: #004C99">GESTIÓN DE CALIDAD Y DESARROLLO ORGANIZACIONAL (GCDO)</p>
+        </div>
+    </div>
+</div>

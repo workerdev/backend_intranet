@@ -90,14 +90,14 @@ class Documento
 
     /**
      * @var string
-     * @ORM\Column(name="cb_documento_vinculodiagflujo", type="text", nullable=false)
+     * @ORM\Column(name="cb_documento_vinculodiagflujo", type="text", nullable=true)
      */
     private $vinculodiagflujo;
 
     /**
      * @var date
-     *  @Assert\NotBlank
-     * @ORM\Column(name="cb_documento_fechaPublicacion", type="date", nullable=true)
+     *
+     * @ORM\Column(name="cb_documento_fechaPublicacion", type="date", nullable=true, options={"default":null})
      */
     private $fechaPublicacion;
 

@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<div class="card">
+    <div class="card-tabs">
+        <div class="card-content grey lighten-4">
+            <span id="subject" class="card-title grey-text text-darken-4">Documento en Revisión</span>
+        </div>
+    </div>
+    <div class="card-content">
+        <p id="message" class="card-subtitle grey-text text-darken-2">
+            <table class="bordered striped centered">
+                <thead>
+                    <tr>
+                        <th>NUEVO O ACTUALIZACIÓN</th>
+                        <th>CÓDIGO DEL DOCUMENTO</th>
+                        <th>TIPO DE DOCUMENTO</th>
+                        <th>TÍTULO</th>
+                        <th>VERSIÓN</th>
+                        <th>VINCULO DEL ARCHIVO DIGITAL</th>
+                        <th>FECHA RECIBIDO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ docproceso.nuevoactualizacion }}</td>
+                        {% if docproceso.fkdocumento != null %}
+                            <td>{{ docproceso.fkdocumento.codigo }}</td>
+                        {% else %}
+                            <td>{{ docproceso.codigonuevo }}</td>
+                        {% endif %}
+                        <td>{{ docproceso.fktipo.nombre }}</td>
+                        <td>{{ docproceso.titulo }}</td>
+                        <td>{{ docproceso.versionvigente }}</td>
+                        <td><a href="{{ 'http://' ~ adicional.dominio ~ docproceso.vinculoarchivo }}">{{ docproceso.vinculoarchivo|slice(30) }}</a></td>
+                        <td>{{ adicional.fecha }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </p>
+    </div>
+</div>

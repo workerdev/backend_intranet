@@ -51,6 +51,7 @@
                             <input id="fnac" name="fnac" type="date" class="form-control">
                         </div>
                     </div>
+
                     <label>Tipo de Cargo</label>
                         <select id="fkprocesoscargo" class="form-control">
                         {% for t in tipo %}
@@ -59,10 +60,29 @@
                         </select>
                         </br>
                         </br>
-                        <label>Tipo de Estado Personal</label>
+
+                    <label>Tipo de Estado Personal</label>
                         <select id="fkestadopersonal" class="form-control">
                         {% for t2 in tipo2 %}
                             <option value="{{t2.id}}">{{t2.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+
+                    <label>Sector</label>
+                        <select id="fksector" class="form-control">
+                        {% for t in sector %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
+                        {% endfor %}
+                        </select>
+                        </br>
+                        </br>
+
+                    <label>Área</label>
+                        <select id="fkarea" class="form-control">
+                        {% for t in area %}
+                            <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}
                         </select>
                         </br>

@@ -2,12 +2,18 @@
 {% block stylesheets %}
     <style>
         .accion{ cursor:pointer }
+        .sidebar-own{
+            width: 182px!important;
+        }
+        .content-own{
+            margin: 80px 0 0 182px !important;
+        }
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-
+    <script src="{{ 'http://' ~ dominio ~ '/resources/js/transporte.js' }}"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/resources/js/functions.js' }}"></script>
     <script>
+        /*var obj = JSON.parse({{organigrama}});
+        console.log(obj);*/
         main_route = '/organigrama'
 
         function default_values() {
@@ -22,26 +28,50 @@
 {% endblock %}
 {% block body %}
     {{ include('personalcargo/form_asignar_cargo') }}
-    <div class="header bg-indigo"><h2>PROCESOS CARGO</h2></div>
+    <div class="header bg-indigo"><h2>PROCESOS CARGO</h2>
+    </div>
+    <!--button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+        <i class="material-icons">add</i>
+    </button-->
     <div class="body">
+        <label>Cargo</label>
+            <select id="ft-cargo" class="form-control">
+            {% for c in cargo %}
+                <option value="{{c.id}}">{{c.nombre}}</option>
+            {% endfor %}
+            </select>
+            </br>
+            </br> 
         <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; height: 500px"></div>
         <button id="btnsave" class="btn btn-primary">Confirmar cambios</button>
         <textarea id="resultado" style="display: none;"></textarea>
         <textarea id="mySavedModel" style="width:100%;height:250px;display: none;">
-            { "class": "go.TreeModel",
+        { 
+            "class": "go.TreeModel",
             "nodeDataArray": {{organigrama}}
-            }
+        }
         </textarea>
         <input id="cantidad" style="display: none" value="{{cantidad}}">
 
     </div>
 {%endblock%}
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/momentjs/moment.js' }}"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/momentjs/locale/es.j' }}s"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' }}"></script>
     <script type="text/javascript">
-        
+        $('#ft-cargo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar cargo.',
+            title: 'Seleccione un cargo.'
+        })
+
+        $(document).ready(function() {
+            $('#leftsidebar').addClass("sidebar-own");
+            $('#content').addClass("content-own");
+        });
+
         $('#btnsave').click(function(){
             var modelasText = JSON.parse(myDiagram.model.toJson());
             var modelo2 = JSON.parse($('#mySavedModel').val());
@@ -54,7 +84,7 @@
             ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 2000);});
         })
     </script>
-    <script src="Plugins/gojs/go-debug.js"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/Plugins/gojs/go-debug.js' }}"></script>
     <script id="code">
         var nombre = '[VACANTE]';
         var id = 0;
@@ -172,7 +202,7 @@
                                     alternateNodeSpacing: 20
                                 }),
                         "undoManager.isEnabled": true // enable undo & redo
-                    });
+                    });       
 
             // when the document is modified, add a "*" to the title and enable the "Save" button
             myDiagram.addDiagramListener("Modified", function(e) {
@@ -629,5 +659,23 @@
         function load() {
             myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
         }
+
+        $('#ft-cargo').change(function() {
+            let id_cargo = $(this).val(); 
+          
+            window.location.href = main_route + '/' + id_cargo;
+        });
+
+        $('#new').click(function () {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse('2'))
+            })
+            ajax_call_get("/personalcargo_filtrar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+               
+            })
+        })        
     </script>
 {% endblock %}

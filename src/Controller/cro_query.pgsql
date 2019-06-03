@@ -1,4 +1,4 @@
-SELECT
+~!@##!SELECT
 cb_gerencia_nombre AS GERENCIA,
 cb_area_nombre AS AREA,
 cb_documento_formulario_codigo AS COD_FORMULARIO,

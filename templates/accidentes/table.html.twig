@@ -8,7 +8,11 @@
     {% endif %}
     <td >{{ t.tipo }}</td>
     <td class="dias">
-
+    </td>
+     <td align="center">
+    {% if 'accidentes_editar' in permisos %}
+        <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+    {% endif %}
     </td>
 </tr>
 {% endfor %}

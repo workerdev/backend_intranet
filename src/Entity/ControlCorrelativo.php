@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * ControlCorrelativo
- * @ORM\Table(name="cb_procesos_control_correlativo", indexes={@ORM\Index(name="cb_control_correlativo_id", columns={"cb_control_correlativo_id"})})
+ * @ORM\Table(name="cb_control_correlativo", indexes={@ORM\Index(name="cb_control_correlativo_id", columns={"cb_control_correlativo_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\ControlCorrelativoRepository")
  *  @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */

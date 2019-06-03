@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Correlativo;
-use App\Entity\Personal;
+use App\Entity\Usuario;
 use App\Entity\ControlCorrelativo;
 use App\Entity\TipoNota;
 use App\Entity\EstadoCorrelativo;
@@ -50,7 +50,7 @@ class CorrelativoType extends AbstractType
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('fksolicitante', EntityType::class, array(
-                'class' => Personal::class,
+                'class' => Usuario::class,
                 'query_builder' => function (EntityRepository $per) {
                     return $per->createQueryBuilder('p')
                         ->where('p.estado=1');
@@ -59,11 +59,15 @@ class CorrelativoType extends AbstractType
                     return $fksolicitante->getNombre() . ' ' . $fksolicitante->getApellido();
                 },
                 'label' => 'Solicitante',
-                'attr' => ['class' => 'form-line form-label']
+                'attr' => ['class' => 'hidden'],
+                'required' => false,
+                'data' => '1'
             ))
             ->add('numcorrelativo', NumberType::class, array(
                 'label' => 'Número correlativo',
-                'attr' => ['class' => 'form-line form-label']
+                'attr' => ['class' => 'hidden'],
+                'required' => false,
+                'data' => '1'
             ))
             ->add('destinatario', TextType::class, array(
                 'label' => 'Destinatario',
@@ -89,7 +93,9 @@ class CorrelativoType extends AbstractType
             ))
             ->add('ip', TextType::class, array(
                 'label' => 'IP',
-                'attr' => ['class' => 'form-line form-label']
+                'attr' => ['class' => 'hidden'],
+                'required' => false,
+                'data' => '123'
             ))
             ->add('url', FileType::class, array(
                 'label' => 'Url',
@@ -118,16 +124,16 @@ class CorrelativoType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('fkestado', EntityType::class, array(
-                'class' => EstadoCorrelativo::class,
-                'query_builder' => function (EntityRepository $ectr) {
-                    return $ectr->createQueryBuilder('ec')
-                        ->where('ec.estado=1');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Estado',
+            ->add('estadocorrelativo', ChoiceType::class, array(
+                'choices'  => array(
+                    'Vigente' => 'Vigente',
+                    'Anulado' => 'Anulado',
+                ),
+                'label' => 'Estado Correlativo',
                 'attr' => ['class' => 'form-line form-label']
             ))
+            
+           
             ->add('fkunidad', EntityType::class, array(
                 'class' => Unidad::class,
                 'query_builder' => function (EntityRepository $und) {

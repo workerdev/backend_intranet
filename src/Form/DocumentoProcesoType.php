@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\DocumentoProceso;
 use App\Entity\Documento;
+use App\Entity\DocumentoFormulario;
 use App\Entity\TipoDocumento;
 use App\Entity\FichaProcesos;
 use App\Entity\Usuario;
@@ -29,12 +30,49 @@ class DocumentoProcesoType extends AbstractType
                 'attr' => ['class' => 'form-line form-label'],
                 'attr' => ['type' => 'hidden']
             ))
+            ->add('fktipo', EntityType::class, array(
+                'class' => TipoDocumento::class,
+                'query_builder' => function (EntityRepository $tp) {
+                    return $tp->createQueryBuilder('t')
+                        ->where('t.estado=1');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo de documento',
+                'attr' => ['class' => 'form-line form-label']
+            ))
             ->add('nuevoactualizacion', ChoiceType::class, array(
                 'choices'  => array(
                     'NUEVO' => 'NUEVO',
                     'ACTUALIZACION' => 'ACTUALIZACION',
                 ),
                 'label' => 'Nuevo/Actualización',
+                'attr' => ['class' => 'form-line form-label']
+            ))  
+            ->add('codigonuevo', TextType::class, array(
+                'label' => 'Código de Documento',
+                'required' => false,
+                'attr' => ['class' => 'form-line form-label']
+            ))
+            ->add('fkdocumento', EntityType::class, array(
+                'class' => Documento::class,
+                'query_builder' => function (EntityRepository $doc) {
+                    return $doc->createQueryBuilder('d')
+                        ->where('d.estado=1');
+                },
+                'choice_label' => 'codigo',
+                'label' => 'Documento',
+                'required' => false,
+                'attr' => ['class' => 'form-line form-label']
+            ))
+            ->add('fkformulario', EntityType::class, array(
+                'class' => DocumentoFormulario::class,
+                'query_builder' => function (EntityRepository $docf) {
+                    return $docf->createQueryBuilder('df')
+                        ->where('df.estado=1');
+                },
+                'choice_label' => 'codigo',
+                'label' => 'Documento formulario',
+                'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('titulo', TextType::class, array(
@@ -51,6 +89,7 @@ class DocumentoProcesoType extends AbstractType
             ))
             ->add('carpetaoperativa', NumberType::class, array(
                 'label' => 'Carpeta operativa',
+                'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('aprobadorechazado', ChoiceType::class, array(
@@ -59,6 +98,7 @@ class DocumentoProcesoType extends AbstractType
                     'RECHAZADO' => 'RECHAZADO',
                 ),
                 'label' => 'Aprobado/Rechazado',
+                'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('fkaprobador', EntityType::class, array(
@@ -71,22 +111,14 @@ class DocumentoProcesoType extends AbstractType
                     return $fkaprobador->getNombre() . ' ' . $fkaprobador->getApellido();
                 },
                 'label' => 'Aprobador',
+                'required' => false,
                 'attr' => ['class' => 'form-line form-label']
             ))
             ->add('fechaaprobacion', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => 'Fecha de aprobación',
-                'attr' => ['class' => 'form-line form-label']
-            ))
-            ->add('fkdocumento', EntityType::class, array(
-                'class' => Documento::class,
-                'query_builder' => function (EntityRepository $doc) {
-                    return $doc->createQueryBuilder('d')
-                        ->where('d.estado=1');
-                },
-                'choice_label' => 'codigo',
-                'label' => 'Documento',
-                'attr' => ['class' => 'form-line form-label']
+                'attr' => ['class' => 'form-line form-label'],
+                'required' => false
             ))
             ->add('fkproceso', EntityType::class, array(
                 'class' => FichaProcesos::class,
@@ -96,16 +128,6 @@ class DocumentoProcesoType extends AbstractType
                 },
                 'choice_label' => 'codproceso',
                 'label' => 'Proceso',
-                'attr' => ['class' => 'form-line form-label']
-            ))
-            ->add('fktipo', EntityType::class, array(
-                'class' => TipoDocumento::class,
-                'query_builder' => function (EntityRepository $tp) {
-                    return $tp->createQueryBuilder('t')
-                        ->where('t.estado=1');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Tipo de documento',
                 'attr' => ['class' => 'form-line form-label']
             ))
             

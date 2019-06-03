@@ -277,43 +277,61 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $accidentesins->setFkmodulo($this->getReference(ModuloChildrenFixtures::ACCIDENTE_CHILD));
         $manager->persist($accidentesins);
 
+        $accidentesedt = new Modulo();
+        $accidentesedt->setNombre('accidentes_editar');
+        $accidentesedt->setTitulo('Actualizar');
+        $accidentesedt->setRuta( '/accidentes_editar');
+        $accidentesedt->setIcono('home');
+        $accidentesedt->setMenu(0);
+        $accidentesedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::ACCIDENTE_CHILD));
+        $manager->persist($accidentesedt);
 
 
-        $dctohm = new Modulo();
-        $dctohm->setNombre('home_documento');
-        $dctohm->setTitulo('Consultar');
-        $dctohm->setRuta('');
-        $dctohm->setIcono('home');
-        $dctohm->setMenu(0);
-        $dctohm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
-        $manager->persist($dctohm);
+        $sighm = new Modulo();
+        $sighm->setNombre('home_sig');
+        $sighm->setTitulo('Consultar');
+        $sighm->setRuta('');
+        $sighm->setIcono('home');
+        $sighm->setMenu(0);
+        $sighm->setFkmodulo($this->getReference(ModuloChildrenFixtures::SIG_CHILD));
+        $manager->persist($sighm);
 
-        $dctoins = new Modulo();
-        $dctoins->setNombre('documento_insertar');
-        $dctoins->setTitulo('Adicionar');
-        $dctoins->setRuta('/documento_insertar');
-        $dctoins->setIcono('home');
-        $dctoins->setMenu(0);
-        $dctoins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
-        $manager->persist($dctoins);
+        $sigins = new Modulo();
+        $sigins->setNombre('sig_insertar');
+        $sigins->setTitulo('Adicionar');
+        $sigins->setRuta('/sig_insertar');
+        $sigins->setIcono('home');
+        $sigins->setMenu(0);
+        $sigins->setFkmodulo($this->getReference(ModuloChildrenFixtures::SIG_CHILD));
+        $manager->persist($sigins);
 
-        $dctoedt = new Modulo();
-        $dctoedt->setNombre('documento_editar');
-        $dctoedt->setTitulo('Actualizar');
-        $dctoedt->setRuta('/documento_editar');
-        $dctoedt->setIcono('home');
-        $dctoedt->setMenu(0);
-        $dctoedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
-        $manager->persist($dctoedt);
+        $sigedt = new Modulo();
+        $sigedt->setNombre('sig_editar');
+        $sigedt->setTitulo('Actualizar');
+        $sigedt->setRuta('/sig_editar');
+        $sigedt->setIcono('home');
+        $sigedt->setMenu(0);
+        $sigedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::SIG_CHILD));
+        $manager->persist($sigedt);
 
-        $dctoelm = new Modulo();
-        $dctoelm->setNombre('documento_eliminar');
-        $dctoelm->setTitulo('Dar de Baja');
-        $dctoelm->setRuta('/documento_eliminar');
-        $dctoelm->setIcono('home');
-        $dctoelm->setMenu(0);
-        $dctoelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
-        $manager->persist($dctoelm);
+        $sigelm = new Modulo();
+        $sigelm->setNombre('sig_eliminar');
+        $sigelm->setTitulo('Dar de Baja');
+        $sigelm->setRuta('/sig_eliminar');
+        $sigelm->setIcono('home');
+        $sigelm->setMenu(0);
+        $sigelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::SIG_CHILD));
+        $manager->persist($sigelm);
+
+
+        $mailhm = new Modulo();
+        $mailhm->setNombre('home_correo');
+        $mailhm->setTitulo('Consultar');
+        $mailhm->setRuta('');
+        $mailhm->setIcono('home');
+        $mailhm->setMenu(0);
+        $mailhm->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORREO_CHILD));
+        $manager->persist($mailhm);
 
 
         $docaddhm = new Modulo();
@@ -501,80 +519,6 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($bajadocelm);
 
 
-        $docprochm = new Modulo();
-        $docprochm->setNombre('home_documentoproceso');
-        $docprochm->setTitulo('Consultar');
-        $docprochm->setRuta('');
-        $docprochm->setIcono('home');
-        $docprochm->setMenu(0);
-        $docprochm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
-        $manager->persist($docprochm);
-
-        $docprocins = new Modulo();
-        $docprocins->setNombre('documentoproceso_insertar');
-        $docprocins->setTitulo('Adicionar');
-        $docprocins->setRuta('/documentoproceso_insertar');
-        $docprocins->setIcono('home');
-        $docprocins->setMenu(0);
-        $docprocins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
-        $manager->persist($docprocins);
-
-        $docprocedt = new Modulo();
-        $docprocedt->setNombre('documentoproceso_editar');
-        $docprocedt->setTitulo('Actualizar');
-        $docprocedt->setRuta('/documentoproceso_editar');
-        $docprocedt->setIcono('home');
-        $docprocedt->setMenu(0);
-        $docprocedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
-        $manager->persist($docprocedt);
-
-        $docprocelm = new Modulo();
-        $docprocelm->setNombre('documentoproceso_eliminar');
-        $docprocelm->setTitulo('Dar de Baja');
-        $docprocelm->setRuta('/documentoproceso_eliminar');
-        $docprocelm->setIcono('home');
-        $docprocelm->setMenu(0);
-        $docprocelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
-        $manager->persist($docprocelm);
-
-
-        $dcprorvhm = new Modulo();
-        $dcprorvhm->setNombre('home_docprocesorev');
-        $dcprorvhm->setTitulo('Consultar');
-        $dcprorvhm->setRuta('');
-        $dcprorvhm->setIcono('home');
-        $dcprorvhm->setMenu(0);
-        $dcprorvhm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
-        $manager->persist($dcprorvhm);
-
-        $dcprorvins = new Modulo();
-        $dcprorvins->setNombre('docprocesorev_insertar');
-        $dcprorvins->setTitulo('Adicionar');
-        $dcprorvins->setRuta('/docprocesorev_insertar');
-        $dcprorvins->setIcono('home');
-        $dcprorvins->setMenu(0);
-        $dcprorvins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
-        $manager->persist($dcprorvins);
-
-        $dcprorvedt = new Modulo();
-        $dcprorvedt->setNombre('docprocesorev_editar');
-        $dcprorvedt->setTitulo('Actualizar');
-        $dcprorvedt->setRuta('/docprocesorev_editar');
-        $dcprorvedt->setIcono('home');
-        $dcprorvedt->setMenu(0);
-        $dcprorvedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
-        $manager->persist($dcprorvedt);
-
-        $dcprorvelm = new Modulo();
-        $dcprorvelm->setNombre('docprocesorev_eliminar');
-        $dcprorvelm->setTitulo('Dar de Baja');
-        $dcprorvelm->setRuta('/docprocesorev_eliminar');
-        $dcprorvelm->setIcono('home');
-        $dcprorvelm->setMenu(0);
-        $dcprorvelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
-        $manager->persist($dcprorvelm);
-
-
         $docfrmhm = new Modulo();
         $docfrmhm->setNombre('home_documentoformulario');
         $docfrmhm->setTitulo('Consultar');
@@ -758,6 +702,183 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $segelbelm->setMenu(0);
         $segelbelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::SEGUIMIENTOELAB_CHILD));
         $manager->persist($segelbelm);
+
+
+
+        $docprochm = new Modulo();
+        $docprochm->setNombre('home_documentoproceso');
+        $docprochm->setTitulo('Consultar');
+        $docprochm->setRuta('');
+        $docprochm->setIcono('home');
+        $docprochm->setMenu(0);
+        $docprochm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
+        $manager->persist($docprochm);
+
+        $docprocins = new Modulo();
+        $docprocins->setNombre('documentoproceso_insertar');
+        $docprocins->setTitulo('Adicionar');
+        $docprocins->setRuta('/documentoproceso_insertar');
+        $docprocins->setIcono('home');
+        $docprocins->setMenu(0);
+        $docprocins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
+        $manager->persist($docprocins);
+
+        $docprocedt = new Modulo();
+        $docprocedt->setNombre('documentoproceso_editar');
+        $docprocedt->setTitulo('Actualizar');
+        $docprocedt->setRuta('/documentoproceso_editar');
+        $docprocedt->setIcono('home');
+        $docprocedt->setMenu(0);
+        $docprocedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
+        $manager->persist($docprocedt);
+
+        $docprocelm = new Modulo();
+        $docprocelm->setNombre('documentoproceso_eliminar');
+        $docprocelm->setTitulo('Dar de Baja');
+        $docprocelm->setRuta('/documentoproceso_eliminar');
+        $docprocelm->setIcono('home');
+        $docprocelm->setMenu(0);
+        $docprocelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
+        $manager->persist($docprocelm);
+
+        $docprocaprob = new Modulo();
+        $docprocaprob->setNombre('documentoproceso_aprobar');
+        $docprocaprob->setTitulo('Aprobar documentos');
+        $docprocaprob->setRuta('/documentoproceso_aprobar');
+        $docprocaprob->setIcono('home');
+        $docprocaprob->setMenu(0);
+        $docprocaprob->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCESO_CHILD));
+        $manager->persist($docprocaprob);
+
+
+        $dcprorvhm = new Modulo();
+        $dcprorvhm->setNombre('home_docprocesorev');
+        $dcprorvhm->setTitulo('Consultar');
+        $dcprorvhm->setRuta('');
+        $dcprorvhm->setIcono('home');
+        $dcprorvhm->setMenu(0);
+        $dcprorvhm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
+        $manager->persist($dcprorvhm);
+
+        $dcprorvins = new Modulo();
+        $dcprorvins->setNombre('docprocesorev_insertar');
+        $dcprorvins->setTitulo('Adicionar');
+        $dcprorvins->setRuta('/docprocesorev_insertar');
+        $dcprorvins->setIcono('home');
+        $dcprorvins->setMenu(0);
+        $dcprorvins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
+        $manager->persist($dcprorvins);
+
+        $dcprorvedt = new Modulo();
+        $dcprorvedt->setNombre('docprocesorev_editar');
+        $dcprorvedt->setTitulo('Actualizar');
+        $dcprorvedt->setRuta('/docprocesorev_editar');
+        $dcprorvedt->setIcono('home');
+        $dcprorvedt->setMenu(0);
+        $dcprorvedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
+        $manager->persist($dcprorvedt);
+
+        $dcprorvelm = new Modulo();
+        $dcprorvelm->setNombre('docprocesorev_eliminar');
+        $dcprorvelm->setTitulo('Dar de Baja');
+        $dcprorvelm->setRuta('/docprocesorev_eliminar');
+        $dcprorvelm->setIcono('home');
+        $dcprorvelm->setMenu(0);
+        $dcprorvelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCPROCREV_CHILD));
+        $manager->persist($dcprorvelm);
+
+
+        $dctohm = new Modulo();
+        $dctohm->setNombre('home_documento');
+        $dctohm->setTitulo('Consultar');
+        $dctohm->setRuta('');
+        $dctohm->setIcono('home');
+        $dctohm->setMenu(0);
+        $dctohm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
+        $manager->persist($dctohm);
+
+        $dctoins = new Modulo();
+        $dctoins->setNombre('documento_insertar');
+        $dctoins->setTitulo('Adicionar');
+        $dctoins->setRuta('/documento_insertar');
+        $dctoins->setIcono('home');
+        $dctoins->setMenu(0);
+        $dctoins->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
+        $manager->persist($dctoins);
+
+        $dctoedt = new Modulo();
+        $dctoedt->setNombre('documento_editar');
+        $dctoedt->setTitulo('Actualizar');
+        $dctoedt->setRuta('/documento_editar');
+        $dctoedt->setIcono('home');
+        $dctoedt->setMenu(0);
+        $dctoedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
+        $manager->persist($dctoedt);
+
+        $dctoelm = new Modulo();
+        $dctoelm->setNombre('documento_eliminar');
+        $dctoelm->setTitulo('Dar de Baja');
+        $dctoelm->setRuta('/documento_eliminar');
+        $dctoelm->setIcono('home');
+        $dctoelm->setMenu(0);
+        $dctoelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DOCUMENTO_CHILD));
+        $manager->persist($dctoelm);
+
+
+        $pubdochm = new Modulo();
+        $pubdochm->setNombre('home_publicaciondoc');
+        $pubdochm->setTitulo('Consultar');
+        $pubdochm->setRuta('');
+        $pubdochm->setIcono('home');
+        $pubdochm->setMenu(0);
+        $pubdochm->setFkmodulo($this->getReference(ModuloChildrenFixtures::PUBLICACIONDOC_CHILD));
+        $manager->persist($pubdochm);
+
+        $pubdocins = new Modulo();
+        $pubdocins->setNombre('publicaciondoc_insertar');
+        $pubdocins->setTitulo('Adicionar');
+        $pubdocins->setRuta('/publicaciondoc_insertar');
+        $pubdocins->setIcono('home');
+        $pubdocins->setMenu(0);
+        $pubdocins->setFkmodulo($this->getReference(ModuloChildrenFixtures::PUBLICACIONDOC_CHILD));
+        $manager->persist($pubdocins);
+
+
+        $gpmailhm = new Modulo();
+        $gpmailhm->setNombre('home_grupocorreo');
+        $gpmailhm->setTitulo('Consultar');
+        $gpmailhm->setRuta('');
+        $gpmailhm->setIcono('home');
+        $gpmailhm->setMenu(0);
+        $gpmailhm->setFkmodulo($this->getReference(ModuloChildrenFixtures::GRUPOCORREO_CHILD));
+        $manager->persist($gpmailhm);
+
+        $gpmailins = new Modulo();
+        $gpmailins->setNombre('grupocorreo_insertar');
+        $gpmailins->setTitulo('Adicionar');
+        $gpmailins->setRuta('/grupocorreo_insertar');
+        $gpmailins->setIcono('home');
+        $gpmailins->setMenu(0);
+        $gpmailins->setFkmodulo($this->getReference(ModuloChildrenFixtures::GRUPOCORREO_CHILD));
+        $manager->persist($gpmailins);
+
+        $gpmailedt = new Modulo();
+        $gpmailedt->setNombre('grupocorreo_editar');
+        $gpmailedt->setTitulo('Actualizar');
+        $gpmailedt->setRuta('/grupocorreo_editar');
+        $gpmailedt->setIcono('home');
+        $gpmailedt->setMenu(0);
+        $gpmailedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::GRUPOCORREO_CHILD));
+        $manager->persist($gpmailedt);
+
+        $gpmailelm = new Modulo();
+        $gpmailelm->setNombre('grupocorreo_eliminar');
+        $gpmailelm->setTitulo('Dar de Baja');
+        $gpmailelm->setRuta('/grupocorreo_eliminar');
+        $gpmailelm->setIcono('home');
+        $gpmailelm->setMenu(0);
+        $gpmailelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::GRUPOCORREO_CHILD));
+        $manager->persist($gpmailelm);
 
 
 
@@ -1352,44 +1473,6 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $tpnotaelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPONOTA_CHILD));
         $manager->persist($tpnotaelm);
 
-        
-        $estcrlthm = new Modulo();
-        $estcrlthm->setNombre('home_estadocorrelativo');
-        $estcrlthm->setTitulo('Consultar');
-        $estcrlthm->setRuta('');
-        $estcrlthm->setIcono('home');
-        $estcrlthm->setMenu(0);
-        $estcrlthm->setFkmodulo($this->getReference(ModuloChildrenFixtures::ESTADOCRLTVO_CHILD));
-        $manager->persist($estcrlthm);
-
-        $estcrltins = new Modulo();
-        $estcrltins->setNombre('estadocorrelativo_insertar');
-        $estcrltins->setTitulo('Adicionar');
-        $estcrltins->setRuta('/estadocorrelativo_insertar');
-        $estcrltins->setIcono('home');
-        $estcrltins->setMenu(0);
-        $estcrltins->setFkmodulo($this->getReference(ModuloChildrenFixtures::ESTADOCRLTVO_CHILD));
-        $manager->persist($estcrltins);
-
-        $estcrltedt = new Modulo();
-        $estcrltedt->setNombre('estadocorrelativo_editar');
-        $estcrltedt->setTitulo('Actualizar');
-        $estcrltedt->setRuta('/estadocorrelativo_editar');
-        $estcrltedt->setIcono('home');
-        $estcrltedt->setMenu(0);
-        $estcrltedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::ESTADOCRLTVO_CHILD));
-        $manager->persist($estcrltedt);
-
-        $estcrltelm = new Modulo();
-        $estcrltelm->setNombre('estadocorrelativo_eliminar');
-        $estcrltelm->setTitulo('Dar de Baja');
-        $estcrltelm->setRuta('/estadocorrelativo_eliminar');
-        $estcrltelm->setIcono('home');
-        $estcrltelm->setMenu(0);
-        $estcrltelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::ESTADOCRLTVO_CHILD));
-        $manager->persist($estcrltelm);
-
-
         $rechm = new Modulo();
         $rechm->setNombre('home_recurso');
         $rechm->setTitulo('Consultar');
@@ -1425,44 +1508,6 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $recelm->setMenu(0);
         $recelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPORECURSO_CHILD));
         $manager->persist($recelm);
-
-
-        $tpermshm = new Modulo();
-        $tpermshm->setNombre('home_tipopermiso');
-        $tpermshm->setTitulo('Consultar');
-        $tpermshm->setRuta('');
-        $tpermshm->setIcono('home');
-        $tpermshm->setMenu(0);
-        $tpermshm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
-        $manager->persist($tpermshm);
-
-        $tpermsins = new Modulo();
-        $tpermsins->setNombre('tipopermiso_insertar');
-        $tpermsins->setTitulo('Adicionar');
-        $tpermsins->setRuta('/tipopermiso_insertar');
-        $tpermsins->setIcono('home');
-        $tpermsins->setMenu(0);
-        $tpermsins->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
-        $manager->persist($tpermsins);
-
-        $tpermsedt = new Modulo();
-        $tpermsedt->setNombre('tipopermiso_editar');
-        $tpermsedt->setTitulo('Actualizar');
-        $tpermsedt->setRuta('/tipopermiso_editar');
-        $tpermsedt->setIcono('home');
-        $tpermsedt->setMenu(0);
-        $tpermsedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
-        $manager->persist($tpermsedt);
-
-        $tpermselm = new Modulo();
-        $tpermselm->setNombre('tipopermiso_eliminar');
-        $tpermselm->setTitulo('Dar de Baja');
-        $tpermselm->setRuta('/tipopermiso_eliminar');
-        $tpermselm->setIcono('home');
-        $tpermselm->setMenu(0);
-        $tpermselm->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOPERMISO_CHILD));
-        $manager->persist($tpermselm);
-
 
         $ctvohm = new Modulo();
         $ctvohm->setNombre('home_correlativo');
@@ -1824,7 +1869,7 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $estadoplanupd->setIcono('home');
         $estadoplanupd->setMenu(0);
         $estadoplanupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::ESTADOPLAN_CHILD));
-        $manager->persist($estadoplan);
+        $manager->persist($estadoplanupd);
 
         $estadoplandel = new Modulo();
         $estadoplandel->setNombre('estadoplan_eliminar');

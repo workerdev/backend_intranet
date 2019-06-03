@@ -40,7 +40,7 @@
                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                         <tr>
-                            <th class="order_by_th" data-name="phone">Item </th>
+                            <th class="order_by_th" data-name="phone">Usuario </th>
                             <th class="order_by_th" data-name="phone">Tipo de permiso </th>
                             <th class="order_by_th" data-name="phone">Unidad </th>
                             <th class="actions_header">Acciones </th>
@@ -63,7 +63,13 @@
     <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
     <script>
-    $('#fktipo').selectpicker({
+    $('#fkusuario').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar usuario.',
+        title: 'Seleccione un usuario.'
+    })
+    $('#tipo').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo.',
@@ -77,8 +83,6 @@
     })
     
     $('#new').click(function () {
-        $('#item').val('')
-
         clean_form()
         verif_inputs()
         $('#id_div').hide()
@@ -89,9 +93,8 @@
 
     $('#insert').click(function () {
         objeto = JSON.stringify({
-            'item': $('#item').val(),
-
-            'tipo': $('#fktipo').val(),
+            'usuario': $('#fkusuario').val(),
+            'tipo': $('#tipo').val(),
             'unidad': $('#fkunidad').val()
         })
         ajax_call_validation("/permiso_insertar", {object: objeto}, null, main_route)
@@ -107,10 +110,12 @@
             },function(response){
                 var self = JSON.parse(response)                
                 $('#id').val(self.id)
-                $('#item').val(self.item)
 
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
+                $('#fkusuario').val(self.fkusuario.id)
+                $('#fkusuario').selectpicker('render')
+
+                $('#tipo').val(self.tipo)
+                $('#tipo').selectpicker('render')
 
                 $('#fkunidad').val(self.fkunidad.id)
                 $('#fkunidad').selectpicker('render')
@@ -128,9 +133,8 @@
     $('#update').click(function () {
         objeto = JSON.stringify({
             'id': parseInt(JSON.parse($('#id').val())),
-            'item': $('#item').val(),
-
-            'tipo': $('#fktipo').val(),
+            'usuario': $('#fkusuario').val(),
+            'tipo': $('#tipo').val(),
             'unidad': $('#fkunidad').val()
         })
         ajax_call_validation("/permiso_actualizar", {object: objeto}, null, main_route)

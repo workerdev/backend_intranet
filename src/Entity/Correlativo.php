@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Correlativo 
- * @ORM\Table(name="cb_proc_correlativo", uniqueConstraints={@ORM\UniqueConstraint(name="cb_correlativo_id", columns={"cb_correlativo_id"})})
+ * @ORM\Table(name="cb_correlativo_correlativo", uniqueConstraints={@ORM\UniqueConstraint(name="cb_correlativo_id", columns={"cb_correlativo_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\CorrelativoRepository")
  */
 
@@ -42,11 +42,10 @@ class Correlativo
     /**
      * @var \solicitante
      *
-     * @ORM\ManyToOne(targetEntity="Personal")
+     * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_correlativo_fksolicitante", referencedColumnName="cb_personal_id")
+     *   @ORM\JoinColumn(name="cb_correlativo_fksolicitante", referencedColumnName="cb_usuario_id", nullable=true)
      * })
-     * @Assert\NotBlank
      */
     private $fksolicitante;
 
@@ -79,9 +78,8 @@ class Correlativo
      *
      * @ORM\ManyToOne(targetEntity="ControlCorrelativo")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_correlativo_fkcorrelativo", referencedColumnName="cb_control_correlativo_id")
+     *   @ORM\JoinColumn(name="cb_correlativo_fkcorrelativo", referencedColumnName="cb_control_correlativo_id", nullable=true)
      * })
-     * @Assert\NotBlank
      */
     private $fkcorrelativo;
 
@@ -96,13 +94,6 @@ class Correlativo
      */
     private $fktiponota;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="cb_correlativo_equipo", type="text", nullable=false)
-         * @Assert\NotBlank
-     */
-    private $equipo;
 
     /**
      * @var string
@@ -126,17 +117,13 @@ class Correlativo
          * @Assert\NotBlank
      */
     private $antecedente;
-
-    /**
-     * @var \estado
+/**
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="EstadoCorrelativo")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_correlativo_fkestado", referencedColumnName="cb_estado_correlativo_id")
-     * })
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_correlativo_estadocorrelativo", type="text", nullable=true)
+         * @Assert\NotBlank
      */
-    private $fkestado;
+    private $estadocorrelativo;
 
     /**
      * @var int
@@ -224,12 +211,12 @@ class Correlativo
         return $this;
     }
 
-    public function getFksolicitante(): ?Personal
+    public function getFksolicitante(): ?Usuario
     {
         return $this->fksolicitante;
     }
 
-    public function setFksolicitante(?Personal $fksolicitante): self
+    public function setFksolicitante(?Usuario $fksolicitante): self
     {
         $this->fksolicitante = $fksolicitante;
 
@@ -296,17 +283,7 @@ class Correlativo
         return $this;
     }
 
-    public function getEquipo(): ?string
-    {
-        return $this->equipo;
-    }
-
-    public function setEquipo(string $equipo): self
-    {
-        $this->equipo = $equipo;
-
-        return $this;
-    }
+   
 
     public function getIp(): ?string
     {
@@ -344,14 +321,14 @@ class Correlativo
         return $this;
     }
 
-    public function getFkestado(): ?EstadoCorrelativo
+    public function getEstadoCorrelativo(): ?string
     {
-        return $this->fkestado;
+        return $this->estadocorrelativo;
     }
 
-    public function setFkestado(?EstadoCorrelativo $fkestado): self
+    public function setEstadoCorrelativo(string $estadocorrelativo): self
     {
-        $this->fkestado = $fkestado;
+        $this->estadocorrelativo = $estadocorrelativo;
 
         return $this;
     }

@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Unidad
- * @ORM\Table(name="cb_proc_unidad", uniqueConstraints={@ORM\UniqueConstraint(name="cb_unidad_id", columns={"cb_unidad_id"})})
+ * @ORM\Table(name="cb_correlativo_unidad", uniqueConstraints={@ORM\UniqueConstraint(name="cb_unidad_id", columns={"cb_unidad_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\UnidadRepository")
  */
 class Unidad
@@ -37,7 +37,7 @@ class Unidad
      *
      * @ORM\ManyToOne(targetEntity="ControlCorrelativo")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_unidad_fkcorrelativo", referencedColumnName="cb_control_correlativo_id")
+     *   @ORM\JoinColumn(name="cb_unidad_fkcorrelativo", referencedColumnName="cb_control_correlativo_id",nullable=true)
      * })
      * @Assert\NotBlank
      */
@@ -48,7 +48,7 @@ class Unidad
      *
      * @ORM\ManyToOne(targetEntity="Unidad")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_unidad_fksuperior", referencedColumnName="cb_unidad_id")
+     *   @ORM\JoinColumn(name="cb_unidad_fksuperior", referencedColumnName="cb_unidad_id",nullable=true)
      * })
      */
     private $fksuperior;
@@ -56,7 +56,7 @@ class Unidad
     /**
      * @var int
      *
-     * @ORM\Column(name="cb_unidad_estado", type="integer", nullable=true)
+     * @ORM\Column(name="cb_unidad_estado", type="integer", nullable=false)
      *
      */
     private $estado;

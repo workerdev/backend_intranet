@@ -117,6 +117,9 @@
         ajax_call("/file", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
         $('#form').modal('hide')
     })
+    $("#files_ruta").change(function(){
+       $("#lnkva").hide();
+   });
 
     function attach_edit() {
         $('.edit').click(function () {
@@ -137,7 +140,13 @@
                 
                 $('#files_id').val(self.id)
                 //$('#files_ruta').val(self.ruta)
-                document.getElementById('files_ruta').filename = self.ruta
+                //document.getElementById('files_ruta').filename = self.ruta
+		if(self.ruta != 'N/A') {
+                   $('#lnkva').remove();
+                   let urlfile = self.ruta;
+                   let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                   $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#files_ruta");
+               }
                 document.getElementById('files_tipo').value = self.tipo
                 //$('#files_tipo').val(self.tipo)
                 $('#files_tipo').selectpicker('render')

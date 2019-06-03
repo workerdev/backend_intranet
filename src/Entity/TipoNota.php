@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * TipoNota
- * @ORM\Table(name="cb_procesos_tipo_nota", uniqueConstraints={@ORM\UniqueConstraint(name="cb_tipo_nota_nombre", columns={"cb_tipo_nota_nombre"})})
+ * @ORM\Table(name="cb_correlativo_tipo_nota", uniqueConstraints={@ORM\UniqueConstraint(name="cb_tipo_nota_nombre", columns={"cb_tipo_nota_nombre"})})
  * @ORM\Entity(repositoryClass="App\Repository\TipoNotaRepository")
  *  @UniqueEntity(fields = "nombre", message="Este valor ya se encuentra registrado")
  */

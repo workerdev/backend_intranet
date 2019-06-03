@@ -118,14 +118,26 @@
                 $('#id').val(self.id)
                 $('#nombre').val(self.nombre)
 
-                $('#fkcorrelativo').val(self.fkcorrelativo.id)
+                  if(self.fkcorrelativo!= null){
+                    $('#fkcorrelativo').val(self.fkcorrelativo.id)
                 $('#fkcorrelativo').selectpicker('render')
+                }
+                else {  
+                 
+                    $('#fkcorrelativo').selectpicker('render')
+                }
+
+
+
+              
                 if(self.fksuperior != null){
-                    $('#cont-sup').show()
                     $('#fksuperior').val(self.fksuperior.id)
                     $('#fksuperior').selectpicker('render')
                 }
-                else $('#cont-sup').hide()
+                else {
+                     
+                    $('#fksuperior').selectpicker('render')
+                }
 
                 clean_form()
                 verif_inputs()

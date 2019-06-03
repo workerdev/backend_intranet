@@ -12,7 +12,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\Enlaces;
 use App\Entity\Menu;
 use App\Entity\Personal;
+use App\Entity\EstadoCorrelativo;
+use App\Entity\TipoNota;
 use App\Entity\DatoEmpresarial;
+use App\Entity\Correlativo;
 use App\Entity\Files;
 use App\Entity\Turno;
 use App\Entity\NoticiaCategoria;
@@ -31,6 +34,11 @@ use App\Entity\IndicadorProceso;
 use App\Entity\GerenciaAreaSector;
 use App\Entity\Usuario;
 use App\Entity\OrganigramaGerencia;
+use App\Entity\Unidad;
+use App\Entity\Permiso;
+use App\Entity\ControlCorrelativo;
+use App\Entity\SIG;
+use App\Entity\Correo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -47,6 +55,8 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Ldap\Exception\ConnectionException;
+use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
+use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
 
 use Symfony\Component\Ldap\Ldap;
 
@@ -96,34 +106,51 @@ class ServiciosController extends AbstractController
         }
     }
 
-    /**
+     /**
      * @Route("/enviarcorreo", name="enviarcorreo")
      * @Method({"POST"})
      */
-    public function enviarcorreo(Request $request)
+    public function enviarcorreo(Request $request,\Swift_Mailer $mailer)
     {   
         try {
-
+            $cx = $this->getDoctrine()->getManager();
             $sx = json_decode($request->getContent(), true);
             $asunto = $sx['asunto'];
             $cuerpo = $sx['cuerpo'];
-
+            $remitente = $sx['remitente'];
+            
+            $login = 'ctcloudbit';//$sx['login'];
+            
             /*$transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
             ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
             $mailer =(new \ Swift_Mailer($transport));*/
 
-            $message = (new \Swift_Message())
+            $message = (new \Swift_Message('Asunto:   ' .$asunto. '  -  ' .$remitente .' - COMITE DE ETICA'))
             /*->setSubject($asunto)
             ->setTo('sum.ghost4@gmail.com')*/
-            ->setFrom('cloud4resources@gmail.com')
-            ->setTo('sum.ghost4@gmail.com')
+            ->setFrom('intranet@elfec.bo')
+            ->setTo(['grupouti@elfec.com'])
             ->setBody($cuerpo, 'text/html');
-            //->setContentType('text/html');
+          //  ->setContentType('text/html');
 
-            $this->get('mailer')->send($message);
-            //$result = $mailer -> send($message);     
+            //$this->get('mailer')->send($message);
+            $mailer -> send($message);     
 
             $resultado = 'OK';
+            
+            $correo = new Correo();
+            $correo->setAsunto($asunto);
+            $correo->setMensaje($cuerpo);
+            $correo->setTipo('COMITE DE ETICA');
+            $correo->setEstado(1);
+
+            $fkusuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $login, 'estado' => '1'));
+            $fkusuario[0] != '' ? $fkusuario[0] = $this->getDoctrine()->getRepository(Usuario::class)->find($fkusuario[0]) : $fkusuario[0] =null;
+            $correo->setFkusuario($fkusuario[0]);
+
+            $cx->persist($correo);
+            $cx->flush();
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -134,31 +161,48 @@ class ServiciosController extends AbstractController
      * @Route("/enviarcorreo_buzon", name="enviarcorreo_buzon")
      * @Method({"POST"})
      */
-    public function enviarcorreo_buzon(Request $request)
+    public function enviarcorreo_buzon(Request $request,\Swift_Mailer $mailer)
     {
         try {
-            // $transport = (new \Swift_SmtpTransport('smtp.live.com', 465,'ssl'))
 
-            //*$transport = (new \Swift_SmtpTransport('smtp-mail.outlook.com', 'tls', 587))
-            $transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
-            ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
-            $mailer =(new \ Swift_Mailer($transport));
-
+            $cx = $this->getDoctrine()->getManager();
             $sx = json_decode($request->getContent(), true);
             $asunto = $sx['asunto'];
             $cuerpo = $sx['cuerpo'];
-            //$mail = $sx['mail'];
+            $remitente = $sx['remitente'];
+            $login = $sx['login'];
+            
 
-            $message = (new \Swift_Message())
-            ->setSubject($asunto)
-            ->setTo('sum.ghost4@gmail.com')
-            ->setFrom('cloud4resources@gmail.com')
-            ->setBody($cuerpo)
-            ->setContentType('text/html');
-            $result = $mailer -> send($message);
+            /*$transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+            ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
+            $mailer =(new \ Swift_Mailer($transport));*/
 
+            $message = (new \Swift_Message('Asunto:   ' .$asunto. '  -  ' .$remitente .' - BUZON DE SUGERENCIAS DE '))
+            /*->setSubject($asunto)
+            ->setTo('sum.ghost4@gmail.com')*/
+            ->setFrom('intranet@elfec.com')
+            ->setTo('grupouti@elfec.com')
+            ->setBody($cuerpo, 'text/html');
+          //  ->setContentType('text/html');
 
-            $resultado ='OK';
+            //$this->get('mailer')->send($message);
+            $mailer -> send($message);     
+
+            $resultado = 'OK';
+            
+            $correo = new Correo();
+            $correo->setAsunto($asunto);
+            $correo->setMensaje($cuerpo);
+            $correo->setTipo('BUZON DE SUGERENCIAS');
+            $correo->setEstado(1);
+
+            $fkusuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $login, 'estado' => '1'));
+            $fkusuario[0] != '' ? $fkusuario[0] = $this->getDoctrine()->getRepository(Usuario::class)->find($fkusuario[0]) : $fkusuario[0] =null;
+            $correo->setFkusuario($fkusuario[0]);
+
+            $cx->persist($correo);
+            $cx->flush();
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -233,7 +277,7 @@ class ServiciosController extends AbstractController
             $cx = $this->getDoctrine()->getManager();
             $DatoEmpresarial1 = $cx->getRepository(Personal::class)->findBy(array('estado' => '1'));
             $serializer = new Serializer(array(new ObjectNormalizer()));
-            $data = $serializer->normalize($DatoEmpresarial1, null, array('attributes' => array('nombre','apellido','ci','correo','telefono')));
+            $data = $serializer->normalize($DatoEmpresarial1, null, array('attributes' => array('nombre','apellido','correo','telefono','fksector','fkarea')));
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array      ('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($data, 'json');
@@ -322,7 +366,7 @@ class ServiciosController extends AbstractController
     cb_personal_personal P
     JOIN cb_personal_turno T ON P.cb_personal_id = T.cb_turno_fkpersonal
     JOIN cb_personal_cargo C ON P.cb_personal_fkcargo = C.cb_cargo_id
-    WHERE P.cb_personal_estado = 1";
+    WHERE P.cb_personal_estado = 1 AND cb_turno_estado=1";
 
     $stmt = $cx->prepare($sql);
     $stmt->execute();
@@ -854,11 +898,11 @@ class ServiciosController extends AbstractController
 
 
 
-/************************************************************************************************************************************************************************************************************************
-/*                                                                                                                                                                                                                      /
-/*      1.- PROCESOS                                                                                                                                                                                                    /               
-/*                                                                                                                                                                                                                      /
- ***********************************************************************************************************************************************************************************************************************/
+    /************************************************************************************************************************************************************************************************************************
+    /*                                                                                                                                                                                                                      /
+    /*      1.- PROCESOS                                                                                                                                                                                                    /               
+    /*                                                                                                                                                                                                                      /
+    ***********************************************************************************************************************************************************************************************************************/
 
 
 
@@ -1031,7 +1075,7 @@ class ServiciosController extends AbstractController
 
 
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
 
                                     /*************************************************************************************/
                                     /*                              * INDICADORES                                        */
@@ -1160,7 +1204,7 @@ class ServiciosController extends AbstractController
     }
 
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
 
                                     /*************************************************************************************/
                                     /*                              * CAMBIO RIESGOS                                     */
@@ -1168,7 +1212,7 @@ class ServiciosController extends AbstractController
                                     /*************************************************************************************/
 
 
-/************************************************************************************/
+    /************************************************************************************/
 
                             /* ORDENADO POR GERENCIAS (LISTA) ***/
                             /* DESARROLLADOR: EDWARD RIOS       */
@@ -1294,7 +1338,7 @@ class ServiciosController extends AbstractController
     }
 
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
 
 
 
@@ -1302,11 +1346,11 @@ class ServiciosController extends AbstractController
 
 
 
-/************************************************************************************************************************************************************************************************************************/
-/*                                                                                                                                                                                                                      */
-/*      1.- DOCUMENTOS                                                                                                                                                                                                  */               
-/*                                                                                                                                                                                                                      */
-/*************************************************************************************************************************************************************************************************************************/
+    /************************************************************************************************************************************************************************************************************************/
+    /*                                                                                                                                                                                                                      */
+    /*      1.- DOCUMENTOS                                                                                                                                                                                                  */               
+    /*                                                                                                                                                                                                                      */
+    /*************************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * INFORMACION DOCUMENTADA                            */
                                     /*                                                                                   */
@@ -1419,7 +1463,7 @@ class ServiciosController extends AbstractController
         }
     }
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * FORMULARIOS                                        */
                                     /*                                                                                   */
@@ -1508,14 +1552,14 @@ class ServiciosController extends AbstractController
     
 
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * DOCUMENTOS EXTERNOS Y LEGALES                      */
                                     /*                                                                                   */
                                     /*************************************************************************************/
-/**DOCUMENTO EXTERNO LEGALES  ************/
-/*DESARROLADOR: EDWARD RIOS*/
-/**
+    /**DOCUMENTO EXTERNO LEGALES  ************/
+    /*DESARROLADOR: EDWARD RIOS*/
+    /**
     * @Route("/documentoexternolegales", methods={"GET"}, name="documentoexternolegales")
     */
    public function documentoexternolegales()
@@ -1534,7 +1578,7 @@ class ServiciosController extends AbstractController
                             JOIN ags.fkarea ar
                             JOIN de.fktipo ti";
            $query = $cx->createQuery($dqlIndicador);
-//            $query->setParameter('fichaid', $id);
+    //            $query->setParameter('fichaid', $id);
            $indicador = $query->getResult();
            $data2 = $serializer->serialize($indicador, 'json');
            $data = json_decode($data2, true);
@@ -1551,7 +1595,7 @@ class ServiciosController extends AbstractController
        }
    }
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * DOCUMENTOS EN PROCESO                              */
                                     /*                                                                                   */
@@ -1619,7 +1663,7 @@ class ServiciosController extends AbstractController
         }
     }
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * DOCUMENTOS DADOS DE BAJA                           */
                                     /*                                                                                   */
@@ -1675,13 +1719,13 @@ class ServiciosController extends AbstractController
     }
 
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
 
-/************************************************************************************************************************************************************************************************************************
-/*                                                                                                                                                                                                                      /
-/*      1.- FICHAS DE CARGO                                                                                                                                                                                             /               
-/*                                                                                                                                                                                                                      /
- ***********************************************************************************************************************************************************************************************************************/
+    /************************************************************************************************************************************************************************************************************************
+    /*                                                                                                                                                                                                                      /
+    /*      1.- FICHAS DE CARGO                                                                                                                                                                                             /               
+    /*                                                                                                                                                                                                                      /
+    ***********************************************************************************************************************************************************************************************************************/
                                     /*************************************************************************************/
                                     /*                              * FICHAS DE CARGOS                                   */
                                     /*                                                                                   */
@@ -1770,13 +1814,13 @@ class ServiciosController extends AbstractController
         }
     }
 
-/***************************************************************************************************************************************************************************************************************************************************************/
+    /***************************************************************************************************************************************************************************************************************************************************************/
 
-/************************************************************************************************************************************************************************************************************************/
-/*                                                                                                                                                                                                                      */
-/*      4.- AUDITORIAS S.I.G.                                                                                                                                                                                           */               
-/*                                                                                                                                                                                                                      */
-/************************************************************************************************************************************************************************************************************************/
+    /************************************************************************************************************************************************************************************************************************/
+    /*                                                                                                                                                                                                                      */
+    /*      4.- AUDITORIAS S.I.G.                                                                                                                                                                                           */               
+    /*                                                                                                                                                                                                                      */
+    /************************************************************************************************************************************************************************************************************************/
 
 
                                     /************************************************************************************/
@@ -2229,6 +2273,43 @@ class ServiciosController extends AbstractController
     }
 
 
+    /**
+     * @Route("/loginbackend2", methods={"POST"}, name="loginbackend2")
+     */
+    public function info2(Request $request)
+    {
+        $sx = json_decode($request->getContent(), true);
+
+        $user = $sx['user'];
+        $pass = $sx['password'];
+        
+        try {
+            if(empty($user) || empty($pass)) {
+                $mensaje="empty";
+                return new JsonResponse($mensaje);
+            }
+
+            $usuariob = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username'=>$user));//, 'password'=>$pass
+            $cx = $this->getDoctrine()->getManager();
+
+            if(empty($usuariob)) {
+                $mensaje =  "error";
+                return new JsonResponse($mensaje);
+            }else {
+                $elementos = array('Nombre'=> $usuariob[0]->getNombre(),'Apellido'=>$usuariob[0]->getApellido(),'Cargo'=>'Gerente');
+                        
+                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                $data2 = $serializer->serialize($elementos, 'json');
+                return new Response($data2);
+            }   
+        }
+        catch (ConnectionException $ce) {
+            $mensaje =  "error";
+            return new JsonResponse($mensaje);
+        }
+    }
+
+
       /**
      * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
     */
@@ -2236,27 +2317,27 @@ class ServiciosController extends AbstractController
     {
         $sx = json_decode($request->getContent(), true);
 
-        $username ='Administrador'; 
-        $password ='P@ssw0rd';
+        $username ='ctcloudbit'; 
+        $password ='Elfec2019';
 
         $user = $sx['user'];
         $pass = $sx['password'];
-        $dn="cn=".$username.",CN=Users,DC=elfec,DC=com";
+        $dn="CN=".$username.",OU=Personal Regular,OU=UTI,OU=ELFEC,DC=elfec,DC=com";
     
         $ldap = Ldap::create('ext_ldap', array(
-            'host' => '172.17.1.150',
-            //'host' => '192.168.0.20',
+            'host' => '192.168.30.10',
+            //'host' => '172.17.1.139',
             'encryption' => 'none',
             'port' => '389',
         ));
-        $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'dn'/*dn*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'samAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
-
+        $attributes = ['givenName'/*Nombres*/,'department'/*gerencia*/, 'sn'/*appellidos*/, 'title'/*cargo*/, 'dn'/*dn*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'sAMAccountName'/*login*/,'userPrincipalName'/*loginparaloguear@elfec.com*/];
+        try {
         $ldap->bind($dn, $password);
-        $query =  $ldap->query('DC=elfec,DC=com', 'objectclass=person', ['filter' => $attributes]);
+        $query =  $ldap->query('DC=elfec,DC=com', 'sAMAccountName='.$user, ['filter' => $attributes]);
     
         $results = $query->execute();
     
-        try {
+       
             if(empty($user) || empty($pass)) {
                 $mensaje="empty";
                 return new JsonResponse($mensaje);
@@ -2292,7 +2373,79 @@ class ServiciosController extends AbstractController
                         }else {
                             $Cargo='Sin\Cargo';
                         }
-                        $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo);
+                        if($ayudalogin= array_key_exists("sAMAccountName",$data['attributes'])) {
+                            $login=$data['attributes']['sAMAccountName'][0];
+                        }else{
+                                $login='Sin\login';
+                        }
+                        if(isset($data['attributes']['physicalDeliveryOfficeName'][0])){ 
+                            $unidad=$data['attributes']['physicalDeliveryOfficeName'][0]; 
+                            $unidadEntidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $unidad, 'estado' => '1'));
+                            $usuarioEntidad = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $user, 'estado' => '1'));
+                            $cx = $this->getDoctrine()->getManager();
+                            if(empty($usuarioEntidad)) {
+                                $usuarionuevo = new Usuario();
+                                if(isset($data['attributes']['givenName'][0])) {
+                                    $usuarionuevo->setNombre($data['attributes']['givenName'][0]);
+                                }else {
+                                    $usuarionuevo->setNombre('S/N');
+                                }
+                                if(isset($data['attributes']['sn'][0])) {
+                                    $usuarionuevo->setApellido($data['attributes']['sn'][0]);
+                                }else{
+                                    $usuarionuevo->setApellido('S/A');
+                                }
+                                if(isset($data['attributes']['mail'][0])) {
+                                    $usuarionuevo->setCorreo($data['attributes']['mail'][0]);
+                                }else{
+                                    $usuarionuevo->setCorreo('S/Correo');
+                                }
+                                if(isset($data['attributes']['sAMAccountName'][0])){ 
+                                    $usuarionuevo->setUsername($data['attributes']['sAMAccountName'][0]);
+                                }else{ 
+                                    $usuarionuevo->setUsername('S/Login');
+                                }
+                                if( $ayudanombre= array_key_exists("cn",$data['attributes'] ))  {   
+                                    if($data['attributes']['cn'][0]== 'Administrador') {
+                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Administrador'));
+                                    }else{
+                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario')); 
+                                    }
+                                }else {
+                                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre'=>'Usuario'));
+                                }
+                                $usuarionuevo->setEstado(1); 
+
+                                $usuarionuevo->setFkrol($rol[0]);
+                                $cx->persist($usuarionuevo);
+                                $cx->flush();
+                            }
+                              
+                                $usuarioEntidad = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $user, 'estado' => '1'));
+                            
+                           
+                            $usuario=$usuarioEntidad[0]->getId();
+                            $tipo='Completo';                        
+
+                           
+                            $permiso = $this->getDoctrine()->getRepository(Permiso::class)->findBy(array('fkusuario' => $usuario, 'estado' => '1'));
+                            if(empty($permiso))
+                            {
+                                $cx = $this->getDoctrine()->getManager();
+                                $newpermiso= new Permiso();
+                                $newpermiso->setFkusuario($usuarioEntidad[0]);
+                                $newpermiso->setFkunidad($unidadEntidad[0]);
+                                $newpermiso->setTipo($tipo);
+                                $newpermiso->setEstado(1);
+                                 $cx->persist($newpermiso);
+                                 $cx->flush();    
+                            }
+
+                        }
+
+                      
+
+                        $elementos = array('Nombre'=> $Nombre,'Apellido'=>$Apellido,'Cargo'=>$Cargo,'login'=>$login);
                         
                         $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                         $data2 = $serializer->serialize($elementos, 'json');
@@ -2555,4 +2708,585 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
         }
     }
+    /**
+     * @Route("/correlativo_gestiones", methods={"POST"}, name="correlativo_gestiones")
+     */
+    public function correlativo_gestiones(Request $request)
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            
+           $sx = json_decode($request->getContent(), true);
+           $username = $sx['username'];
+
+            $sql = "SELECT distinct date_part('Year', cb_correlativo_fechareg) AS gestion
+            FROM cb_correlativo_correlativo , cb_usuario_usuario
+            WHERE cb_correlativo_fksolicitante=cb_usuario_id 
+            AND cb_usuario_username=:username
+            and cb_correlativo_estado=1"
+;
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute(['username' => ($username),]);
+            $cobertura = $stmt->fetchAll();     
+
+                       
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($cobertura, 'json');
+            
+            return new jsonResponse(json_decode($data2));
+            
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/listar_correlativogestion", methods={"POST"}, name="listar_correlativogestion")
+    */
+    public function listar_correlativogestion (Request $request)
+    {
+        try {
+ 
+        date_default_timezone_set('America/La_Paz');
+         $dia = date("d");
+         $mes = date("m");
+         $anho = date("y");
+ 
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+          $gestion = $sx['gestion'];
+            $cx = $this->getDoctrine()->getManager();
+            
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser2($user,$gestion);
+            $correlativos = array();
+            foreach ($correlativo as $crtv) {
+               //$dtcrtv = (object) $crtv;
+               // $fecreg = $dtcrtv->getFechareg();
+               // $fecent = $dtcrtv->getEntrega();
+               // if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+               //if($fecent != null) $rsfce = $fecent->format('Y-m-d'); else $rsfce = $fecent;
+             if($crtv['cb_correlativo_fksolicitante']!=null){
+                 $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($crtv['cb_correlativo_fksolicitante']);
+             }
+                 else{
+                     $fksolicitante=null;
+                 }   
+               $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($crtv['cb_correlativo_fksolicitante']);
+ 
+               if($crtv['cb_correlativo_fkcorrelativo']!=null){
+                 $fkscorrelativo = $this->getDoctrine()->getRepository(EstadoCorrelativo::class)->find($crtv['cb_correlativo_fkcorrelativo']);
+               }
+               else{
+               $fkscorrelativo=null;
+               }
+               if($crtv['cb_correlativo_fkunidad']!=null){
+                 $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($crtv['cb_correlativo_fkunidad']);
+               }else{
+                 $fkunidad=null;
+               }
+               
+               if($crtv['cb_correlativo_fktiponota']!=null){
+                 $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($crtv['cb_correlativo_fktiponota']);
+               }
+                 else{
+                     $fktiponota=null;
+                 }   
+               
+                 
+             
+ 
+                $sendinf = [
+                    "id" => $crtv['cb_correlativo_id'],                   
+                    "antecedente" => $crtv['cb_correlativo_antecedente'],
+                    "item" => $crtv['cb_correlativo_item'],
+                    "numcorrelativo" => $crtv['cb_correlativo_numcorrelativo'],
+                    "fechareg" => $crtv['cb_correlativo_fechareg'],
+                    "redactor" => $crtv['cb_correlativo_redactor'],
+                    "destinatario" => $crtv['cb_correlativo_destinatario'],
+                    "referencia" => $crtv['cb_correlativo_referencia'],
+                    "fksolicitante" => $fksolicitante,
+                    "fkcorrelativo" => $fkscorrelativo,
+                    "fktiponota" => $fktiponota,
+                    "estadocorrelativo" => $crtv['cb_correlativo_estadocorrelativo'],
+                    "ip" => $crtv['cb_correlativo_ip'],
+                    "url" => $crtv['cb_correlativo_url'],
+                    "urleditable" => $crtv['cb_correlativo_urleditable'],
+                    "entrega" => $crtv['cb_correlativo_entrega'],
+                    "fkunidad" => $fkunidad,
+                    "urlorigen" => $crtv['cb_correlativo_urlorigen']
+                ];
+                $correlativos[] = $sendinf;
+            }
+ 
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            if(sizeof($correlativo) > 0) {
+                $data2 = $serializer->serialize($correlativos, 'json');
+            }else {
+                $empty = array('mensaje' => 'No se encotraron datos.');
+                $data2 = $serializer->serialize($empty, 'json');
+            }
+            return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+ 
+     /**
+      * @Route("/listar_correlativo", methods={"POST"}, name="listar_correlativo")
+     */
+    public function listar_correlativo(Request $request)
+    {
+        try {
+ 
+        date_default_timezone_set('America/La_Paz');
+         $dia = date("d");
+         $mes = date("m");
+         $anho = date("y");
+ 
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+          //  $user = $sx['gestion'];
+            $cx = $this->getDoctrine()->getManager();
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user);
+ 
+            $correlativos = array();
+            foreach ($correlativo as $crtv) {
+                $dtcrtv = (object) $crtv;
+ 
+                $fecreg = $dtcrtv->getFechareg();
+                $fecent = $dtcrtv->getEntrega();
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                if($fecent != null) $rsfce = $fecent->format('Y-m-d'); else $rsfce = $fecent;
+ 
+                $sendinf = [
+                    "id" => $dtcrtv->getId(),
+                    "antecedente" => $dtcrtv->getAntecedente(),
+                    "item" => $dtcrtv->getItem(),
+                    "numcorrelativo" => $dtcrtv->getNumcorrelativo(),
+                    "fechareg" => $rsfcr,
+                    "redactor" => $dtcrtv->getRedactor(),
+                    "destinatario" => $dtcrtv->getDestinatario(),
+                    "referencia" => $dtcrtv->getReferencia(),
+                    "fksolicitante" => $dtcrtv->getFksolicitante(),
+                    "fkcorrelativo" => $dtcrtv->getFkcorrelativo(),
+                    "fktiponota" => $dtcrtv->getFktiponota(),
+                    "estadocorrelativo" => $dtcrtv->getEstadoCorrelativo(),
+                    "ip" => $dtcrtv->getIp(),
+                    "url" => $dtcrtv->getUrl(),
+                    "urleditable" => $dtcrtv->getUrleditable(),
+                    "entrega" => $rsfce,
+                    "fkunidad" => $dtcrtv->getFkunidad(),
+                    "urlorigen" => $dtcrtv->getUrlorigen()
+                ];
+                $correlativos[] = $sendinf;
+            }
+ 
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            if(sizeof($correlativo) > 0) {
+                $data2 = $serializer->serialize($correlativos, 'json');
+            }else {
+                $empty = array('mensaje' => 'No se encotraron datos.');
+                $data2 = $serializer->serialize($empty, 'json');
+            }
+            return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+     /**
+     * @Route("/correlativoform", methods={"POST"}, name="correlativoform")
+    */
+    public function correlativoform(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+            $cx = $this->getDoctrine()->getManager();
+
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
+           
+
+    
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('estado' => '1'));
+            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $datatipo = $serializer->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
+            
+    
+    
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadByPermission($user); 
+            $dataunidad = array_column($unidad,'cb_unidad_nombre');
+            
+            
+            $elementos= array('Control'=>$datacontrol, 'Nota'=>$datatipo, 'Unidad'=>$dataunidad);
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $respuesta= $serializer->serialize($elementos, 'json');
+            return new jsonResponse(json_decode($respuesta));
+            
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+  
+
+   /**
+     * @Route("/correlativoinsert", methods={"POST"}, name="correlativoinsert")
+     */
+    public function correlativoinsert(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+                    
+            $fksolicitante = $sx['fksolicitante'];
+            $redactor = $sx['redactor'];
+            $destinatario = $sx['destinatario'];
+            $referencia = $sx['referencia'];
+            $fkcorrelativo = $sx['fkcorrelativo'];
+            $fktiponota = $sx['fktiponota'];
+            $url = $sx['url'];              
+            $antecedente = $sx['antecedente'];
+            $estadocorrelativo = $sx['estadocorrelativo'];
+            $item = $sx['item'];
+            $urleditable = $sx['urleditable'];
+            $entrega = $sx['entrega'];
+            $fkunidad = $sx['fkunidad'];
+            $urlorigen = $sx['urlorigen'];
+            $ipcontrol = $sx['ipcontrol'];            
+            $cx = $this->getDoctrine()->getManager();
+            $Correlativo = new Correlativo();
+            $numcorrelativo = $this->numerar();
+            $Correlativo->setNumcorrelativo($numcorrelativo);
+            $Correlativo->setFechareg(new \DateTime('now'));
+            $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $fksolicitante));
+            $Correlativo->setFksolicitante($Usuario[0]);
+            $Correlativo->setRedactor($redactor);
+            $Correlativo->setDestinatario($destinatario);
+            $Correlativo->setReferencia($referencia);
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(array('id' => $fkcorrelativo));
+            if($fkcorrelativo!=null){
+                    $Correlativo->setFkcorrelativo($controlcorrelativo[0]);
+              }
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('id' => $fktiponota));
+            $Correlativo->setFktiponota($tiponota[0]);
+            $Correlativo->setUrl($url);
+            $Correlativo->setAntecedente($antecedente);
+            $Correlativo->setEstadoCorrelativo($estadocorrelativo);
+            $Correlativo->setItem($item);
+            $Correlativo->setUrleditable($urleditable);
+            $Correlativo->setEntrega(new \DateTime($entrega));
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $fkunidad));
+            $Correlativo->setFkunidad($unidad[0]);
+            $Correlativo->setUrlorigen($urlorigen); 
+            $Correlativo->setIp($ipcontrol);                    
+            $Correlativo->setEstado(1);
+            $cx->persist($Correlativo);
+            $cx->flush();
+            $resultado = array('response'=>"El numero de correlativo es: ".$Correlativo->getNumcorrelativo().".",   
+            'success' => true,
+            'message' => 'Correlativo registrado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+            
+           // return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+     /**
+     * @Route("/correlativomodificar", methods={"POST"}, name="correlativomodificar")
+     */
+    public function correlativomodificar(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            
+            $id = $sx['id'];
+          //  $fechareg = $sx['fechareg'];
+            $fksolicitante = $sx['fksolicitante'];
+            $redactor = $sx['redactor'];
+            $destinatario = $sx['destinatario'];
+            $referencia = $sx['referencia'];
+            $fkcorrelativo = $sx['fkcorrelativo'];
+            $fktiponota = $sx['fktiponota'];
+            $url = $sx['url'];
+            $antecedente = $sx['antecedente'];
+            $estadocorrelativo = $sx['estadocorrelativo'];
+            $item = $sx['item'];
+            $urleditable = $sx['urleditable'];
+            $entrega = $sx['entrega'];
+            $fkunidad = $sx['fkunidad'];
+            $urlorigen = $sx['urlorigen'];
+            $ipcontrol = $sx['ipcontrol'];
+            
+            $cx = $this->getDoctrine()->getManager();
+
+            $Correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+            //$numcorrelativo = $this->numerar();
+            //$Correlativo->setFechareg(new \DateTime('now'));
+            $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $fksolicitante));
+            $Correlativo->setFksolicitante($Usuario[0]);
+            $Correlativo->setRedactor($redactor);
+            $Correlativo->setDestinatario($destinatario);
+            $Correlativo->setReferencia($referencia);
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(array('id' => $fkcorrelativo));
+            if($fkcorrelativo!=null){
+                $Correlativo->setFkcorrelativo($controlcorrelativo[0]);
+          }
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('id' => $fktiponota));
+            $Correlativo->setFktiponota($tiponota[0]);
+            $Correlativo->setUrl($url);
+            $Correlativo->setAntecedente($antecedente);
+            $Correlativo->setEstadoCorrelativo($estadocorrelativo);
+            $Correlativo->setItem($item);
+            $Correlativo->setUrleditable($urleditable);
+            $Correlativo->setEntrega(new \DateTime($entrega));
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $fkunidad));
+            $Correlativo->setFkunidad($unidad[0]);
+            $Correlativo->setUrlorigen($urlorigen); 
+            $Correlativo->setIp($ipcontrol);                    
+            $Correlativo->setEstado(1);
+            $cx->persist($Correlativo);
+            $cx->flush();
+            $resultado = array('response'=>"El numero de correlativo Modificado es: ".$Correlativo->getNumcorrelativo().".",   
+            'success' => true,
+            'message' => 'Correlativo Modificado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+            
+           // return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+
+    public function numerar()
+    {
+        try {
+            date_default_timezone_set('America/La_Paz');
+            $dia = date("d");
+            $mes = date("m");
+
+            $cx = $this->getDoctrine()->getManager()->getConnection();
+            $sql = "SELECT cb_correlativo_numcorrelativo AS numcorrelativo 
+                    FROM cb_correlativo_correlativo
+                    WHERE date_part('Day', cb_correlativo_fechareg) = 1 AND date_part('Month', cb_correlativo_fechareg) = 1 AND 
+                        cb_correlativo_estado = 1";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->fetchAll();
+
+            $sql2 = "SELECT cb_correlativo_numcorrelativo + 1 AS numcorrelativo
+                    FROM cb_correlativo_correlativo
+                    WHERE cb_correlativo_estado = 1 AND cb_correlativo_id IN
+                    (SELECT MAX(c.cb_correlativo_id) 
+                    FROM cb_correlativo_correlativo c 
+                    WHERE c.cb_correlativo_estado = 1)";
+
+            $stmt2 = $cx->prepare($sql2);
+            $stmt2->execute();
+            $query2 = $stmt2->fetchAll();
+            
+            if($dia == '01' && $mes == '01' && empty($query) || empty($query) && empty($query2)){
+                $num = 1;
+            }else{
+                $num = $query2[0]['numcorrelativo'];
+            }
+            
+            return $num;
+        } catch (Exception $e) {
+            return 0;
+        }
+
+    }
+
+     /**
+     * @Route("/correlativoeliminar", methods={"POST"}, name="correlativoeliminar")
+     */
+    public function correlativoeliminar(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $cx = $this->getDoctrine()->getManager();
+            $id = $sx['id'];
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+
+            $correlativo->setEstado(0);
+            $cx->persist($correlativo);
+            $cx->flush();
+
+            $resultado = array('response'=>"El numero de correlativo Eliminado es: ".$correlativo->getNumcorrelativo().".",'success' => true,
+                'message' => 'Correlativo dado de baja correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+         /**
+     * @Route("/correlativopermiso", methods={"POST"}, name="correlativopermiso")
+     */
+    public function correlativopermiso(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            
+            $username = $sx['username'];
+            
+            $permisos = $this->getDoctrine()->getRepository(Correlativo::class)->filterByPermissions($username);
+         
+           // $resultado = array('response'=>"El numero de correlativo Modificado es: ".$Correlativo->getNumcorrelativo().".",   
+            //'success' => true,
+         //   'message' => 'Correlativo Modificado correctamente.');
+
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+          
+                $data2 = $serializer->serialize($permisos, 'json');
+       
+                
+            
+            return new jsonResponse(json_decode($data2));
+
+
+
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+            
+           // return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/correlativoeditar", methods={"POST"}, name="correlativoeditar")
+     */
+    public function correlativoeditar(Request $request)
+    {
+        
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $id = $sx['id'];            
+            $cx = $this->getDoctrine()->getManager();
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+            $fecreg = $correlativo->getFechareg();
+            $fecent = $correlativo->getEntrega();
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+            if($fecent != null) $rsfce = $fecent->format('Y-m-d'); else $rsfce = $fecent;
+            $sendinf = [
+                "id" => $correlativo->getId(),
+                "fechareg" => $rsfcr,
+                "numcorrelativo" => $correlativo->getNumcorrelativo(),
+                "fksolicitante" => $correlativo->getFksolicitante(),
+                "redactor" => $correlativo->getRedactor(),
+                "destinatario" => $correlativo->getDestinatario(),
+                "referencia" => $correlativo->getReferencia(),
+                "fkcorrelativo" => $correlativo->getFkcorrelativo(),
+                "fktiponota" => $correlativo->getFktiponota(),
+                "url" => $correlativo->getUrl(),
+                "antecedente" => $correlativo->getAntecedente(),
+                "estadocorrelativo" => $correlativo->getEstadoCorrelativo(),
+                "item" => $correlativo->getItem(),
+                "urleditable" => $correlativo->getUrleditable(),
+                "entrega" => $rsfce,
+                "fkunidad" => $correlativo->getFkunidad(),
+                "urlorigen" => $correlativo->getUrlorigen(),
+                "ipcontrol" => $correlativo->getIp()       
+            ];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($sendinf, 'json');
+            
+            $resultado = $json;
+            return new Response($resultado);
+            
+           // return new jsonResponse(json_decode($data2));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
+
+    /**
+    * @Route("/datasig", methods={"GET"}, name="datasig")
+    */
+    public function datasig(Request $request)
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager()->getConnection();
+            $sql = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior 
+                    FROM cb_cfg_sig 
+                    WHERE cb_sig_id IN
+                    (SELECT DISTINCT (a.cb_sig_fksuperior)  
+                    FROM cb_cfg_sig a 
+                    WHERE a.cb_sig_fksuperior IS NOT NULL)";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $parent = $stmt->fetchAll();
+            
+            $sql2 = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior, NULL AS children
+                    FROM cb_cfg_sig 
+                    WHERE cb_sig_fksuperior IS NULL AND cb_sig_id NOT IN
+                    (SELECT DISTINCT (a.cb_sig_fksuperior) 
+                    FROM cb_cfg_sig a 
+                    WHERE a.cb_sig_fksuperior IS NOT NULL)
+                    ORDER BY 1";
+
+            $stmt2 = $cx->prepare($sql2);
+            $stmt2->execute();
+            $first = $stmt2->fetchAll();
+
+            $sig = array();
+            foreach($parent as $item){
+                $id = $item['id'];
+                $sql3 = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior 
+                        FROM cb_cfg_sig
+                        WHERE cb_sig_fksuperior=:id
+                        ORDER BY 1";
+
+                $stmt3 = $cx->prepare($sql3);
+                $stmt3->execute(['id' => ($id)]);
+                $children = $stmt3->fetchAll();
+                $item['children'] = $children;
+                $sig[] = $item; 
+            }
+            foreach($first as $item){
+                $sig[] = $item; 
+            }
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array ('json' => new JsonEncoder()));
+            $data = $serializer->serialize($sig, 'json');
+
+            return new jsonResponse(json_decode($data));
+        }
+        catch(Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ',  $e->getMessage(), "\n");
+        }
+    }
+
 }

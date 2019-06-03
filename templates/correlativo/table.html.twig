@@ -1,6 +1,6 @@
 {% for tr in objects %}
     
-    <tr {% if tr.fkestado.nombre == 'Anulado' %} style="background-color: #ffcdd2" {% endif %}>
+    <tr {% if tr.estadocorrelativo == 'Anulado' %} style="background-color: #ffcdd2" {% endif %}>
         <td class="details-control">
             <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'cr' ~ tr.id}}"></i>
         </td>
@@ -13,40 +13,53 @@
                  <b><i>{{' (Inactivo)' }}</i></b>
             {% endif %}
         </td>
-        <td>{{ tr.redactor }}</td>
+        <td>{{ tr.redactor }}{{ tr.urlorigen }}</td>
         <td class="d-none">{{ tr.destinatario }}</td>
         <td class="d-none">{{ tr.referencia }}</td>
         <td class="d-none">{{ tr.fkcorrelativo.nombre }}</td>
         <td class="d-none">{{ tr.fktiponota.nombre }}</td>
         <td class="d-none">{{ tr.equipo }}</td>
         <td class="d-none">{{ tr.ip }}</td>
+
         {% if tr.url != null and tr.url != 'N/A' %}
             <td><a href="{{tr.url}}" class="ruta"><i class="material-icons">folder</i> Archivo</a></td>
         {% else %}
             <td>{{ tr.url }}</td>
         {% endif %}
+
         <td class="d-none">{{ tr.antecedente }}</td>
-        <td class="d-none">{{ tr.fkestado.nombre }}</td>
+        <td class="d-none">{{ tr.estadocorrelativo }}</td>
         <td class="d-none">{{ tr.item }}</td>
-        {% if tr.urleditable != null and tr.url != 'N/A' %}
+
+        {% if tr.urleditable != null and tr.urleditable != 'N/A' %}
             <td><a href="{{tr.urleditable}}" class="ruta"><i class="material-icons">folder_open</i> Archivo</a></td>
         {% else %}
-            <td>{{ tr.url }}</td>
+            <td>{{ tr.urleditable }}</td>
         {% endif %}
+
         <td class="d-none">{{ tr.entrega | date('Y-m-d') }}</td>
         <td class="d-none">{{ tr.fkunidad.nombre }}</td>
-        {% if tr.urlorigen != null and tr.url != 'N/A' %}
+        
+        {% set cmp = 'Completo' ~ tr.fkunidad.nombre %}
+        {% set crp = 'Crear' ~ tr.fkunidad.nombre %}
+
+        {% if tr.urlorigen != null and tr.urlorigen != 'N/A' %}
             <td><a href="{{tr.urlorigen}}" class="ruta"><i class="material-icons">folder_special</i> Archivo</a></td>
         {% else %}
-            <td>{{ tr.url }}</td>
+            <td>{{ tr.urlorigen }}</td>
         {% endif %}
         <td align="center">
         {% if 'correlativo_editar' in permisos %}
+            {% if cmp in permissions or crp in permissions %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
+            {% endif %}
         {% endif %}
         {% if 'correlativo_eliminar' in permisos %}  
+            {% if cmp in permissions or crp in permissions %}
             <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+            {% endif %}
         {% endif %}
         </td>
     </tr>
 {% endfor %}
+

@@ -4,19 +4,45 @@
             <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'dp' ~ tr.id}}"></i>
         </td>
         <td class="d-none">{{ tr.id }}</td>
-        <td>{{ tr.fkdocumento.codigo }}</td>
+        {% if tr.codigonuevo != '' %}
+            <td>{{ tr.codigonuevo }}</td>
+        {% else %}
+            {% if tr.fkdocumento != null %}
+                <td>{{ tr.fkdocumento.codigo }}</td>
+            {% else %}
+                {% if tr.fkformulario != null %}
+                    <td>{{ tr.fkformulario.codigo }}</td>
+                {% else %}
+                    <td>S/A</td>
+                {% endif %}     
+            {% endif %}     
+        {% endif %}   
+
+        <td>{{ tr.nuevoactualizacion }}</td>
         <td>{{ tr.fkproceso.codproceso }}</td>
         <td>{{ tr.fktipo.nombre }}</td>
+
         <td>{{ tr.titulo }}</td>
         <td>{{ tr.versionvigente }}</td>
         <td class="d-none">{{ tr.vinculoarchivo }}</td>
+
         <td class="d-none">{{ tr.carpetaoperativa }}</td>
-        <td class="d-none">{{ tr.nuevoactualizacion }}</td>
         <td class="d-none">{{ tr.aprobadorechazado }}</td>
-        <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
-        <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d') }}</td>
+        {% if tr.fkaprobador != null %}
+            <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
+
+        {% if tr.fechaaprobacion != null %}  
+            <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d') }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
         <td align="center">
-        {% if 'documentoproceso_editar' in permisos %}
+        <button id="rev" data-json="{{tr.id}}" type="button" class="btn bg-blue waves-effect waves-light rev" title="En revisión"><i class="material-icons">receipt</i></button>
+        <button id="view" data-json="{{tr.id}}" type="button" class="btn bg-cyan waves-effect waves-light view" title="Ver Contenido"><i class="material-icons">pageview</i></button>
+        {% if 'documentoproceso_edit' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
         {% endif %}
         {% if 'documentoproceso_eliminar' in permisos %}  

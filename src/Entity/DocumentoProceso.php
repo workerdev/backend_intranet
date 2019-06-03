@@ -42,9 +42,25 @@ class DocumentoProceso
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cb_documento_proceso_fkdocumento", referencedColumnName="cb_documento_id")
      * })
-     * @Assert\NotBlank
      */
     private $fkdocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_documento_proceso_codigonuevo", type="text", nullable=true)
+     */
+    private $codigonuevo;
+
+    /**
+     * @var \formulario
+     *
+     * @ORM\ManyToOne(targetEntity="DocumentoFormulario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_documento_proceso_fkformulario", referencedColumnName="cb_documento_formulario_id")
+     * })
+     */
+    private $fkformulario;
     
     /**
      * @var \proceso
@@ -93,9 +109,7 @@ class DocumentoProceso
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="cb_documento_proceso_carpetaoperativa", type="text", nullable=true)
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_documento_proceso_carpetaoperativa", type="text", nullable=true, options={"default":""})
      */
     private $carpetaoperativa;
 
@@ -103,7 +117,6 @@ class DocumentoProceso
      * @var string
      *
      * @ORM\Column(name="cb_documento_proceso_aprobadorechazado", type="text", nullable=true)
-     * @Assert\NotBlank
      */
     private $aprobadorechazado;
 
@@ -112,17 +125,15 @@ class DocumentoProceso
      *
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_documento_proceso_fkaprobador", referencedColumnName="cb_usuario_id")
+     *   @ORM\JoinColumn(name="cb_documento_proceso_fkaprobador", referencedColumnName="cb_usuario_id", nullable=true)
      * })
-     * @Assert\NotBlank
      */
     private $fkaprobador;
     
     /**
      * @var date
      *
-     * @ORM\Column(name="cb_documento_proceso_fechaaprobacion", type="date", nullable=true)
-     * @Assert\NotBlank
+     * @ORM\Column(name="cb_documento_proceso_fechaaprobacion", type="date", nullable=true, options={"default":null})
      */
     private $fechaaprobacion;
 
@@ -166,6 +177,18 @@ class DocumentoProceso
     public function setFkdocumento(?Documento $fkdocumento): self
     {
         $this->fkdocumento = $fkdocumento;
+
+        return $this;
+    }  
+
+    public function getFkformulario(): ?DocumentoFormulario
+    {
+        return $this->fkformulario;
+    }
+
+    public function setFkformulario(?DocumentoFormulario $fkformulario): self
+    {
+        $this->fkformulario = $fkformulario;
 
         return $this;
     } 
@@ -241,6 +264,19 @@ class DocumentoProceso
 
         return $this;
     }  
+
+
+    public function getCodigonuevo(): ?string
+    {
+        return $this->codigonuevo;
+    }
+
+    public function setCodigonuevo(string $codigonuevo): self
+    {
+        $this->codigonuevo = $codigonuevo;
+
+        return $this;
+    } 
 
     public function getAprobadorechazado(): ?string
     {

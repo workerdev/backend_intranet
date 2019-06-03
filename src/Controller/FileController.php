@@ -79,7 +79,7 @@ class FileController extends Controller
             $galeriadesc =$galeriav->getNombre();
 
             $file = $datosFiles->getRuta();
-            $directorio=$this->getParameter('Directorio_Files');
+           
             $directorioproyec=$this->getParameter('Directorio_proyecto');
             //$fileName = $file->getClientOriginalName();             
             //$file->move($directorio.'\\'.$galeriadesc, $fileName);
@@ -94,8 +94,8 @@ class FileController extends Controller
                 $file = $form['ruta']->getData();
                 $fileName = $file->getClientOriginalName();             
                 //$file->move($this->getParameter('Directorio_Files'), $fileName);
-                $file->move($directorioproyec.'\\'.$galeriadesc, $fileName);
-                $ruta = '\\'.$galeriadesc.'\\'.$fileName;
+                $file->move($directorioproyec.'/'.$galeriadesc, $fileName);
+                $ruta = '/'.$galeriadesc.'/'.$fileName;
                 $files->setRuta($ruta);
             }
             
@@ -119,7 +119,7 @@ class FileController extends Controller
             //return $this->render('files/index.html.twig', array('objects' => $Files,'form' => $form->createView(), 'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
         }
         
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
        

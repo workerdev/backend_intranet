@@ -1,0 +1,297 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+<style>
+    .accion{ 
+        cursor:pointer 
+    }
+    .swal2-title{
+        font-size: 16px !important;
+    }
+    .check-own{
+        position: static !important;
+        left: 0px !important;
+        opacity: 1 !important;
+    }
+    .padding-own{
+        padding: 12px;
+    }
+    .modal-dialog-own {
+        width: 50% !important;
+    }
+</style>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/publicaciondoc'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 100
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
+{% endblock %}
+{% block body %}
+
+{{ include('publicaciondoc/form.html.twig') }}
+
+<div class="header bg-indigo"><h2>PUBLICACIÓN DE DOCUMENTOS</h2></div>
+<div class="body">
+    <div class="row clearfix">
+        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+        {% if 'publicaciondoc_insertar' in permisos %}
+            <button id="new" type="button" class="btn bg-blue waves-effect" title="Publicar">
+                <i class="material-icons">markunread_mailbox</i>
+            </button>
+        {% endif %}
+        </div>
+    </div>
+    <!--div class="switch">
+        <label>
+            Seleccionar documentos 
+            <input id="checkdoc" type="checkbox">
+            <span class="lever"></span>
+        </label>
+    </div-->
+    {% if 'home_publicaciondoc' in permisos and objects %}
+    <div class="row">
+        <div class="body table-responsive">
+            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                <thead>
+                <tr>
+                    <th class="order_by_th" data-name="phone">Marcar </th>
+                    <th class="order_by_th" data-name="phone">Tipo </th>
+                    <th class="order_by_th" data-name="phone">Área </th>
+                    <th class="order_by_th" data-name="phone">Código </th>
+                    <th class="order_by_th" data-name="names">Título </th>
+                    <th class="order_by_th" data-name="names">Versión </th>
+                    <th class="order_by_th" data-name="names">Vínculo </th>
+                </tr>
+                </thead>
+                <tbody id="table_content">
+                {{ include('publicaciondoc/table.html.twig') }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+    {% endif %}
+</div>
+{%endblock%}
+{% block javascripts %}
+<script src="resources/plugins/momentjs/moment.js"></script>
+<script src="resources/plugins/momentjs/locale/es.js"></script>
+<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/plugins/tinymce/tinymce.js"></script>
+
+<script>
+    var global_check = [];
+    var global_data = '';
+    $(document).ready(function (){
+        $('#checkdoc').prop( "checked", false);
+        $('.check-own').prop('checked', false);
+    });
+
+    var table = $('#data_table').DataTable({
+        drawCallback: function(){
+            $('.paginate_button', this.api().table().container())          
+                .on('click', function(){
+                    console.log((this));
+                if($('#checkdoc').prop('checked')){
+                    $('.hidden-own').removeClass('d-none')
+                }
+                else{
+                    $('.hidden-own').addClass('d-none')
+                }
+            });       
+        }
+    });
+
+    var derivar = false;
+    var aprobar = false;
+    var rechazar = false;
+    var idrev = 0;
+    $('#fkdoc').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar tipo documento.',
+        title: 'Seleccione un documento.'
+    })
+ 
+    $('#estadodoc').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar opción.',
+        title: 'Seleccione una opción.'
+    })
+
+    $('#responsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
+    $('#dresponsable').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar responsable.',
+        title: 'Seleccione un responsable.'
+    })
+
+    function init(){ }
+
+    function changeval(idc){
+        if($('#'+idc).is(':checked')){
+            let id = $('#'+idc).attr('data-id'); 
+            let tipo = $('#'+idc).attr('data-type');
+            let objdoc = {
+                'id': id,
+                'tipo': tipo
+            }; 
+            global_check.push(objdoc);
+            console.log(global_check);
+        }else{
+            let id = $('#'+idc).attr('data-id'); 
+            let tipo = $('#'+idc).attr('data-type');
+            for( var i = 0; i < global_check.length; i++){ 
+                if ( global_check[i].id === id && global_check[i].tipo === tipo ) {
+                    global_check.splice(i, 1); 
+                }
+            }
+            console.log(global_check);
+        }
+    }
+
+    $('#checkdoc').change(function(){
+        if($(this).prop('checked')){
+            $('.hidden-own').removeClass('d-none')
+        }
+        else{
+            $('.hidden-own').addClass('d-none')
+        }
+    })
+
+    $('#new').click(function () {
+        var list = global_check;
+        console.log(list);
+
+        obj = JSON.stringify({
+            'docs': list
+        })
+        ajax_call_get("/publicaciondoc_listar",{
+            object: obj
+        },function(response){
+            var ldoc = JSON.parse(response);
+            console.log(ldoc);
+            global_data = ldoc;
+
+            var table = $('#table_docs').DataTable();
+            table.destroy();
+
+            for(var i=0; i<ldoc.length; i++){
+                if(ldoc[i].isform == 'true'){
+                    table.row.add([
+                        "Formulario",
+                        ldoc[i].fkdocumento.fkficha.fkareagerenciasector.fkarea.nombre,
+                        ldoc[i].codigo,
+                        ldoc[i].titulo,
+                        ldoc[i].versionvigente,
+                        ldoc[i].vinculofiledig
+                    ]).draw(false);
+                }else{
+                    table.row.add([
+                        ldoc[i].fktipo.nombre,
+                        ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
+                        ldoc[i].codigo,
+                        ldoc[i].titulo,
+                        ldoc[i].versionvigente,
+                        ldoc[i].vinculoarchivodig
+                    ]).draw(false);
+                }
+            }
+        
+            clean_form()
+            $('#form').modal('show')
+        })
+    })
+
+    $('#apb').click(function () {
+        $('#form-rev').modal('show');
+    })
+
+    $('#cdc-pass').mousedown(function(){
+        $("#ic-dpass").css("color", "lightgrey");
+        $("#clave").prop("type", "text");
+    });
+    
+    $("#cdc-pass").mouseup(function(){
+        $("#ic-dpass").css("color", "grey");
+        $("#clave").prop("type", "password");
+    });
+    
+    $('#btn-publicar').click(function () {
+        var grupos = []
+        $("input[name=gp-check]").each(function (index) {
+            if($(this).is(':checked')){
+                grupos.push($(this).attr("data-id"))
+            }
+        });
+
+        objeto = JSON.stringify({
+            'datadoc': global_data,
+            'grupos': grupos
+        });
+        ajax_call_validation("/publicaciondoc_publicar", {object: objeto}, null, main_route)
+    })
+
+    function attach_edit() {
+        $('.edit').click(function () {
+            obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+            })
+            ajax_call_get("/publicaciondoc_editar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                $('#id').val(self.id)
+                $('#fecha').val(self.fecha)
+                $('#firma').val(self.firma)
+
+                $('#responsable').val(self.responsable)
+                $('#responsable').selectpicker('render')
+
+                $('#estadodoc').val(self.estadodoc)
+                $('#estadodoc').selectpicker('render')
+
+                $('#fkdoc').val(self.fkdoc.id)
+                $('#fkdoc').selectpicker('render')
+           
+                clean_form()
+                $('#form').modal('show')
+            })
+        })
+    }
+
+    $('#update').click(function () {
+        objeto = JSON.stringify({
+            'id': parseInt(JSON.parse($('#id').val())),
+            'fecha': $('#fecha').val(),
+            'responsable': $('#responsable').val(),
+            'firma': $('#firma').val(),
+            'estadodoc': $('#estadodoc').val(),
+            'fkdocs': $('#fkdoc').val()
+        })
+        ajax_call_validation("/publicaciondoc_actualizar", {object: objeto}, null, main_route)
+    })
+    reload_form()
+</script>
+<script>
+    attach_edit()
+</script>
+
+{% endblock %}

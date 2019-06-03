@@ -8,6 +8,7 @@ use App\Entity\Usuario;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -31,27 +32,27 @@ class FichaCargoType extends AbstractType
                 'label' => 'Nombre',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('objetivo', TextType::class, array(
+            ->add('objetivo', TextareaType::class, array(
                 'label' => 'Objetivo',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('responsabilidades', TextType::class, array(
+            ->add('responsabilidades', TextareaType::class, array(
                 'label' => 'Responsabilidades',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('experiencia', TextType::class, array(
+            ->add('experiencia', TextareaType::class, array(
                 'label' => 'Experiencia',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('conocimientos', TextType::class, array(
+            ->add('conocimientos', TextareaType::class, array(
                 'label' => 'Conocimientos',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('formacion', TextType::class, array(
+            ->add('formacion', TextareaType::class, array(
                 'label' => 'Formación',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('caracteristicas', TextType::class, array(
+            ->add('caracteristicas', TextareaType::class, array(
                 'label' => 'Características',
                 'attr' => ['class' => 'form-line form-label']
             ))

@@ -28,6 +28,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Rol;
 
 
@@ -63,7 +65,7 @@ class AccidentesController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('responsable' => $s_user['nombre'].' '.$s_user['apellido'], 'firma' => 'Por revisar', 'estado' => '1'));
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(array('estado' => '1'));
@@ -97,27 +99,64 @@ class AccidentesController extends AbstractController
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-
-
-    /**
-     * @Route("/accidentes_editar", methods={"POST"}, name="accidentes_editar")
+     /**
+     * @Route("/accidentes_actualizar", methods={"POST"}, name="accidentes_actualizar")
      */
-    public function editar(){
+    public function actualizar(ValidatorInterface $validator)
+    {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $id = $_POST['id'];
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $fechainicio = $sx['fechainicio'];
             $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->find($id);
-
-            $accidentes->setEstado(0);
-            $cx->persist($accidentes);
+            $accidentes->setFechaInicio(new \DateTime($fechainicio));
+            $errors = $validator->validate($accidentes);
+            if (count($errors)>0){
+                $array = array();
+                $array['error'] = 'error';
+                foreach ($errors as $e){
+                    $array += [$e->getPropertyPath() => $e->getMessage()];
+                    // dd($e->getMessage());
+                    // dd($e->getPropertyPath()) ;
+                }
+                return  new  Response(json_encode($array)) ;
+            }
+            $cx->merge($accidentes);
             $cx->flush();
-
-            $resultado = array('response'=>"El ID modificado es: ".$accidentes->getId().".",'success' => true,
-                'message' => 'Accidente actualizado correctamente.');
+            $resultado = array('success' => true,
+                    'message' => 'Accidentes actualizado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+      /**
+     * @Route("/accidentes_editar", methods={"POST"}, name="accidentes_editar")
+     */
+    public function editar()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->find($id);
+            $fpb = $accidentes->getFechaInicio();
+            $result = $fpb->format('Y-m-d');
+            $sendinf = [
+                "fechainicio" => $result                
+                ];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($sendinf, 'json');
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Accidentes listado correctamente.');
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
 

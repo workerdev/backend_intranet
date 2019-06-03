@@ -1,0 +1,17 @@
+{% for t in objects %}
+<tr>
+    <td class="order_by_th">        
+        <input id="{{ t.id ~ t.tipo|replace({' ':''}) }}" onclick="changeval('{{ t.id ~ t.tipo|replace({' ':''}) }}')" class="check-own" name="documents" type="checkbox" data-id="{{t.id}}" data-type="{{t.tipo}}"/>
+    </td>
+    <td>{{ t.tipo }}</td>
+    <td>{{ t.area }}</td>
+    <td>{{ t.codigo }}</td>
+    <td>{{ t.titulo }}</td>
+    <td>{{ t.version }}</td>
+    {% if t.vinculo != null %}
+        <td><a href="{{ t.vinculo }}">{{ t.vinculo }}</a></td>
+    {% else %}
+        <td>N/A</td>
+    {% endif %}
+</tr>
+{% endfor %}

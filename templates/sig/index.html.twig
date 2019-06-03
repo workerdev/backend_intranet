@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .accion{ cursor:pointer }
+    </style>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
+
+    <script>
+        main_route = '/sig'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+
+    </script>
+{% endblock %}
+{% block body %}
+
+    {{ include('sig/form.html.twig') }}
+
+    <div class="header bg-indigo"><h2>SISTEMA INTEGRADO DE GESTIÓN</h2></div>
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+            {% if 'sig_insertar' in permisos %}
+                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                    <i class="material-icons">add</i>
+                </button>
+            {% endif %}
+            </div>
+        </div>
+        {% if 'home_sig' in permisos and objects %}
+            <div class="row">
+                <div class="body table-responsive">
+                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                        <tr>
+                            <th class="order_by_th" data-name="phone">Título </th>
+                            <th class="order_by_th" data-name="names">Ruta </th>
+                            <th class="order_by_th" data-name="names">Superior </th>
+                            <th class="actions_header">Acciones </th>
+                        </tr>
+                        </thead>
+                        <tbody id="table_content">
+                        {{ include('sig/table.html.twig') }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+        {% endif %}
+    </div>
+{%endblock%}
+{% block javascripts %}
+    <script src="resources/plugins/momentjs/moment.js"></script>
+    <script src="resources/plugins/momentjs/locale/es.js"></script>
+    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+
+    <script>
+    $('#sig_fksuperior').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar superior.',
+        title: 'Seleccione un superior.'
+    })
+
+    attach_validators()
+
+    $('#new').click(function () {
+        $('#lnkva').remove();
+        $('#sig_id').hide()
+        $("#sig_id" ).siblings().hide()
+        $('#sig_id').val('')
+
+        clean_form()
+        verif_inputs()
+        $('#id_div').hide()
+        $('#insert').show()
+        $('#update').hide()
+
+        document.getElementById("sig_submit").innerHTML= "Guardar"
+        $('#sig_id').val(0)
+        $('#form').modal('show')
+    })
+
+    $("#sig_ruta").change(function(){
+        $("#lnkva").hide();
+    });
+
+    function attach_edit() {
+        $('.edit').click(function () {
+            $("#sig_id").attr("readonly", "readonly")
+
+            $('#sig_id').val('')
+            $('#sig_id').show()
+            $( "#sig_id" ).siblings().show()
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
+            })
+            ajax_call_get("/sig_editar",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response)
+                $('#sig_id').val(self.id)
+                document.getElementById('sig_titulo').value = self.titulo
+
+                if(self.ruta != 'N/A') {
+                    $('#lnkva').remove();
+
+                    let urlfile = self.ruta;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#sig_ruta");
+                }
+                else $('#lnkva').hide();
+
+                if(self.fksuperior != null) document.getElementById('sig_fksuperior').value = self.fksuperior.id
+            })
+            clean_form()
+            verif_inputs()
+            $('#id_div').show()
+            $('#insert').hide()
+            $('#update').show()
+            
+            document.getElementById("sig_submit").innerHTML = "Modificar"
+            setTimeout(function(){$('#form').modal('show')}, 500);
+        })
+    }
+    reload_form()
+    </script>
+    <script>
+        attach_edit()
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            enabled = false
+            swal({
+                title: "¿Desea dar de baja los datos del SIG?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/sig_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 500);S})
+            })
+        })
+    </script>
+
+{% endblock %}

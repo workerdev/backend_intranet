@@ -72,6 +72,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/acceso_eliminar' => [['_route' => 'acceso_eliminar', '_controller' => 'App\\Controller\\AccesoController::eliminar'], null, ['POST' => 0], null, false],
                     '/accidentes' => [['_route' => 'accidentes', '_controller' => 'App\\Controller\\AccidentesController::index'], null, null, null, false],
                     '/accidentes_eliminar' => [['_route' => 'accidentes_eliminar', '_controller' => 'App\\Controller\\AccidentesController::eliminar'], null, ['POST' => 0], null, false],
+                    '/accidentes_actualizar' => [['_route' => 'accidentes_actualizar', '_controller' => 'App\\Controller\\AccidentesController::actualizar'], null, ['POST' => 0], null, false],
                     '/accidentes_editar' => [['_route' => 'accidentes_editar', '_controller' => 'App\\Controller\\AccidentesController::editar'], null, ['POST' => 0], null, false],
                     '/accidentes_reset' => [['_route' => 'accidentes_reset', '_controller' => 'App\\Controller\\AccidentesController::reset'], null, ['POST' => 0], null, false],
                     '/accion' => [['_route' => 'accion_listar', '_controller' => 'App\\Controller\\AccionController::index'], null, null, null, false],
@@ -153,8 +154,9 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/ctrlcorrelativo_prev' => [['_route' => 'ctrlcorrelativo_prev', '_controller' => 'App\\Controller\\ControlCorrelativoController::ctrlcorrelativo_prev'], null, ['POST' => 0], null, false],
                     '/correlativo' => [['_route' => 'correlativo_listar', '_controller' => 'App\\Controller\\CorrelativoController::index'], null, ['GET' => 0, 'POST' => 1], null, false],
                     '/correlativo_editar' => [['_route' => 'correlativo_editar', '_controller' => 'App\\Controller\\CorrelativoController::editar'], null, ['POST' => 0], null, false],
-                    '/correlativo_numerar' => [['_route' => 'correlativo_numerar', '_controller' => 'App\\Controller\\CorrelativoController::numerar'], null, ['POST' => 0], null, false],
+                    '/obtener_unidad' => [['_route' => 'obtener_unidad', '_controller' => 'App\\Controller\\CorrelativoController::obtener_unidad'], null, ['POST' => 0], null, false],
                     '/correlativo_eliminar' => [['_route' => 'correlativo_eliminar', '_controller' => 'App\\Controller\\CorrelativoController::eliminar'], null, ['POST' => 0], null, false],
+                    '/correo' => [['_route' => 'correo', '_controller' => 'App\\Controller\\CorreoController::index'], null, ['GET' => 0, 'POST' => 1], null, false],
                     '/datoempresarial' => [['_route' => 'datoempresarial_listar', '_controller' => 'App\\Controller\\DatoEmpresarialController::index'], null, null, null, false],
                     '/datoempresarial_insertar' => [['_route' => 'datoempresarial_insertar', '_controller' => 'App\\Controller\\DatoEmpresarialController::insertar'], null, ['POST' => 0], null, false],
                     '/datoempresarial_actualizar' => [['_route' => 'datoempresarial_actualizar', '_controller' => 'App\\Controller\\DatoEmpresarialController::actualizar'], null, ['POST' => 0], null, false],
@@ -176,6 +178,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/docprocesorev_aprorec' => [['_route' => 'docprocesorev_aprorec', '_controller' => 'App\\Controller\\DocProcRevisionController::aprorec'], null, ['POST' => 0], null, false],
                     '/docprocesorev_actualizar' => [['_route' => 'docprocesorev_actualizar', '_controller' => 'App\\Controller\\DocProcRevisionController::actualizar'], null, ['POST' => 0], null, false],
                     '/docprocesorev_editar' => [['_route' => 'docprocesorev_editar', '_controller' => 'App\\Controller\\DocProcRevisionController::editar'], null, ['POST' => 0], null, false],
+                    '/docprocrevision_editar' => [['_route' => 'docprocrevision_editar', '_controller' => 'App\\Controller\\DocProcRevisionController::editar_rev'], null, ['POST' => 0], null, false],
                     '/docrev_prev' => [['_route' => 'docrev_prev', '_controller' => 'App\\Controller\\DocProcRevisionController::docrev_prev'], null, ['POST' => 0], null, false],
                     '/docprocesorev_eliminar' => [['_route' => 'docprocesorev_eliminar', '_controller' => 'App\\Controller\\DocProcRevisionController::eliminar'], null, ['POST' => 0], null, false],
                     '/doctipoextra' => [['_route' => 'doctipoextra', '_controller' => 'App\\Controller\\DocTipoExtraController::index'], null, null, null, false],
@@ -208,6 +211,9 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/documentoproceso_editar' => [['_route' => 'documentoproceso_editar', '_controller' => 'App\\Controller\\DocumentoProcesoController::editar'], null, ['POST' => 0], null, false],
                     '/docproc_prev' => [['_route' => 'docproc_prev', '_controller' => 'App\\Controller\\DocumentoProcesoController::docproc_prev'], null, ['POST' => 0], null, false],
                     '/documentoproceso_eliminar' => [['_route' => 'documentoproceso_eliminar', '_controller' => 'App\\Controller\\DocumentoProcesoController::eliminar'], null, ['POST' => 0], null, false],
+                    '/revision_insertar' => [['_route' => 'revision_insertar', '_controller' => 'App\\Controller\\DocumentoProcesoController::insertar'], null, ['POST' => 0], null, false],
+                    '/documentoproceso_userderiv' => [['_route' => 'documentoproceso_userderiv', '_controller' => 'App\\Controller\\DocumentoProcesoController::userderiv'], null, ['POST' => 0], null, false],
+                    '/documentoproceso_insertaraprob' => [['_route' => 'documentoproceso_insertaraprob', '_controller' => 'App\\Controller\\DocumentoProcesoController::insertaraprob'], null, ['POST' => 0], null, false],
                     '/documentosaso' => [['_route' => 'documentosaso_listar', '_controller' => 'App\\Controller\\DocumentosAsoController::index'], null, null, null, false],
                     '/documentosaso_insertar' => [['_route' => 'documentosaso_insertar', '_controller' => 'App\\Controller\\DocumentosAsoController::insertar'], null, ['POST' => 0], null, false],
                     '/documentosaso_actualizar' => [['_route' => 'documentosaso_actualizar', '_controller' => 'App\\Controller\\DocumentosAsoController::actualizar'], null, ['POST' => 0], null, false],
@@ -292,6 +298,11 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/gerencia_editar' => [['_route' => 'gerencia_editar', '_controller' => 'App\\Controller\\GerenciaController::editar'], null, ['POST' => 0], null, false],
                     '/gerencia_prev' => [['_route' => 'gerencia_prev', '_controller' => 'App\\Controller\\GerenciaController::gerencia_prev'], null, ['POST' => 0], null, false],
                     '/gerencia_eliminar' => [['_route' => 'gerencia_eliminar', '_controller' => 'App\\Controller\\GerenciaController::eliminar'], null, ['POST' => 0], null, false],
+                    '/grupocorreo' => [['_route' => 'grupocorreo', '_controller' => 'App\\Controller\\GrupoCorreoController::index'], null, null, null, false],
+                    '/grupocorreo_insertar' => [['_route' => 'grupocorreo_insertar', '_controller' => 'App\\Controller\\GrupoCorreoController::insertar'], null, ['POST' => 0], null, false],
+                    '/grupocorreo_actualizar' => [['_route' => 'grupocorreo_actualizar', '_controller' => 'App\\Controller\\GrupoCorreoController::actualizar'], null, ['POST' => 0], null, false],
+                    '/grupocorreo_editar' => [['_route' => 'grupocorreo_editar', '_controller' => 'App\\Controller\\GrupoCorreoController::editar'], null, ['POST' => 0], null, false],
+                    '/grupocorreo_eliminar' => [['_route' => 'grupocorreo_eliminar', '_controller' => 'App\\Controller\\GrupoCorreoController::eliminar'], null, ['POST' => 0], null, false],
                     '/gruporiesgo' => [['_route' => 'gruporiesgo', '_controller' => 'App\\Controller\\GrupoRiesgoController::index'], null, null, null, false],
                     '/gruporiesgo_insertar' => [['_route' => 'gruporiesgo_insertar', '_controller' => 'App\\Controller\\GrupoRiesgoController::insertar'], null, ['POST' => 0], null, false],
                     '/gruporiesgo_actualizar' => [['_route' => 'gruporiesgo_actualizar', '_controller' => 'App\\Controller\\GrupoRiesgoController::actualizar'], null, ['POST' => 0], null, false],
@@ -356,11 +367,12 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/permiso_editar' => [['_route' => 'permiso_editar', '_controller' => 'App\\Controller\\PermisoController::editar'], null, ['POST' => 0], null, false],
                     '/permiso_eliminar' => [['_route' => 'permiso_eliminar', '_controller' => 'App\\Controller\\PermisoController::eliminar'], null, ['POST' => 0], null, false],
                     '/personalcargo' => [['_route' => 'personalcargo_listar', '_controller' => 'App\\Controller\\PersonalCargoController::index'], null, null, null, false],
-                    '/organigrama' => [['_route' => 'PersonalCargo_listar2', '_controller' => 'App\\Controller\\PersonalCargoController::organigrama'], null, null, null, false],
+                    '/organigrama' => [['_route' => 'PersonalCargo_listar2', '_controller' => 'App\\Controller\\PersonalCargoController::organigrama'], null, ['GET' => 0], null, false],
                     '/organigrama_cambios' => [['_route' => 'organigrama cambios', '_controller' => 'App\\Controller\\PersonalCargoController::cambiosorganigrama'], null, null, null, false],
                     '/personalcargo_insertar' => [['_route' => 'PersonalCargo_insertar', '_controller' => 'App\\Controller\\PersonalCargoController::insertar'], null, ['POST' => 0], null, false],
                     '/personalcargo_actualizar' => [['_route' => 'PersonalCargo_actualizar', '_controller' => 'App\\Controller\\PersonalCargoController::actualizar'], null, ['POST' => 0], null, false],
                     '/personalcargo_editar' => [['_route' => 'PersonalCargo_editar', '_controller' => 'App\\Controller\\PersonalCargoController::editar'], null, ['POST' => 0], null, false],
+                    '/personalcargo_filtrar' => [['_route' => 'PersonalCargo_filtrar', '_controller' => 'App\\Controller\\PersonalCargoController::filtrar'], null, ['POST' => 0], null, false],
                     '/cargo_prev' => [['_route' => 'cargo_prev', '_controller' => 'App\\Controller\\PersonalCargoController::cargo_prev'], null, ['POST' => 0], null, false],
                     '/personalcargo_eliminar' => [['_route' => 'PersonalCargo_eliminar', '_controller' => 'App\\Controller\\PersonalCargoController::eliminar'], null, ['POST' => 0], null, false],
                     '/personal' => [['_route' => 'personal_listar', '_controller' => 'App\\Controller\\PersonalController::index'], null, null, null, false],
@@ -384,6 +396,9 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/procesorelacionado_actualizar' => [['_route' => 'procesorelacionado_actualizar', '_controller' => 'App\\Controller\\ProcesoRelacionadoController::actualizar'], null, ['POST' => 0], null, false],
                     '/procesorelacionado_editar' => [['_route' => 'procesorelacionado_editar', '_controller' => 'App\\Controller\\ProcesoRelacionadoController::editar'], null, ['POST' => 0], null, false],
                     '/procesorelacionado_eliminar' => [['_route' => 'procesorelacionado_eliminar', '_controller' => 'App\\Controller\\ProcesoRelacionadoController::eliminar'], null, ['POST' => 0], null, false],
+                    '/publicaciondoc' => [['_route' => 'publicaciondoc', '_controller' => 'App\\Controller\\PublicacionController::index'], null, null, null, false],
+                    '/publicaciondoc_listar' => [['_route' => 'publicaciondoc_listar', '_controller' => 'App\\Controller\\PublicacionController::listar'], null, ['POST' => 0], null, false],
+                    '/publicaciondoc_publicar' => [['_route' => 'publicaciondoc_publicar', '_controller' => 'App\\Controller\\PublicacionController::publicar'], null, ['POST' => 0], null, false],
                     '/recurso' => [['_route' => 'recurso', '_controller' => 'App\\Controller\\RecursoController::index'], null, null, null, false],
                     '/recurso_insertar' => [['_route' => 'recurso_insertar', '_controller' => 'App\\Controller\\RecursoController::insertar'], null, ['POST' => 0], null, false],
                     '/recurso_actualizar' => [['_route' => 'recurso_actualizar', '_controller' => 'App\\Controller\\RecursoController::actualizar'], null, ['POST' => 0], null, false],
@@ -423,6 +438,9 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/rol_editar' => [['_route' => 'rol_editar', '_controller' => 'App\\Controller\\RolController::editar'], null, ['POST' => 0], null, false],
                     '/rol_prev' => [['_route' => 'rol_prev', '_controller' => 'App\\Controller\\RolController::rol_prev'], null, ['POST' => 0], null, false],
                     '/rol_eliminar' => [['_route' => 'rol_eliminar', '_controller' => 'App\\Controller\\RolController::eliminar'], null, ['POST' => 0], null, false],
+                    '/sig' => [['_route' => 'sig', '_controller' => 'App\\Controller\\SIGController::index'], null, ['GET' => 0, 'POST' => 1], null, false],
+                    '/sig_editar' => [['_route' => 'sigeditar', '_controller' => 'App\\Controller\\SIGController::editar'], null, ['POST' => 0], null, false],
+                    '/sig_eliminar' => [['_route' => 'sig_eliminar', '_controller' => 'App\\Controller\\SIGController::eliminar'], null, ['POST' => 0], null, false],
                     '/sector' => [['_route' => 'sector_listar', '_controller' => 'App\\Controller\\SectorController::index'], null, null, null, false],
                     '/sector_insertar' => [['_route' => 'sector_insertar', '_controller' => 'App\\Controller\\SectorController::insertar'], null, ['POST' => 0], null, false],
                     '/sector_actualizar' => [['_route' => 'sector_actualizar', '_controller' => 'App\\Controller\\SectorController::actualizar'], null, ['POST' => 0], null, false],
@@ -513,6 +531,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/detaud_crocm' => [['_route' => 'detaud_crocm', '_controller' => 'App\\Controller\\ServiciosController::detaud_crocm'], null, ['POST' => 0], null, false],
                     '/listar_verificaref' => [['_route' => 'listar_verificaref', '_controller' => 'App\\Controller\\ServiciosController::listar_verificaref'], null, null, null, false],
                     '/listar_fortaleza' => [['_route' => 'listar_fortaleza', '_controller' => 'App\\Controller\\ServiciosController::listar_fortaleza'], null, null, null, false],
+                    '/loginbackend2' => [['_route' => 'loginbackend2', '_controller' => 'App\\Controller\\ServiciosController::info2'], null, ['POST' => 0], null, false],
                     '/loginbackend' => [['_route' => 'loginbackend', '_controller' => 'App\\Controller\\ServiciosController::info'], null, ['POST' => 0], null, false],
                     '/combo_proceso' => [['_route' => 'combo_proceso', '_controller' => 'App\\Controller\\ServiciosController::combo_proceso'], null, null, null, false],
                     '/combo_tipocrocm' => [['_route' => 'combo_tipocrocm', '_controller' => 'App\\Controller\\ServiciosController::combo_tipocrocm'], null, null, null, false],
@@ -522,6 +541,16 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/insertar_crocm' => [['_route' => 'insertar_crocm', '_controller' => 'App\\Controller\\ServiciosController::insertar_crocm'], null, ['POST' => 0], null, false],
                     '/combo_organigrama' => [['_route' => 'combo_organigrama', '_controller' => 'App\\Controller\\ServiciosController::combo_organigrama'], null, null, null, false],
                     '/listar_cobertura' => [['_route' => 'listar_cobertura', '_controller' => 'App\\Controller\\ServiciosController::listar_cobertura'], null, null, null, false],
+                    '/correlativo_gestiones' => [['_route' => 'correlativo_gestiones', '_controller' => 'App\\Controller\\ServiciosController::correlativo_gestiones'], null, ['POST' => 0], null, false],
+                    '/listar_correlativogestion' => [['_route' => 'listar_correlativogestion', '_controller' => 'App\\Controller\\ServiciosController::listar_correlativogestion'], null, ['POST' => 0], null, false],
+                    '/listar_correlativo' => [['_route' => 'listar_correlativo', '_controller' => 'App\\Controller\\ServiciosController::listar_correlativo'], null, ['POST' => 0], null, false],
+                    '/correlativoform' => [['_route' => 'correlativoform', '_controller' => 'App\\Controller\\ServiciosController::correlativoform'], null, ['POST' => 0], null, false],
+                    '/correlativoinsert' => [['_route' => 'correlativoinsert', '_controller' => 'App\\Controller\\ServiciosController::correlativoinsert'], null, ['POST' => 0], null, false],
+                    '/correlativomodificar' => [['_route' => 'correlativomodificar', '_controller' => 'App\\Controller\\ServiciosController::correlativomodificar'], null, ['POST' => 0], null, false],
+                    '/correlativoeliminar' => [['_route' => 'correlativoeliminar', '_controller' => 'App\\Controller\\ServiciosController::correlativoeliminar'], null, ['POST' => 0], null, false],
+                    '/correlativopermiso' => [['_route' => 'correlativopermiso', '_controller' => 'App\\Controller\\ServiciosController::correlativopermiso'], null, ['POST' => 0], null, false],
+                    '/correlativoeditar' => [['_route' => 'correlativoeditar', '_controller' => 'App\\Controller\\ServiciosController::correlativoeditar'], null, ['POST' => 0], null, false],
+                    '/datasig' => [['_route' => 'datasig', '_controller' => 'App\\Controller\\ServiciosController::datasig'], null, ['GET' => 0], null, false],
                     '/tipoauditor' => [['_route' => 'tipoauditor', '_controller' => 'App\\Controller\\TipoAuditorController::index'], null, null, null, false],
                     '/tipoauditor_insertar' => [['_route' => 'tipoauditor_insertar', '_controller' => 'App\\Controller\\TipoAuditorController::insertar'], null, ['POST' => 0], null, false],
                     '/tipoauditor_actualizar' => [['_route' => 'tipoauditor_actualizar', '_controller' => 'App\\Controller\\TipoAuditorController::actualizar'], null, ['POST' => 0], null, false],
@@ -644,7 +673,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
+                    .'|/organigrama/([^/]++)(*:28)'
+                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:63)'
                 .')/?$}sD',
         ];
 
@@ -653,7 +683,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                 switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = [
-                            35 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
+                            28 => [['_route' => 'organigrama_filtro', '_controller' => 'App\\Controller\\PersonalCargoController::filtro'], ['id'], ['GET' => 0], null, false, true],
+                            63 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
                         ];
 
                         list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
@@ -690,7 +721,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                         return $ret;
                 }
 
-                if (35 === $m) {
+                if (63 === $m) {
                     break;
                 }
                 $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));

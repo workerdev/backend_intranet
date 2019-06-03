@@ -10,6 +10,7 @@
     </style>
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
     <script>
         main_route = '/personalcargo'
@@ -186,7 +187,7 @@
 
                 if((quest.split(" ").length) > 8){
                     swal({
-                        title: quest,
+                        title: "¿Desea dar de baja el Cargo?",
                         type: "warning",
                         showConfirmButton: false,
                         showCancelButton: true,
@@ -200,7 +201,7 @@
 
                 }else{
                     swal({
-                        title: quest,
+                        title: "¿Desea dar de baja el Cargo?",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#004c99",
