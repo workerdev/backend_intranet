@@ -119,7 +119,7 @@ class ServiciosController extends AbstractController
             $cuerpo = $sx['cuerpo'];
             $remitente = $sx['remitente'];
             
-            $login = 'ctcloudbit';//$sx['login'];
+            $login = $sx['login'];
             
             /*$transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
             ->setUsername('cloud4resources@gmail.com')->setPassword('4cloud_resources');
@@ -181,7 +181,7 @@ class ServiciosController extends AbstractController
             /*->setSubject($asunto)
             ->setTo('sum.ghost4@gmail.com')*/
             ->setFrom('intranet@elfec.com')
-            ->setTo('grupouti@elfec.com')
+            ->setTo('cflores@elfec.com')
             ->setBody($cuerpo, 'text/html');
           //  ->setContentType('text/html');
 
@@ -2458,6 +2458,8 @@ class ServiciosController extends AbstractController
             $mensaje =  "error";
             return new JsonResponse($mensaje);
         }
+        $mensaje =  "error";
+            return new JsonResponse($mensaje);
     }
 
 
