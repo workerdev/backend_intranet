@@ -23,7 +23,7 @@
         "symfony/security-bundle": "*",
         "symfony/serializer": "*",
         "symfony/swiftmailer-bundle": "^3.2",
-        "symfony/translation": "*",
+        "symfony/translation": "4.1.*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/yaml": "*"

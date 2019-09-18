@@ -87,6 +87,7 @@ class FichaProcesosController extends Controller
             $areagerenciasector = $sx['areagerenciasector'];
             $entradasrequeridas = $sx['entradasrequeridas'];
             $salidasesperadas = $sx['salidasesperadas'];
+            $reqlegales = $sx['reqlegales'];
 
             $fichaprocesos = new FichaProcesos();
             $fichaprocesos->setCodproceso($codproceso);
@@ -98,6 +99,7 @@ class FichaProcesosController extends Controller
             $fichaprocesos->setEntradasrequeridas($entradasrequeridas);
             $fichaprocesos->setSalidasesperadas($salidasesperadas);
             $fichaprocesos->setRecursosnecesarios($recursosnecesarios);
+            $fichaprocesos->setReqlegales($reqlegales);
             $fichaprocesos->setEstado(1);
 
             $areagerenciasector !='' ?
@@ -151,6 +153,7 @@ class FichaProcesosController extends Controller
             $areagerenciasector = $sx['fkareagerenciasector'];
             $entradasrequeridas = $sx['entradasrequeridas'];
             $salidasesperadas = $sx['salidasesperadas'];
+            $reqlegales = $sx['reqlegales'];
 
             $fichaprocesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($id);
             $fichaprocesos->setId($id);
@@ -163,6 +166,7 @@ class FichaProcesosController extends Controller
             $fichaprocesos->setEntradasrequeridas($entradasrequeridas);
             $fichaprocesos->setSalidasesperadas($salidasesperadas);
             $fichaprocesos->setRecursosnecesarios($recursosnecesarios);
+            $fichaprocesos->setReqlegales($reqlegales);
             $fichaprocesos->setEstado(1);
 
 
@@ -219,6 +223,7 @@ class FichaProcesosController extends Controller
                 "entradasrequeridas" => $fichaprocesos->getEntradasrequeridas(),
                 "salidasesperadas" => $fichaprocesos->getSalidasesperadas(),
                 "recursosnecesarios" => $fichaprocesos->getRecursosnecesarios(),
+                "reqlegales" => $fichaprocesos->getReqlegales(),
                 "fkareagerenciasector" => $fichaprocesos->getFkareagerenciasector()
             ];
 

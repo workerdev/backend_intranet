@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
+<link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
         .accion{ 
             cursor:pointer 
@@ -45,16 +46,21 @@
                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                         <tr>
+                            <th></th>
+                            <th class="d-none" data-name="phone">ID </th>
+                            <th class="order_by_th" data-name="names">Foto </th>
                             <th class="order_by_th" data-name="names">Nombre </th>
                             <th class="order_by_th" data-name="phone">Apellido </th>
+                            <th class="order_by_th" data-name="phone">Género </th>
                             <th class="order_by_th" data-name="phone">Ci </th>
                             <th class="order_by_th" data-name="phone">Correo </th>
                             <th class="order_by_th" data-name="phone">Teléfono </th>
                             <th class="order_by_th" data-name="phone">Fecha de Nacimiento </th>
-                            <th class="order_by_th" data-name="phone">Procesos Cargo </th>
-                            <th class="order_by_th" data-name="phone">Estado de Personal </th>
-                            <th class="order_by_th" data-name="phone">Sector </th>
-                            <th class="order_by_th" data-name="phone">Área </th>
+                            <th class="d-none" data-name="phone">Username </th>
+                            <th class="d-none" data-name="phone">Procesos Cargo </th>
+                            <th class="d-none" data-name="phone">Estado de Personal </th>
+                            <th class="d-none" data-name="phone">Sector </th>
+                            <th class="d-none" data-name="phone">Área </th>
                             <th class="actions_header">Acciones </th>
                         </tr>
                         </thead>
@@ -83,32 +89,65 @@
         liveSearchPlaceholder: 'Buscar tipo de cargo.',
         title: 'Seleccione un tipo de cargo.'
     })
-     $('#fkestadopersonal').selectpicker({
+
+    $('#fkestadopersonal').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar tipo de estado.',
         title: 'Seleccione un tipo de estado.'
     })
-     $('#fksector').selectpicker({
+
+    $('#fksector').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar sector.',
         title: 'Seleccione un sector.'
     })
-     $('#fkarea').selectpicker({
+
+    $('#fkarea').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar área.',
         title: 'Seleccione un área.'
     })
     
+    $('#genero').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar género.',
+        title: 'Seleccione un género.'
+    })
+
+    $("#foto").on('change', function() {
+        $('.fileinput-upload').hide()
+        $('.fileinput-remove-button span').text('Eliminar')
+        $('.fileinput-remove-button').attr('title', 'Quitar archivos seleccionados')
+        setTimeout(function(){ 
+            $('.kv-file-zoom').hide()
+            $('.file-upload-indicator').attr('title', 'No importado aún')
+        }, 800);
+    })
+    
     $('#new').click(function () {
+        $('#accion').val('new')
         $('#nombre').val('')
         $('#apellido').val('')
         $('#ci').val('')
         $('#correo').val('')
+        $('#username').val('')
         $('#telefono').val('')
         $('#fnac').val('')
+
+        $('#genero').val('')
+        $('#genero').selectpicker('render')
+        $('#fkprocesoscargo').val('')
+        $('#fkprocesoscargo').selectpicker('render')
+        $('#fkestadopersonal').val('')
+        $('#fkestadopersonal').selectpicker('render')
+        $('#fksector').val('')
+        $('#fksector').selectpicker('render')
+        $('#fkarea').val('')
+        $('#fkarea').selectpicker('render')
 
         clean_form()
         verif_inputs()
@@ -118,47 +157,85 @@
         $('#form').modal('show')
     })
 
-    $('#insert').click(function () {
-        var objeto = JSON.stringify({
-            'nombre': $('#nombre').val(),
-            'apellido': $('#apellido').val(),
-            'ci': $('#ci').val(),
-            'correo': $('#correo').val(),
-            'telefono': $('#telefono').val(),
-            'fnac': $('#fnac').val(),
-            'personalcargo': $('#fkprocesoscargo').val(),
-            'estadopersonal': $('#fkestadopersonal').val(),
-            'sector': $('#fksector').val(),
-            'area': $('#fkarea').val()
-        })
-        ajax_call_validation("/personal_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/personal_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
+    $("#submit_form").on('submit', function(e){
+        e.preventDefault();
+        
+        $.ajax({
+            type: 'POST',
+            url: '/personal_insertar',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function(){
+                $('.file').attr("disabled", "disabled");
+                $('#submit_form').css("opacity", ".7");
+            },
+            success: function(msg){
+                $('#submit_form').css("opacity","");
+                $(".file").removeAttr("disabled");
+            }
+        }).done(function (data) {
+            msg = JSON.parse(data) 
+            //console.log(msg)
+            if(msg.response == 'Empty'){ 
+                swal(
+                    'Error',
+                    'Por favor, ingrese todos los datos requeridos.',
+                    'error'
+                ) 
+            }
+            if(msg.response == 'NoFile'){
+                swal(
+                    'Error',
+                    'Por favor, debe subir un archivo.',
+                    'error'
+                ) 
+            }
+            if(msg.response == 'Save'){
+                $('#form').modal('hide')
+                showMessage(msg.message, "success", "ok")
+                setTimeout(function(){ window.location=main_route }, 1000);
+            }
+        })        
+    });
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/personal_editar",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response)
-                console.log(self);
-                $('#id').val(self.id)
+                $('#accion').val('update')
+                //console.log(self);
+
+                $('#id').val(self.id)      
+                $('#idp').val(self.id)
                 $('#nombre').val(self.nombre)
                 $('#apellido').val(self.apellido)
                 $('#ci').val(self.ci)
                 $('#correo').val(self.correo)
+                $('#username').val(self.username)
                 $('#telefono').val(self.telefono)
-
                 $('#fnac').val(self.fnac)
 
-                $('#fkprocesoscargo').val(self.fkprocesoscargo.id)
-                $('#fkestadopersonal').val(self.fkestadopersonal.id)
-                $('#fkprocesoscargo').selectpicker('render')
-                $('#fkestadopersonal').selectpicker('render')
+                if(genero != null){
+                    $('#genero').val(self.genero)
+                    $('#genero').selectpicker('render')
+                }
+
+                if(self.fkprocesoscargo != null){
+                    $('#fkprocesoscargo').val(self.fkprocesoscargo)
+                    $('#fkprocesoscargo').selectpicker('render')
+                }
+
+                if(self.fkestadopersonal != null){
+                    $('#fkestadopersonal').val(self.fkestadopersonal.id)
+                    $('#fkestadopersonal').selectpicker('render')
+                }
 
                 if(self.fksector != null){
                     $('#fksector').val(self.fksector.id)
@@ -218,6 +295,56 @@
                 ajax_call("/personal_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
             })
         })
+    </script>
+    <script>
+        function format (d) {
+            //console.log(d)
+            return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="bold">Username:</td>'+
+                    '<td>'+d[10]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Procesos Cargo:</td>'+
+                    '<td>'+d[11]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Estado de Personal:</td>'+
+                    '<td>'+d[12]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Sector:</td>'+
+                    '<td>'+d[13]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Área:</td>'+
+                    '<td>'+d[14]+'</td>'+
+                '</tr>'+
+            '</table></div>';
+        }
+    
+        $(document).ready(function() {
+            table = $('#data_tabletr').DataTable();
+            $('#data_tabletr tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                let idet = 'per'+row.data()[1];
+                if ( row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                    $("#"+idet).attr('title', 'Mostrar más');
+                }
+                else {
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                    $("#"+idet).attr('title', 'Ver menos');
+                }
+            });
+        });
     </script>
 
 {% endblock %}

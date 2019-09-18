@@ -34,7 +34,8 @@ class DocumentoProcesoType extends AbstractType
                 'class' => TipoDocumento::class,
                 'query_builder' => function (EntityRepository $tp) {
                     return $tp->createQueryBuilder('t')
-                        ->where('t.estado=1');
+                        ->where('t.estado=1')
+                        ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Tipo de documento',
@@ -57,7 +58,8 @@ class DocumentoProcesoType extends AbstractType
                 'class' => Documento::class,
                 'query_builder' => function (EntityRepository $doc) {
                     return $doc->createQueryBuilder('d')
-                        ->where('d.estado=1');
+                        ->where('d.estado=1')
+                        ->orderBy('d.codigo', 'ASC');
                 },
                 'choice_label' => 'codigo',
                 'label' => 'Documento',
@@ -68,7 +70,8 @@ class DocumentoProcesoType extends AbstractType
                 'class' => DocumentoFormulario::class,
                 'query_builder' => function (EntityRepository $docf) {
                     return $docf->createQueryBuilder('df')
-                        ->where('df.estado=1');
+                        ->where('df.estado=1')
+                        ->orderBy('df.codigo', 'ASC');
                 },
                 'choice_label' => 'codigo',
                 'label' => 'Documento formulario',
@@ -87,7 +90,7 @@ class DocumentoProcesoType extends AbstractType
                 'label' => 'Archivo',
                 'required' => false
             ))
-            ->add('carpetaoperativa', NumberType::class, array(
+            ->add('carpetaoperativa', TextType::class, array(
                 'label' => 'Carpeta operativa',
                 'required' => false,
                 'attr' => ['class' => 'form-line form-label']
@@ -105,7 +108,8 @@ class DocumentoProcesoType extends AbstractType
                 'class' => Usuario::class,
                 'query_builder' => function (EntityRepository $fc) {
                     return $fc->createQueryBuilder('u')
-                        ->where('u.estado=1');
+                        ->where('u.estado=1')
+                        ->orderBy('u.nombre', 'ASC');
                 },
                 'choice_label' => function ($fkaprobador) {
                     return $fkaprobador->getNombre() . ' ' . $fkaprobador->getApellido();
@@ -124,7 +128,8 @@ class DocumentoProcesoType extends AbstractType
                 'class' => FichaProcesos::class,
                 'query_builder' => function (EntityRepository $fp) {
                     return $fp->createQueryBuilder('f')
-                        ->where('f.estado=1');
+                        ->where('f.estado=1')
+                        ->orderBy('f.codproceso', 'ASC');
                 },
                 'choice_label' => 'codproceso',
                 'label' => 'Proceso',

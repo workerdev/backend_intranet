@@ -36,6 +36,7 @@ class Personal
      * @Assert\NotBlank
      */
     private $apellido;
+
     /**
      * @var int
      *
@@ -53,6 +54,7 @@ class Personal
      *
      */
     private $correo;
+
     /**
      * @var int
      *
@@ -85,7 +87,6 @@ class Personal
      * @Assert\NotBlank
      *
      */
-
     private $fkprocesoscargo;
 
     /**
@@ -120,6 +121,31 @@ class Personal
      * @Assert\NotBlank
      */
     private $fkarea;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_personal_genero", type="string", length=20, nullable=true)
+     * @Assert\NotBlank
+     */
+    private $genero;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_personal_username", type="string", length=50, nullable=true)
+     * @Assert\NotBlank
+     */
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_personal_foto", type="text", nullable=true)
+     * @Assert\NotBlank
+     */
+    private $foto;
+
 
     public function getId(): ?int
     {
@@ -259,6 +285,42 @@ class Personal
     public function setFkarea(?Area $fkarea): self
     {
         $this->fkarea = $fkarea;
+
+        return $this;
+    }
+
+    public function getGenero(): ?string
+    {
+        return $this->genero;
+    }
+
+    public function setGenero(string $genero): self
+    {
+        $this->genero = $genero;
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getFoto(): ?string
+    {
+        return $this->foto;
+    }
+
+    public function setFoto(string $foto): self
+    {
+        $this->foto = $foto;
 
         return $this;
     }

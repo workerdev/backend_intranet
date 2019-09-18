@@ -92,7 +92,7 @@ class FileController extends Controller
                 }
             }else{
                 $file = $form['ruta']->getData();
-                $fileName = $file->getClientOriginalName();             
+                $fileName = str_replace(" ", "_", $file->getClientOriginalName());              
                 //$file->move($this->getParameter('Directorio_Files'), $fileName);
                 $file->move($directorioproyec.'/'.$galeriadesc, $fileName);
                 $ruta = '/'.$galeriadesc.'/'.$fileName;

@@ -1,29 +1,40 @@
 {% for tr in objects %}
     <tr>
+        <td class="details-control">
+            <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'per' ~ tr.id}}"></i>
+        </td>
+        <td class="d-none">{{ tr.id }}</td>
+        {% if tr.foto not in [null, '', 'S/F'] %}
+            <td><img src="{{ tr.foto }}" style="height: 75px; width: auto;" alt="{{tr.foto|slice('/personal/'|length)}}"></td>
+        {% else %}
+            <td></td>
+        {% endif %}
         <td>{{ tr.nombre }}</td>
         <td>{{ tr.apellido }}</td>
+        <td>{{ tr.genero }}</td>
         <td>{{ tr.ci }}</td>
         <td>{{ tr.correo }}</td>
         <td>{{ tr.telefono }}</td>
         <td>{{ tr.fnac|date('Y-m-d')}}</td>
-        {% if tr.fkpersonalcargo %}
-            <td>{{ tr.fkpersonalcargo.nombre }}</td>
+        <td class="d-none">{{ tr.username }}</td>
+        {% if tr.fkpersonalcargo != null %}
+            <td class="d-none">{{ tr.fkpersonalcargo.nombre }}</td>
         {% else %}
-            <td> Sin cargo</td>
+            <td class="d-none"> Sin cargo</td>
         {% endif %}
-        <td>{{ tr.fkestadopersonal.nombre }}</td>
+        <td class="d-none">{{ tr.fkestadopersonal.nombre }}</td>
 
         {% if tr.fksector %}
-            <td>{{ tr.fksector.nombre }}</td>
+            <td class="d-none">{{ tr.fksector.nombre }}</td>
         {% else %}
-            <td> Sin Sector</td>
+            <td class="d-none"> Sin Sector</td>
         {% endif %}
 
         
         {% if tr.fkarea %}
-            <td>{{ tr.fkarea.nombre }}</td>
+            <td class="d-none">{{ tr.fkarea.nombre }}</td>
         {% else %}
-            <td> Sin Área</td>
+            <td class="d-none"> Sin Área</td>
         {% endif %}
 
         <td align="center">

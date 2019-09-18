@@ -40,8 +40,12 @@
                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                         <tr>
-                            <th class="order_by_th" data-name="names">Turno </th>
+                            <th class="order_by_th" data-name="names">Tipo </th>
                             <th class="order_by_th" data-name="phone">Personal </th>
+                            <th class="order_by_th" data-name="names">Teléfono </th>
+                            <th class="order_by_th" data-name="names">Celular </th>
+                            <th class="order_by_th" data-name="names">Fecha Inicio </th>
+                            <th class="order_by_th" data-name="names">Fecha Fin </th>
                             <th class="actions_header">Acciones </th>
                         </tr>
                         </thead>
@@ -70,15 +74,22 @@
         liveSearchPlaceholder: 'Buscar tipo de personal.',
         title: 'Seleccione un tipo de personal.'
     })
-    $('#nombre').selectpicker({
+    $('#fktipo').selectpicker({
         size: 4,
         liveSearch: true,
-        liveSearchPlaceholder: 'Buscar turno.',
-        title: 'Seleccione un turno.'
+        liveSearchPlaceholder: 'Buscar tipo.',
+        title: 'Seleccione un tipo.'
     })
     
     $('#new').click(function () {
-        $('#nombre').val('')
+        $('#telefono').val('')
+        $('#celular').val('')
+        $('#fechainicio').val('')
+        $('#fechafin').val('')
+        $('#fkpersonal').val('')
+        $('#fkpersonal').selectpicker('render')
+        $('#fktipo').val('')
+        $('#fktipo').selectpicker('render')
 
         clean_form()
         verif_inputs()
@@ -90,7 +101,11 @@
 
     $('#insert').click(function () {
         objeto = JSON.stringify({
-            'turnoh': $('#nombre').val(),
+            'telefono': $('#telefono').val(),
+            'celular': $('#celular').val(),
+            'fechainicio': $('#fechainicio').val(),
+            'fechafin': $('#fechafin').val(),
+            'tipo': $('#fktipo').val(),
             'personal': $('#fkpersonal').val()
         })
         ajax_call_validation("/turno_insertar", {object: objeto}, null, main_route)
@@ -107,13 +122,16 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response)
-                console.log(self)
+                //console.log(self)
                 $('#id').val(self.id)
-                $('#nombre').val(self.nombre)
-                $('#nombre').selectpicker('render')
-                $('#descripcion').val(self.descripcion)
+                $('#telefono').val(self.telefono)
+                $('#celular').val(self.celular)
+                $('#fechainicio').val(self.fechainicio)
+                $('#fechafin').val(self.fechafin)
 
-                $('#fkpersonal').val(self.fkpersonal.id)
+                $('#fktipo').val(self.fktipo.id)
+                $('#fktipo').selectpicker('render')
+                $('#fkpersonal').val(self.fkpersonal)
                 $('#fkpersonal').selectpicker('render')
 
                 clean_form()
@@ -129,8 +147,11 @@
     $('#update').click(function () {
         objeto = JSON.stringify({
             'id': parseInt(JSON.parse($('#id').val())),
-            'turno': $('#nombre').val(),
-            'descripcion': '',
+            'telefono': $('#telefono').val(),
+            'celular': $('#celular').val(),
+            'fechainicio': $('#fechainicio').val(),
+            'fechafin': $('#fechafin').val(),
+            'tipo': $('#fktipo').val(),
             'personal': $('#fkpersonal').val()
         })
         ajax_call_validation("/turno_actualizar", {object: objeto}, null, main_route)
@@ -155,7 +176,11 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/turno_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/turno_eliminar", { 
+                    id:id, enabled:enabled, _xsrf: getCookie("_xsrf")}, 
+                    null, 
+                    function () { setTimeout(function(){window.location=main_route}, 1000); }
+                )
             })
         })
     </script>

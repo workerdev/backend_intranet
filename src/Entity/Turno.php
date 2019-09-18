@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * Turno
  * @ORM\Table(name="cb_personal_turno", indexes={@ORM\Index(name="cb_turno_fkpersonal", columns={"cb_turno_fkpersonal"})})
@@ -26,25 +27,43 @@ class Turno
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_turno_nombre", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_turno_telefono", type="string", length=50, nullable=false)
      * @Assert\NotBlank
      */
-    private $nombre;
+    private $telefono;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_turno_descripcion", type="string", length=150, nullable=false)
+     * @ORM\Column(name="cb_turno_celular", type="string", length=50, nullable=false)
      *
      */
-    private $descripcion;
+    private $celular;
 
     /**
-     * @var int
+     * @var date
      *
-     * @ORM\Column(name="cb_turno_estado", type="integer", nullable=false)
+     * @ORM\Column(name="cb_turno_fecha_inicio", type="date", nullable=false)
      */
-    private $estado;
+    private $fechainicio;
+    
+    /**
+     * @var date
+     *
+     * @ORM\Column(name="cb_turno_fecha_fin", type="date", nullable=true)
+     */
+    private $fechafin;
+
+    /**
+     * @var \tipo
+     *
+     * @ORM\ManyToOne(targetEntity="TipoTurno")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="cb_turno_fktipo", referencedColumnName="cb_tipo_turno_id")
+     * })
+     * @Assert\NotBlank
+     */
+    private $fktipo;
 
     /**
      * @var \personal
@@ -57,8 +76,13 @@ class Turno
      */
     private $fkpersonal;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cb_turno_estado", type="integer", nullable=false)
+     */
+    private $estado;
    
-
 
     public function getId(): ?int
     {
@@ -70,37 +94,58 @@ class Turno
 
         return $this;
     }
-    public function getNombre(): ?string
+    public function getTelefono(): ?string
     {
-        return $this->nombre;
+        return $this->telefono;
     }
 
-    public function setNombre(string $nombre): self
+    public function setTelefono(string $telefono): self
     {
-        $this->nombre = $nombre;
+        $this->telefono = $telefono;
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getCelular(): ?string
     {
-        return $this->descripcion;
+        return $this->celular;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setCelular(string $celular): self
     {
-        $this->descripcion = $descripcion;
+        $this->celular = $celular;
 
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getFechainicio(): ?\DateTimeInterface
     {
-        return $this->estado;
+        return $this->fechainicio;
+    }
+    public function setFechainicio(\DateTimeInterface $fechainicio): self
+    {
+        $this->fechainicio = $fechainicio;
+
+        return $this;
     }
 
-    public function setEstado(int $estado): self
+    public function getFechafin(): ?\DateTimeInterface
     {
-        $this->estado = $estado;
+        return $this->fechafin;
+    }
+    public function setFechafin(\DateTimeInterface $fechafin): self
+    {
+        $this->fechafin = $fechafin;
+        return $this;
+    }
+
+    public function getFktipo(): ?TipoTurno
+    {
+        return $this->fktipo;
+    }
+
+    public function setFktipo(?TipoTurno $fktipo): self
+    {
+        $this->fktipo = $fktipo;
 
         return $this;
     }
@@ -113,6 +158,18 @@ class Turno
     public function setFkpersonal(?Personal $fkpersonal): self
     {
         $this->fkpersonal = $fkpersonal;
+
+        return $this;
+    }
+
+    public function getEstado(): ?int
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(int $estado): self
+    {
+        $this->estado = $estado;
 
         return $this;
     }

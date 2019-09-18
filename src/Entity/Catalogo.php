@@ -39,13 +39,19 @@ class Catalogo
      */
     private $descripcion;
 
-     /**
+    /**
      * @var string
      *
-     * @ORM\Column(name="cb_catalogo_urldueno", type="string", length=150, nullable=false)
-      * @Assert\NotBlank
+     * @ORM\Column(name="cb_catalogo_duenio", type="text", nullable=true)
      */
-    private $urldueno;
+    private $duenio;
+
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="cb_catalogo_url", type="text", nullable=true)
+    */
+   private $url;
     
 
     /**
@@ -101,14 +107,26 @@ class Catalogo
         return $this;
     }
     
-    public function getUrldueno(): ?string
+    public function getDuenio(): ?string
     {
-        return $this->urldueno;
+        return $this->duenio;
     }
 
-    public function setUrldueno(string $urldueno): self
+    public function setDuenio(string $duenio): self
     {
-        $this->urldueno = $urldueno;
+        $this->duenio = $duenio;
+
+        return $this;
+    }
+    
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }  

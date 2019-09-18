@@ -1,8 +1,9 @@
 {% for t in objects %}
 <tr>
     <td>{{ t.sistema }}</td>
-    <td>{{ t.descripcion }}</td>
-    <td>{{ t.urldueno }}</td>
+    <td style="white-space: pre-wrap;">{{ t.descripcion }}</td>
+    <td>{{ t.duenio }}</td>
+    <td><a href="#" onclick="window.open('{{ t.url }}')">{{ t.url }}</a></td>
     <td align="center">
     {% if 'catalogo_editar' in permisos %}
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

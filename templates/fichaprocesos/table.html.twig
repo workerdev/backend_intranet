@@ -12,7 +12,8 @@
         <td class="d-none">{{ tr.version }}</td>
         <td class="d-none">{{ tr.fechaemision | date('d-m-Y') }}</td>
         <td class="d-none">{{ tr.recursosnecesarios }}</td>
-        <td align="center">
+        <td class="d-none">{{ tr.reqlegales }}</td>
+        <td align="center"> 
         {% if 'fichaprocesos_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
         {% endif %}

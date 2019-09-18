@@ -1,12 +1,19 @@
 {% for tr in objects %}
     <tr>
-        <td>{{ tr.nombre}}</td>
+        <td>
+            {{ tr.fktipo.nombre }}
+        </td>
         <td>
             {{ tr.fkpersonal.nombre ~ ' ' ~ tr.fkpersonal.apellido }}
-            {% if tr.fkpersonal.estado == 2 %}
-                 <b><i>{{' (Inactivo)' }}</i></b>
-            {% endif %}
         </td>
+        {% if tr.telefono != null %}
+            <td>{{ tr.telefono }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        <td>{{ tr.celular }}</td>
+        <td>{{ tr.fechainicio | date('Y-m-d') }}</td>
+        <td>{{ tr.fechafin | date('Y-m-d') }}</td>
         <td align="center">
         {% if 'turno_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

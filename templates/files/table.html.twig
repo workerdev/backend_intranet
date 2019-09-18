@@ -3,12 +3,12 @@
         {% if tr.tipo == 'imagen' %}
             <td>
                 {#<input class="ruta" value={{ tr.ruta }} />#}
-                <img class="rutas" style="width:12vw;height: vw;" src={{ tr.ruta }} >
+                <img id="myImg{{ tr.id }}" class="rutas myImg" onclick="view_image(this)" style="width:12vw;height: vw;" src="{{ tr.ruta }}" title="{{ tr.ruta | slice(tr.fkgaleria.nombre | length + 2) }}">
             </td>
         {% else %}
             <td>
                 {#<input class="ruta" value={{ tr.ruta }} />#}
-                <video style="width:12vw;height: 8vw;" class="rutas" src={{ tr.ruta }} controls>
+                <video style="width:12vw;height: 8vw;" class="rutas" src="{{ tr.ruta }}" title="{{ tr.ruta | slice(tr.fkgaleria.nombre | length + 2) }}" controls>
                     Your browser does not support the video tag.
                 </video>
             </td>

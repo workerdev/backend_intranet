@@ -52,6 +52,13 @@ class Correo
      * @ORM\Column(name="cb_correo_tipo", type="text", nullable=false)
      */
     private $tipo;
+
+    /**
+     * @var timestamp
+     *
+     * @ORM\Column(name="cb_correo_fecha", type="datetime", nullable=true, options={"default":null})
+     */
+    private $fecha;
      
     /**
      * @var int
@@ -117,6 +124,17 @@ class Correo
     {
         $this->tipo = $tipo;
 
+        return $this;
+    }
+
+    public function getFecha(): ?\DateTimeInterface
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(\DateTimeInterface $fecha): self
+    {
+        $this->fecha = $fecha;
         return $this;
     }
 

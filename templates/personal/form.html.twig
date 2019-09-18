@@ -1,6 +1,7 @@
 <div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+        <form id="submit_form" class="new" enctype="multipart/form-data" novalidate>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 id="cliente_tittle" class="modal-title">Personal</h3>
@@ -10,7 +11,9 @@
                 <div id="cliente_form_body" class="box-body">
                     <div id="id_div" class="form-group">
                         <div class="form-line">
-                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <input id="id" name="id" type="text" class="form-control" disabled="disabled">
+                            <input id="idp" name="idp" type="hidden">
+                            <input id="accion" name="accion" type="hidden">
                             <label class="form-label">Personal ID</label>
                         </div>
                     </div>
@@ -26,17 +29,34 @@
                             <label class="form-label">Apellido</label>
                         </div>
                     </div>
+
+                    <label>Género</label>
+                        <select id="genero" name="genero" class="form-control show-tick">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                        <br>
+                        <br>
+
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input id="ci" name="ci" type="text" class="form-control ci">
                             <label class="form-label">Ci</label>
                         </div>
-                    </div><div class="form-group form-float">
+                    </div>
+                    <div class="form-group form-float">
                         <div class="form-line">
                             <input id="correo" name="correo" type="text" class="form-control email">
                             <label class="form-label">Correo</label>
                         </div>
-                    </div><div class="form-group form-float">
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input id="username" name="username" type="text" class="form-control email">
+                            <label class="form-label">Nombre de Usuario</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
                         <div class="form-line">
                             <input id="telefono" name="telefono" type="text" class="form-control telefono">
                             <label class="form-label">Teléfono</label>
@@ -44,55 +64,61 @@
                     </div>
                     <div class="form-group form-float">
                         <div class="form-line">
-                        
                             <label class="form-label">Fecha de Nacimiento</label>
-                            </br>
-                            </br>
+                            <br>
                             <input id="fnac" name="fnac" type="date" class="form-control">
                         </div>
                     </div>
 
                     <label>Tipo de Cargo</label>
-                        <select id="fkprocesoscargo" class="form-control">
+                        <select id="fkprocesoscargo" name="fkprocesoscargo" class="form-control show-tick">
                         {% for t in tipo %}
                             <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}
                         </select>
-                        </br>
-                        </br>
+                        <br>
+                        <br>
 
                     <label>Tipo de Estado Personal</label>
-                        <select id="fkestadopersonal" class="form-control">
+                        <select id="fkestadopersonal" name="fkestadopersonal" class="form-control show-tick">
                         {% for t2 in tipo2 %}
                             <option value="{{t2.id}}">{{t2.nombre}}</option>
                         {% endfor %}
                         </select>
-                        </br>
-                        </br>
+                        <br>
+                        <br>
 
                     <label>Sector</label>
-                        <select id="fksector" class="form-control">
+                        <select id="fksector" name="fksector" class="form-control show-tick">
                         {% for t in sector %}
                             <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}
                         </select>
-                        </br>
-                        </br>
+                        <br>
+                        <br>
 
                     <label>Área</label>
-                        <select id="fkarea" class="form-control">
+                        <select id="fkarea" name="fkarea" class="form-control show-tick">
                         {% for t in area %}
                             <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}
                         </select>
-                        </br>
-                        </br>
+                        <br>
+                        <br>
+                    
+                    <div class="form-group col-sm-6">
+                    <label class="form-label">Foto</label>
+                        <input id="foto" name="foto" type="file" class="file form-control validate" width="100" />
+                        <br>
+                        <br>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                    <button id="insert" type="submit" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                    <button id="update" type="submit" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
+        </form>
         </div>
     </div>
 </div>

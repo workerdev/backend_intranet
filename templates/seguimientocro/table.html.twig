@@ -7,7 +7,7 @@
     {% else %}
         <td>{{ t.fkresponsable.nombre ~ ' ' ~ t.fkresponsable.apellido }}</td>
     {% endif %}
-    <td>{{ t.observaciones }}</td>
+    <td style="white-space: pre-wrap;">{{ t.observaciones }}</td>
     <td>{{ t.estadoseg }}</td>
     <td align="center">
     {% if 'seguimientocro_editar' in permisos %} 

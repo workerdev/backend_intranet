@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="resources/css/sweetalert2.min.css">
     <style>
         .accion{ 
             cursor:pointer 
@@ -20,7 +21,7 @@
     </style>
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
-
+    
     <script>
         main_route = '/documentoproceso'
 
@@ -41,7 +42,7 @@
     <div class="header bg-indigo"><h2>DOCUMENTO EN PROCESO</h2></div>
     <div class="body">
         <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+            <div class="col-xs-3 col-sm-8 col-md-8 col-lg-8">
             {% if 'documentoproceso_insertar' in permisos %}
                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                     <i class="material-icons">add</i>
@@ -49,7 +50,7 @@
             {% endif %}
             {% if docderiv %}
                 <button id="apb" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
-                    <i class="material-icons">folder</i>
+                    <i class="material-icons">folder</i> Docs. derivados
                 </button>
             {% endif %}
             </div>
@@ -91,6 +92,7 @@
     <script src="resources/plugins/momentjs/moment.js"></script>
     <script src="resources/plugins/momentjs/locale/es.js"></script>
     <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    {# <script src="resources/js/sweetalert2.min.js"></script> #}
 
     <script>
     var i = 0;
@@ -160,6 +162,13 @@
         liveSearchPlaceholder: 'Buscar documento.',
         title: 'Seleccione un documento.'
     })
+
+    $('#file_upload_fkdoc').selectpicker({
+        size: 4,
+        liveSearch: true,
+        liveSearchPlaceholder: 'Buscar documento.',
+        title: 'Seleccione un documento.'
+    })
     
     $('#new').click(function () {
         $('#documento_proceso_codigonuevo').parent().hide()
@@ -198,6 +207,13 @@
         $('#cmb-drv').empty();
         $('#form-rev').modal('show');
     })
+
+    $('#form').submit(function(){
+        var botonSubmit = document.getElementById('documento_proceso_submit')
+        botonSubmit.innerText = "Cargando espere por favor"
+        botonSubmit.disabled = true
+    })
+
 
     $('#cdc-pass').mousedown(function(){
         $("#ic-dpass").css("color", "lightgrey");
@@ -367,7 +383,7 @@
                     /*console.log('dproc'); 
                     console.log(self); 
                     console.log('drev');  
-                    console.log(datarev); */
+                    console.log(datarev);*/
                     global_docproc = self;
 
                     $('#vdg').remove();
@@ -450,21 +466,67 @@
     })     
 
     $('#insert-rev').click(function () {
-        var list = [];
-        $("select[name=aprobadores]").each(function (index) { 
+    
+     var botonGuardar = document.getElementById('insert-rev')
+     botonGuardar.innerText = "Cargando datos espere por favor..."
+     botonGuardar.disabled = true
+        
+        var selectAprobadorDoc = document.getElementById('aprobadordoc')
+        if (selectAprobadorDoc.value == ""){
+            swal(
+                'Error',
+                'Seleccione un aprobador',
+                     'warning'
+            )
+            botonGuardar.innerText = "Guardar"
+            botonGuardar.disabled = false
+        }else{
+            var list = [];
+            $("select[name=aprobadores]").each(function (index) { 
             let i = $(this).val(); 
             list.push(i);
-        });
-        objeto = JSON.stringify({
-            'id': $('#idrev').val(),
-            'fkaprobador': $('#aprobadordoc').val(),
-            'derivados': list
-        })
-        //console.log(objeto);
-        ajax_call_validation( "/revision_insertar" , {object: objeto}, null, main_route)
+            });
+            if (list.length == 0){
+                 swal(
+                'Error',
+                'Seleccione al menos un derivado',
+                'warning'
+                )
+                botonGuardar.innerText = "Guardar"
+                botonGuardar.disabled = false
+            }else{
+                objeto = JSON.stringify({
+                    'id': $('#idrev').val(),
+                    'fkaprobador': $('#aprobadordoc').val(),
+                    'derivados': list
+                    
+                })
+                //console.log(objeto);
+                //botonGuardar.innerText = "Cargando datos espere por favor..."
+                //botonGuardar.disabled = true
+                
+                  if(botonGuardar.disabled = true)
+                {
+                    ajax_call_validation( "/revision_insertar" , {object: objeto}, null, main_route)
+                }
+            }
+        }
     })
 
     reload_form()
+
+  
+    $('#formfile').submit(function(){
+        var botonGuardar = document.getElementById('documento_file_submit')
+                botonGuardar.innerText = "Cargando datos espere por favor..."
+                botonGuardar.disabled = true  
+    })
+
+    $('#filepdf').submit(function(){
+        var botonGuardar = document.getElementById('file_upload_submit')
+                botonGuardar.innerText = "Cargando datos espere por favor..."
+                botonGuardar.disabled = true  
+    })
 
     $('#confirm').click(function () {
         objeto = JSON.stringify({
@@ -486,16 +548,21 @@
                 $("#spn-vld").fadeOut(800);
             }
         }).done(function (response) {
+            console.log(response)
             let message = "";
-            if(response == "vacio"){
+            if(response == "vacio"){ 
+                console.log('into empty')
                 message = 'Por favor ingrese su password.'; 
                 document.getElementById('msgv').innerHTML = message;
+                //$("#msgv").html(message);
                 $("#msgv").show();
-                setTimeout(function(){ $("#msgv").fadeOut() }, 1000);
+                setTimeout(function(){ $("#msgv").fadeOut() }, 2000);
             }
             if(response == "error"){ 
+                console.log('into error')
                 message = 'Datos invalidos, intente de nuevo.';
                 document.getElementById('msgv').innerHTML = message;
+                //$("#msgv").html(message);
                 $("#msgv").show();
                 setTimeout(function(){ 
                         $("#msgv").fadeOut();
@@ -511,7 +578,30 @@
                         'firma': 'Firmado',
                         'estadodoc': 'DERIVADO'
                     });
-                    ajax_call_validation("/docprocesorev_derivar", {object: objeto}, null, main_route)
+
+                    var labelid = document.querySelector('label[for="documento_file_id"]')
+                    labelid.hidden = true
+                    var labelresponsable = document.querySelector('label[for="documento_file_responsable"]')
+                    labelresponsable.hidden = true
+                    var labelfirma = document.querySelector('label[for="documento_file_firma"]')
+                    labelfirma.hidden = true
+                    var labelestadodoc = document.querySelector('label[for="documento_file_estadodoc"]')
+                    labelestadodoc.hidden = true
+
+                    $('#documento_file_id').hide()
+                    $('#documento_file_firma').hide()
+                    $('#documento_file_responsable').hide()
+                    $('#documento_file_estadodoc').hide()
+                    
+                    $('#documento_file_id').val(idrev)
+                    $('#documento_file_responsable').val($('#dresponsable').val())
+                    $('#documento_file_firma').val('Firmado')
+                    $('#documento_file_estadodoc').val('DERIVADO')
+
+                    $('#formfile').modal('show');
+
+                    //ajax_call_validation("/docprocesorev_derivar", {object: objeto}, null, main_route)
+                    
                 }
                 if(aprobar){
                     objeto = JSON.stringify({
@@ -519,7 +609,27 @@
                         'firma': 'Firmado',
                         'estadodoc': 'APROBADO'
                     });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
+
+                    var labelid = document.querySelector('label[for="documento_file_id"]')
+                    labelid.hidden = true
+                    var labelresponsable = document.querySelector('label[for="documento_file_responsable"]')
+                    labelresponsable.hidden = true
+                    var labelfirma = document.querySelector('label[for="documento_file_firma"]')
+                    labelfirma.hidden = true
+                    var labelestadodoc = document.querySelector('label[for="documento_file_estadodoc"]')
+                    labelestadodoc.hidden = true
+
+                    $('#documento_file_id').hide()
+                    $('#documento_file_firma').hide()
+                    $('#documento_file_estadodoc').hide()
+
+                    $('#documento_file_id').val(idrev)
+                    $('#documento_file_firma').val('Firmado')
+                    $('#documento_file_estadodoc').val('APROBADO')
+                    
+                    $('#formfile').modal('show');
+                   
+                    //ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
                 }
                 if(rechazar){ 
                     objeto = JSON.stringify({
@@ -527,7 +637,27 @@
                         'firma': 'Firmado',
                         'estadodoc': 'RECHAZADO'
                     });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
+                    //ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
+
+                    var labelid = document.querySelector('label[for="documento_file_id"]')
+                    labelid.hidden = true
+                    var labelresponsable = document.querySelector('label[for="documento_file_responsable"]')
+                    labelresponsable.hidden = true
+                    var labelfirma = document.querySelector('label[for="documento_file_firma"]')
+                    labelfirma.hidden = true
+                    var labelestadodoc = document.querySelector('label[for="documento_file_estadodoc"]')
+                    labelestadodoc.hidden = true
+
+                    $('#documento_file_id').hide()
+                    $('#documento_file_firma').hide()
+                    $('#documento_file_responsable').hide()
+                    $('#documento_file_estadodoc').hide()
+                    
+                    $('#documento_file_id').val(idrev)
+                    $('#documento_file_firma').val('Firmado')
+                    $('#documento_file_estadodoc').val('RECHAZADO')
+
+                    $('#formfile').modal('show');
                 }
                 $('#form-valid').hide();
                 $('#form-rev').hide();
@@ -537,16 +667,83 @@
         });
     })
 
+       
+
     $('#aprobar-rev').click(function () {
+        console.log(global_docproc)
+        if(global_docproc.fkdocumento != null) doc = global_docproc.fkdocumento.id;
+        else doc = '';
+        if(global_docproc.fkformulario != null) form = global_docproc.fkformulario.id;
+        else form = '';
         //console.log($('#tipodocumento').val())
         if($('#tipodocumento').val() == 'Formulario'){
-            $('#vinculodiagf').parent().parent().hide();
-            $('#documento').parent().parent().parent().show(); 
+            var labelvinculodiagrama = document.querySelector('label[for="file_upload_vinculodiagrama"]')
+            labelvinculodiagrama.hidden = true
+
+            $('#file_upload_vinculodiagrama').hide()
+            $('#file_upload_fkdoc').parent().parent().show()
         }else{
-            $('#vinculodiagf').parent().parent().show();
-            $('#documento').parent().parent().parent().hide();
+            var labelvinculodescarga = document.querySelector('label[for="file_upload_vinculodescarga"]')
+            labelvinculodescarga.hidden = true
+            var labelfkdoc = document.querySelector('label[for="file_upload_fkdoc"]')
+            labelfkdoc.hidden = true
+
+            $('#file_upload_vinculodescarga').hide()
+            $('#file_upload_fkdoc').hide()
+            $('#file_upload_fkdoc').parent().parent().hide()
         }
-        $('#form-register').modal('show');
+        var labelid = document.querySelector('label[for="file_upload_id"]')
+        labelid.hidden = true
+        var labelcodigo = document.querySelector('label[for="file_upload_codigo"]')
+        labelcodigo.hidden = true
+        var labelficha = document.querySelector('label[for="file_upload_ficha"]')
+        labelficha.hidden = true
+        var labeltipo = document.querySelector('label[for="file_upload_tipo"]')
+        labeltipo.hidden = true
+        var labeltitulo = document.querySelector('label[for="file_upload_titulo"]')
+        labeltitulo.hidden = true
+        var labelversion = document.querySelector('label[for="file_upload_version"]')
+        labelversion.hidden = true
+        var labelaprobador = document.querySelector('label[for="file_upload_aprobador"]')
+        labelaprobador.hidden = true
+        var labelnuevoactualizacion = document.querySelector('label[for="file_upload_nuevoactualizacion"]')
+        labelnuevoactualizacion.hidden = true
+        var labelfechapublicacion = document.querySelector('label[for="file_upload_fechapublicacion"]')
+        labelfechapublicacion.hidden = true
+        var labelcarpetaoperativa = document.querySelector('label[for="file_upload_carpetaoperativa"]')
+        labelcarpetaoperativa.hidden = true
+        var labeldocumento = document.querySelector('label[for="file_upload_documento"]')
+        labeldocumento.hidden = true
+        var labelformulario = document.querySelector('label[for="file_upload_formulario"]')
+        labelformulario.hidden = true
+
+        $('#file_upload_id').hide()
+        $('#file_upload_codigo').hide()
+        $('#file_upload_ficha').hide()
+        $('#file_upload_tipo').hide()
+        $('#file_upload_titulo').hide()
+        $('#file_upload_version').hide()
+        $('#file_upload_aprobador').hide()
+        $('#file_upload_nuevoactualizacion').hide()
+        $('#file_upload_fechapublicacion').hide()
+        $('#file_upload_carpetaoperativa').hide()
+        $('#file_upload_documento').hide()
+        $('#file_upload_formulario').hide()
+        
+        $('#file_upload_id').val(global_docproc.id)
+        $('#file_upload_codigo').val(global_docproc.codigonuevo)
+        $('#file_upload_ficha').val(global_docproc.fkproceso.id)
+        $('#file_upload_tipo').val(global_docproc.fktipo.id)
+        $('#file_upload_titulo').val(global_docproc.titulo)
+        $('#file_upload_version').val(global_docproc.versionvigente)
+        $('#file_upload_aprobador').val(global_docproc.fkaprobador.id)
+        $('#file_upload_nuevoactualizacion').val(global_docproc.nuevoactualizacion)
+        $('#file_upload_fechapublicacion').val('')
+        $('#file_upload_carpetaoperativa').val(global_docproc.carpetaoperativa)
+        $('#file_upload_documento').val(doc)
+        $('#file_upload_formulario').val(form)
+
+        $('#filepdf').modal('show');
     })
     
 
@@ -611,15 +808,16 @@
             aprobar = false;
             rechazar = true;
             idrev = parseInt(JSON.parse($(this).attr('data-json')))
+             
             $('#form-valid').modal('show')
         });
     }
 
     $('#btn-rgaprob').click(function () {
         if(global_docproc.fkdocumento != null) doc = global_docproc.fkdocumento.id;
-        else doc = null;
+        else doc = '';
         if(global_docproc.fkformulario != null) form = global_docproc.fkformulario.id;
-        else form = null;
+        else form = '';
         objeto = JSON.stringify({
             'id': global_docproc.id,
             'codigo': global_docproc.codigonuevo,
@@ -639,7 +837,68 @@
             'fkdoc': $('#documento').val()
         })
         console.log(objeto);
-        ajax_call_validation( "/documentoproceso_insertaraprob" , {object: objeto}, null, main_route)
+        //ajax_call_validation( "/documentoproceso_insertaraprob" , {object: objeto}, null, main_route)
+
+        var labelid = document.querySelector('label[for="file_upload_id"]')
+        labelid.hidden = true
+        var labelcodigo = document.querySelector('label[for="file_upload_codigo"]')
+        labelcodigo.hidden = true
+        var labelficha = document.querySelector('label[for="file_upload_ficha"]')
+        labelficha.hidden = true
+        var labeltipo = document.querySelector('label[for="file_upload_tipo"]')
+        labeltipo.hidden = true
+        var labeltitulo = document.querySelector('label[for="file_upload_titulo"]')
+        labeltitulo.hidden = true
+        var labelversion = document.querySelector('label[for="file_upload_version"]')
+        labelversion.hidden = true
+        var labelaprobador = document.querySelector('label[for="file_upload_aprobador"]')
+        labelaprobador.hidden = true
+        var labelnuevoactualizacion = document.querySelector('label[for="file_upload_nuevoactualizacion"]')
+        labelnuevoactualizacion.hidden = true
+        var labelfechapublicacion = document.querySelector('label[for="file_upload_fechapublicacion"]')
+        labelfechapublicacion.hidden = true
+        var labelcarpetaoperativa = document.querySelector('label[for="file_upload_carpetaoperativa"]')
+        labelcarpetaoperativa.hidden = true
+        var labeldocumento = document.querySelector('label[for="file_upload_documento"]')
+        labeldocumento.hidden = true
+        var labelformulario = document.querySelector('label[for="file_upload_formulario"]')
+        labelformulario.hidden = true
+        var labelvinculodiagrama = document.querySelector('label[for="file_upload_vinculodiagrama"]')
+        labelvinculodiagrama.hidden = true
+        var labelfkdoc = document.querySelector('label[for="file_upload_fkdoc"]')
+        labelfkdoc.hidden = true
+
+        $('#file_upload_id').hide()
+        $('#file_upload_codigo').hide()
+        $('#file_upload_ficha').hide()
+        $('#file_upload_tipo').hide()
+        $('#file_upload_titulo').hide()
+        $('#file_upload_version').hide()
+        $('#file_upload_aprobador').hide()
+        $('#file_upload_nuevoactualizacion').hide()
+        $('#file_upload_fechapublicacion').hide()
+        $('#file_upload_carpetaoperativa').hide()
+        $('#file_upload_documento').hide()
+        $('#file_upload_formulario').hide()
+        $('#file_upload_vinculodiagrama').hide()
+        $('#file_upload_fkdoc').hide()
+        
+        $('#file_upload_id').val(global_docproc.id)
+        $('#file_upload_codigo').val(global_docproc.codigonuevo)
+        $('#file_upload_ficha').val(global_docproc.fkproceso.id)
+        $('#file_upload_tipo').val(global_docproc.fktipo.id)
+        $('#file_upload_titulo').val(global_docproc.titulo)
+        $('#file_upload_version').val(global_docproc.versionvigente)
+        $('#file_upload_aprobador').val(global_docproc.fkaprobador.id)
+        $('#file_upload_nuevoactualizacion').val(global_docproc.nuevoactualizacion)
+        $('#file_upload_fechapublicacion').val('')
+        $('#file_upload_carpetaoperativa').val(global_docproc.carpetaoperativa)
+        $('#file_upload_documento').val(doc)
+        $('#file_upload_formulario').val(form)
+        $('#file_upload_vinculodiagrama').val($('#vinculodiagf').val())
+        $('#file_upload_fkdoc').val($('#documento').val())
+
+        $('#filepdf').modal('show');
     })
     </script>
     <script>

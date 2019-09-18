@@ -64,10 +64,10 @@ class PersonalController extends Controller
             $permisos[] = $item;
         }
         $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1'));
-        $sector = $this->getDoctrine()->getRepository(Sector::class)->findBy(array('estado' => '1'));
-        $area = $this->getDoctrine()->getRepository(Area::class)->findBy(array('estado' => '1'));
-        $ProcesosCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(array('estado' => '1'));
-        $EstadoPersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->findBy(array('estado' => '1'));
+        $sector = $this->getDoctrine()->getRepository(Sector::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $area = $this->getDoctrine()->getRepository(Area::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $ProcesosCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $EstadoPersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
@@ -75,58 +75,129 @@ class PersonalController extends Controller
     }
 
 
+    public function validate_data($data, $process)
+    {
+        if($process == ''){
+            return false;
+        }else{
+            if($process == 'new'){
+                foreach ($data as $key => $value) {
+                    if(!in_array($key, ['idp', 'nombre', 'apellido', 'ci', 'correo', 'username', 'telefono', 'fnac', 'genero', 'fkprocesoscargo', 'fkestadopersonal', 'fksector', 'fkarea'])){
+                        if($value == "" && $key != "idp") return false;
+                    }
+                }
+                return true;
+            }else{
+                foreach ($data as $key => $value) {
+                    if(!in_array($key, ['idp', 'nombre', 'apellido', 'ci', 'correo', 'username', 'telefono', 'fnac', 'genero', 'fkprocesoscargo', 'fkestadopersonal', 'fksector', 'fkarea'])){
+                        if($value == '') return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+
+
     /**
      * @Route("/personal_insertar", methods={"POST"}, name="personal_insertar")
      */
-    public function insertar(ValidatorInterface $validator)
+    public function insertar()
     {
         try {
-            $cx = $this->getDoctrine()->getManager();
+            $file = $_FILES;
+            $datos = $_POST;
 
-            $sx = json_decode($_POST['object'], true);
-            $nombre = $sx['nombre'];
-            $apellido = $sx['apellido'];
-            $ci = $sx['ci'];
-            $correo = $sx['correo'];
-            $telefono = $sx['telefono'];
-            $fnac = $sx['fnac'];
-            $procesoscargo = $sx['personalcargo'];
-            $estadopersonal = $sx['estadopersonal'];
-            $sector = $sx['sector'];
-            $area = $sx['area'];
+            if($this->validate_data($datos, $datos['accion'])){
+                //if(!empty($file['foto']['name']) || $datos['accion'] == 'update'){
+                    $cx = $this->getDoctrine()->getManager();
+                    $uploadedFile = '';
+                    
+                    $nombre = $datos['nombre'];
+                    $apellido = $datos['apellido'];
+                    $ci = $datos['ci'];
+                    $correo = $datos['correo'];
+                    $username = $datos['username'];
+                    $telefono = $datos['telefono'];
+                    $fechanac = $datos['fnac'];
+                    $genero = $datos['genero'];
+                    $procesos = $datos['fkprocesoscargo'];
+                    $estado = $datos['fkestadopersonal'];
+                    $sector = $datos['fksector'];
+                    $area = $datos['fkarea'];
+                    $foto = 'S/F';
 
-            $personal = new Personal();
-            $personal->setNombre($nombre);
-            $personal->setApellido($apellido);
-            if($ci != '' && is_numeric($ci))$personal->setCi($ci);
-            $personal->setCorreo($correo);
-            if($telefono != '' && is_numeric($telefono)) $personal->setTelefono($telefono);
-            $personal->setFnac(new \DateTime($fnac));
-            $procesoscargo != '' ? $procesoscargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($procesoscargo): $procesoscargo =null;
-            $estadopersonal != '' ? $estadopersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->find($estadopersonal): $estadopersonal=null;
-            $sector != '' ? $sector = $this->getDoctrine()->getRepository(Sector::class)->find($sector): $sector =null;
-            $area != '' ? $area = $this->getDoctrine()->getRepository(Area::class)->find($area):$area=null;
-            $personal->setFkPersonalCargo($procesoscargo); 
-            $personal->setFkestadopersonal($estadopersonal);   
-            $personal->setFksector($sector);    
-            $personal->setFkarea($area);                 
-            $personal->setEstado(1);
-            $errors = $validator->validate($personal);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return  new  Response(json_encode($array)) ;
+                    if(intval($datos['idp']) > 0) $personal = $this->getDoctrine()->getRepository(Personal::class)->find($datos['idp']);
+                    else $personal = new Personal();
+
+                    $dt_name = str_replace(" ", "_", $nombre." ".$apellido);
+                    $picture_name = strtolower($dt_name);   
+
+                    if(!empty($file["foto"]["type"])){
+                        $fileName = $file['foto']['name'];
+                        $sourcePath = $file['foto']['tmp_name'];
+                        $targetPath = $this->getParameter('Directorio_Personal') . '/' . $picture_name;
+                        
+                        if(move_uploaded_file($sourcePath, $targetPath)){
+                            $uploadedFile = $picture_name;
+                        }
+                        $ruta = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
+                        $url = str_replace("\\", "/", $ruta);
+                        $foto = $url;
+                    }
+                    if($datos['accion'] == 'update' && !empty($file['foto']['name']) || $datos['accion'] == 'new') $personal->setFoto($foto);
+                    $personal->setNombre($nombre);
+                    $personal->setApellido($apellido);
+                    $personal->setGenero($genero);
+                    $personal->setCi($ci);
+                    $personal->setCorreo($correo);
+                    $personal->setTelefono($telefono);
+                    $personal->setFnac(new \DateTime($fechanac));
+                    $personal->setUsername($username);
+                    $personal->setEstado(1);
+
+                    $procesos != '' ? $procesos = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($procesos) : $procesos = null;
+                    $estado != '' ? $estado = $this->getDoctrine()->getRepository(EstadoPersonal::class)->find($estado) : $estado = null;
+                    $sector != '' ? $sector = $this->getDoctrine()->getRepository(Sector::class)->find($sector) : $sector = null;
+                    $area != '' ? $area = $this->getDoctrine()->getRepository(Area::class)->find($area) : $area = null;
+                    $personal->setFkPersonalCargo($procesos);
+                    $personal->setFkestadopersonal($estado);
+                    $personal->setFksector($sector);
+                    $personal->setFkarea($area);
+
+                    if($datos['accion'] == 'update'){
+                        $cx->merge($personal);
+                        $cx->flush();
+                    }else{
+                        $cx->persist($personal);
+                        $cx->flush();
+                    }
+
+                    $resultado = array(
+                        'response' => "Save",   
+                        'success' => true,
+                        'message' => 'Datos registrados correctamente.'
+                    );
+                    $resultado = json_encode($resultado);
+                    return new Response($resultado);
+                /*}else{
+                    $resultado = array(
+                        'response' => "NoFile",   
+                        'success' => false,
+                        'message' => 'Ingrese una imagen.'
+                    );
+                    $resultado = json_encode($resultado);
+                    return new Response($resultado);
+                }*/
+            }else{
+                $resultado = array(
+                    'response' => "Empty",   
+                    'success' => false,
+                    'message' => 'Ingrese todo los datos.'
+                );
+                $resultado = json_encode($resultado);
+                return new Response($resultado);
             }
-            $cx->persist($personal);
-            $cx->flush();
-
-            $resultado = array('response'=>"El ID registrado es: ".$personal->getId().".",'success' => true,
-                'message' => 'Personal registrado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
@@ -207,16 +278,19 @@ class PersonalController extends Controller
             $personal = $this->getDoctrine()->getRepository(Personal::class)->find($id);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $fecha = $personal->getFnac();
-            $fechaformat = $fecha->format('Y-m-d');
+            if($fecha != null) $fechaformat = $fecha->format('Y-m-d'); else $fechaformat = $fecha;
             $sendinf = [
                 "id" => $personal->getId(),
-                "fnac"=> $fechaformat,
-                "apellido" => $personal->getApellido(),
                 "nombre"=> $personal->getNombre(),
-                "telefono" => $personal->getTelefono(),
+                "apellido" => $personal->getApellido(),
                 "ci"=> $personal->getCi(),
                 "correo" => $personal->getCorreo(),
-                "fkprocesoscargo" => $personal->getFkPersonalCargo(),
+                "username" => $personal->getUsername(),
+                "telefono" => $personal->getTelefono(),
+                "fnac"=> $fechaformat,
+                "genero" => $personal->getGenero(),
+                "fkprocesoscargo" => $personal->getFkPersonalCargo()->getId(),
+                "procesoscargo" => $personal->getFkPersonalCargo()->getNombre(),
                 "fkestadopersonal"=> $personal->getFkestadopersonal(),
                 "fksector"=> $personal->getFksector(),
                 "fkarea"=> $personal->getFkarea()

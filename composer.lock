@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86065001e327e780be98768524f71537",
+    "content-hash": "e7b28b3e2b4954272e8c8a4996cb5c51",
     "packages": [
         {
             "name": "andreiavrammsd/serializer",
@@ -4599,16 +4599,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.1.9",
+            "version": "v4.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "615e3cf75d00a7d6788316d9631957991ba9c26a"
+                "reference": "347b9f093a2554ce3174ae56cc25a21381352c76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/615e3cf75d00a7d6788316d9631957991ba9c26a",
-                "reference": "615e3cf75d00a7d6788316d9631957991ba9c26a",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/347b9f093a2554ce3174ae56cc25a21381352c76",
+                "reference": "347b9f093a2554ce3174ae56cc25a21381352c76",
                 "shasum": ""
             },
             "require": {
@@ -4664,7 +4664,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-26T10:26:29+00:00"
+            "time": "2019-01-25T14:34:37+00:00"
         },
         {
             "name": "symfony/twig-bridge",

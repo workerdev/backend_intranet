@@ -31,6 +31,14 @@ class Usuario implements UserInterface, \Serializable
      * @ORM\Column(name="cb_usuario_nombre", type="string", length=50, nullable=false)
      */
     private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cb_usuario_cargo", type="text", nullable=false)
+     */
+     private $cargo;
+
      /**
      * @var string
      *
@@ -124,6 +132,18 @@ class Usuario implements UserInterface, \Serializable
     public function setNombre(string $nombre): self
     {
         $this->nombre = $nombre;
+
+        return $this;
+    } 
+
+    public function getCargo(): ?string
+    {
+        return $this->cargo;
+    }
+
+    public function setCargo(string $cargo): self
+    {
+        $this->cargo= $cargo;
 
         return $this;
     } 

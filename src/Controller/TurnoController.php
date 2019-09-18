@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Personal;
+use App\Entity\TipoTurno;
 use App\Entity\Turno;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
@@ -56,12 +57,15 @@ class TurnoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $Turno = $this->getDoctrine()->getRepository(Turno::class)->findBy(array('estado' => '1'));
-        $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1'));
-	$docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));       
-	$fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+
+        $turno = $this->getDoctrine()->getRepository(Turno::class)->findBy(['estado' => '1']);
+        $tipo = $this->getDoctrine()->getRepository(TipoTurno::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));       
+        $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('turno/index.html.twig', array('objects' => $Turno, 'personal' => $Personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+       
+        return $this->render('turno/index.html.twig', array('objects' => $turno, 'tipo' => $tipo, 'personal' => $personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -73,15 +77,24 @@ class TurnoController extends Controller
             $cx = $this->getDoctrine()->getManager();
 
             $sx = json_decode($_POST['object'], true);
-            $turnoh = $sx['turnoh'];
+            $telefono = $sx['telefono'];
+            $celular = $sx['celular'];
+            $fechainicio = $sx['fechainicio'];
+            $fechafin = $sx['fechafin'];
+            $tipo = $sx['tipo'];
             $personal = $sx['personal'];
 
             $turno = new Turno();
-            $turno->setNombre($turnoh);
+            $turno->setTelefono($telefono);
+            $turno->setCelular($celular);
+            $turno->setFechainicio(new \DateTime($fechainicio));
+            $turno->setFechafin(new \DateTime($fechafin));
             $turno->setEstado(1);
-            $turno->setDescripcion("descripcion");
 
+            $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoTurno::class)->find($tipo):$tipo=null;
+            $turno->setFktipo($tipo);
             $personal != ''? $personal = $this->getDoctrine()->getRepository(Personal::class)->find($personal):$personal=null;
+            $turno->setFktipo($tipo);
             $turno->setFkpersonal($personal);
             $errors = $validator->validate($turno);
             if (count($errors)>0){
@@ -114,16 +127,25 @@ class TurnoController extends Controller
 
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
-            $turnoh = $sx['turno'];
+            $telefono = $sx['telefono'];
+            $celular = $sx['celular'];
+            $fechainicio = $sx['fechainicio'];
+            $fechafin = $sx['fechafin'];
+            $tipo = $sx['tipo'];
             $personal = $sx['personal'];
 
             $turno = $this->getDoctrine()->getRepository(Turno::class)->find($id);
             $turno->setId($id);
-            $turno->setNombre($turnoh);
+            $turno->setTelefono($telefono);
+            $turno->setCelular($celular);
+            $turno->setFechainicio(new \DateTime($fechainicio));
+            $turno->setFechafin(new \DateTime($fechafin));
             $turno->setEstado(1);
-            $turno->setDescripcion('');
 
+            $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoTurno::class)->find($tipo):$tipo=null;
+            $turno->setFktipo($tipo);
             $personal != ''? $personal = $this->getDoctrine()->getRepository(Personal::class)->find($personal):$personal=null;
+            $turno->setFktipo($tipo);
             $turno->setFkpersonal($personal);
             $errors = $validator->validate($turno);
             if (count($errors)>0){
@@ -132,7 +154,7 @@ class TurnoController extends Controller
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
                 }
-                return  new  Response(json_encode($array)) ;
+                return new Response(json_encode($array)) ;
             }
 
             $cx->merge($turno);
@@ -156,14 +178,30 @@ class TurnoController extends Controller
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $turno = $this->getDoctrine()->getRepository(Turno::class)->find($id);
+
+            $fbg = $turno->getFechainicio();
+            if($fbg != null) $result = $fbg->format('Y-m-d'); else $result = $fbg;
+            $fnd = $turno->getFechafin();
+            if($fnd != null) $fresult = $fnd->format('Y-m-d'); else $fresult = $fnd;
+            $sendinf = [
+                "id" => $turno->getId(),
+                "telefono" => $turno->getTelefono(),
+                "celular" => $turno->getCelular(),
+                "fechainicio" => $result,
+                "fechafin" => $fresult,
+                "fktipo" => $turno->getFktipo(),
+                "fkpersonal" => $turno->getFkpersonal()->getId(),
+                "personal" => $turno->getFkpersonal()->getNombre().' '.$turno->getFkpersonal()->getApellido()             
+            ];
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($turno, 'json');
+            $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Turno listado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
         } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
 

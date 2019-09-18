@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\DocumentoFormulario;
+use App\Entity\DocumentoBaja;
+use App\Entity\TipoDocumento;
 use App\Entity\Documento;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
@@ -182,6 +184,21 @@ class DocumentoFormularioController extends AbstractController
             $cx = $this->getDoctrine()->getManager();
             $id = $_POST['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
+
+            $bajadoc = new DocumentoBaja();
+            $bajadoc->setCodigo($DocumentoFormulario->getCodigo());
+            $bajadoc->setTitulo($DocumentoFormulario->getTitulo());
+            $bajadoc->setVersionvigente($DocumentoFormulario->getversionVigente());
+            $bajadoc->setVinculoarchivo($DocumentoFormulario->getVinculoFileDig());
+            if($DocumentoFormulario->getFechaPublicacion() != null) $bajadoc->setFechapublicacion($DocumentoFormulario->getFechaPublicacion());
+            //$bajadoc->setCarpetaoperativa();
+            $bajadoc->setEstado(1);
+            //$bajadoc->setFkproceso();
+            $tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->findOneBy(['nombre' => 'Formulario']);
+            if(!empty($tipo)) $bajadoc->setFktipo($tipo);
+            $bajadoc->setFkaprobador($DocumentoFormulario->getFkaprobador());
+            $cx->persist($bajadoc);
+            $cx->flush();   
 
             $DocumentoFormulario->setEstado(0);
             $cx->persist($DocumentoFormulario);

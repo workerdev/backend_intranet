@@ -4,34 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ELFEC</title>
-        <title>{% block title %}ELFEC{% endblock %}</title>
-        <link rel="icon" href="resources/elfec.ico" type="image/x-icon">
-        <link href="resources/css/iconfont/material-icons.css" rel="stylesheet">
-        <link href="resources/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="resources/plugins/node-waves/waves.css" rel="stylesheet" />
-        <link href="resources/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" />
-        <link href="resources/plugins/animate-css/animate.css" rel="stylesheet" />
-        <link href="resources/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
-        <link href="resources/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
-        <link href="resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
-        <link href="resources/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-        <link href="resources/css/style.css" rel="stylesheet">
-        <link href="resources/css/themes/all-themes.css" rel="stylesheet" />
-        <link href="resources/plugins/nestable/jquery-nestable.css" rel="stylesheet">
-        <link href="resources/css/main.css" rel="stylesheet" />
-        <link href="resources/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
-        <link href="resources/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        {% block stylesheets %}{% endblock %}
-</head>
+    <title>{% block title %}ELFEC{% endblock %}</title>
+    <link rel="icon" href="resources/elfec.ico" type="image/x-icon">
+    <link href="resources/css/iconfont/material-icons.css" rel="stylesheet">
+    <link href="resources/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="resources/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <link href="resources/plugins/animate-css/animate.css" rel="stylesheet" />
+    <link href="resources/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="resources/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <link href="resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="resources/css/style.css" rel="stylesheet">
+    <link href="resources/css/themes/all-themes.css" rel="stylesheet" />
+    <link href="resources/plugins/nestable/jquery-nestable.css" rel="stylesheet">
+    <link href="resources/css/main.css" rel="stylesheet" />
+    <link href="resources/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+          
+    {% block stylesheets %}
     <style>
-        .login-page{ background-color: #3F51B5 }
-        .input-group .form-line::after{
+        .login-page { 
+            background-color: #3F51B5 
+        }
+        .input-group .form-line::after {
             border-bottom: 2px solid #302d66;
         }
+        .loader-own{
+            padding-left: 44%;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        .inf-own{
+            font-size: 12px;
+            padding-bottom: 4%;
+        }
+        .txt-lower{
+            text-transform: lowercase;
+        }
     </style>
+    {% endblock %}
+</head>
 
 <body class="login-page">
     <div class="login-box">
@@ -48,7 +61,11 @@
                     <div class="msg">Iniciar sesión</div>
                     
                     <div  class="alert alert-danger text-center" id="lgfail" style="display:none">
-                        <span class="glyphicon glyphicon-lock"> </span><span id="msg"> CREDENCIALES INVALIDAS</span>
+                        <span class="glyphicon glyphicon-lock"> </span> <span id="msg"> </span>
+                    </div>
+                    
+                    <div  class="alert alert-warning text-center" id="lgempty" style="display:none">
+                        <span class="glyphicon glyphicon-warning-sign"> </span><span id="msgw"> Ingrese todos los datos requeridos.</span>
                     </div>
                     
                     <div class="input-group">
@@ -70,83 +87,133 @@
                             <i class="material-icons" style="color: grey" id="ic-pass">visibility_off</i>
                         </span>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-4">
 
+                    <div id="lg-loader" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-indigo">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-4">
+                        <p class="text-center inf-own">Verificando...</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4 align-self-center">
                             <button id="iniciar" class="btn bg-indigo btn-block waves-effect" type="button">Ingresar</button>
                         </div>
-                    </div>
+                        <div class="col-sm-4"></div>
                 </form>
             </div>
         </div>
     </div>
-
+    
     <script src="resources/plugins/jquery/jquery.min.js"></script>
-        <script src="resources/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-        <script src="resources/plugins/bootstrap/js/bootstrap.js"></script>
-        <script src="resources/plugins/node-waves/waves.js"></script>
-        <script src="resources/js/admin.js"></script>
-        <script src="resources/plugins/momentjs/moment.js"></script>
-        <script src="resources/plugins/bootstrap-notify/bootstrap-notify.js"></script>
-        <script src="resources/plugins/fileinput/js/fileinput.min.js"></script>
-        <script src="resources/plugins/sweetalert2/sweetalert2.min.js"></script>
-        <script src="resources/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-        <script src="resources/plugins/jquery-validation/jquery.validate.js"></script>
-        <script src="resources/plugins/nestable/jquery.nestable.js"></script>
-        <script src="resources/js/jquery.toast.js"></script>
-        <script src="resources/js/functions.js"></script>
-        <script src="resources/plugins/momentjs/moment.js"></script>
-        <script src="resources/plugins/momentjs/locale/es.js"></script>
-        <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-        
-</body>
-<script>
-    $('#iniciar').click(function () {
-        objeto = JSON.stringify({
-            'user': $('#usuario').val(),
-            'password': $('#password').val()
+    <script src="resources/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <script src="resources/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="resources/plugins/node-waves/waves.js"></script>
+    <script src="resources/js/admin.js"></script>
+    <script src="resources/plugins/momentjs/moment.js"></script>
+    <script src="resources/plugins/bootstrap-notify/bootstrap-notify.js"></script>
+    <script src="resources/plugins/fileinput/js/fileinput.min.js"></script>
+    <script src="resources/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="resources/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="resources/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="resources/plugins/nestable/jquery.nestable.js"></script>
+    <script src="resources/js/jquery.toast.js"></script>
+    <script src="resources/js/functions.js"></script>
+    <script src="resources/plugins/momentjs/locale/es.js"></script>
+    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>         
+    <script>
+        $('#iniciar').click(function () {
+            if($('#usuario').val() == '' || $('#password').val() == ''){
+                $('#lgempty').fadeIn(800)
+                setTimeout(function(){ $('#lgempty').fadeOut(2000) }, 4000)
+            }else{
+                objeto = JSON.stringify({
+                    'user': ($('#usuario').val()).toLowerCase(),
+                    'password': ($('#password').val()).toLowerCase()
+                })
+
+                $.ajax({
+                    method: "POST",
+                    url: "/sesion",
+                    data: {object : objeto},
+                    //async: false,
+                    beforeSend: function () {
+                        $("#lg-loader").fadeIn(800);
+                        $("#iniciar").attr('disabled', true);
+                    },
+                    success: function (data, textStatus) {
+                        $("#lg-loader").fadeOut(800);
+                        $("#iniciar").attr('disabled', false);
+                    }
+                }).done(function (response) {
+                    var self = JSON.parse(response);
+                    if(self.response == "error"){
+                        if(self.ldap_msg != '') $('#msg').html(self.ldap_msg)
+                        else $('#msg').html(self.info)
+                        $('#lgfail').fadeIn(2000)
+                        setTimeout(function(){ $('#lgfail').fadeOut(2000) }, 4000)
+                    }else{
+                    setTimeout(function(){window.location="/"}, 500)
+                    }
+                });
+            }
         })
 
-        $.ajax({
-            method: "POST",
-            url: "/sesion",
-            data: {object : objeto},
-            async: false,
-            beforeSend: function () {
-                $("#spn-ld").remove();
-                $("<div id='spn-ld' style='text-align: center; margin:auto;width:100%; height:65px;'>"+
-                    "<div style='margin:auto;display:block; height:55px;'>"+
-                        "<img src='resources/images/espiral.gif' style='height:100%; width:auto;'/>"+
-                    "</div>"+
-                "</div>").insertAfter("#bf-btn");
-            },
-            success: function (data, textStatus) {
-                $("#spn-ld").fadeOut(800);
+        $('#see-pass').mousedown(function(){
+            $("#ic-pass").css("color", "lightgrey");
+            $("#password").prop("type", "text");
+            $("#ic-pass").html("visibility");
+        });
+        
+        $("#see-pass").mouseup(function(){
+            $("#ic-pass").css("color", "grey");
+            $("#password").prop("type", "password");
+            $("#ic-pass").html("visibility_off");
+        });
+
+        $('#password').keydown(function (e){
+            if(e.keyCode == 13){
+                $('#iniciar').click();
             }
-        }).done(function (response) {
-            var self = JSON.parse(response);
-            if(self.response == "error" || self.response == "vacio"){
-                $('#lgfail').fadeIn(2000)
-               setTimeout(function(){ $('#lgfail').fadeOut(2000) }, 4000)
+        })
+
+        $('#usuario').keypress(function(){
+            if($('#usuario').val() == ''){
+                $('#usuario').removeClass('txt-lower');
             }else{
-               setTimeout(function(){window.location="/"}, 500)
+                if(!$('#usuario').hasClass('txt-lower')) $('#usuario').addClass('txt-lower');
             }
         });
-    })
 
-    $('#see-pass').mousedown(function(){
-        $("#ic-pass").css("color", "lightgrey");
-        $("#password").prop("type", "text");
-        $("#ic-pass").html("visibility");
-    });
-    
-    $("#see-pass").mouseup(function(){
-        $("#ic-pass").css("color", "grey");
-        $("#password").prop("type", "password");
-        $("#ic-pass").html("visibility_off");
-    });
-</script>
+        $('#usuario').keyup(function(){
+            if($('#usuario').val() == ''){
+                $('#usuario').removeClass('txt-lower');
+            }else{
+                if(!$('#usuario').hasClass('txt-lower')) $('#usuario').addClass('txt-lower');
+            }
+        });
 
+        $('#password').keypress(function(){
+            if($('#password').val() == ''){
+                $('#password').removeClass('txt-lower');
+            }else{
+                if(!$('#password').hasClass('txt-lower')) $('#password').addClass('txt-lower');
+            }
+        });
+
+        $('#password').keyup(function(){
+            if($('#password').val() == ''){
+                $('#password').removeClass('txt-lower');
+            }else{
+                if(!$('#password').hasClass('txt-lower')) $('#password').addClass('txt-lower');
+            }
+        });
+    </script>
+</body>
 </html>

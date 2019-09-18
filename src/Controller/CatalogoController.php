@@ -79,11 +79,14 @@ class CatalogoController extends AbstractController
             
             $sistema = $sx['sistema'];
             $descripcion = $sx['descripcion']; 
-            $urldueno = $sx['urldueno'];                
+            $duenio = $sx['duenio'];   
+            $url = $sx['url'];   
+
             $catalogo = new Catalogo();
             $catalogo->setSistema($sistema);
             $catalogo->setDescripcion($descripcion);
-            $catalogo->setUrldueno($urldueno);
+            $catalogo->setDuenio($duenio);
+            $catalogo->setUrl($url);
             $catalogo->setEstado(1);
             $errors = $validator->validate($catalogo);
             if (count($errors)>0){
@@ -120,13 +123,16 @@ class CatalogoController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $sistema = $sx['sistema'];
-            $descripcion = $sx['descripcion']; 
-            $urldueno = $sx['urldueno'];                
+            $descripcion = $sx['descripcion'];
+            $duenio = $sx['duenio'];   
+            $url = $sx['url'];   
+
             $catalogo = $this->getDoctrine()->getRepository(Catalogo::class)->find($id);
             $catalogo->setId($id);
             $catalogo->setSistema($sistema);
             $catalogo->setDescripcion($descripcion);
-            $catalogo->setUrldueno($urldueno);
+            $catalogo->setDuenio($duenio);
+            $catalogo->setUrl($url);
             $catalogo->setEstado(1);
             $errors = $validator->validate($catalogo);
             if (count($errors)>0){
@@ -161,10 +167,7 @@ class CatalogoController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $catalogo = $this->getDoctrine()->getRepository(Catalogo::class)->find($id);
-            $id = $catalogo->getId();
-            $sistema= $catalogo->getSistema();
-            $descripcion = $catalogo->getDescripcion();
-            $urldueno = $catalogo->getUrldueno();
+            
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($catalogo, 'json');
             $resultado = array('response'=>$json,'success' => true,

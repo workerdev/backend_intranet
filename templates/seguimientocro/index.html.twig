@@ -2,21 +2,13 @@
 {% block stylesheets %}
 <style>
     .accion{ cursor:pointer }
-</style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/seguimientocro'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
+    .txta-own{
+        background-color: rgba(40, 40, 40, .05);
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding: 4px !important;
     }
-    default_values()
-</script>
+</style>
 {% endblock %}
 {% block body %}
 
@@ -161,7 +153,20 @@
         // ajax_call("/seguimientocro_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
         // $('#form').modal('hide')
     })
-    reload_form()
+</script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/seguimientocro'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
 </script>
 <script>
 

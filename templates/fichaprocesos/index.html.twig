@@ -57,6 +57,7 @@
                             <th class="d-none" data-name="phone">Versión </th>
                             <th class="d-none" data-name="phone">Fecha de Emisión </th>
                             <th class="d-none" data-name="phone">Recursos Necesarios </th>
+                            <th class="d-none" data-name="phone">Requisitos Legales </th>
                             <th class="actions_header">Acciones </th>
                         </tr>
                         </thead>
@@ -126,6 +127,7 @@
             'recursosnecesarios': $('#recursosnecesarios').val(),
             'areagerenciasector': $('#fkareagerenciasector').val(),
             'entradasrequeridas': $('#entradasrequeridas').val(),
+            'reqlegales': $('#reqlegales').val(),
             'salidasesperadas': $('#salidasesperadas').val()
         });
         console.log(objeto);
@@ -154,6 +156,7 @@
                 $('#recursosnecesarios').val(self.recursosnecesarios)
                 $('#entradasrequeridas').val(self.entradasrequeridas)
                 $('#salidasesperadas').val(self.salidasesperadas)
+                $('#reqlegales').val(self.reqlegales)
                 $('#fkareagerenciasector').val(self.fkareagerenciasector.id)
                 $('#fkareagerenciasector').selectpicker('render')
 
@@ -179,6 +182,7 @@
             'fechaemision': $('#fechaemision').val(),
             'recursosnecesarios': $('#recursosnecesarios').val(),
             'entradasrequeridas': $('#entradasrequeridas').val(),
+            'reqlegales': $('#reqlegales').val(),
             'salidasesperadas': $('#salidasesperadas').val()
         });
         ajax_call_validation("/fichaprocesos_actualizar", {object: objeto}, null, '/fichaprocesos')
@@ -247,6 +251,10 @@
                 '<tr>'+
                     '<td class="bold">Recursos Necesarios:</td>'+
                     '<td>'+d[9]+'</td>'+
+                '</tr>'+
+                  '<tr>'+
+                    '<td class="bold">Requerimientos Legales:</td>'+
+                    '<td>'+d[10]+'</td>'+
                 '</tr>'+
             '</table></div>';
         }

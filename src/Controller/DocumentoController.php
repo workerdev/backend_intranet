@@ -9,6 +9,7 @@ use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\EstadoDocumento;
 use App\Entity\Documento;
+use App\Entity\DocumentoBaja;
 use App\Entity\DocumentoProceso;
 use App\Entity\DocumentoFormulario;
 use App\Entity\NormaDocumento;
@@ -382,6 +383,19 @@ class DocumentoController extends Controller
                 }
             }
 
+            $bajadoc = new DocumentoBaja();
+            $bajadoc->setCodigo($Documento->getCodigo());
+            $bajadoc->setTitulo($Documento->getTitulo());
+            $bajadoc->setVersionvigente($Documento->getversionVigente());
+            $bajadoc->setVinculoarchivo($Documento->getVinculoarchivodig());
+            if($Documento->getFechaPublicacion() != null) $bajadoc->setFechapublicacion($Documento->getFechaPublicacion());
+            $bajadoc->setCarpetaoperativa($Documento->getCarpetaOperativa());
+            $bajadoc->setEstado(1);
+            $bajadoc->setFkproceso($Documento->getFkficha());
+            $bajadoc->setFktipo($Documento->getFktipo());
+            $bajadoc->setFkaprobador($Documento->getFkaprobador());
+            $cx->persist($bajadoc);
+            $cx->flush();   
 
             $Documento->setEstado(0);
             $cx->persist($Documento);

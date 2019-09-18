@@ -2,21 +2,13 @@
 {% block stylesheets %}
 <style>
     .accion{ cursor:pointer }
-</style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/catalogo'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
+    .txta-own{
+        background-color: rgba(40, 40, 40, .05);
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding: 4px !important;
     }
-    default_values()
-</script>
+</style>
 {% endblock %}
 {% block body %}
 
@@ -41,7 +33,8 @@
                 <tr>
                     <th class="order_by_th" data-name="names">Sistema </th>
                     <th class="order_by_th" data-name="phone">Descripción </th>
-                    <th class="order_by_th" data-name="phone">Url o dueño </th>
+                    <th class="order_by_th" data-name="phone">Dueño </th>
+                    <th class="order_by_th" data-name="phone">Url </th>
                     <th class="actions_header">Acciones </th>
                 </tr>
                 </thead>
@@ -60,12 +53,27 @@
 <script src="resources/plugins/momentjs/moment.js"></script>
 <script src="resources/plugins/momentjs/locale/es.js"></script>
 <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/catalogo'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     $('#new').click(function () {
         $('#sistema').val('')
         $('#descripcion').val('')
-        $('#urldueno').val('')
+        $('#duenio').val('')
+        $('#url').val('')
 
         clean_form()
         verif_inputs()
@@ -79,11 +87,10 @@
         objeto = JSON.stringify({
             'sistema': $('#sistema').val(),
             'descripcion': $('#descripcion').val(),
-            'urldueno': $('#urldueno').val()
+            'duenio': $('#duenio').val(),
+            'url': $('#url').val()
         })
        ajax_call_validation("/catalogo_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/catalogo_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -98,7 +105,8 @@
                 $('#id').val(self.id)
                 $('#sistema').val(self.sistema)
                 $('#descripcion').val(self.descripcion)
-                $('#urldueno').val(self.urldueno)
+                $('#duenio').val(self.duenio)
+                $('#url').val(self.url)
 
                 clean_form()
                 verif_inputs()
@@ -115,11 +123,10 @@
             'id': parseInt(JSON.parse($('#id').val())),
             'sistema': $('#sistema').val(),
             'descripcion': $('#descripcion').val(),
-            'urldueno': $('#urldueno').val()
+            'duenio': $('#duenio').val(),
+            'url': $('#url').val()
         })
         ajax_call_validation("/catalogo_actualizar", {object: objeto}, null,  main_route)
-        // ajax_call("/catalogo_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
@@ -139,7 +146,12 @@
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/catalogo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            ajax_call(
+                "/catalogo_eliminar", 
+                { id: id, enabled: enabled, _xsrf: getCookie("_xsrf") }, 
+                null, 
+                function () { setTimeout(function(){window.location = main_route}, 1000); }
+            )
         })
     })
 

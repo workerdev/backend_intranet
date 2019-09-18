@@ -15,7 +15,22 @@
     </div>
 </div>
 
-
+<div id="formfile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Subir Documento</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    {{ form(form2) }}   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="form-revision" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-own" role="document">
@@ -173,10 +188,8 @@
     </div>
 </div>
 
-
-
 <div id="form-rev" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-dialog-validate" role="document">
+    <div class="modal-dialog modal-dialog-validate" role="document" style="width: 85% !important">
         <div class="modal-content">
             {% if docderiv %}
             <div class="modal-header">
@@ -204,25 +217,35 @@
                             {% for v in docderiv %}
                                 <tr>
                                     <td>{{ v.fecha | date('d-m-Y') }}</td>
-                                    <td>{{ v.fkdoc.nuevoactualizacion }}</td>
-                                    {% if v.fkdoc.fkdocumento != null %}
-                                        <td>{{ v.fkdoc.fkdocumento.codigo }}</td>
+                                    {% if v.fkdoc != null %}
+                                        <td>{{ v.fkdoc.nuevoactualizacion }}</td>
                                     {% else %}
-                                        {% if v.fkdoc.fkformulario != null %}
-                                            <td>{{ v.fkdoc.fkformulario.codigo }}</td>
-                                        {% else %}
-                                            <td>{{ v.fkdoc.codigonuevo }}</td>
-                                        {% endif %}
+                                        <td></td>
                                     {% endif %}
+
+                                    {% if v.fkdoc != null %}
+                                        {% if v.fkdoc.fkdocumento != null %}
+                                            <td>{{ v.fkdoc.fkdocumento.codigo }}</td>
+                                        {% else %}
+                                            {% if v.fkdoc.fkformulario != null %}
+                                                <td>{{ v.fkdoc.fkformulario.codigo }}</td>
+                                            {% else %}
+                                                <td>{{ v.fkdoc.codigonuevo }}</td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    
                                     <td>{{ v.fkdoc.fktipo.nombre }}</td>
                                     <td>{{ v.fkdoc.titulo }}</td>
                                     <td align="center">
                                     {% if v.fkdoc.fkaprobador.id == profile.id %}
-                                        <button id="apdoc" data-json="{{v.id}}" type="button" class="btn bg-cyan waves-effect waves-light apdoc" title="Aprobar"><i class="material-icons">done</i></button> 
+                                        <button id="apdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-cyan waves-effect waves-light apdoc" title="Aprobar"><i class="material-icons">done</i> Aprobar</button> 
                                     {% else %}
-                                        <button id="drdoc" data-json="{{v.id}}" type="button" class="btn bg-light-green waves-effect waves-light drdoc" title="Derivar"><i class="material-icons">send</i></button>
+                                        <button id="drdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-light-green waves-effect waves-light drdoc" title="Derivar"><i class="material-icons">send</i> Derivar</button>
                                     {% endif %}
-                                        <button id="rcdoc" data-json="{{v.id}}" type="button" class="btn bg-blue waves-effect waves-light rcdoc" title="Rechazar"><i class="material-icons">clear</i></button>
+                                        <button id="rcdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-blue waves-effect waves-light rcdoc" title="Rechazar"><i class="material-icons">clear</i> Rechazar</button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -253,9 +276,7 @@
                 <h3 id="cliente_tittle" class="modal-title">Confirmar acción</h3>
                 <h4 id="cliente_enable" class=""></h4>
             </div>
-            <div class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert" id="msgv">
-                
-            </div>
+            <div id="msgv" class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert"></div>
             <div class="modal-body">
                 <div id="cnfdc_form_body" class="box-body">
                     <div class="input-group">
@@ -287,9 +308,6 @@
                 <h3 id="cliente_tittle" class="modal-title">Documento Aprobado</h3>
                 <h4 id="cliente_enable" class=""></h4>
             </div>
-            <div class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert" id="msgv">
-                
-            </div>
             <div class="modal-body">
                 <div id="cnfdc_form_body" class="box-body">
                     <div class="form-group form-float">
@@ -314,6 +332,24 @@
                     <button id="btn-rgaprob" type="button" class="btn bg-teal waves-effect">Aprobar <i class="material-icons">check_circle</i></button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="filepdf" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Aprobar Documento</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    {{ form(formfile) }}   
+                </div>
             </div>
         </div>
     </div>

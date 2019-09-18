@@ -21,6 +21,9 @@ parameters:
     Directorio_DocBaja: '%kernel.project_dir%/public/repositorio/documentobaja'
     Directorio_FichaCargo: '%kernel.project_dir%/public/repositorio/fichacargo'
     Directorio_SIG: '%kernel.project_dir%/public/sig'  
+    Directorio_Delautoridad_Foto: '%kernel.project_dir%/public/delautoridad/foto'  
+    Directorio_Delautoridad_Archivo: '%kernel.project_dir%/public/delautoridad/archivo'  
+    Directorio_Personal: '%kernel.project_dir%/public/personal' 
 
 services:
 

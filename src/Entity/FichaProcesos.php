@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * FichaProcesos
- * @ORM\Table(name="cb_procesos_ficha_procesos", indexes={@ORM\Index(name="cb_ficha_procesos_id", columns={"cb_ficha_procesos_nombre"})})
+ * @ORM\Table(name="cb_procesos_ficha_procesos", uniqueConstraints={@ORM\UniqueConstraint(name="cb_ficha_procesos_codproceso",columns={"cb_ficha_procesos_codproceso"})})
  * @ORM\Entity(repositoryClass="App\Repository\FichaProcesosRepository")
  */
 class FichaProcesos
@@ -91,6 +91,7 @@ class FichaProcesos
      * @Assert\NotBlank
      */
     private $entradasrequeridas;
+    
     /**
      * @var string
      * @ORM\Column(name="cb_ficha_procesos_salidasesperadas", type="text", nullable=true)
@@ -99,13 +100,20 @@ class FichaProcesos
     private $salidasesperadas;
 
     /**
+     * @var string
+     * @ORM\Column(name="cb_ficha_procesos_req_legales", type="text", nullable=true)
+     * @Assert\NotBlank
+     */
+    private $reqlegales;
+
+
+    /**
      * @var int
      * @ORM\Column(name="cb_ficha_procesos_estado", type="integer", nullable=true)
      */
     private $estado;
 
-   
-    
+
 
 
     public function getId(): ?int
@@ -224,6 +232,16 @@ class FichaProcesos
     public function setSalidasesperadas(string $salidasesperadas): self
     {
         $this->salidasesperadas = $salidasesperadas;
+        return $this;
+    }
+    public function getReqlegales(): ?string
+    {
+        return $this->reqlegales;
+    }
+
+    public function setReqlegales(string $reqlegales): self
+    {
+        $this->reqlegales = $reqlegales;
         return $this;
     }
 

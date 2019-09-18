@@ -1,8 +1,12 @@
 {% for t in objects %}
 <tr>
     <td>{{ t.asunto }}</td>
-    <td>{{ t.mensaje }}</td>
+    <td style="white-space: pre-wrap;">{{ t.mensaje }}</td>
     <td>{{ t.fkusuario.nombre ~ ' ' ~ t.fkusuario.apellido }}</td>
-    <td>{{ t.tipo }}</td>
+    <td>{{ t.tipo }}</td>{% if t.fecha != null %}
+        <td>{{ t.fecha | date('Y-m-d H:i:s') }}</td>
+    {% else %}
+        <td></td>
+    {% endif %}
 </tr>
 {% endfor %}
