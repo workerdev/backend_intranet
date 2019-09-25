@@ -61,9 +61,9 @@ class DocumentoFormulario
    private $versionVigente;
 
     /**
-     * @var date
+     * @var timestamp
      *
-     * @ORM\Column(name="cb_documento_formulario_fechaPublicacion", type="date", nullable=true)
+     * @ORM\Column(name="cb_documento_formulario_fechaPublicacion", type="datetime", nullable=true)
      * @Assert\NotBlank
      */
     private $fechaPublicacion;

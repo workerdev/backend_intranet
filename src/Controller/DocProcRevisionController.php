@@ -375,7 +375,7 @@ class DocProcRevisionController extends AbstractController
             $id = $sx['id'];
             $docprocrev = $this->getDoctrine()->getRepository(DocProcRevision::class)->find($id);
             $fpb = $docprocrev->getFecha();
-            $result = $fpb->format('Y-m-d');
+            $result = $fpb->format('Y-m-d H:i:s');
             $sendinf = [
                 "id" => $docprocrev->getId(),
                 "fecha" => $result,
@@ -408,7 +408,7 @@ class DocProcRevisionController extends AbstractController
             foreach ($dprocrevision as $docprocrev) {
                 $fpb = $docprocrev->getFecha();
                 if ($fpb != null) {
-                    $result = $fpb->format('Y-m-d');
+                    $result = $fpb->format('Y-m-d H:i:s');
                 } else {
                     $result = $fpb;
                 }
@@ -464,7 +464,7 @@ class DocProcRevisionController extends AbstractController
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
-
+    
     /**
      * @Route("/docprocesorev_eliminar", methods={"POST"}, name="docprocesorev_eliminar")
      */

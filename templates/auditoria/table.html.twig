@@ -5,7 +5,7 @@
     </td>
     <td class="d-none">{{ t.id }}</td>
     <td>{{ t.codigo }}</td>
-    <td>{{ t.fkarea.fkarea.nombre }}</td>
+    <td>{{ t.fkgas.fkarea.nombre }}</td>
     <td>{{ t.fktipo.nombre }}</td>
     <td>{{ t.fechaprogramada | date('Y-m-d') }}</td>
     <td>{{ t.duracionestimada }}</td>
@@ -18,6 +18,8 @@
     <td class="d-none">{{ t.responsable }}</td>
     <td class="d-none">{{ t.fecharegistro | date('Y-m-d') }}</td>
     <td align="center">
+        <button id="team" data-json="{{t.id}}" type="button" class="btn bg-cyan waves-effect waves-light team" title="Equipo de auditores"><i class="material-icons">group</i></button>
+        <button id="hlgfort" data-json="{{t.id}}" type="button" class="btn bg-teal waves-effect waves-light hlgfort" title="Fortalezas y hallazgos"><i class="material-icons">equalizer</i></button>
     {% if 'auditoria_editar' in permisos %}
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
     {% endif %}

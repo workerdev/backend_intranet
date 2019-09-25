@@ -167,11 +167,27 @@ class NoticiaController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $noticia = $this->getDoctrine()->getRepository(Noticia::class)->find($id);
+            $noticia_categoria = $this->getDoctrine()->getRepository(NoticiaCategoria::class)->findBy(['fknoticia' => $id]);
+          
+            $fc = $noticia->getFecha();
+            if($fc != null) $result = $fc->format('Y-m-d'); else $result = $fc;
+
+            $sendinf = [
+                "id" => $noticia->getId(),
+                "titulo" => $noticia->getTitulo(),
+                "subtitulo" => $noticia->getSubtitulo(),
+                "contenido" => $noticia->getContenido(),
+                "tipo" => $noticia->getTipo(),
+                "fecha" => $result,
+                "categorias" => $noticia_categoria
+            ];
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($noticia, 'json');
+            $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Datos de la noticia listado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

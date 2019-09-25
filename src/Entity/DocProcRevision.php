@@ -34,7 +34,7 @@ class DocProcRevision
      */
     private $fkdoc; 
     
-   /**
+    /**
     * @var timestamp
     *
     * @ORM\Column(name="cb_docprocrevision_fecha", type="datetime", nullable=true, nullable=true, options={"default":null})

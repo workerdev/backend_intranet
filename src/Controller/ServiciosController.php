@@ -9,6 +9,7 @@ use App\Entity\ControlCorrelativo;
 use App\Entity\Correlativo;
 use App\Entity\Correo;
 use App\Entity\DatoEmpresarial;
+use App\Entity\DelegacionAutoridad;
 use App\Entity\Documento;
 use App\Entity\Enlaces;
 use App\Entity\EstadoCorrelativo;
@@ -110,8 +111,8 @@ class ServiciosController extends AbstractController
             $fecha = date("Y-m-d H:i:s");
 
             $message = (new \Swift_Message('Asunto:   ' . $asunto . '  - COMITÉ DE ÉTICA'))
-            ->setFrom('charly_90_6@hotmail.com') //intranet@elfec.com
-            ->setTo('avargas@cloudbit.com.bo') //cflores@elfec.com
+            ->setFrom($_SERVER['COMITE_ETICA_REMITENTE']) //intranet@elfec.com
+            ->setTo($_SERVER['COMITE_ETICA_DESTINATARIO']) //cflores@elfec.com
             ->setBody($this->renderView('mail/index.html.twig',
                 array(
                     'remitente' => $remitente,
@@ -164,8 +165,8 @@ class ServiciosController extends AbstractController
             $fecha = date("Y-m-d H:i:s");
 
             $message = (new \Swift_Message('Asunto:   ' . $asunto . '  - BUZÓN DE SUGERENCIAS'))
-            ->setFrom('charly_90_6@hotmail.com') //intranet@elfec.com
-            ->setTo('avargas@cloudbit.com.bo') //cflores@elfec.com
+            ->setFrom($_SERVER['BUZON_SUGERENCIA_REMITENTE']) //intranet@elfec.com
+            ->setTo($_SERVER['BUZON_SUGERENCIA_DESTINATARIO']) //cflores@elfec.com
             ->setBody($this->renderView('mail/index.html.twig',
                 array(
                     'remitente' => $remitente,
@@ -2242,9 +2243,6 @@ class ServiciosController extends AbstractController
 
             $results = $query->execute();
 
-            $dt_aux = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('estado' => '1', 'username' => $user));
-            if(!empty($dt_aux)) $process = 'username';
-
             foreach ($results as $entry) {
                 $entry; // Do something with the results
                 $encoders = [new XmlEncoder(), new JsonEncoder()];
@@ -2256,6 +2254,9 @@ class ServiciosController extends AbstractController
                 if ($ayudanombre = array_key_exists("sAMAccountName", $data['attributes'])) {
                     if ($user == $data['attributes']['sAMAccountName'][0]) {
                         $dn = $data['dn'];
+                        $dt_aux = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                        if(!empty($dt_aux)) $process = 'username';
+
                         $ldap->bind($dn, $pass);
                         $process = 'success';
 
@@ -2396,26 +2397,6 @@ class ServiciosController extends AbstractController
                     $ldap_msg = "The LDAP PHP extension is not enabled.";
 
                     //return new JsonResponse($translator->trans($ldap_msg));
-                    $elementos = array('message' => $translator->trans($ldap_msg), 'process' => $process);
-
-                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                    $data2 = $serializer->serialize($elementos, 'json');
-                    return new Response($data2);
-                    break;
-                case "validate":
-                    $ldap_msg = "Error al consultar los datos del AD";
-
-                    //return new JsonResponse($translator->trans($ldap_msg));
-                    $elementos = array('message' => $translator->trans($ldap_msg), 'process' => $process);
-
-                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                    $data2 = $serializer->serialize($elementos, 'json');
-                    return new Response($data2);
-                    break;
-                case "username":
-                    $ldap_msg = "Password incorrecto";
-
-                    //return new JsonResponse($ldap_msg);
                     $elementos = array('message' => $translator->trans($ldap_msg), 'process' => $process);
 
                     $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));

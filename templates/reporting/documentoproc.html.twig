@@ -1,0 +1,115 @@
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+<div class='container' style='font-size: 12px'>
+    <div class='row'>
+        <div class='col-md-4'>
+            <img src="resources/images/image_rep.png" width='auto' height='75'>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-md-4'>
+            <h4 align='center'>DOCUMENTO EN PROCESO</h4>
+        </div>
+    </div>
+
+    {% set url_file = doc.doc_proceso.vinculoarchivo|split('/') %}
+
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px; padding-top: 4px'>ID Revisión </th>
+                <td colspan='4' class='text-normal' align='left' style='padding-top: 4px'> {{ doc.doc_proceso.id }} </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Nuevo, baja o actualización </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.nuevoactualizacion }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Código del documento </th>
+                <td colspan='4' class='text-normal' align='left'>
+                {% if doc.doc_proceso.codigonuevo != null or doc.doc_proceso.codigonuevo != '' %}
+                    {{ doc.doc_proceso.codigonuevo }}
+                {% else %}
+                    {% if doc.doc_proceso.fkdocumento != null %}
+                        {{ doc.doc_proceso.fkdocumento.codigo }}
+                    {% else %}
+                        {{ doc.doc_proceso.fkformulario.codigo }}
+                    {% endif %}
+                {% endif %}
+                </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Código de proceso </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.fkproceso.codproceso }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Título </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.titulo }} </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Tipo de documento </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.fktipo.nombre }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Versión </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.versionvigente }} </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Vínculo archivo digital </th>
+                <td colspan='4' class='text-normal' align='left'> {{ url_file[3] }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Carpeta operativa </th>
+                <td colspan='4' class='text-normal' align='left'> {{ doc.doc_proceso.carpetaoperativa }} </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Aprobado o rechazado </th>
+                <td colspan='4' class='text-normal' align='left'>
+                {% if doc.doc_proceso.aprobadorechazado != null %}
+                    {{ doc.doc_proceso.aprobadorechazado }}
+                {% endif %} 
+                </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Aprobado por </th>
+                <td colspan='4' class='text-normal' align='left'>
+                {% if doc.doc_proceso.fkaprobador != null %}
+                    {{ doc.doc_proceso.fkaprobador.nombre ~ ' ' ~ doc.doc_proceso.fkaprobador.apellido }}
+                {% endif %}   
+                </td>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha aprobación </th>
+                <td colspan='4' class='text-normal' align='left'>
+                {% if doc.doc_proceso.fechaaprobacion != null %}
+                    {{ doc.doc_proceso.fechaaprobacion|date('Y-m-d H:i:s') }}
+                {% endif %}  
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div style="padding-top: 30px;">
+        <table align='center' style='padding: 4px; border: 1px solid white' width='100%'>
+            <caption>DETALLE REVISIÓN</caption>
+            <tr style='font-size: 12px'>
+                <th colspan='3' scope='colgroup' align='center' style='background-color: #1976d2; color: white; margin-top: 4px'>ID. Revisión</th>
+                <th colspan='3' scope='colgroup' align='center' style='background-color: #1976d2; color: white; margin-top: 4px'>Fecha Recibido</th>
+                <th colspan='3' scope='colgroup' align='center' style='background-color: #1976d2; color: white; margin-top: 4px'>Responsable Revisión</th>
+                <th colspan='3' scope='colgroup' align='center' style='background-color: #1976d2; color: white; margin-top: 4px'>Estado</th>
+                <th colspan='3' scope='colgroup' align='center' style='background-color: #1976d2; color: white; margin-top: 4px'>Firma Electónica</th>
+            </tr>
+            {% for r in doc.en_revision %}
+            <tr style='border-top: 0px; border-bottom: 2px solid rgba(96, 96, 96, 0.5)'>
+                <td class='border-own' width='20%' colspan='3' align='center' ><font size=2>{{ r.id }}</font></td>
+                {% if r.fecha != null %}
+                    <td class='border-own' width='20%' colspan='3' align='center' ><font size=2>{{ r.fecha|date('d-m-Y H:i:s') }}</font></td>
+                {% else %}
+                    <td class='border-own' width='20%' colspan='3' align='center' ><font size=2></font></td>
+                {% endif %}  
+                {% if r.fkresponsable != null %}
+                    <td class='border-own' width='20%' colspan='3' align='center' ><font size=2>{{ r.fkresponsable.nombre ~ ' ' ~ r.fkresponsable.apellido }}</font></td>
+                {% else %}
+                    <td class='border-own' width='20%' colspan='3' align='center' ><font size=2></font></td>
+                {% endif %} 
+                <td class='border-own' width='20%' colspan='3' align='center' ><font size=2>{{ r.estadodoc }}</font></td>
+                <td class='border-own' width='20%' colspan='3' align='center' ><font size=2>{{ r.firma }}</font></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

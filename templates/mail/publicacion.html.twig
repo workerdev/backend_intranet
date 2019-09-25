@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
 <div class="card">
     <div class="card-tabs">
         <div class="card-content grey lighten-4">
@@ -37,15 +34,28 @@
                                 <td>{{ d.vinculofiledig }}</td>
                             {% endif %}
                         {% else %}
-                            <td>{{ d.fktipo.nombre }}</td>
-                            <td>{{ d.fkficha.fkareagerenciasector.fkarea.nombre}}</td>
-                            <td>{{ d.codigo }}</td>
-                            <td>{{ d.titulo }}</td>
-                            <td>{{ d.versionvigente }}</td>
-                            {% if d.vinculoarchivodig not in ['N/A', null] %}
-                                <td><a href="{{ 'http://' ~ adicional.dominio ~ d.vinculoarchivodig }}">{{ d.vinculoarchivodig }}</a></td>
+                            {% if d.isdisabled == 'true' %}
+                                <td>{{ 'BAJA ' ~ d.fktipo.nombre }}</td>
+                                <td>{{ d.fkficha.fkareagerenciasector.fkarea.nombre}}</td>
+                                <td>{{ d.codigo }}</td>
+                                <td>{{ d.titulo }}</td>
+                                <td>{{ d.versionvigente }}</td>
+                                {% if d.vinculoarchivo not in ['N/A', null] %}
+                                    <td><a href="{{ 'http://' ~ adicional.dominio ~ d.vinculoarchivo }}">{{ d.vinculoarchivo }}</a></td>
+                                {% else %}
+                                    <td>{{ d.vinculoarchivo}}</td>
+                                {% endif %}
                             {% else %}
-                                <td>{{ d.vinculoarchivodig }}</td>
+                                <td>{{ d.fktipo.nombre }}</td>
+                                <td>{{ d.fkficha.fkareagerenciasector.fkarea.nombre}}</td>
+                                <td>{{ d.codigo }}</td>
+                                <td>{{ d.titulo }}</td>
+                                <td>{{ d.versionvigente }}</td>
+                                {% if d.vinculoarchivodig not in ['N/A', null] %}
+                                    <td><a href="{{ 'http://' ~ adicional.dominio ~ d.vinculoarchivodig }}">{{ d.vinculoarchivodig }}</a></td>
+                                {% else %}
+                                    <td>{{ d.vinculoarchivodig }}</td>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     </tr>

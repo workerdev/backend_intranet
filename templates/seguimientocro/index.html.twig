@@ -51,13 +51,8 @@
 </div>
 {%endblock%}
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
 <script>
-
-
     $('#fkriesgos').selectpicker({
         size: 4,
         liveSearch: true,
@@ -104,8 +99,6 @@
         })
 
         ajax_call_validation("/seguimientocro_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientocro_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -150,8 +143,6 @@
         })
 
         ajax_call_validation("/seguimientocro_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientocro_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 </script>
 <script src="resources/js/functions.js"></script>

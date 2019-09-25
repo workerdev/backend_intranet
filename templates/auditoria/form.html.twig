@@ -1,5 +1,5 @@
 <div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-own" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -11,94 +11,121 @@
                     <div id="id_div" class="form-group">
                         <div class="form-line">
                             <input id="id" type="text" class="form-control" disabled="disabled">
-                            <label class="form-label">Auditoría</label>
+                            <label class="form-label">Auditoría ID</label>
                         </div>
                     </div>
                     
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="codigo" name="codigo" type="text" class="form-control name">
-                            <label class="form-label">Código</label>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="codigo" name="codigo" type="text" class="form-control name">
+                                    <label class="form-label">Código</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Sector</label>
+                                <select id="fkgas" class="form-control show-tick">
+                                {% for tr in area %}
+                                    <option value="{{tr.id}}">{{tr.nombre}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
                         </div>
                     </div>
                     
-                    <label>Área</label>
-                        <select id="fkarea" class="form-control">
-                        {% for tr in area %}
-                            <option value="{{tr.id}}">{{tr.fksector.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
-                    
-                    <label>Tipo de auditoría</label>
-                        <select id="fktipo" class="form-control">
-                        {% for tr in tipo %}
-                            <option value="{{tr.id}}">{{tr.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <label>Tipo de auditoría</label>
+                                <select id="fktipo" class="form-control show-tick">
+                                {% for tr in tipo %}
+                                    <option value="{{tr.id}}">{{tr.nombre}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha programada</label><br>
+                                    <input id="fechaprogramada" name="fechaprogramada" type="date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha programada</label><br>
-                            <input id="fechaprogramada" name="fechaprogramada" type="date" class="form-control">
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="duracionestimada" name="duracionestimada" type="text" class="form-control text">
+                                    <label class="form-label">Duración estimada</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="lugar" name="lugar" type="text" class="form-control text">
+                                    <label class="form-label">Lugar</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="duracionestimada" name="duracionestimada" type="text" class="form-control text">
-                            <label class="form-label">Duración estimada</label>
+                    
+                    <div class="form-group">
+                        <label for="alcance">Alcance</label>
+                        <textarea class="form-control txta-own" rows="3" id="alcance" name="alcance"></textarea>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="objetivos">Objetivos</label>
+                        <textarea class="form-control txta-own" rows="3" id="objetivos" name="objetivos"></textarea>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha/hora de inicio</label><br>
+                                    <input id="fechahorainicio" name="fechahorainicio" type="datetime-local" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha/hora de fin</label><br>
+                                    <input id="fechahorafin" name="fechahorafin" type="datetime-local" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="lugar" name="lugar" type="text" class="form-control text">
-                            <label class="form-label">Lugar</label>
-                        </div>
+
+                    <div class="form-group">
+                        <label for="conclusiones">Conclusiones</label>
+                        <textarea class="form-control txta-own" rows="3" id="conclusiones" name="conclusiones"></textarea>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                              <label for="accion">Alcance</label>
-                            <textarea id="alcance" name="alcance" class="materialize-textarea" data-length="120"></textarea>
-                        
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsable" name="responsable" type="text" class="form-control text">
+                                    <label class="form-label">Responsable</label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label for="accion">Objetivos</label>
-                            <textarea id="objetivos" name="objetivos" class="materialize-textarea" data-length="120"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha/hora de inicio</label><br>
-                            <input id="fechahorainicio" name="fechahorainicio" type="datetime-local" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha/hora de fin</label><br>
-                            <input id="fechahorafin" name="fechahorafin" type="datetime-local" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                              <label for="accion">Conclusiones</label>
-                            <textarea id="conclusiones" name="conclusiones" class="materialize-textarea" data-length="120"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="responsable" name="responsable" type="text" class="form-control text">
-                            <label class="form-label">Responsable</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha de registro</label><br>
-                            <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha de registro</label><br>
+                                    <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,6 +159,93 @@
                 <div class="modal-footer">
                     <!--button id="pro_rep" type="button" class="btn bg-red waves-effect prorep" title="PDF"> <i class="material-icons">picture_as_pdf</i></button-->
                     <button id="aud_yrep" type="button" class="btn bg-teal waves-effect proxrep" title="Excel">Generar <i class="material-icons">grid_on</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="form-team" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Equipo de Auditores</h3>
+            </div>
+            <div class="modal-body">
+                <div class="pd-own">
+                    <div id="cliente_form_body" class="box-body">
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">ID auditoría</label>
+                                            <input id="idaud" name="idaud" type="text" class="form-control" readonly autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código de auditoría</label>
+                                            <input id="codigoaud" name="codigoaud" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Sector</label>
+                                            <input id="sectoraud" name="sectoraud" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr  width="100%" style="height: 1px; background-color: #004c99" noshade>
+
+                <div class="pd-own">
+                    <button id="new-aud" type="button" class="btn bg-blue waves-effect" title="Agregar auditor">
+                        <i class="material-icons">person</i>
+                    </button>
+                    
+                    <h4 id="cliente_enable" class="">Detalle de integrantes</h4>
+                    <table id="table_team" class="table table-bordered table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID. auditoría</th>
+                                <th>Nombre</th>
+                                <th>Tipo de auditor</th>
+                                <th id="row-del">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="spn-addaud" class="loader-wrapper" style="display: none">
+                    <div class="loader loader-own">
+                        <div class="preloader preloader-own">
+                            <div class="spinner-layer pl-indigo">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center inf-own">Guardando...</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="save-team" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">group</i></button>
                 </div>
             </div>
         </div>

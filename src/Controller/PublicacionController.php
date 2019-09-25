@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\Documento;
+use App\Entity\DocumentoBaja;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
@@ -82,44 +83,72 @@ class PublicacionController extends AbstractController
 
             $prevdocs = array();
             foreach ($vldocs as $dc){
-                if($dc['tipo'] == 'Formulario') $dcto = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->findOneBy(['id'=>$dc['id'], 'estado'=>'1']);
-                else $dcto = $this->getDoctrine()->getRepository(Documento::class)->findOneBy(['id'=>$dc['id'], 'estado'=>'1']);
+                if($dc['tipo'] == 'Formulario'){
+                    $dcto = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->findOneBy(['id'=>$dc['id'], 'estado'=>'1']);
+                }else{
+                    if($dc['tipo'] == 'Baja'){
+                        $dcto = $this->getDoctrine()->getRepository(DocumentoBaja::class)->findOneBy(['id'=>$dc['id'], 'estado'=>'1']);
+                    }else{
+                        $dcto = $this->getDoctrine()->getRepository(Documento::class)->findOneBy(['id'=>$dc['id'], 'estado'=>'1']);
+                    }
+                }
                 $prevdocs[] = $dcto;
             }    
             $docs = array();
             foreach ($prevdocs as $ditem){
-                if(method_exists($ditem, 'getFktipo')){
+                if(property_exists($ditem, 'vinculoFileDig')){ // Formulario
                     $fpb = $ditem->getFechaPublicacion();
-                    if($fpb != null) $result = $fpb->format('Y-m-d'); else $result = $fpb;
+                    if($fpb != null) $result = $fpb->format('Y-m-d H:i:s'); else $result = $fpb;
                     $sendinf = [
                         "id" => $ditem->getId(),
                         "codigo" => $ditem->getCodigo(),
                         "titulo" => $ditem->getTitulo(),
-                        "versionvigente" => $ditem->getversionVigente(),
-                        "vinculoarchivodig" => $ditem->getVinculoarchivodig(),
-                        "vinculodiagflujo" => $ditem->getVinculodiagflujo(),
-                        "fechapublicacion" => $result,
-                        "carpetaoperativa" => $ditem->getCarpetaOperativa(),
-                        "fkficha" => $ditem->getFkficha(),
-                        "fktipo" => $ditem->getFktipo(),
-                        "fkaprobador" => $ditem->getFkaprobador(),
-                        "isform" => "false"
-                    ];
-                }else{
-                    $fpb = $ditem->getFechaPublicacion();
-                    if($fpb != null) $result = $fpb->format('Y-m-d'); else $result = $fpb;
-                    $sendinf = [
-                        "id" => $ditem->getId(),
-                        "codigo" => $ditem->getCodigo(),
-                        "titulo" => $ditem->getTitulo(),
-                        "versionvigente" => $ditem->getversionVigente(),
-                        "fechapublicacion" => $result,
-                        "fkaprobador" => $ditem->getFkaprobador(),
+                        "versionvigente" => $ditem->getVersionVigente(),
                         "vinculofiledig" => $ditem->getVinculoFileDig(),
                         "vinculofiledesc" => $ditem->getVinculoFileDesc(),
+                        "fechapublicacion" => $result,
+                        "fkficha" => $ditem->getFkdocumento()->getFkficha(),
+                        "fkaprobador" => $ditem->getFkaprobador(),
                         "fkdocumento" => $ditem->getFkdocumento(),
-                        "isform" => "true"
+                        "isform" => "true",
+                        "isdisabled" => "false"
                     ];
+                } else {
+                    if(property_exists($ditem, 'vinculoarchivo')){ // Baja
+                        $fpb = $ditem->getFechapublicacion();
+                        if($fpb != null) $result = $fpb->format('Y-m-d H:i:s'); else $result = $fpb;
+                        $sendinf = [
+                            "id" => $ditem->getId(),
+                            "codigo" => $ditem->getCodigo(),
+                            "titulo" => $ditem->getTitulo(),
+                            "versionvigente" => $ditem->getVersionVigente(),
+                            "fechapublicacion" => $result,
+                            "fkaprobador" => $ditem->getFkaprobador(),
+                            "vinculoarchivo" => $ditem->getVinculoarchivo(),
+                            "fkficha" => $ditem->getFkproceso(),
+                            "fktipo" => $ditem->getFktipo(),
+                            "isform" => "false",
+                            "isdisabled" => "true"
+                        ];
+                    } else { // Documento
+                        $fpb = $ditem->getFechaPublicacion();
+                        if($fpb != null) $result = $fpb->format('Y-m-d H:i:s'); else $result = $fpb;
+                        $sendinf = [
+                            "id" => $ditem->getId(),
+                            "codigo" => $ditem->getCodigo(),
+                            "titulo" => $ditem->getTitulo(),
+                            "versionvigente" => $ditem->getVersionVigente(),
+                            "fechapublicacion" => $result,
+                            "fkaprobador" => $ditem->getFkaprobador(),
+                            "vinculoarchivodig" => $ditem->getVinculoarchivodig(),
+                            "vinculodiagflujo" => $ditem->getVinculodiagflujo(),
+                            "carpetaOperativa" => $ditem->getCarpetaOperativa(),
+                            "fkficha" => $ditem->getFkficha(),
+                            "fktipo" => $ditem->getFktipo(),
+                            "isform" => "false",
+                            "isdisabled" => "false"
+                        ];
+                    }
                 }
                 $docs[] = $sendinf;
             }
@@ -144,30 +173,37 @@ class PublicacionController extends AbstractController
         try {
             $cx = $this->getDoctrine()->getManager();
             $sx = json_decode($_POST['object'], true);
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("Y-m-d H:i:s");
             
             $datadoc = $sx['datadoc'];
             $dtgrupo = $sx['grupos'];
-            foreach ($datadoc as $dc){
-                date_default_timezone_set('America/La_Paz');
-                $fecha = date("Y-m-d");
+            /*foreach ($datadoc as $dc){
                 if($dc['isform'] == 'true'){
                     $docform = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($dc['id']);
                     $docform->setFechaPublicacion(new \DateTime($fecha));
                     $cx->merge($docform);
                     $cx->flush();
                 }else{
-                    $doc = $this->getDoctrine()->getRepository(Documento::class)->find($dc['id']);
-                    $doc->setFechaPublicacion(new \DateTime($fecha));
-                    $cx->merge($doc);
-                    $cx->flush();
+                    if($dc['isdisabled'] == 'true'){
+                        $bajadoc = $this->getDoctrine()->getRepository(DocumentoBaja::class)->find($dc['id']);
+                        $bajadoc->setFechaPublicacion(new \DateTime($fecha));
+                        $cx->merge($bajadoc);
+                        $cx->flush();
+                    }else{
+                        $doc = $this->getDoctrine()->getRepository(Documento::class)->find($dc['id']);
+                        $doc->setFechaPublicacion(new \DateTime($fecha));
+                        $cx->merge($doc);
+                        $cx->flush();
+                    }
                 }
-            }
+            }*/
 
             foreach ($dtgrupo as $gp){
                 $grupo = $this->getDoctrine()->getRepository(GrupoCorreo::class)->find($gp);
                 
                 $message = (new \Swift_Message('ELFEC - Documentos en vigencia'))
-                    ->setFrom('intranet@elfec.com')
+                    ->setFrom($_SERVER['REMITENTE_CORREO'])
                     ->setTo($grupo->getCorreo())
                     ->setBody($this->renderView('mail/publicacion.html.twig', 
                         array(

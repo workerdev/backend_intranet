@@ -151,7 +151,7 @@ class DocumentoFormularioController extends AbstractController
             $id = $sx['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
             $fpb = $DocumentoFormulario->getFechaPublicacion();
-            if($fpb != null) $result = $fpb->format('Y-m-d'); else $result = $fpb;
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),
                 "codigo" => $DocumentoFormulario->getCodigo(),
@@ -182,21 +182,26 @@ class DocumentoFormularioController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
+            $s_user = $this->get('session')->get('s_user');
+            $idu = $s_user['id'];
+            $user = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['id' => $idu, 'estado' => '1']);
             $id = $_POST['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
 
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("Y-m-d H:i:s");
             $bajadoc = new DocumentoBaja();
             $bajadoc->setCodigo($DocumentoFormulario->getCodigo());
             $bajadoc->setTitulo($DocumentoFormulario->getTitulo());
             $bajadoc->setVersionvigente($DocumentoFormulario->getversionVigente());
             $bajadoc->setVinculoarchivo($DocumentoFormulario->getVinculoFileDig());
-            if($DocumentoFormulario->getFechaPublicacion() != null) $bajadoc->setFechapublicacion($DocumentoFormulario->getFechaPublicacion());
-            //$bajadoc->setCarpetaoperativa();
+
+            $bajadoc->setFechapublicacion(new \DateTime($fecha));
             $bajadoc->setEstado(1);
-            //$bajadoc->setFkproceso();
             $tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->findOneBy(['nombre' => 'Formulario']);
+
             if(!empty($tipo)) $bajadoc->setFktipo($tipo);
-            $bajadoc->setFkaprobador($DocumentoFormulario->getFkaprobador());
+            $bajadoc->setFkaprobador($user);
             $cx->persist($bajadoc);
             $cx->flush();   
 

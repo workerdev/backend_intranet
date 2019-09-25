@@ -9,17 +9,26 @@
         <td>{{ tr.fktipo.nombre }}</td>
         <td>{{ tr.titulo }}</td>
         <td>{{ tr.versionvigente }}</td>
-        <td>{{ tr.fechapublicacion | date('Y-m-d') }}</td>
+        {% if tr.fechapublicacion != null %} 
+            <td>{{ tr.fechapublicacion | date('Y-m-d H:i:s') }}</td>
+        {% else %} 
+            <td></td>
+        {% endif %}
         <td>{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
         <td>{{ tr.carpetaoperativa }}</td>
         {% if tr.vinculoarchivo != 'N/A' %}
-            <td><a href="{{ tr.vinculoarchivo }}">{{ tr.vinculoarchivo[30:] }}</a></td>
+            {% set url_file = tr.vinculoarchivo|split('/') %}
+            {% set url = '' %}
+            {% for u in url_file %}
+                {% set url = u %}
+            {% endfor %}
+            <td>{{ url }}</td>
         {% else %}
             <td>{{ tr.vinculoarchivo }}</td>
         {% endif %}
         <td align="center">
         {% if 'bajadocumento_editar' in permisos %}
-            
+            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
         {% endif %}
         {% if 'bajadocumento_eliminar' in permisos %}  
             <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>

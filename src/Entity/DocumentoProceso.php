@@ -131,9 +131,9 @@ class DocumentoProceso
     private $fkaprobador;
     
     /**
-     * @var date
+     * @var timestamp
      *
-     * @ORM\Column(name="cb_documento_proceso_fechaaprobacion", type="date", nullable=true, options={"default":null})
+     * @ORM\Column(name="cb_documento_proceso_fechaaprobacion", type="datetime", nullable=true, options={"default":null})
      */
     private $fechaaprobacion;
 

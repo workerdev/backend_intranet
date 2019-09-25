@@ -1,53 +1,71 @@
 {% for tr in objects %}
-    <tr>
-        <td class="details-control">
-            <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'dp' ~ tr.id}}"></i>
-        </td>
-        <td class="d-none">{{ tr.id }}</td>
-        {% if tr.codigonuevo != '' %}
-            <td>{{ tr.codigonuevo }}</td>
-        {% else %}
-            {% if tr.fkdocumento != null %}
-                <td>{{ tr.fkdocumento.codigo }}</td>
+    {% if tr.aprobadorechazado == null %}
+        {% set c = 0 %}
+        {% for dr in docrevision %}
+            {% if tr.id == dr.fkdoc.id and dr.estadodoc == 'PARA PUBLICAR' %}
+                {% set c = 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <tr {% if c == 1 %} style="background-color: #b2dfdb" {% endif %}>
+            <td class="details-control">
+                <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'dp' ~ tr.id}}"></i>
+            </td>
+            <td class="d-none">{{ tr.id }}</td>
+
+            {% if tr.codigonuevo != '' %}
+                <td>{{ tr.codigonuevo }}</td>
             {% else %}
-                {% if tr.fkformulario != null %}
-                    <td>{{ tr.fkformulario.codigo }}</td>
+                {% if tr.fkdocumento != null %}
+                    <td>{{ tr.fkdocumento.codigo }}</td>
                 {% else %}
-                    <td>S/A</td>
+                    {% if tr.fkformulario != null %}
+                        <td>{{ tr.fkformulario.codigo }}</td>
+                    {% else %}
+                        <td>S/A</td>
+                    {% endif %}     
                 {% endif %}     
-            {% endif %}     
-        {% endif %}   
+            {% endif %}   
 
-        <td>{{ tr.nuevoactualizacion }}</td>
-        <td>{{ tr.fkproceso.codproceso }}</td>
-        <td>{{ tr.fktipo.nombre }}</td>
+            <td>{{ tr.nuevoactualizacion }}</td>
+            <td style="white-sapce: pre-wrap">{{ tr.fkproceso.codproceso }}</td>
+            <td>{{ tr.fktipo.nombre }}</td>
+            <td>{{ tr.titulo }}</td>
+            <td>{{ tr.versionvigente }}</td>
 
-        <td>{{ tr.titulo }}</td>
-        <td>{{ tr.versionvigente }}</td>
-        <td class="d-none">{{ tr.vinculoarchivo }}</td>
+            <td class="d-none">{{ tr.vinculoarchivo }}</td>
+            <td class="d-none">{{ tr.carpetaoperativa }}</td>
+            <td class="d-none">{{ tr.aprobadorechazado }}</td>
 
-        <td class="d-none">{{ tr.carpetaoperativa }}</td>
-        <td class="d-none">{{ tr.aprobadorechazado }}</td>
-        {% if tr.fkaprobador != null %}
-            <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
-        {% else %}
-            <td class="d-none"></td>
-        {% endif %}
+            {% if tr.fkaprobador != null %}
+                <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+            {% else %}
+                <td class="d-none"></td>
+            {% endif %}
 
-        {% if tr.fechaaprobacion != null %}  
-            <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d') }}</td>
-        {% else %}
-            <td class="d-none"></td>
-        {% endif %}
-        <td align="center">
-        <button id="rev" data-json="{{tr.id}}" type="button" class="btn bg-blue waves-effect waves-light rev" title="En revisión"><i class="material-icons">receipt</i></button>
-        <button id="view" data-json="{{tr.id}}" type="button" class="btn bg-cyan waves-effect waves-light view" title="Ver Contenido"><i class="material-icons">pageview</i></button>
-        {% if 'documentoproceso_edit' in permisos %}
-            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
-        {% endif %}
-        {% if 'documentoproceso_eliminar' in permisos %}  
-            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
-        {% endif %}
-        </td>
-    </tr>
+            {% if tr.fechaaprobacion != null %}  
+                <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d H:i:s') }}</td>
+            {% else %}
+                <td class="d-none"></td>
+            {% endif %}
+            
+            <td align="center">
+            {% if 'documentoproceso_editar_revisor' in permisos and tr.id not in en_revision and c == 0 %}
+            <button id="edit-rev" data-json="{{tr.id}}" type="button" class="btn bg-teal-own waves-effect waves-light edit-rev" title="Editar revisores"><i class="material-icons icons-own">group_add</i></button>
+            {% endif %}
+            {% if tr.id in en_revision %}
+            <button id="rev" data-json="{{tr.id}}" type="button" class="btn bg-blue waves-effect waves-light rev" title="En revisión"><i class="material-icons">receipt</i></button>
+            {% endif %}
+            {% if tr.id not in en_revision %}
+            <button id="view" data-json="{{tr.id}}" type="button" class="btn bg-cyan waves-effect waves-light view" title="Ver contenido"><i class="material-icons">pageview</i></button>
+            {% endif %}
+            {% if 'documentoproceso_exportar' in permisos and tr.id not in en_revision %}
+            <button id="print" data-json="{{tr.id}}" type="button" class="btn bg-blue-own waves-effect waves-light print" title="Generar reporte"><i class="material-icons icons-own">print</i></button>
+            {% endif %}
+            {% if 'documentoproceso_eliminar' in permisos %}  
+                <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+            {% endif %}
+            </td>
+        </tr>
+    {% endif %}
 {% endfor %}

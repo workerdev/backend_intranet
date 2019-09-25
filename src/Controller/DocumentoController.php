@@ -104,12 +104,14 @@ class DocumentoController extends Controller
                 $url = str_replace("\\", "/", $ruta).'/'.$fileName;
                 $documento->setvinculodiagflujo($url);
             }
-
+            
             $documento->setCodigo($datosDocumento->getCodigo());
             $documento->setVersionvigente($datosDocumento->getVersionvigente());
             $documento->setTitulo($datosDocumento->getTitulo());
             $documento->setFechaPublicacion($datosDocumento->getFechaPublicacion());
-            $documento->setCarpetaOperativa($datosDocumento->getCarpetaOperativa());
+
+            if($datosDocumento->getCarpetaOperativa() == null) $documento->setCarpetaOperativa('');
+            else $documento->setCarpetaOperativa($datosDocumento->getCarpetaOperativa());
             $documento->setEstado(1);
             
             $proceso = new FichaProcesos();
@@ -146,6 +148,7 @@ class DocumentoController extends Controller
         $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
         return $this->render('documento/index.html.twig', array('objects' => $Documento, 'form' => $form->createView(), 'aprobador' => $aprobador, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
+
 
     /**
      * @Route("/documento_insertar", methods={"POST"}, name="documento_insertar")
@@ -205,8 +208,8 @@ class DocumentoController extends Controller
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
-
  
+
     /**
      * @Route("/documento_actualizar", methods={"POST"}, name="documento_actualizar")
      */
@@ -258,6 +261,7 @@ class DocumentoController extends Controller
         }
     }
 
+
     /**
      * @Route("/documento_editar", methods={"POST"}, name="documento_editar")
      */
@@ -268,7 +272,7 @@ class DocumentoController extends Controller
             $id = $sx['id'];
             $Documento = $this->getDoctrine()->getRepository(Documento::class)->find($id);
             $fpb = $Documento->getFechaPublicacion();
-            $result = $fpb->format('Y-m-d');
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
             $sendinf = [
                 "id" => $Documento->getId(),
                 "codigo" => $Documento->getCodigo(),
@@ -329,6 +333,7 @@ class DocumentoController extends Controller
         }
     }
 
+
     /**
      * @Route("/documento_eliminar", methods={"POST"}, name="documento_eliminar")
      */
@@ -338,6 +343,9 @@ class DocumentoController extends Controller
             $cx = $this->getDoctrine()->getManager();
             $id = $_POST['id'];
             $Documento = $this->getDoctrine()->getRepository(Documento::class)->find($id);
+            $s_user = $this->get('session')->get('s_user');
+            $idu = $s_user['id'];
+            $user = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['id' => $idu, 'estado' => '1']);
 
             $proceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('fkdocumento' => $id, 'estado' => '1'));
             $procesos = (array) $proceso;
@@ -383,17 +391,19 @@ class DocumentoController extends Controller
                 }
             }
 
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("Y-m-d H:i:s");
             $bajadoc = new DocumentoBaja();
             $bajadoc->setCodigo($Documento->getCodigo());
             $bajadoc->setTitulo($Documento->getTitulo());
             $bajadoc->setVersionvigente($Documento->getversionVigente());
             $bajadoc->setVinculoarchivo($Documento->getVinculoarchivodig());
-            if($Documento->getFechaPublicacion() != null) $bajadoc->setFechapublicacion($Documento->getFechaPublicacion());
+            $bajadoc->setFechapublicacion(new \DateTime($fecha));
             $bajadoc->setCarpetaoperativa($Documento->getCarpetaOperativa());
             $bajadoc->setEstado(1);
             $bajadoc->setFkproceso($Documento->getFkficha());
             $bajadoc->setFktipo($Documento->getFktipo());
-            $bajadoc->setFkaprobador($Documento->getFkaprobador());
+            $bajadoc->setFkaprobador($user);
             $cx->persist($bajadoc);
             $cx->flush();   
 
@@ -405,6 +415,102 @@ class DocumentoController extends Controller
                 'message' => 'Documento dado de baja correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**     
+     * @Route("/documento_tipodoc", methods={"POST"}, name="documento_tipodoc")
+     */
+    public function tipodoc()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            
+            $documentos = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1', 'fktipo' => $id), array('codigo' => 'ASC'));
+
+            $docs = array();
+            foreach ($documentos as $doc) {
+                $documento = (object) $doc;
+                $item = $this->getDoctrine()->getRepository(Documento::class)->find($documento->getId());
+                $fcpb = $documento->getFechaPublicacion();
+                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i:s'); else $result = $fcpb;
+
+                $info = [
+                    "id" => $documento->getId(),
+                    "codigo" => $documento->getCodigo(),
+                    "titulo" => $documento->getTitulo(),
+                    "versionVigente" => $documento->getversionVigente(),
+                    "vinculoarchivodig" => $documento->getVinculoarchivodig(),
+                    "vinculodiagflujo" => $documento->getVinculodiagflujo(),
+                    "fechaPublicacion" => $result,
+                    "carpetaOperativa" => $documento->getCarpetaOperativa(),
+                    "fkficha" => $documento->getFkficha(),
+                    "fktipo" => $documento->getFktipo(),
+                    "fkaprobador" => $documento->getFkaprobador()
+                ];
+                $docs[] = $info;
+            }            
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($docs, 'json');
+            $resultado = array(
+                'response'=>$json,'success' => true,
+                'message' => 'Documentos listados correctamente.'
+            );
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/documento_alldoc", methods={"POST"}, name="documento_alldoc")
+     */
+    public function alldoc()
+    {
+        try {
+            //$tipo = $this->getDoctrine()->getRepository(TipoDocumento::class)->find($id);
+            $documentos = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'), array('codigo' => 'ASC'));
+
+            $docs = array();
+            foreach ($documentos as $doc) {
+                $documento = (object) $doc;
+                $item = $this->getDoctrine()->getRepository(Documento::class)->find($documento->getId());
+                $fcpb = $documento->getFechaPublicacion();
+                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i:s'); else $result = $fcpb;
+
+                $info = [
+                    "id" => $documento->getId(),
+                    "codigo" => $documento->getCodigo(),
+                    "titulo" => $documento->getTitulo(),
+                    "versionVigente" => $documento->getversionVigente(),
+                    "vinculoarchivodig" => $documento->getVinculoarchivodig(),
+                    "vinculodiagflujo" => $documento->getVinculodiagflujo(),
+                    "fechaPublicacion" => $result,
+                    "carpetaOperativa" => $documento->getCarpetaOperativa(),
+                    "fkficha" => $documento->getFkficha(),
+                    "fktipo" => $documento->getFktipo(),
+                    "fkaprobador" => $documento->getFkaprobador()
+                ];
+                $docs[] = $info;
+            }       
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($docs, 'json');
+            $resultado = array(
+                'response'=>$json,'success' => true,
+                'message' => 'Documentos listados correctamente.'
+            );
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }

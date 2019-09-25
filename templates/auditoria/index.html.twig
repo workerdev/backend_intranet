@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-<script src="resources/js/functions.js"></script>
 <style>
     .swal2-title{
         font-size: 16px !important;
     }
-</style>
-<script>
-    main_route = '/auditoria'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
+    .txta-own{
+        background-color: rgba(40, 40, 40, .05);
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding: 4px !important;
     }
-    default_values()
-</script>
+    .modal-dialog-own{
+        width: 70%;
+    }
+    .all-w{
+        width: 100% !important;
+    }
+</style>
 {% endblock %}
+
 {% block body %}
 
 {{ include('auditoria/form.html.twig') }}
@@ -52,7 +52,7 @@
                     <th></th>
                     <th class="d-none" data-name="phone">ID </th>
                     <th class="order_by_th" data-name="names">Código </th>
-                    <th class="order_by_th" data-name="phone">Área </th>
+                    <th class="order_by_th" data-name="phone">Sector </th>
                     <th class="order_by_th" data-name="phone">Tipo </th>
                     <th class="order_by_th" data-name="phone">Fecha programada </th>
                     <th class="order_by_th" data-name="phone">Duración estimada </th>
@@ -77,20 +77,90 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+<script>
+    main_route = '/auditoria'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
-    //attach_validators()
+    var i_aud = 0; 
+    var del_aud = [];
 
+    function format (d) {
+        return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
+        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td class="bold">Alcance:</td>'+
+                '<td style="white-space: pre-wrap">'+d[8]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Objetivos:</td>'+
+                '<td style="white-space: pre-wrap">'+d[9]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Fecha/hora de inicio:</td>'+
+                '<td>'+d[10]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Fecha/hora de fin:</td>'+
+                '<td>'+d[11]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Conclusiones:</td>'+
+                '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Responsable:</td>'+
+                '<td>'+d[13]+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td class="bold">Fecha de registro:</td>'+
+                '<td>'+d[14]+'</td>'+
+            '</tr>'+
+        '</table></div>';
+    }
+ 
+    $(document).ready(function() {
+        table = $('#data_table').DataTable();
+        $('#data_table tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            let idet = 'aud'+row.data()[1];
+            if ( row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                $("#"+idet).attr('title', 'Mostrar más');
+            }
+            else {
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                $("#"+idet).attr('title', 'Ver menos');
+            }
+        });
+    });
+</script>
+
+<script>
     $('#fkarea').selectpicker({
         size: 4,
         liveSearch: true,
-        liveSearchPlaceholder: 'Buscar área.',
-        title: 'Seleccione un área.'
+        liveSearchPlaceholder: 'Buscar sector.',
+        title: 'Seleccione un sector.'
     })
 
     $('#fktipo').selectpicker({
@@ -118,9 +188,15 @@
         $('#responsable').val('')
         $('#fecharegistro').val('')
 
+        $('#fkgas').val('')
+        $('#fkgas').selectpicker('render')
+        $('#fktipo').val('')
+        $('#fktipo').selectpicker('render')
+
         clean_form()
         verif_inputs()
         $('#id_div').hide()
+        $('#conclusiones').parent().hide()
         $('#insert').show()
         $('#update').hide()
         $('#form').modal('show')
@@ -140,7 +216,7 @@
             'responsable': $('#responsable').val(),
             'fecharegistro': $('#fecharegistro').val(),
             
-            'area': $('#fkarea').val(),
+            'sector': $('#fkgas').val(),
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
@@ -150,6 +226,7 @@
 
     function attach_edit() {
         $('.edit').click(function () {
+            $('#conclusiones').parent().show()
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
@@ -161,8 +238,8 @@
                 $('#id').val(self.id)
                 $('#codigo').val(self.codigo)
                 
-                $('#fkarea').val(self.fkarea.id)
-                $('#fkarea').selectpicker('render')
+                $('#fkgas').val(self.fkgas.id)
+                $('#fkgas').selectpicker('render')
                 $('#fktipo').val(self.fktipo.id)
                 $('#fktipo').selectpicker('render')
 
@@ -285,7 +362,7 @@
             'responsable': $('#responsable').val(),
             'fecharegistro': $('#fecharegistro').val(),
             
-            'area': $('#fkarea').val(),
+            'sector': $('#fkgas').val(),
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
@@ -338,64 +415,204 @@
             }, 1000
         )
     })
-
 </script>
 <script>
-    function format (d) {
-        return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td class="bold">Alcance:</td>'+
-                '<td>'+d[8]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Objetivos:</td>'+
-                '<td>'+d[9]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha/hora de inicio:</td>'+
-                '<td>'+d[10]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha/hora de fin:</td>'+
-                '<td>'+d[11]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Conclusiones:</td>'+
-                '<td>'+d[12]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Responsable:</td>'+
-                '<td>'+d[13]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha de registro:</td>'+
-                '<td>'+d[14]+'</td>'+
-            '</tr>'+
-        '</table></div>';
-    }
- 
-    $(document).ready(function() {
-        table = $('#data_table').DataTable();
-        $('#data_table tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            let idet = 'aud'+row.data()[1];
-            if ( row.child.isShown()) {
-                row.child.hide();
-                tr.removeClass('shown');
-                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
-                $("#"+idet).attr('title', 'Mostrar más');
-            }
-            else {
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
-                $("#"+idet).attr('title', 'Ver menos');
-            }
+    $('.team').click(function () {
+        $('#idaud').parent().parent().parent().hide()
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
-    });
-</script>
+        console.log(obj)
 
+        ajax_call_get("/auditoria_editar",{
+            object: obj
+        },function(response){
+            console.log(JSON.parse(response))
+            let self = JSON.parse(response)
+
+            $('#idaud').val(self.id)
+            $('#codigoaud').val(self.codigo)
+            $('#sectoraud').val(self.fkgas.fksector.nombre)
+            
+            var del_rev = [];
+            var table = $('#table_team').DataTable({
+                language: {
+                    "url": "/resources/js/spanish.json"
+                }
+            });
+            
+            $('#form-team').modal('show')
+        })
+    })
+
+    $('#new-aud').click(function () {
+        var table = $('#table_team').DataTable();
+        i_aud++;
+        var combo_auditor = '<div class="input-field">'+
+            '<select id="auditor'+i_aud+'" name="auditores" class="auditores show-tick">';
+        var combo_tipo = '<div class="input-field">'+
+            '<select id="tipo'+i_aud+'" name="tipos" class="tipos show-tick">';
+
+        var accion = '';
+        {% for tr in auditor %}
+            combo_auditor += "<option value='"+"{{tr.id}}"+"'>"+"{{tr.nombres ~ ' ' ~ tr.paterno ~ ' ' ~ tr.materno}}"+"</option>";
+        {% endfor %}
+        combo_auditor += '</select>'+
+                    '</div>';
+        {% for t in tpauditor %}
+            combo_tipo += "<option value='"+"{{t.id}}"+"'>"+"{{t.nombre}}"+"</option>";
+        {% endfor %}
+        combo_tipo += '</select>'+
+                    '</div>';
+        accion = '<div class="col-sm-1">'+
+                '   <button id="bd'+i_aud+'" type="button" name="change-vl" class="btn bg-red waves-effect clear_auditor" data-id="'+i_aud+'" aud-id="0" title="Eliminar">'+
+                    '   <i class="material-icons">clear</i>'+
+                '   </button>'+
+                '</div>';
+
+        table.row.add([
+            $('#idaud').val(),
+            combo_auditor,
+            combo_tipo,
+            accion
+        ]).draw(false);
+        
+        $('#auditor'+i_aud).selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar auditor.',
+            title: 'Seleccione un auditor.'
+        })
+        
+        $('#tipo'+i_aud).selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo.',
+            title: 'Seleccione un tipo.'
+        }) 
+
+        $('.auditores').change(function() {
+            var valord = $(this).val()
+            var vid = $(this).prop('id')
+            $('select[name="auditores"]').each(function(){
+                if($(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
+                    swal(
+                        'Error de datos',
+                        'No puede duplicarse un auditor.',
+                        'warning'
+                    ) 
+                    $('#'+vid).val('')
+                    $('#'+vid).selectpicker('render')
+                }
+            });
+        });
+
+        $('.tipos').change(function() {
+            var valord = $(this).val()
+            var vid = $(this).prop('id')
+            var text = $(this).find(":selected").text();
+            $('select[name="tipos"]').each(function(){
+                if(text == 'AUDITOR LIDER' &&  $(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
+                    swal(
+                        'Error de datos',
+                        'No puede duplicarse el tipo.',
+                        'warning'
+                    ) 
+                    $('#'+vid).val('')
+                    $('#'+vid).selectpicker('render')
+                }
+            });
+        });
+
+        $('.auditores').parent().addClass('all-w');
+        $('.tipos').parent().addClass('all-w');
+        $('#bd'+i_aud).parent().parent().parent().attr('id', 'tr'+i_aud)
+
+        $('#table_team').on( 'click', 'tbody tr td div.col-sm-1 button.clear_auditor', function () {
+            if($(this).attr("aud-id")){
+                if(!del_aud.includes($(this).attr("aud-id"))) del_aud.push($(this).attr("aud-id"))
+            }
+
+            idrmv = $(this).attr('data-id');
+            var dltable = $('#table_team').DataTable();
+            dltable.row('#tr'+idrmv).remove().draw(false);
+        });
+    })
+
+    $('#save-team').click(function () {
+        var list_aud = [];
+        var list_type = [];
+        $("select[name=auditores]").each(function (index) { 
+            let i = $(this).val(); 
+
+            let el_crt = document.getElementById($(this).attr('id'))
+            if(el_crt.value != '') list_aud.push(i);
+        });
+        $("select[name=tipos]").each(function (index) { 
+            let i = $(this).val(); 
+
+            let tp_crt = document.getElementById($(this).attr('id'))
+            if(tp_crt.value != '') list_type.push(i);
+        });
+        if (list_aud.length == 0){
+            if (list_type.length == 0){
+                swal(
+                    'Error de datos',
+                    'Debe seleccionar los auditores y el tipo asociado',
+                    'warning'
+                )
+            }else{
+                swal(
+                    'Error de datos',
+                    'Debe seleccionar los auditores',
+                    'warning'
+                )
+            }
+        }else{
+            if (list_type.length == 0){
+                swal(
+                    'Error de datos',
+                    'Debe seleccionar los auditores y el tipo asociado',
+                    'warning'
+                )
+            }else{
+                objeto = JSON.stringify({
+                    'id': $('#idaud').val(),
+                    'auditores': list_aud,
+                    'tipos': list_type,
+                    'accion': 'insert'
+                })
+
+                var table = $('#table_team').DataTable()
+                if(table.rows().count() == list_aud.length){
+                    if(table.rows().count() == list_type.length){
+                        ajax_call_get_nwr("/equipoaud_insertar", {
+                            object: objeto
+                        }, function(msg){
+                            msg = JSON.parse(msg)
+                            datos = msg
+                            
+                            showMessage(msg.message, "success", "ok");
+                            $('#form-team').modal('hide');
+                            setTimeout(function(){window.location = main_route; }, 1000); 
+                        })
+                    }else{
+                        swal(
+                            'Error de datos',
+                            'Seleccione todos los tipos asociados a cada auditor',
+                            'warning'
+                        )
+                    }
+                    console.log(objeto)
+                }else{
+                    swal(
+                        'Error de datos',
+                        'Seleccione todos los auditores',
+                        'warning'
+                    )
+                }
+            }
+        }
+    })
+</script>
 {% endblock %}

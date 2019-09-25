@@ -142,7 +142,7 @@
                     method: "POST",
                     url: "/sesion",
                     data: {object : objeto},
-                    //async: false,
+                    async: true,
                     beforeSend: function () {
                         $("#lg-loader").fadeIn(800);
                         $("#iniciar").attr('disabled', true);
@@ -187,7 +187,7 @@
             if($('#usuario').val() == ''){
                 $('#usuario').removeClass('txt-lower');
             }else{
-                if(!$('#usuario').hasClass('txt-lower')) $('#usuario').addClass('txt-lower');
+                if($('#usuario').hasClass('txt-lower')) $('#usuario').addClass('txt-lower');
             }
         });
 
@@ -196,22 +196,6 @@
                 $('#usuario').removeClass('txt-lower');
             }else{
                 if(!$('#usuario').hasClass('txt-lower')) $('#usuario').addClass('txt-lower');
-            }
-        });
-
-        $('#password').keypress(function(){
-            if($('#password').val() == ''){
-                $('#password').removeClass('txt-lower');
-            }else{
-                if(!$('#password').hasClass('txt-lower')) $('#password').addClass('txt-lower');
-            }
-        });
-
-        $('#password').keyup(function(){
-            if($('#password').val() == ''){
-                $('#password').removeClass('txt-lower');
-            }else{
-                if(!$('#password').hasClass('txt-lower')) $('#password').addClass('txt-lower');
             }
         });
     </script>

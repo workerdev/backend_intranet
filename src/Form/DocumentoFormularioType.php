@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -40,11 +41,11 @@ class DocumentoFormularioType extends AbstractType
                 'label' => 'Versión vigente',
                 'attr' => ['class' => 'form-line form-label']
             ))
-            ->add('fechaPublicacion', DateType::class, array(
+            ->add('fechaPublicacion', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Fecha de publicación',
                 'attr' => ['class' => 'form-line form-label']
-            ))
+            ])
             ->add('vinculoFileDig', FileType::class, array(
                 'label' => 'Archivo digital',
                 'required' => false
@@ -57,7 +58,8 @@ class DocumentoFormularioType extends AbstractType
                 'class' => Documento::class,
                 'query_builder' => function (EntityRepository $dc) {
                     return $dc->createQueryBuilder('d')
-                        ->where('d.estado=1');
+                        ->where('d.estado=1')
+                        ->orderBy('d.codigo', 'ASC');
                 },
                 'choice_label' => 'codigo',
                 'label' => 'Documento',
@@ -67,7 +69,8 @@ class DocumentoFormularioType extends AbstractType
                 'class' => Usuario::class,
                 'query_builder' => function (EntityRepository $fc) {
                     return $fc->createQueryBuilder('u')
-                        ->where('u.estado=1');
+                        ->where('u.estado=1')
+                        ->orderBy('u.nombre', 'ASC');
                 },
                 'choice_label' => function ($fkaprobador) {
                     return $fkaprobador->getNombre() . ' ' . $fkaprobador->getApellido();

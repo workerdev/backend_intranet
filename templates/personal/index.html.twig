@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-<link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
         .accion{ 
             cursor:pointer 
@@ -9,21 +9,6 @@
             font-size: 20px !important;
         }
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/personal'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
 {% block body %}
 
@@ -76,9 +61,21 @@
     </div>
 {%endblock%}
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
+
+    <script>
+        main_route = '/personal'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
     <script>
     attach_validators() 

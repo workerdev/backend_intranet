@@ -1,36 +1,169 @@
 <div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog dialog-own" role="document">
+
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Documento en proceso</h3>
-                <h4 id="cliente_enable" class=""></h4>
-            </div>
-            <div class="modal-body">
-                <div id="cliente_form_body" class="box-body">
-                    {{ form(form) }}   
+            <form id="submit_data" class="new" enctype="multipart/form-data" novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 id="cliente_tittle" class="modal-title">Documento en Proceso</h3>
+                    <h4 id="cliente_enable" class=""></h4>
                 </div>
-            </div>
+
+                <div class="modal-body">
+                    <div id="cliente_form_body" class="box-body">
+                        <div id="id_div" class="form-group">
+                            <div class="form-line">
+                                <input id="id" name="id" type="text" class="form-control" disabled="disabled">
+                                <label class="form-label">Doc. ID</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row clearfix">
+                            <div class="col-sm-6">
+                                <div class="form-group form-float">
+                                    <label>Nuevo/Actualización</label>
+                                    <select id="nuevoactualizacion" name="nuevoactualizacion" class="form-control show-tick validate">
+                                        <option value="NUEVO">NUEVO</option>
+                                        <option value="ACTUALIZACION">ACTUALIZACION</option>
+                                        <option value="BAJA">BAJA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group form-float">
+                                    <label>Tipo de documento</label>
+                                    <select id="fktipo" name="fktipo" class="form-control show-tick validate">
+                                        {% for tp in tipo %}
+                                            <option value="{{ tp.id }}">{{ tp.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input id="codigonuevo" name="codigonuevo" type="text" class="form-control">
+                                <label for="codigonuevo" class="form-label">Código del documento</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <label>Cód. del documento</label>
+                            <select id="fkdocumento" name="fkdocumento" class="form-control show-tick">
+                                {% for d in documento %}
+                                    <option value="{{ d.id }}">{{ d.codigo }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="form-group form-float">
+                            <label>Código doc. formulario</label>
+                            <select id="fkformulario" name="fkformulario" class="form-control show-tick">
+                                {% for f in formulario %}
+                                    <option value="{{ f.id }}">{{ f.codigo }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="form-group form-float">
+                            <label class="form-label">Título</label>
+                            <div class="form-line">
+                                <textarea id="titulo" name="titulo" class="md-textarea form-control txta-own validate"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-sm-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input id="versionvigente" name="versionvigente" type="text" class="form-control text validate">
+                                        <label class="form-label">Versión vigente</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input id="carpetaoperativa" name="carpetaoperativa" type="text" class="form-control text">
+                                        <label class="form-label">Carpeta operativa</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-float">
+                            <label>Código del proceso</label>
+                            <select id="fkproceso" name="fkproceso" class="form-control show-tick validate">
+                                {% for p in proceso %}
+                                    <option value="{{ p.id }}">{{ p.codproceso }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Fecha</label><br>
+                                <input id="fechaaprobacion" name="fechaaprobacion" type="datetime-local" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group form-float">
+                            <label>Aprobado/Rechazado</label>
+                            <select id="aprobadorechazado" name="aprobadorechazado" class="form-control">
+                                <option value="APROBADO">APROBADO</option>
+                                <option value="RECHAZADO">RECHAZADO</option>
+                            </select>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="form-group form-float">
+                            <label>Aprobado por</label>
+                            <select id="fkaprobador" name="fkaprobador" class="form-control show-tick">
+                                {% for a in aprobador %}
+                                    <option value="{{ a.id }}">{{ a.nombre ~ ' ' ~ a.apellido }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-sm-7">
+                                <label class="form-label">Archivo digital</label>
+                                <input id="archivo" name="archivo" type="file" class="file form-control validate" width="100" />
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="spn-nwrev" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-indigo">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center inf-own">Guardando...</p>
+                    </div>
+                        
+                    <div class="modal-footer">
+                        <button id="insert" type="submit" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                        <button id="update" type="submit" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
+                    </div>
+                </div>
+            </form>
         </div>
+
     </div>
 </div>
 
-<div id="formfile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Subir Documento</h3>
-                <h4 id="cliente_enable" class=""></h4>
-            </div>
-            <div class="modal-body">
-                <div id="cliente_form_body" class="box-body">
-                    {{ form(form2) }}   
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="form-revision" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-own" role="document">
@@ -40,7 +173,7 @@
                 <h3 id="cliente_tittle" class="modal-title">Documento en proceso</h3>
             </div>
             <div class="modal-body">
-                <div class="card pd-own">
+                <div class="pd-own">
                 <div id="cliente_form_body" class="box-body">
                     <div class="container">
                         <div class="row justify-content-md-center">
@@ -55,8 +188,8 @@
                             <div class="col col-lg-5">
                                 <div class="form-group form-float">
                                     <div class="">
-                                        <label class="form-label">Nuevo o actualización</label>
-                                        <input id="nuevooactualizacion" name="nuevooactualizacion" type="text" class="form-control" readonly autofocus>
+                                        <label class="form-label">Nuevo, baja o actualización</label>
+                                        <input id="nuevooactualizacion" name="nuevooactualizacion" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +197,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Código del documento</label>
-                                        <input id="codigodocumento" name="codigodocumento" type="text" class="form-control" readonly autofocus>
+                                        <input id="codigodocumento" name="codigodocumento" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +207,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Código de proceso</label>
-                                        <input id="codigoproceso" name="codigoproceso" type="text" class="form-control" readonly autofocus>
+                                        <input id="codigoproceso" name="codigoproceso" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +215,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Título</label>
-                                        <input id="titulodoc" name="titulodoc" type="text" class="form-control" readonly autofocus>
+                                        <input id="titulodoc" name="titulodoc" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +223,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Tipo de documento</label>
-                                        <input id="tipodocumento" name="tipodocumento" type="text" class="form-control" readonly autofocus>
+                                        <input id="tipodocumento" name="tipodocumento" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +233,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Versión</label>
-                                        <input id="versiondoc" name="versiondoc" type="text" class="form-control" readonly autofocus>
+                                        <input id="versiondoc" name="versiondoc" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +241,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Vínculo archivo digital</label>
-                                        <input id="vinculoarchivodig" name="vinculoarchivodig" type="text" class="form-control" readonly autofocus>
+                                        <input id="vinculoarchivodig" name="vinculoarchivodig" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +249,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Carpeta operativa</label>
-                                        <input id="carpetaop" name="carpetaop" type="text" class="form-control" readonly autofocus>
+                                        <input id="carpetaop" name="carpetaop" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +259,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Aprobado o rechazado</label>
-                                        <input id="aproborec" name="aproborec" type="text" class="form-control" readonly autofocus>
+                                        <input id="aproborec" name="aproborec" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +267,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Aprobado por</label>
-                                        <select id="aprobadordoc" name="aprobadordoc" class="form-control" autofocus required>
+                                        <select id="aprobadordoc" name="aprobadordoc" class="form-control show-tick" autofocus required>
                                         {% for tr in aprobador %}
                                             <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
                                         {% endfor %}
@@ -146,7 +279,7 @@
                                 <div class="form-group form-float">
                                     <div class="">
                                         <label class="form-label">Fecha aprobación</label>
-                                        <input id="faprobacion" name="faprobacion" type="text" class="form-control" readonly autofocus>
+                                        <input id="faprobacion" name="faprobacion" type="text" class="form-control" autofocus readonly>
                                     </div>
                                 </div>
                             </div>
@@ -155,13 +288,15 @@
                 </div>
                 </div>
 
-                <div class="card pd-own">
-                <button id="new-rev" type="button" class="btn bg-teal waves-effect" title="Agregar revisión">
+                <hr  width="100%" style="height: 3px; background-color: lightseagreen" noshade>
+
+                <div class="pd-own">
+                <button id="new-rev" type="button" class="btn bg-teal waves-effect" title="Agregar revisor">
                     <i class="material-icons">assignment_ind</i>
                 </button>
                 
                 <h4 id="cliente_enable" class="">Detalle en Proceso de Revisión</h4>
-                <table id="table_revision" class="table table-bordered table-striped table-hover js-basic-example dataTable" style="width:100%">
+                <table id="table_revision" class="table table-bordered table-striped table-hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID. Revisión</th>
@@ -169,6 +304,7 @@
                             <th>Responsable Revisión</th>
                             <th>Estado</th>
                             <th>Firma Electrónica</th>
+                            <th id="row-del">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,17 +313,34 @@
                 </table>
                 </div>
 
+                <div id="spn-addrv" class="loader-wrapper" style="display: none">
+                    <div class="loader loader-own">
+                        <div class="preloader preloader-own">
+                            <div class="spinner-layer pl-indigo">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center inf-own">Guardando...</p>
+                </div>
+
                 <div class="modal-footer">
-                    {% if 'documentoproceso_aprobar' in permisos %}
-                        <button id="aprobar-rev" type="button" class="btn bg-blue waves-effect">APROBADO <i class="material-icons">assignment_turned_in</i></button>
+                    {% if 'documentoproceso_publicar' in permisos %}
+                        <button id="aprobar-rev" type="button" class="btn bg-blue waves-effect">PUBLICAR <i class="material-icons">assignment_turned_in</i></button>
+                    {% endif %}
+                    {% if 'documento_eliminar' in permisos %}
+                        <button id="bajadoc-rev" type="button" class="btn bg-blue-own waves-effect icons-own">BAJA DOC. <i class="material-icons icons-own">assignment_returned</i></button>
                     {% endif %}
                     <button id="insert-rev" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                    <button id="update-rev" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">group</i></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+ 
 <div id="form-rev" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-validate" role="document" style="width: 85% !important">
         <div class="modal-content">
@@ -196,13 +349,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 id="cliente_tittle" class="modal-title">Documentos derivados</h3>
                 <h4 id="cliente_enable" class=""></h4>
-                <div id="cmb-drv" class="form-group form-float">
-                    
-                </div> 
             </div>
             <div class="modal-body">
                 <div class="body table-responsive">
-                    <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                    <table id="data_table" class="table table-bordered table-striped table-hover" style="width:100%">
                         <thead>
                         <tr>
                             <th class="order_by_th" data-name="phone">Fecha </th>
@@ -216,7 +366,7 @@
                         <tbody id="table_content">
                             {% for v in docderiv %}
                                 <tr>
-                                    <td>{{ v.fecha | date('d-m-Y') }}</td>
+                                    <td>{{ v.fecha | date('d-m-Y H:i:s') }}</td>
                                     {% if v.fkdoc != null %}
                                         <td>{{ v.fkdoc.nuevoactualizacion }}</td>
                                     {% else %}
@@ -224,7 +374,7 @@
                                     {% endif %}
 
                                     {% if v.fkdoc != null %}
-                                        {% if v.fkdoc.fkdocumento != null %}
+                                        {% if v.fkdoc.fkdocumento != null and v.fkdoc.codigonuevo == null %}
                                             <td>{{ v.fkdoc.fkdocumento.codigo }}</td>
                                         {% else %}
                                             {% if v.fkdoc.fkformulario != null %}
@@ -241,11 +391,11 @@
                                     <td>{{ v.fkdoc.titulo }}</td>
                                     <td align="center">
                                     {% if v.fkdoc.fkaprobador.id == profile.id %}
-                                        <button id="apdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-cyan waves-effect waves-light apdoc" title="Aprobar"><i class="material-icons">done</i> Aprobar</button> 
+                                        <button id="apdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-cyan waves-effect waves-light apdoc"><i class="material-icons">done</i> Aprobar</button> 
                                     {% else %}
-                                        <button id="drdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-light-green waves-effect waves-light drdoc" title="Derivar"><i class="material-icons">send</i> Derivar</button>
+                                        <button id="drdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-light-green waves-effect waves-light drdoc"><i class="material-icons">send</i> Derivar</button>
                                     {% endif %}
-                                        <button id="rcdoc" data-json="{{v.id}}" type="button" class="btn btn-small bg-blue waves-effect waves-light rcdoc" title="Rechazar"><i class="material-icons">clear</i> Rechazar</button>
+                                        <button id="rcdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-blue waves-effect waves-light rcdoc"><i class="material-icons">clear</i> Rechazar</button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -267,90 +417,288 @@
 </div>
 
 
-
 <div id="form-valid" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog dialog-confirm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Confirmar acción</h3>
+                <h3 id="cliente_tittle" class="modal-title">Datos del documento</h3>
                 <h4 id="cliente_enable" class=""></h4>
             </div>
-            <div id="msgv" class="text-center" style="background-color: rgba(0, 02, 204, .2); margin: 10px; padding: 10px; color: grey; display: none" role="alert"></div>
+        
             <div class="modal-body">
-                <div id="cnfdc_form_body" class="box-body">
-                    <div class="input-group">
-                        <div class="form-line">
-                            <input type="password" class="form-control" id="clave" name="clave" placeholder="Contraseña" required>
+                <div class="pd-own">
+                    <div id="cliente_form_body" class="box-body">
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Próximo revisor</label>
+                                            <input id="infrev" name="infrev" type="text" class="form-control" autofocus readonly>
+                                            <input id="dresponsable" name="dresponsable" type="hidden">
+                                            <input id="vld-proc" name="vld-proc" type="hidden">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Nuevo, baja o actualización</label>
+                                            <input id="infnewupd" name="infnewupd" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código del documento</label>
+                                            <input id="infcod" name="infcod" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código de proceso</label>
+                                            <input id="infcpro" name="infcpro" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-6">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Título</label>
+                                            <textarea id="inftitulo" name="inftitulo" type="text" class="form-control txta-own" autofocus readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Tipo de documento</label>
+                                            <input id="inftipo" name="inftipo" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-6">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Vínculo archivo digital</label>
+                                            <input id="infvinculo" name="infvinculo" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <span class="input-group-addon" id="cdc-pass" style="cursor: pointer;" title="Mostrar">
-                            <i class="material-icons" style="color: grey" id="ic-dpass">visibility_off</i>
-                        </span>
-                    </div>  
-                </div>
 
-                <div class="modal-footer">
-                    <button id="confirm" type="button" class="btn bg-green waves-effect">Enviar <i class="material-icons">lock_open</i></button>
-                </div>
+                        <h5 id="cliente_enable" class="">Detalle en Proceso de Revisión</h5>
+                        <table id="table_inforev" class="table table-bordered table-striped table-hover" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID. Revisión</th>
+                                    <th>Fecha Recibido</th>
+                                    <th>Responsable Revisión</th>
+                                    <th>Estado</th>
+                                    <th>Firma Electrónica</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-            </div>
-        </div>
-    </div>
-</div>
+                            </tbody>
+                        </table>
+                        
+                        <hr class="continer-fluid" width="100%" style="height: 3px; background-color: lightseagreen" noshade>
 
+                        <h5 id="cliente_enable" class="">Firma revisor - Confirmar acción</h5>
+                        <div id="msgv" class="text-center" style="background-color: rgba(30, 136, 229, .8); margin: 10px; padding: 10px; color: white; display: none" role="alert"></div>
+                        <div id="cnfdc_form_body" class="box-body">
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="password" class="form-control" id="clave" name="clave" placeholder="Contraseña" required>
+                                </div>
+                                <span class="input-group-addon" id="cdc-pass" style="cursor: pointer;" title="Mostrar">
+                                    <i class="material-icons" style="color: grey" id="ic-dpass">visibility_off</i>
+                                </span>
+                            </div>  
+                        </div>
 
+                        <div id="spn-valid" class="loader-wrapper" style="display: none">
+                            <div class="loader loader-own">
+                                <div class="preloader preloader-own">
+                                    <div class="spinner-layer pl-indigo">
+                                        <div class="circle-clipper left"><div class="circle"></div></div>
+                                        <div class="circle-clipper right"><div class="circle"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-center inf-own">Verificando...</p>
+                        </div>
 
-<div id="form-register" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Documento Aprobado</h3>
-                <h4 id="cliente_enable" class=""></h4>
-            </div>
-            <div class="modal-body">
-                <div id="cnfdc_form_body" class="box-body">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="vinculodiagf" name="vinculodiagf" type="text" class="form-control text">
-                            <label class="form-label">Vínculo diagrama flujo</label>
+                        <div class="modal-footer">
+                            <button id="confirm" type="button" class="btn bg-green waves-effect">Enviar <i class="material-icons">lock_open</i></button>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label="form-label">Código de documento</label>
-                            <select id="documento" name="documento" class="form-control" autofocus required>
-                            {% for d in documento %}
-                                <option value="{{d.id}}">{{d.codigo}}</option>
-                            {% endfor %}
-                            </select>
-                        </div>
-                    </div>  
                 </div>
-
-                <div class="modal-footer">
-                    <button id="btn-rgaprob" type="button" class="btn bg-teal waves-effect">Aprobar <i class="material-icons">check_circle</i></button>
-                </div>
-
             </div>
         </div>
     </div>
 </div>
 
 
-<div id="filepdf" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div id="form-file" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog dialog-own" role="document">
+
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Aprobar Documento</h3>
-                <h4 id="cliente_enable" class=""></h4>
-            </div>
-            <div class="modal-body">
-                <div id="cliente_form_body" class="box-body">
-                    {{ form(formfile) }}   
+            <form id="submit_file" class="new" enctype="multipart/form-data" novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 id="cliente_tittle" class="modal-title">Documento en revisión</h3>
+                    <h4 id="cliente_enable" class=""></h4>
                 </div>
-            </div>
+
+                <div class="modal-body">
+                    <div id="cliente_form_body" class="box-body">
+                        <div id="id_dv" class="form-group hidden">
+                            <div class="form-line">
+                                <input id="idrv" name="idrv" type="hidden" class="form-control">
+                                <label class="form-label">Doc. ID</label>
+                                <input id="revfl" name="revfl" type="hidden">
+                                <input id="infproc" name="infproc" type="hidden">
+                                <input id="urlserver" name="urlserver" type="hidden">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p>Por favor, marque abajo para subir el archivo modificado.</p>
+
+                            <li class="list-unstyled">
+                                <i class="material-icons">insert_drive_file</i>
+                                <input id="op_upload" name="op_upload" type="checkbox" class="chk-col-deep-purple" >
+                                <label id="check_upload" for="op_upload">Habilitar subida de documento</label>
+                            </li>
+                        </div>
+
+                        <div id="dv-updfl" class="row clearfix" style="display: none">
+                            <div class="col-sm-7">
+                                <p id="infdocp">Info. doc.</p>
+                                <label class="form-label" for="archivodig">Archivo digital</label>
+                                <input id="archivodig" name="archivodig" type="file" class="file form-control" width="100" />
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="spn-fileup" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-indigo">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center inf-own">Guardando...</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="insertfl" type="submit" class="btn bg-teal-own waves-effect icons-own">Continuar <i class="material-icons icons-own">cloud_done</i></button>
+                    </div>
+                </div>
+
+            </form>
         </div>
+
+    </div>
+</div>
+
+
+<div id="form-rgdoc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <form id="submit_frev" class="new" enctype="multipart/form-data" novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 id="finalrev_title" class="modal-title">Documento Aprobado</h3>
+                    <h4 id="finalrev_enable" class=""></h4>
+                </div>
+
+                <div class="modal-body">
+                    <div id="cliente_form_body" class="box-body">
+                        <div id="id_div" class="form-group">
+                            <div class="form-line">
+                                <input id="idfr" name="idfr" type="hidden" class="form-control">
+                                <input id="accion" name="accion" type="hidden">
+                                <label class="form-label">Doc. ID</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                <label id="lblvin" class="form-label" style="padding-right: 14px">Vínculo</label>
+                                <input id="vinculo" name="vinculo" type="hidden">
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-sm-7">
+                                <label id="lblfa" class="form-label">Archivo</label>
+                                <input id="archivoadd" name="archivoadd" type="file" class="file form-control validate" width="100" />
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                        
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <div class="form-group form-float">
+                                    <label class="form-label">Código de documento</label>
+                                    <select id="documento" name="documento" class="form-control show-tick" autofocus required>
+                                    {% for d in documento %}
+                                        <option value="{{d.id}}">{{d.codigo}}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-sm-7">
+                                <label class="form-label">Archivo PDF</label>
+                                <input id="archivopdf" name="archivopdf" type="file" class="file form-control validate" width="100" />
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="spn-fnrev" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-indigo">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center inf-own">Guardando...</p>
+                    </div>
+                        
+                    <div class="modal-footer">
+                        <button id="btn-pub" type="submit" class="btn bg-teal-own waves-effect icons-own">Aprobar <i class="material-icons icons-own">check_circle</i></button>
+                        <button id="btn-rmv" type="submit" class="btn bg-deep-orange waves-effect">Eliminar <i class="material-icons">remove_circle</i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>

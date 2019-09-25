@@ -132,9 +132,6 @@ class SecurityController extends AbstractController
             $attributes = ['givenName' /*Nombres*/, 'sn' /*appellidos*/, 'mail' /*email*/, 'name' /*primernombre*/, 'physicalDeliveryOfficeName' /* cargo */, 'sAMAccountName' /*login*/, 'userPrincipalName' /*loginparaloguear@elfec.com*/];
             $query = $ldap->query('DC=elfec,DC=com', 'sAMAccountName=' . $usuario, ['filter' => $attributes]);
             $results = $query->execute();
-
-            $dt_aux = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('estado' => '1', 'username' => $usuario));
-            if(!empty($dt_aux)) $process = 'username';
         
             foreach ($results as $entry) {
                 $entry; // Do something with the results
@@ -147,9 +144,11 @@ class SecurityController extends AbstractController
                 if ($ayudanombre = array_key_exists("sAMAccountName", $data['attributes'])) {
                     if ($usuario == $data['attributes']['sAMAccountName'][0]) {
                         $dn = $data['dn'];
+                        $usuariob = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username' => $usuario));
+			            if(!empty($usuariob)) $process = 'username';
                         $ldap->bind($dn, $pass);
 
-                        $usuariob = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1', 'username' => $usuario));
+
                         $cx = $this->getDoctrine()->getManager();
 
                         $encoders = [new XmlEncoder(), new JsonEncoder()];
@@ -320,24 +319,6 @@ class SecurityController extends AbstractController
         }finally {
             switch ($process) {
                 case "connect":
-                    $ldap_msg = "The LDAP PHP extension is not enabled.";
-                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                    $resultado = array('response' => "error", 'success' => false,
-                        'message' => 'error', 'ldap_msg' => $translator->trans($ldap_msg), 'info' => '', 'process' => $process);
-                    $resultado = json_encode($resultado);
-
-                    return new Response($resultado);
-                    break;
-                case "validate":
-                    $ldap_msg = "Error al consultar los datos del AD";
-                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                    $resultado = array('response' => "error", 'success' => false,
-                        'message' => 'error', 'ldap_msg' => $translator->trans($ldap_msg), 'info' => '', 'process' => $process);
-                    $resultado = json_encode($resultado);
-
-                    return new Response($resultado);
-                    break;
-                case "username":
                     $ldap_msg = "Password incorrecto";
                     $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                     $resultado = array('response' => "error", 'success' => false,

@@ -56,7 +56,8 @@ class DocumentoExtraType extends AbstractType
                 'class' => FichaProcesos::class,
                 'query_builder' => function (EntityRepository $fc) {
                     return $fc->createQueryBuilder('f')
-                        ->where('f.estado=1');
+                        ->where('f.estado=1')
+                        ->orderBy('f.codproceso', 'ASC');
                 },
                 'choice_label' => 'codproceso',
                 'label' => 'Proceso',
@@ -66,7 +67,8 @@ class DocumentoExtraType extends AbstractType
                 'class' => DocTipoExtra::class,
                 'query_builder' => function (EntityRepository $tp) {
                     return $tp->createQueryBuilder('t')
-                        ->where('t.estado=1');
+                        ->where('t.estado=1')
+                        ->orderBy('t.tipo', 'ASC');
                 },
                 'choice_label' => 'tipo',
                 'label' => 'Tipo de documento',

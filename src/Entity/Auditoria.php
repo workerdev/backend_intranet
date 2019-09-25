@@ -32,15 +32,15 @@ class Auditoria
     private $codigo;
     
     /**
-     * @var \area
+     * @var \gas
      *
      * @ORM\ManyToOne(targetEntity="GerenciaAreaSector")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_auditoria_fkarea", referencedColumnName="cb_gas_id")
+     *   @ORM\JoinColumn(name="cb_auditoria_fkgas", referencedColumnName="cb_gas_id")
      * })
      * @Assert\NotBlank
      */
-    private $fkarea;
+    private $fkgas;
     
     /**
      * @var \tipo
@@ -97,7 +97,7 @@ class Auditoria
     private $objetivos;
 
     /**
-     * @var datetime
+     * @var timestamp
      *
      * @ORM\Column(name="cb_auditoria_fechahorainicio", type="datetime", nullable=false)
      * @Assert\NotBlank
@@ -105,7 +105,7 @@ class Auditoria
     private $fechahorainicio;
 
     /**
-     * @var datetime
+     * @var timestamp
      *
      * @ORM\Column(name="cb_auditoria_fechahorafin", type="datetime", nullable=true)
      * @Assert\NotBlank
@@ -116,7 +116,6 @@ class Auditoria
      * @var string
      *
      * @ORM\Column(name="cb_auditoria_conclusiones", type="text", nullable=true)
-     * @Assert\NotBlank
      */
     private $conclusiones;
     
@@ -168,14 +167,14 @@ class Auditoria
         return $this;
     }  
 
-    public function getFkarea(): ?GerenciaAreaSector
+    public function getFkgas(): ?GerenciaAreaSector
     {
-        return $this->fkarea;
+        return $this->fkgas;
     }
 
-    public function setFkarea(?GerenciaAreaSector $fkarea): self
+    public function setFkgas(?GerenciaAreaSector $fkgas): self
     {
-        $this->fkarea = $fkarea;
+        $this->fkgas = $fkgas;
 
         return $this;
     }  

@@ -88,7 +88,9 @@ class DocumentoBajaController extends Controller
             $docbaja->setTitulo($datosDocumento->getTitulo());
             $docbaja->setVersionvigente($datosDocumento->getVersionvigente());
             $docbaja->setFechapublicacion($datosDocumento->getFechapublicacion());
-            $docbaja->setCarpetaoperativa($datosDocumento->getCarpetaoperativa());
+
+            if($datosDocumento->getCarpetaOperativa() == null) $docbaja->setCarpetaOperativa('');
+            else $docbaja->setCarpetaoperativa($datosDocumento->getCarpetaoperativa());
             $docbaja->setEstado(1);
             
             $ficha = new FichaProcesos();
@@ -137,7 +139,7 @@ class DocumentoBajaController extends Controller
             $id = $sx['id'];
             $bajadocumento = $this->getDoctrine()->getRepository(DocumentoBaja::class)->find($id);
             $fpb = $bajadocumento->getFechapublicacion();
-            $result = $fpb->format('Y-m-d');
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
             $sendinf = [
                 "id" => $bajadocumento->getId(),
                 "codigo" => $bajadocumento->getCodigo(),

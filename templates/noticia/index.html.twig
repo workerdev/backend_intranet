@@ -8,20 +8,6 @@
         font-size: 16px !important;
     }
 </style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/noticia'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
 {% endblock %}
 {% block body %}
 
@@ -63,10 +49,21 @@
 </div>
 {%endblock%}
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 <script src="resources/plugins/tinymce/tinymce.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/noticia'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     //TinyMCE
@@ -125,8 +122,12 @@
         $('#titulo').val('')
         $('#subtitulo').val('')
         $('#contenido').val('')
-        $("#tipo").val('')
         $("#fecha").val('')
+
+        $('input:checkbox').attr('checked', false);
+        $('#tipo').val('')
+        $('#tipo').selectpicker('render')
+
 
         clean_form()
         verif_inputs()
@@ -142,7 +143,7 @@
         var categorias =  new Array();
         $('.categoria:checked').each(
             function() {
-                console.log("El checkbox con valor " + $(this).val() + " está seleccionado");
+                //console.log("El checkbox con valor " + $(this).val() + " está seleccionado");
                 categorias.push($(this).val());
             }
         );
@@ -168,14 +169,27 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
+                //console.log(self)
+
+                if (self.tipo == 'Urgente' || self.tipo == 'Destacados') $('#cont-tpnt').hide()
+                else $('#cont-tpnt').show()
+
                 $('#id').val(self.id)
                 $('#titulo').val(self.titulo)
                 $('#subtitulo').val(self.subtitulo)
+
                 $('#tipo').val(self.tipo)
+                $('#tipo').selectpicker('render')
+
                 $('#fecha').val(self.fecha)
 
                 tinyMCE.get('contenido').setContent(self.contenido)
                 $("#contenido").html(self.contenido)
+                
+                for (const prop in self.categorias) {
+                    let idrs = self.categorias[prop].fkcategoria.id;
+                    $('#'+idrs).attr('checked', true);
+                }
 
                 clean_form()
                 verif_inputs()

@@ -7,7 +7,7 @@
     <td>{{ t.codigo }}</td>
     <td>{{ t.titulo }}</td>
     <td>{{ t.versionVigente }}</td>
-    <td>{{ t.fechaPublicacion | date('Y-m-d')  }}</td>
+    <td>{{ t.fechaPublicacion | date('Y-m-d H:i:s')  }}</td>
     <td class="d-none">{{ t.fkaprobador.nombre ~ ' ' ~ t.fkaprobador.apellido }}</td>
     {% if t.fkdocumento != null %} 
     <td>{{ t.fkdocumento.codigo }}</td>

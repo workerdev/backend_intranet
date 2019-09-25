@@ -56,7 +56,7 @@ class SeguimientoCro
     /**
     * @var string
     *
-    * @ORM\Column(name="cb_seguimientocro_observaciones", type="string", length=300, nullable=false)
+    * @ORM\Column(name="cb_seguimientocro_observaciones", type="text", nullable=false)
      * @Assert\NotBlank
     */
     private $observaciones;

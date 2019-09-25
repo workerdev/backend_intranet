@@ -42,10 +42,6 @@
     </div>
 {%endblock%}
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-    
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
     <script>
@@ -64,18 +60,7 @@
     <script>
     attach_validators()
 
-    function init(){
-        /*var rutas = document.getElementsByClassName('ruta');
-        //console.log(rutas.length)
-        for (let i = 0; i < rutas.length; i++) {
-            var ruta = rutas[i];
-            var src = ruta.getAttribute('src');
-            //console.log(src+"")
-            var rutaCortada = src.split('public')
-            //console.log(rutaCortada[1])
-            rutas[i].setAttribute('src',rutaCortada[1]+"");
-        }*/
-    };
+    function init(){ };
 
     function view_image(object) {
         /*console.log(object)            

@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\DocumentoProceso;
 
 class ReportingController extends AbstractController
 {
@@ -999,6 +1001,74 @@ class ReportingController extends AbstractController
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+    
+    /**
+     * @Route("/docproceso_reporte", methods={"POST"}, name="docproceso_reporte")
+     */
+    public function reporte()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $documento = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($id);
+
+            $dprocrevision = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(['fkdoc' => $id, 'estado' => '1'], ['id' => 'ASC']);
+            $docs = array();
+            foreach ($dprocrevision as $docprocrev) {
+                $fpb = $docprocrev->getFecha();
+                if ($fpb != null) {
+                    $result = $fpb->format('Y-m-d H:i:s');
+                } else {
+                    $result = $fpb;
+                }
+
+                $sendinf = [
+                    "id" => $docprocrev->getId(),
+                    "fecha" => $result,
+                    "fkresponsable" => $docprocrev->getFkresponsable(),
+                    "firma" => $docprocrev->getFirma(),
+                    "estadodoc" => $docprocrev->getEstadodoc(),
+                    "fkdoc" => $docprocrev->getFkdoc(),
+                ];
+                $docs[] = $sendinf;
+            }     
+            $elementos = array('doc_proceso' => $documento, 'en_revision' => $docs);
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("Y-m-d H:i:s");
+
+            $prove = array(
+                'doc' => $elementos,
+                'adicional' => array('fecha' => $fecha, 'dominio' => $_SERVER['HTTP_HOST'], 'logo' => '/resources/images/h_color_lg.png'),
+            );
+            
+            $html = $this->renderView('reporting/documentoproc.html.twig', array('doc' => $elementos));
+
+            $pdfOptions = new Options();
+            $pdfOptions->set('defaultFont', 'Arial');
+           
+            $dompdf = new Dompdf($pdfOptions);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('Letter', 'portrait');
+            $dompdf->render();
+            $output = $dompdf->output();
+            
+            $publicDirectory = $this->getParameter('Directorio_Reportes');
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("dmY_his");
+            $pdfFilepath =  $publicDirectory . '/DocumentoProceso_'.$fecha.'.pdf';
+            file_put_contents($pdfFilepath, $output);
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize('Reporte guardado!', 'json');
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/DocumentoProceso_'.$fecha.'.pdf');
+
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -48,20 +49,22 @@ class DocumentoType extends AbstractType
                 'label' => 'Diagrama de flujo',
                 'required' => false
             ))
-            ->add('fechaPublicacion', DateType::class, array(
+            ->add('fechaPublicacion', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Fecha de publicación',
                 'attr' => ['class' => 'form-line form-label']
-            ))
+            ])
             ->add('carpetaOperativa', NumberType::class, array(
                 'label' => 'Carpeta operativa',
-                'attr' => ['class' => 'form-line form-label']
+                'attr' => ['class' => 'form-line form-label'],
+                'required' => false
             ))
             ->add('fkficha', EntityType::class, array(
                 'class' => FichaProcesos::class,
                 'query_builder' => function (EntityRepository $fp) {
                     return $fp->createQueryBuilder('f')
-                        ->where('f.estado=1');
+                        ->where('f.estado=1')
+                        ->orderBy('f.codproceso', 'ASC');
                 },
                 'choice_label' => 'codproceso',
                 'label' => 'Proceso',
@@ -71,7 +74,8 @@ class DocumentoType extends AbstractType
                 'class' => TipoDocumento::class,
                 'query_builder' => function (EntityRepository $tp) {
                     return $tp->createQueryBuilder('t')
-                        ->where('t.estado=1');
+                        ->where('t.estado=1')
+                        ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Tipo de documento',
@@ -81,7 +85,8 @@ class DocumentoType extends AbstractType
                 'class' => Usuario::class,
                 'query_builder' => function (EntityRepository $fc) {
                     return $fc->createQueryBuilder('u')
-                        ->where('u.estado=1');
+                        ->where('u.estado=1')
+                        ->orderBy('u.nombre', 'ASC');
                 },
                 'choice_label' => function ($fkaprobador) {
                     return $fkaprobador->getNombre() . ' ' . $fkaprobador->getApellido();

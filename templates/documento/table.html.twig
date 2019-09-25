@@ -10,7 +10,7 @@
         <td class="d-none">{{ tr.vinculoarchivodig }}</td>
         <td class="d-none">{{ tr.vinculodiagflujo }}</td>
         <td class="d-none">{{ tr.carpetaOperativa }}</td>
-        <td class="d-none">{{ tr.fechaPublicacion | date('Y-m-d')  }}</td>
+        <td class="d-none">{{ tr.fechaPublicacion | date('Y-m-d H:i:s')  }}</td>
         <td>{{ tr.fkficha.codproceso }}</td>
         <td>{{ tr.fktipo.nombre }}</td>
         {% if tr.fkaprobador.estado == 2 %}

@@ -70,9 +70,9 @@ class DocumentoBaja
     private $versionvigente;
     
     /**
-     * @var date
+     * @var timestamp
      *
-     * @ORM\Column(name="cb_bajadocumento_fechapublicacion", type="date", nullable=true)
+     * @ORM\Column(name="cb_bajadocumento_fechapublicacion", type="datetime", nullable=true)
      * @Assert\NotBlank
      */
     private $fechapublicacion;
@@ -92,7 +92,6 @@ class DocumentoBaja
      * @var string
      *
      * @ORM\Column(name="cb_bajadocumento_carpetaoperativa", type="string", length=10, nullable=true)
-     * @Assert\NotBlank
      */
     private $carpetaoperativa;
 

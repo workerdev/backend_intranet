@@ -5364,7 +5364,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.WR3AQJQ" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.3FFBWiy" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="mailer" type="service" id="swiftmailer.mailer.default"/>
@@ -5390,13 +5390,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.3FFBWiy" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="mailer" type="service" id="swiftmailer.mailer.default"/>
-      </argument>
-    </service>
-    <service id=".service_locator.h0FTSCT" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.TDpIBhO" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccidentesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5415,6 +5409,7 @@
         <argument key="App\Controller\AuditoriaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaEquipoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\AuditoriaEquipoController::insert_group" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaEquipoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\CatalogoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\CatalogoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5435,9 +5430,9 @@
         <argument key="App\Controller\DocumentoAdicionalController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController::index" type="service" id=".service_locator.WR3AQJQ"/>
-        <argument key="App\Controller\DocumentoProcesoController::insertar" type="service" id=".service_locator.l9E.02_"/>
-        <argument key="App\Controller\DocumentoProcesoController::insertaraprob" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocumentoProcesoController::actualizar_rev" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\DocumentoProcesoController::insertar_rev" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\DocumentoProcesoController::uploadfile" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\DocumentosAsoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoCorrelativoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5560,6 +5555,7 @@
         <argument key="App\Controller\AuditoriaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaEquipoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\AuditoriaEquipoController:insert_group" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AuditoriaEquipoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\CatalogoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\CatalogoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5580,9 +5576,9 @@
         <argument key="App\Controller\DocumentoAdicionalController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoAdicionalController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\DocumentoProcesoController:index" type="service" id=".service_locator.WR3AQJQ"/>
-        <argument key="App\Controller\DocumentoProcesoController:insertar" type="service" id=".service_locator.l9E.02_"/>
-        <argument key="App\Controller\DocumentoProcesoController:insertaraprob" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\DocumentoProcesoController:actualizar_rev" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\DocumentoProcesoController:insertar_rev" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\DocumentoProcesoController:uploadfile" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\DocumentosAsoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\DocumentosAsoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\EstadoCorrelativoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5910,7 +5906,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.h0FTSCT"/>
+      <argument type="service" id=".service_locator.TDpIBhO"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -6545,7 +6541,7 @@
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker" public="false"/>
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.h0FTSCT"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.TDpIBhO"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>

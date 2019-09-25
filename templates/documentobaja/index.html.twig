@@ -3,21 +3,6 @@
     <style>
         .accion{ cursor:pointer }
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/bajadocumento'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()    
-    </script>
 {% endblock %}
 {% block body %}
 
@@ -27,12 +12,12 @@
     <div class="body">
         <div class="row clearfix">
             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'bajadocumento_insertar' in permisos %}
+            {% if 'bajadocumentos_insertar' in permisos %}
                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                     <i class="material-icons">add</i>
                 </button>
-            </div>
             {% endif %}
+            </div>
         </div>
         {% if 'home_bajadocumento' in permisos and objects %}
             <div class="row">
@@ -45,7 +30,7 @@
                             <th class="order_by_th" data-name="phone">Tipo </th>
                             <th class="order_by_th" data-name="phone">Titulo </th>
                             <th class="order_by_th" data-name="phone">Versión </th>
-                            <th class="order_by_th" data-name="phone">Fecha publicación </th>
+                            <th class="order_by_th" data-name="phone">Fecha de baja </th>
                             <th class="order_by_th" data-name="phone">Aprobado por </th>
                             <th class="order_by_th" data-name="phone">Carpeta operativa </th>
                             <th class="order_by_th" data-name="phone">Vínculo del archivo </th>
@@ -68,9 +53,22 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
     <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
+
+    <script>
+        main_route = '/bajadocumento'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()    
+    </script>
 
     <script>
     $('#documento_baja_fkficha').selectpicker({
@@ -127,6 +125,12 @@
     $("#documento_baja_vinculoarchivo").change(function(){
         $("#lnkva").hide();
     });
+
+    $('#form').submit(function(){
+        var botonSubmit = document.getElementById('documento_baja_submit')
+        botonSubmit.innerText = "Guardando..."
+        botonSubmit.disabled = true
+    })
 
     function attach_edit() {
         $('.edit').click(function () {

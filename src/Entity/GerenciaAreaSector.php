@@ -35,12 +35,14 @@ class GerenciaAreaSector
      * @Assert\NotBlank
      */
     private $fkresponsable;
+
     /**
      * @var string
      * @Assert\NotBlank
      * @ORM\Column(name="cb_gas_codigo", type="text", nullable=false)
      */
     private $codigo;
+
      /**
      * @var string
      * @Assert\NotBlank
@@ -74,6 +76,7 @@ class GerenciaAreaSector
      * @var \sector
      *
      * @ORM\ManyToOne(targetEntity="Sector")
+     * @ORM\OrderBy({"nombre" = "ASC"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cb_gas_fksector", referencedColumnName="cb_sector_id")
      * })

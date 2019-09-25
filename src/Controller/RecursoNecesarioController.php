@@ -64,8 +64,8 @@ class RecursoNecesarioController extends Controller
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
         $RecursoNecesario = $this->getDoctrine()->getRepository(RecursoNecesario::class)->findBy(array('estado' => '1'));
-        $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'));
-        $Recurso = $this->getDoctrine()->getRepository(Recurso::class)->findBy(array('estado' => '1'));
+        $FichaProcesos = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(['estado' => '1'], ['codproceso' => 'ASC']);
+        $Recurso = $this->getDoctrine()->getRepository(Recurso::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         return $this->render('recursonecesario/index.html.twig', array('objects' => $RecursoNecesario, 'tipo' => $FichaProcesos, 'tipo2' => $Recurso, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 

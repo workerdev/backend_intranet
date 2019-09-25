@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\GerenciaAreaSector;
 use App\Entity\TipoAuditoria;
 use App\Entity\Auditoria;
+use App\Entity\TipoAuditor;
+use App\Entity\Auditor;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
@@ -68,13 +70,15 @@ class AuditoriaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findBy(array('estado' => '1'));
-        $tipoauditoria = $this->getDoctrine()->getRepository(TipoAuditoria::class)->findBy(array('estado' => '1'));
-        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
+        $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findAllBySector();
+        $tipoauditoria = $this->getDoctrine()->getRepository(TipoAuditoria::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['id' => 'DESC']);
+        $tipoauditor = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(['estado' => '1'], ['nombres' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'area' => $area, 'tipo' => $tipoauditoria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -88,7 +92,7 @@ class AuditoriaController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             
             $codigo = $sx['codigo'];
-            $area = $sx['area'];
+            $sector = $sx['sector'];
             $tipo = $sx['tipo'];
             $fechaprogramada = $sx['fechaprogramada'];
             $duracionestimada = $sx['duracionestimada'];
@@ -114,8 +118,8 @@ class AuditoriaController extends AbstractController
             $auditoria->setResponsable($responsable);
             $auditoria->setFecharegistro(new \DateTime($fecharegistro));
             $auditoria->setEstado(1);
-            $area != '' ? $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($area) :$area=null;
-            $auditoria->setFkarea($area);
+            $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
+            $auditoria->setFkgas($sector);
             $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoAuditoria::class)->find($tipo): $tipo=null;
             $auditoria->setFktipo($tipo);
             $errors = $validator->validate($auditoria);
@@ -153,7 +157,7 @@ class AuditoriaController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $codigo = $sx['codigo'];
-            $area = $sx['area'];
+            $sector = $sx['sector'];
             $tipo = $sx['tipo'];
             $fechaprogramada = $sx['fechaprogramada'];
             $duracionestimada = $sx['duracionestimada'];
@@ -169,8 +173,8 @@ class AuditoriaController extends AbstractController
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
             $auditoria->setId($id);
             $auditoria->setCodigo($codigo);
-            $area != '' ? $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($area) :$area=null;
-            $auditoria->setFkarea($area);
+            $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
+            $auditoria->setFkgas($sector);
             $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoAuditoria::class)->find($tipo): $tipo=null;
             $auditoria->setFktipo($tipo);
 
@@ -220,18 +224,18 @@ class AuditoriaController extends AbstractController
             $id = $sx['id']; //dd($sx);
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
             $fecpro = $auditoria->getFechaprogramada();
-            $rsfcp = $fecpro->format('Y-m-d H:s');
             $fecini = $auditoria->getFechahorainicio();
-            $rsfci = $fecini->format('Y-m-d H:s');
             $fecfin = $auditoria->getFechahorafin();
             $fecreg = $auditoria->getFecharegistro();
-            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:s'); else $rsfcf = $fecfin;
+            if($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
+            if($fecini != null) $rsfci = $fecini->format('Y-m-d').'T'.$fecini->format('H:i'); else $rsfci = $fecini;
+            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d').'T'.$fecfin->format('H:i'); else $rsfcf = $fecfin;
             if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
             
             $sendinf = [
                 "id" => $auditoria->getId(),
                 "codigo" => $auditoria->getCodigo(),
-                "fkarea" => $auditoria->getFkarea(),
+                "fkgas" => $auditoria->getFkgas(),
                 "fktipo" => $auditoria->getFktipo(),
                 "fechaprogramada" => $rsfcp,
                 "duracionestimada" => $auditoria->getDuracionestimada(),

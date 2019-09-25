@@ -128,21 +128,10 @@
     .swal2-title{
         font-size: 16px !important;
     }
-</style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/rol'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
+    .loader-own{
+        text-align: center;
     }
-    default_values()
-</script>
+</style>
 {% endblock %}
 {% block body %}
 
@@ -182,9 +171,20 @@
 </div>
 {%endblock%}
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/rol'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     attach_validators()
@@ -280,11 +280,12 @@
         objeto = JSON.stringify({
             'nombre': $('#nombre').val(),
             'descripcion': $('#descripcion').val(),
-            'modules': modulos
+            'modules': modulos,
+            'action': 'insert'
         })
         
-        ajax_call_rol("/rol_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        $('#form').modal('hide')
+        ajax_call_rol("/rol_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
+        //$('#form').modal('hide')
     })
 
     function clean_check(){
@@ -342,10 +343,10 @@
             'id': parseInt(JSON.parse($('#id').val())),
             'nombre': $('#nombre').val(),
             'descripcion': $('#descripcion').val(),
-            'modules': modulos
+            'modules': modulos,
+            'action': 'update'
         })
-        ajax_call_rol("/rol_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        $('#form').modal('hide')
+        ajax_call_rol("/rol_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
     })
     reload_form()
 </script>

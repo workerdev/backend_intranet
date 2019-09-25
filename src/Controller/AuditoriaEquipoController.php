@@ -213,4 +213,47 @@ class AuditoriaEquipoController extends AbstractController
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
+
+
+    /**
+     * @Route("/equipoaud_insertar", methods={"POST"}, name="equipoaud_insertar")
+     */
+    public function insert_group(ValidatorInterface $validator)
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+            $sx = json_decode($_POST['object'], true);
+            
+            $id = $sx['id'];
+            $auditores = $sx['auditores'];
+            $tipos = $sx['tipos'];
+            $accion = $sx['accion'];
+
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+
+            $i = 0;
+            foreach ($auditores as $adtr) {
+                $auditoriaequipo = new AuditoriaEquipo();
+                $auditoriaequipo->setEstado(1);
+                $auditoriaequipo->setFkauditoria($auditoria);
+
+                $auditor = $this->getDoctrine()->getRepository(Auditor::class)->find($adtr);
+                $auditoriaequipo->setFkauditor($auditor);
+                $tipo = $this->getDoctrine()->getRepository(TipoAuditor::class)->find($tipos[$i]);
+                $auditoriaequipo->setFktipo($tipo);
+
+                $cx->persist($auditoriaequipo);
+                $cx->flush();
+                $i++;
+            }
+            
+            $resultado = array('response'=>"El ID registrado es: ".$auditoriaequipo->getId().".",   
+            'success' => true,
+            'message' => 'Equipo de auditoría registrado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
 }

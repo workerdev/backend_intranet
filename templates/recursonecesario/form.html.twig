@@ -14,7 +14,7 @@
                             <label class="form-label">Recurso Necesario ID</label>
                         </div>
                     </div>
-                        <label>Tipo de tipo recurso</label>
+                        <label>Tipo de recurso</label>
                         <select id="fktipo" class="form-control">
                         {% for t2 in tipo2 %}
                             <option value="{{t2.id}}">{{t2.nombre}}</option>
@@ -34,15 +34,15 @@
                     <label>Tipo de ficha</label>
                         <select id="fkficha" class="form-control">
                         {% for t in tipo %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
+                            <option value="{{t.id}}">{{t.codproceso}}</option>
                         {% endfor %}
                         </select>
                         </br>
                         </br>
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
         </div>

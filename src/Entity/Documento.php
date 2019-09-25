@@ -95,15 +95,15 @@ class Documento
     private $vinculodiagflujo;
 
     /**
-     * @var date
+     * @var timestamp
      *
-     * @ORM\Column(name="cb_documento_fechaPublicacion", type="date", nullable=true, options={"default":null})
+     * @ORM\Column(name="cb_documento_fechaPublicacion", type="datetime", nullable=true, options={"default":null})
      */
     private $fechaPublicacion;
 
     /**
      * @var string
-     *  @Assert\NotBlank
+     * 
      * @ORM\Column(name="cb_documento_carpetaOperativa", type="text", nullable=true)
      */
     private $carpetaOperativa;

@@ -121,12 +121,26 @@ function ajax_call_get(url, data, callback) {
     $.ajax({
         method: "POST",
         url: url,
-        data: data/*,
-        async: false*/
+        data: data,
+        async: false
     }).done(function (response) {
         if (callback != null) {
             dictionary = JSON.parse(response)
             callback(dictionary.response)
+        }
+    })
+}
+
+function ajax_call_get_resp(url, data, callback) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: false
+    }).done(function (response) {
+        if (callback != null) {
+            dictionary = JSON.parse(response)
+            callback(dictionary)
         }
     })
 }
@@ -235,20 +249,21 @@ function ajax_call_get_mods(url, data, callback) {
 }
 
 function ajax_call_rol(url, data, render, callback) {
+    let receive_dt = JSON.parse(data['object'])
     $.ajax({
         method: "POST",
         url: url,
         data: data,
-        async: false,
+        async: true,
         beforeSend: function () {
-            $("<div id='spn-md' style='text-align: center; margin:auto;width:100%; height:65px;'>"+
-                "<div style='margin:auto;display:block; height:55px;'>"+
-                    "<img src='resources/images/carga.gif' style='height:100%; width:auto;'/>"+
-                "</div>"+
-            "</div>").insertBefore("#rl-acn");
+            $("#spn-rol").fadeIn(800);
+            if(receive_dt.action == 'insert') $("#insert").attr('disabled', true);
+            else $("#update").attr('disabled', true);
         },
-        success: function (data, textStatus) {
-            $("#spn-md").fadeOut(800);
+        success: function () {
+            $("#spn-rol").fadeOut(800);
+            if(receive_dt.action == 'insert') $("#insert").attr('disabled', false);
+            else $("#update").attr('disabled', false);
         }
     }).done(function (response) {
         if (render != null) {
@@ -305,16 +320,16 @@ function ajax_call_reptb(url, data, callback) {
         method: "POST",
         url: url,
         data: data,
-        async: false,
+        async: true,
         beforeSend: function() {
             $('html, body').animate({
                 scrollTop: $(".header").offset().top
             }, 1000);
-            $(".plan-icon-load").css('display', 'inline-block');
             $('html, body').animate({scrollTop: 0}, 'slow');
+            $("#spn-grep").fadeIn(800);
         },
         success:function (data, textStatus) {
-            $(".plan-icon-load").css('display', 'none');
+            $("#spn-grep").fadeOut(800);
         }
     }).done(function (response) {
         dictionary = JSON.parse(response)
@@ -328,5 +343,108 @@ function ajax_call_reptb(url, data, callback) {
         if(callback != null){
             callback(response)
         }
+    })
+}
+
+function ajax_call_get_nwr(url, data, callback) {
+    receive_dt = JSON.parse(data['object'])
+    
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: true,
+        beforeSend: function () {
+            $("#spn-addrv").fadeIn(800);
+            if(receive_dt.action == 'insert') $("#insert-rev").hide();
+            else $("#update-rev").hide();
+         },
+         success: function (data, textStatus) {
+            $("#spn-addrv").fadeOut(800);
+            if(receive_dt.action == 'insert') $("#insert-rev").show();
+            else $("#update-rev").show();
+         }
+    }).done(function (response) {
+        if (callback != null) {
+            dictionary = response
+            callback(dictionary)
+        }
+    })
+}
+
+function ajax_call_validation_pbl(url, data, render, callback) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: true,
+        beforeSend: function () {
+            $("#spn-pbl").fadeIn(800);
+            $("#btn-publicar").hide();
+         },
+         success: function (data, textStatus) {
+            $("#spn-pbl").fadeOut(800);
+            $("#btn-publicar").show();
+         }
+    }).done(function (response) {
+        dictionary = JSON.parse(response)
+        if ('error' in dictionary) {
+            arreglo = document.getElementsByClassName('label-form123')
+            if (arreglo.length > 0) {
+                arrayErrorFocus = document.getElementsByClassName('error focused')
+                for (i = 0; i < arrayErrorFocus.length; i++) {
+                    arrayErrorFocus[i].classList.remove('error');
+                }
+                for (i = 0; i < arreglo.length; i++)
+                    arreglo[i].remove();
+            }
+            arreglo = document.getElementsByClassName('label-form123')
+            if (arreglo.length > 0) {
+                for (i = 0; i < arreglo.length; i++)
+                    arreglo[i].remove()
+            }
+            c = 0;
+            //Recorrer los valores
+            Object.entries(dictionary).forEach(function (key) {
+                if (key[0] != 'error')
+                {
+                    field = document.getElementById(key[0])
+                    
+                    field.parentElement.classList.add('error');
+                    labelError = document.createElement("label");
+                    labelError.setAttribute('id', 'label-form123');
+                    labelError.setAttribute('class', 'label-form123');
+                    labelErrorText = document.createTextNode(key[1]);
+
+                    labelError.appendChild(labelErrorText);
+
+                    labelError.classList.add("error");
+                    labelError.classList.add("text-danger");
+
+                    field.parentElement.insertAdjacentElement("afterend", labelError)
+                    c++
+                }
+            })
+        }
+
+        if (render != null) {
+            $(render).html(response)
+        } else {
+            dictionary = JSON.parse(response)
+
+            if ("message" in dictionary && dictionary.message != '') {
+                if (dictionary.success) {
+                    showMessage(dictionary.message, "success", "ok");
+                    $('#form').modal('hide');
+                    setTimeout(function () {
+                        window.location = callback
+                    }, 1500)
+                } else {
+                    showMessage(dictionary.message, "danger", "remove")
+                }
+            }
+        }
+    }).fail(function () {
+        console.log('Error Ajax')
     })
 }
