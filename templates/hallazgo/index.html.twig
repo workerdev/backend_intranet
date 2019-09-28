@@ -1,29 +1,23 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
-       #fkprobabilidadaccion{ 
-           cursor:pointer 
+        #fkprobabilidadaccion{ 
+            cursor:pointer 
         }
         .swal2-title{
             font-size: 16px !important;
         }
-    </style>
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/hallazgo'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
         }
-        default_values()
-    </script>
+        .modal-dialog-own{
+            width: 65%;
+        }
+    </style>
 {% endblock %}
 {% block body %}
 
@@ -72,16 +66,27 @@
                         </tbody>
                     </table>
                 </div>
-#fkprobabilidad#fkprobabilidad
         {% else %}
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
 {%endblock%}
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
+
+    <script>
+        main_route = '/hallazgo'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
     <script>
     attach_validators()
@@ -127,14 +132,22 @@
         $('#nombreauditado').val('')
         $('#responsable').val('')
         $('#fecharegistro').val('')
+        
+        $('#fktipo').val('')
+        $('#fktipo').selectpicker('render')
+        $('#fkauditoria').val('')
+        $('#fkauditoria').selectpicker('render')
         $('#fkimpacto').val('')
+        $('#fkimpacto').selectpicker('render')
+        $('#fkprobabilidad').val('')
+        $('#fkprobabilidad').selectpicker('render')
 
         clean_form()
         verif_inputs()
         $('#id_div').hide()
         $('#insert').show()
         $('#update').hide()
-        $('#form').modal('show')
+        $('#form-hlg').modal('show')
     })
 
     $('#insert').click(function () {
@@ -158,8 +171,6 @@
             'probabilidad': $('#fkprobabilidad').val()
         })
         ajax_call_validation("/hallazgo_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/hallazgo_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -202,7 +213,7 @@
                 $('#id_div').show()
                 $('#insert').hide()
                 $('#update').show()
-                $('#form').modal('show')
+                $('#form-hlg').modal('show')
             })
         })
     }
@@ -229,8 +240,6 @@
             'probabilidad': $('#fkprobabilidad').val()
         })
         ajax_call_validation("/hallazgo_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/hallazgo_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
     </script>
@@ -277,13 +286,11 @@
     </script>
     <script>
     function format (d) {
-        // `d` is the original data object for the row
-        //console.log(d);
         return '<div class="card" style="width: 95%; background-color: rgba(0, 76, 153, .15)">'+
         '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+
                 '<td class="bold">Descripción:</td>'+
-                '<td>'+d[6]+'</td>'+
+                '<td style="white-space: pre-wrap">'+d[6]+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td class="bold">Probabilidad:</td>'+
@@ -291,11 +298,11 @@
             '</tr>'+
             '<tr>'+
                 '<td class="bold">Análisis Causa Raíz:</td>'+
-                '<td>'+d[12]+'</td>'+
+                '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td class="bold">Recomendaciones:</td>'+
-                '<td>'+d[13]+'</td>'+
+                '<td style="white-space: pre-wrap">'+d[13]+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td class="bold">Cargo del Auditado:</td>'+

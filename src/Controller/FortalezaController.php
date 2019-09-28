@@ -66,7 +66,7 @@ class FortalezaController extends AbstractController
         
         
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
-        $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(array('estado' => '1'));
+        $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(['estado' => '1'], ['id' => 'DESC']);
         return $this->render('fortaleza/index.html.twig', array('objects' => $fortaleza, 'auditoria' => $auditoria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 

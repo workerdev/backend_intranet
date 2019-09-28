@@ -251,3 +251,104 @@
         </div>
     </div>
 </div>
+
+
+<div id="form-hlfr" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Fortalezas y Hallazgos</h3>
+            </div>
+            <div class="modal-body">
+                <div class="pd-own">
+                    <div id="cliente_form_body" class="box-body">
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">ID auditoría</label>
+                                            <input id="id-aud" name="idaud" type="text" class="form-control" readonly autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código de auditoría</label>
+                                            <input id="codigo-aud" name="codigoaud" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Sector</label>
+                                            <input id="sector-aud" name="sectoraud" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr  width="100%" style="height: 2px; background-color: #004c99" noshade>
+
+                <div class="pd-own">
+                    <button id="new-hlg" type="button" class="btn bg-blue waves-effect" title="Agregar">
+                        <i class="material-icons">add</i>
+                    </button>
+                    
+                    <h4 id="cliente_enable" class="">Hallazgos</h4>
+                    <table id="table_hlg" class="table table-bordered table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Título</th>
+                                <th>Evidencia</th>
+                                <th>Documento</th>
+                                <th>Punto ISO</th>
+                                <th>Nivel de impacto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pd-own">
+                    <button id="new-frt" type="button" class="btn bg-blue waves-effect" title="Agregar">
+                        <i class="material-icons">add</i>
+                    </button>
+                    
+                    <h4 id="cliente_enable" class="">Fortalezas</h4>
+                    <table id="table_fort" class="table table-bordered table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Ordinal</th>
+                                <th>Descripción</th>
+                                <th>Responsable</th>
+                                <th>Fecha de registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="close-form" type="button" class="btn bg-light'blue waves-effect">Cerrar <i class="material-icons">reply</i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

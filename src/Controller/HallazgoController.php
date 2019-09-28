@@ -67,7 +67,7 @@ class HallazgoController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(array('estado' => '1'));
+        $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['id' => 'DESC']);
         $tipo = $this->getDoctrine()->getRepository(TipoHallazgo::class)->findBy(array('estado' => '1'));
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(array('estado' => '1'));
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(array('estado' => '1'));

@@ -23,6 +23,8 @@
 {% block body %}
 
 {{ include('auditoria/form.html.twig') }}
+{{ include('fortaleza/form.html.twig') }}
+{{ include('hallazgo/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>AUDITORÍA</h2></div>
 <div class="body">
@@ -419,6 +421,7 @@
 <script>
     $('.team').click(function () {
         $('#idaud').parent().parent().parent().hide()
+        del_aud = [];
         obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
@@ -427,21 +430,40 @@
         ajax_call_get("/auditoria_editar",{
             object: obj
         },function(response){
-            console.log(JSON.parse(response))
             let self = JSON.parse(response)
 
-            $('#idaud').val(self.id)
-            $('#codigoaud').val(self.codigo)
-            $('#sectoraud').val(self.fkgas.fksector.nombre)
-            
-            var del_rev = [];
-            var table = $('#table_team').DataTable({
-                language: {
-                    "url": "/resources/js/spanish.json"
+            ajax_call_get("/equipoaud_editar",{
+                object: obj
+            },function(responses){
+                console.log(JSON.parse(responses))
+                let data = JSON.parse(responses)
+
+                $('#idaud').val(self.id)
+                $('#codigoaud').val(self.codigo)
+                $('#sectoraud').val(self.fkgas.fksector.nombre)
+                
+                var table = $('#table_team').DataTable({
+                    language: {
+                        "url": "/resources/js/spanish.json"
+                    }
+                });
+                table.clear().draw();
+
+                if(data.length > 0){
+                    for(var i = 0; i < data.length; i++){
+                        $('#new-aud').click()
+
+                        $('#auditor'+i_aud).val(data[i].fkauditor.id);
+                        $('#auditor'+i_aud).selectpicker('render');
+                        $('#tipo'+i_aud).val(data[i].fktipo.id);
+                        $('#tipo'+i_aud).selectpicker('render');
+
+                        $('#bd'+i_aud).attr('aud-id', data[i].id);
+                    }
                 }
-            });
-            
-            $('#form-team').modal('show')
+                
+                $('#form-team').modal('show')
+            })
         })
     })
 
@@ -530,7 +552,7 @@
 
         $('#table_team').on( 'click', 'tbody tr td div.col-sm-1 button.clear_auditor', function () {
             if($(this).attr("aud-id")){
-                if(!del_aud.includes($(this).attr("aud-id"))) del_aud.push($(this).attr("aud-id"))
+                if(!del_aud.includes($(this).attr("aud-id")) && $(this).attr("aud-id") != '0') del_aud.push($(this).attr("aud-id"))
             }
 
             idrmv = $(this).attr('data-id');
@@ -542,6 +564,7 @@
     $('#save-team').click(function () {
         var list_aud = [];
         var list_type = [];
+        var list_ideq = [];
         $("select[name=auditores]").each(function (index) { 
             let i = $(this).val(); 
 
@@ -553,6 +576,12 @@
 
             let tp_crt = document.getElementById($(this).attr('id'))
             if(tp_crt.value != '') list_type.push(i);
+        });
+        $("button[name=change-vl]").each(function (index) { 
+            let btn_crt = document.getElementById($(this).attr('id'))
+            /*console.log(btn_crt)
+            console.log(btn_crt.getAttribute('aud-id'))*/
+            list_ideq.push(btn_crt.getAttribute('aud-id'));
         });
         if (list_aud.length == 0){
             if (list_type.length == 0){
@@ -580,6 +609,8 @@
                     'id': $('#idaud').val(),
                     'auditores': list_aud,
                     'tipos': list_type,
+                    'idgroup': list_ideq,
+                    'delgroup': del_aud,
                     'accion': 'insert'
                 })
 
@@ -613,6 +644,50 @@
                 }
             }
         }
+    })
+
+    $('.hlgfort').click(function () {
+        $('#idaud').parent().parent().parent().hide()
+        del_aud = [];
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+        });
+        console.log(obj)
+
+        var tablehl = $('#table_hlg').DataTable({
+            language: {
+                "url": "/resources/js/spanish.json"
+            },
+            "pageLength": 5
+        });
+
+        var tablefr = $('#table_fort').DataTable({
+            language: {
+                "url": "/resources/js/spanish.json"
+            },
+            "pageLength": 5
+        });
+        $('#id-aud').parent().hide()
+
+        /*ajax_call_get("/auditoria_editar",{
+            object: obj
+        },function(response){
+            let self = JSON.parse(response)*/
+                
+        $('#form-hlfr').modal('show')
+        //})
+    })
+
+    $('#close-form').click(function () {
+        $('#form-hlfr').modal('hide')
+    })
+</script>
+<script>
+    $('#new-hlg').click(function () {
+        $('#form-hlg').modal('show')
+    })
+    $('#new-frt').click(function () {
+        $('#form-frt').modal('show')
     })
 </script>
 {% endblock %}

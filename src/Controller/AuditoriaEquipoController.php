@@ -227,13 +227,16 @@ class AuditoriaEquipoController extends AbstractController
             $id = $sx['id'];
             $auditores = $sx['auditores'];
             $tipos = $sx['tipos'];
+            $idgroup = $sx['idgroup'];
+            $delgroup = $sx['delgroup'];
             $accion = $sx['accion'];
 
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
 
             $i = 0;
             foreach ($auditores as $adtr) {
-                $auditoriaequipo = new AuditoriaEquipo();
+                if(sizeof($idgroup) > 0 && $idgroup[$i] != '0') $auditoriaequipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->find($idgroup[$i]);
+                else $auditoriaequipo = new AuditoriaEquipo();
                 $auditoriaequipo->setEstado(1);
                 $auditoriaequipo->setFkauditoria($auditoria);
 
@@ -242,14 +245,43 @@ class AuditoriaEquipoController extends AbstractController
                 $tipo = $this->getDoctrine()->getRepository(TipoAuditor::class)->find($tipos[$i]);
                 $auditoriaequipo->setFktipo($tipo);
 
-                $cx->persist($auditoriaequipo);
+                if(sizeof($idgroup) > 0 && $idgroup[$i] != '0') $cx->merge($auditoriaequipo);
+                else $cx->persist($auditoriaequipo);
                 $cx->flush();
                 $i++;
+            }
+
+            foreach ($delgroup as $dlad) {
+                $auditoriaequipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->find($dlad);
+                $auditoriaequipo->setEstado(0);
+                $cx->merge($auditoriaequipo);
+                $cx->flush();
             }
             
             $resultado = array('response'=>"El ID registrado es: ".$auditoriaequipo->getId().".",   
             'success' => true,
             'message' => 'Equipo de auditoría registrado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/equipoaud_editar", methods={"POST"}, name="equipoaud_editar")
+     */
+    public function edit_group()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $auditoriaequipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $id, 'estado' => '1']);
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($auditoriaequipo, 'json');
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Equipo de auditoría listado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

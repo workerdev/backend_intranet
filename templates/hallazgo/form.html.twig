@@ -1,5 +1,5 @@
-<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div id="form-hlg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -15,122 +15,138 @@
                         </div>
                     </div>
                     
-                    <label>Auditoría</label>
-                        <select id="fkauditoria" class="form-control">
-                        {% for t in auditoria %}
-                            <option value="{{t.id}}">{{t.codigo}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br>
-
-                    <label>Tipo de Hallazgo</label>
-                        <select id="fktipo" class="form-control">
-                        {% for t in tipo %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
-
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="ordinal" name="ordinal" type="text" class="form-control text">
-                            <label class="form-label">Ordinal</label>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <label>Auditoría</label>
+                                <select id="fkauditoria" class="form-control">
+                                {% for t in auditoria %}
+                                    <option value="{{t.id}}">{{t.codigo}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Tipo de Hallazgo</label>
+                                <select id="fktipo" class="form-control">
+                                {% for t in tipo %}
+                                    <option value="{{t.id}}">{{t.nombre}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="titulo" name="titulo" type="text" class="form-control text">
-                            <label class="form-label">Título</label>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="ordinal" name="ordinal" type="text" class="form-control text">
+                                    <label class="form-label">Ordinal</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="titulo" name="titulo" type="text" class="form-control text">
+                                    <label class="form-label">Título</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                       
-                       
-                                      <label for="accion">Descripción</label>
-                            <textarea id="descripcion" name="descripcion" class="materialize-textarea" data-length="120"></textarea>
-                     
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea class="form-control txta-own" rows="3" id="descripcion" name="descripcion"></textarea>
                     </div>
-                    <div class="form-group form-float">
-                                                   
-                            <label for="accion">Evidencia</label>
-                            <textarea id="evidencia" name="evidencia" class="materialize-textarea" data-length="120"></textarea>
-                     
+                    <div class="form-group">
+                        <label for="evidencia">Evidencia</label>
+                        <textarea class="form-control txta-own" rows="3" id="evidencia" name="evidencia"></textarea>
                     </div>
-                    <div class="form-group form-float">
-                      
-                            <label for="accion">Documento</label>
-                            <textarea id="documento" name="documento" class="materialize-textarea" data-length="120"></textarea>
-                        
+                    <div class="form-group">
+                        <label for="documento">Documento</label>
+                        <textarea class="form-control txta-own" rows="3" id="documento" name="documento"></textarea>
                     </div>
-                    <div class="form-group form-float">
-                        
-                               <label for="accion">Punto ISO</label>
-                            <textarea id="puntoiso" name="puntoiso" class="materialize-textarea" data-length="120"></textarea>
-                        
+                    <div class="form-group">
+                        <label for="puntoiso">Punto ISO</label>
+                        <textarea class="form-control txta-own" rows="3" id="puntoiso" name="puntoiso"></textarea>
                     </div>
                     
-                    <label>Nivel de Impacto</label>
-                        <select id="fkimpacto" class="form-control">
-                        {% for t in impacto %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <label>Nivel de Impacto</label>
+                                <select id="fkimpacto" class="form-control">
+                                {% for t in impacto %}
+                                    <option value="{{t.id}}">{{t.nombre}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Probabilidad</label>
+                                <select id="fkprobabilidad" class="form-control">
+                                {% for t in probabilidad %}
+                                    <option value="{{t.id}}">{{t.nombre}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
+                        </div>
+                    </div>
 
-                    <label>Probabilidad</label>
-                        <select id="fkprobabilidad" class="form-control">
-                        {% for t in probabilidad %}
-                            <option value="{{t.id}}">{{t.nombre}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
+                    <div class="form-group">
+                        <label for="analisiscausaraiz">Análisis causa raíz</label>
+                        <textarea class="form-control txta-own" rows="3" id="analisiscausaraiz" name="analisiscausaraiz"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="recomendaciones">Recomendaciones</label>
+                        <textarea class="form-control txta-own" rows="3" id="recomendaciones" name="recomendaciones"></textarea>
+                    </div>
 
-                    <div class="form-group form-float">
-                    
-                                   <label for="accion">Análisis causa raíz</label>
-                            <textarea id="analisiscausaraiz" name="analisiscausaraiz" class="materialize-textarea" data-length="120"></textarea>
-                            
-                        
-                    </div>
-                    <div class="form-group form-float">
-                       
-                               <label for="accion">Recomendaciones</label>
-                            <textarea id="recomendaciones" name="recomendaciones" class="materialize-textarea" data-length="120"></textarea>
-                            
-                      
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="cargoauditado" name="cargoauditado" type="text" class="form-control text">
-                            <label class="form-label">Cargo del auditado</label>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="cargoauditado" name="cargoauditado" type="text" class="form-control text">
+                                    <label class="form-label">Cargo del auditado</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="nombreauditado" name="nombreauditado" type="text" class="form-control text">
+                                    <label class="form-label">Nombre del auditado</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="nombreauditado" name="nombreauditado" type="text" class="form-control text">
-                            <label class="form-label">Nombre del auditado</label>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsable" name="responsable" type="text" class="form-control text">
+                                    <label class="form-label">Responsable</label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="responsable" name="responsable" type="text" class="form-control text">
-                            <label class="form-label">Responsable</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha de registro</label><br>
-                            <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha de registro</label><br>
+                                    <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
         </div>
