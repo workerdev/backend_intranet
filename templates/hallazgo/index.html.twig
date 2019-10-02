@@ -28,7 +28,7 @@
         <div class="row clearfix">
             <div class="#fkprobabilidadxs-3 col-sm-2 col-md-2 col-lg-2">
             {% if 'hallazgo_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                <button id="new-hlg" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="hallazgo" data-form="form-hlg">
                     <i class="material-icons">add</i>
                 </button>
             {% endif %}
@@ -74,6 +74,7 @@
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
+    <script src="resources/js/hallazgo.js"></script>
 
     <script>
         main_route = '/hallazgo'
@@ -87,270 +88,73 @@
         }
         default_values()
     </script>
-
     <script>
-    attach_validators()
-
-    $('#fkauditoria').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar auditoría.',
-        title: 'Seleccione una auditoría.'
-    })
-
-    $('#fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo.',
-        title: 'Seleccione un tipo.'
-    })
-    
-    $('#fkimpacto').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar nivel de impacto.',
-        title: 'Seleccione un nivel de impacto.'
-    })
-
-    $('#fkprobabilidad').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar probabilidad.',
-        title: 'Seleccione una probabilidad.'
-    })
-
-    $('#new').click(function () {
-        $('#ordinal').val('')
-        $('#titulo').val('')
-        $('#descripcion').val('')
-        $('#evidencia').val('')
-        $('#documento').val('')
-        $('#puntoiso').val('')
-        $('#analisiscausaraiz').val('')
-        $('#recomendaciones').val('')
-        $('#cargoauditado').val('')
-        $('#nombreauditado').val('')
-        $('#responsable').val('')
-        $('#fecharegistro').val('')
-        
-        $('#fktipo').val('')
-        $('#fktipo').selectpicker('render')
-        $('#fkauditoria').val('')
-        $('#fkauditoria').selectpicker('render')
-        $('#fkimpacto').val('')
-        $('#fkimpacto').selectpicker('render')
-        $('#fkprobabilidad').val('')
-        $('#fkprobabilidad').selectpicker('render')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form-hlg').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ordinal': $('#ordinal').val(),
-            'titulo': $('#titulo').val(),
-            'descripcion': $('#descripcion').val(),
-            'evidencia': $('#evidencia').val(),
-            'documento': $('#documento').val(),
-            'puntoiso': $('#puntoiso').val(),
-            'analisiscausaraiz': $('#analisiscausaraiz').val(),
-            'recomendaciones': $('#recomendaciones').val(),
-            'cargoauditado': $('#cargoauditado').val(),
-            'nombreauditado': $('#nombreauditado').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-
-            'auditoria': $('#fkauditoria').val(),
-            'tipo': $('#fktipo').val(),
-            'impacto': $('#fkimpacto').val(),
-            'probabilidad': $('#fkprobabilidad').val()
-        })
-        ajax_call_validation("/hallazgo_insertar", {object: objeto}, null, main_route)
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/hallazgo_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#ordinal').val(self.ordinal)
-                $('#titulo').val(self.titulo)
-                $('#descripcion').val(self.descripcion)
-                $('#evidencia').val(self.evidencia)
-                $('#documento').val(self.documento)
-                $('#puntoiso').val(self.puntoiso)
-                $('#analisiscausaraiz').val(self.analisiscausaraiz)
-                $('#recomendaciones').val(self.recomendaciones)
-                $('#cargoauditado').val(self.cargoauditado)
-                $('#nombreauditado').val(self.nombreauditado)
-                $('#responsable').val(self.responsable)
-                $('#fecharegistro').val(self.fecharegistro)
-
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
-
-                $('#fkauditoria').val(self.fkauditoria.id)
-                $('#fkauditoria').selectpicker('render')
-
-                $('#fkimpacto').val(self.fkimpacto.id)
-                $('#fkimpacto').selectpicker('render')
-
-                $('#fkprobabilidad').val(self.fkprobabilidad.id)
-                $('#fkprobabilidad').selectpicker('render')
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form-hlg').modal('show')
-            })
-        })
-    }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'ordinal': $('#ordinal').val(),
-            'titulo': $('#titulo').val(),
-            'descripcion': $('#descripcion').val(),
-            'evidencia': $('#evidencia').val(),
-            'documento': $('#documento').val(),
-            'puntoiso': $('#puntoiso').val(),
-            'analisiscausaraiz': $('#analisiscausaraiz').val(),
-            'recomendaciones': $('#recomendaciones').val(),
-            'cargoauditado': $('#cargoauditado').val(),
-            'nombreauditado': $('#nombreauditado').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-
-            'auditoria': $('#fkauditoria').val(),
-            'tipo': $('#fktipo').val(),
-            'impacto': $('#fkimpacto').val(),
-            'probabilidad': $('#fkprobabilidad').val()
-        })
-        ajax_call_validation("/hallazgo_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
-    </script>
-    <script>
-        attach_edit()
-
-        let message= ''
-        function hallazgo_prev(id) {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse(id))
-            });
-            ajax_call_get("/hallazgo_prev",{
-                object: obj
-            },function(response){
-                message = response;
-            });
+        function formathlg (d) {
+            return '<div class="card" style="width: 95%; background-color: rgba(0, 76, 153, .15)">'+
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="bold">Descripción:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[6]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Probabilidad:</td>'+
+                    '<td>'+d[11]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Análisis Causa Raíz:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Recomendaciones:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[13]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Cargo del Auditado:</td>'+
+                    '<td>'+d[14]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Nombre del Auditado:</td>'+
+                    '<td>'+d[15]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Responsable:</td>'+
+                    '<td>'+d[16]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha de Registro:</td>'+
+                    '<td>'+d[17]+'</td>'+
+                '</tr>'+
+            '</table></div>';
         }
+    
+        $(document).ready(function() {
+            // Add event listener for opening and closing details
+            table = $('#data_tabletr').DataTable();
+            $('#data_tabletr tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+                console.log(row.data());
 
-        $('.delete').click(function () {
-            id = parseInt(JSON.parse($(this).attr('data-json')))
-            hallazgo_prev(id)
-            setTimeout(function(){
-                let quest = message + " ¿Está seguro en dar de baja el hallazgo?" 
-                enabled = false
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/hallazgo_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
-                })
-                }, 1000
-            )
-        })
-    </script>
-    <script>
-    function format (d) {
-        return '<div class="card" style="width: 95%; background-color: rgba(0, 76, 153, .15)">'+
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td class="bold">Descripción:</td>'+
-                '<td style="white-space: pre-wrap">'+d[6]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Probabilidad:</td>'+
-                '<td>'+d[11]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Análisis Causa Raíz:</td>'+
-                '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Recomendaciones:</td>'+
-                '<td style="white-space: pre-wrap">'+d[13]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Cargo del Auditado:</td>'+
-                '<td>'+d[14]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Nombre del Auditado:</td>'+
-                '<td>'+d[15]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Responsable:</td>'+
-                '<td>'+d[16]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha de Registro:</td>'+
-                '<td>'+d[17]+'</td>'+
-            '</tr>'+
-        '</table></div>';
-    }
- 
-    $(document).ready(function() {
-        // Add event listener for opening and closing details
-        table = $('#data_tabletr').DataTable();
-        $('#data_tabletr tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-            console.log(row.data());
-
-            let idet = 'h'+row.data()[1];
-            console.log(idet);
-            //let s = idet.replace(/[\/\] ]+/g, '');
-            if ( row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                //console.log(s);
-                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
-                $("#"+idet).attr('title', 'Mostrar más');
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
-                $("#"+idet).attr('title', 'Ver menos');
-            }
+                let idet = 'h'+row.data()[1];
+                console.log(idet);
+                //let s = idet.replace(/[\/\] ]+/g, '');
+                if ( row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    //console.log(s);
+                    $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                    $("#"+idet).attr('title', 'Mostrar más');
+                }
+                else {
+                    // Open this row
+                    row.child(formathlg(row.data())).show();
+                    tr.addClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                    $("#"+idet).attr('title', 'Ver menos');
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 {% endblock %}

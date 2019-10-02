@@ -179,7 +179,7 @@ class FortalezaController extends AbstractController
             $id = $sx['id'];
             $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->find($id);
             $fecreg = $fortaleza->getFecharegistro();
-            $rsfcr = $fecreg->format('Y-m-d');
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
             
             $sendinf = [
                 "id" => $fortaleza->getId(),
@@ -221,6 +221,48 @@ class FortalezaController extends AbstractController
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/fortaleza_listall", methods={"POST"}, name="fortaleza_listall")
+     */
+    public function listall()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $fortalezas = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(array('estado' => '1', 'fkauditoria' => $id), array('id' => 'DESC'));
+
+            $datafrt = array();
+            foreach ($fortalezas as $fort) {
+                $fortaleza = (object) $fort;
+                $fecreg = $fortaleza->getFecharegistro();
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                
+                $info = [
+                    "id" => $fortaleza->getId(),
+                    "fkauditoria" => $fortaleza->getFkauditoria(),
+                    "ordinal" => $fortaleza->getOrdinal(),
+                    "descripcion" => $fortaleza->getDescripcion(),
+                    "responsable" => $fortaleza->getResponsable(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datafrt[] = $info;
+            }       
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($datafrt, 'json');
+            $resultado = array(
+                'response'=>$json,'success' => true,
+                'message' => 'Fortalezas listadas correctamente.'
+            );
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
 }

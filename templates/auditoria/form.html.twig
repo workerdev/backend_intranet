@@ -299,14 +299,15 @@
                 <hr  width="100%" style="height: 2px; background-color: #004c99" noshade>
 
                 <div class="pd-own">
-                    <button id="new-hlg" type="button" class="btn bg-blue waves-effect" title="Agregar">
+                    <h4 id="cliente_enable" class="">Hallazgos</h4>
+                    <button id="new-hlg" type="button" class="btn bg-blue waves-effect btn-add-own" title="Nuevo" data-origin="auditoria" data-form="form-hlg">
                         <i class="material-icons">add</i>
                     </button>
-                    
-                    <h4 id="cliente_enable" class="">Hallazgos</h4>
+
                     <table id="table_hlg" class="table table-bordered table-striped table-hover" style="width:100%">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Tipo</th>
                                 <th>Título</th>
                                 <th>Evidencia</th>
@@ -323,14 +324,15 @@
                 </div>
 
                 <div class="pd-own">
-                    <button id="new-frt" type="button" class="btn bg-blue waves-effect" title="Agregar">
+                    <h4 id="cliente_enable" class="">Fortalezas</h4>
+                    <button id="new-frt" type="button" class="btn bg-blue waves-effect btn-add-own" title="Nuevo" data-origin="auditoria" data-form="form-frt">
                         <i class="material-icons">add</i>
                     </button>
-                    
-                    <h4 id="cliente_enable" class="">Fortalezas</h4>
+
                     <table id="table_fort" class="table table-bordered table-striped table-hover" style="width:100%">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Ordinal</th>
                                 <th>Descripción</th>
                                 <th>Responsable</th>
@@ -345,7 +347,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button id="close-form" type="button" class="btn bg-light'blue waves-effect">Cerrar <i class="material-icons">reply</i></button>
+                    <button id="close-form" type="button" class="btn bg-teal waves-effect">Cerrar <i class="material-icons">reply</i></button>
                 </div>
 
             </div>

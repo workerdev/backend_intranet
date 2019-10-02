@@ -17,6 +17,22 @@
     .all-w{
         width: 100% !important;
     }
+    .scroll-own{
+        overflow-y: scroll;
+    }
+    .error-own{
+        display: block !important;
+        height: 0px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    .btn-own{
+        margin-right: 2px;
+        margin-bottom: 2px;
+    }
+    .btn-add-own{
+        margin-bottom: 10px;
+    }
 </style>
 {% endblock %}
 
@@ -82,7 +98,12 @@
 {% endblock %}
 
 {% block javascripts %}
+<script src="resources/plugins/momentjs/moment.js"></script>
+<script src="resources/plugins/momentjs/locale/es.js"></script>
 <script src="resources/js/functions.js"></script>
+<script src="resources/js/hallazgo.js"></script>
+<script src="resources/js/fortaleza.js"></script>
+
 <script>
     main_route = '/auditoria'
 
@@ -154,11 +175,12 @@
                 $("#"+idet).attr('title', 'Ver menos');
             }
         });
+        $('.error').addClass("error-own")
     });
 </script>
 
 <script>
-    $('#fkarea').selectpicker({
+    $('#fkgas').selectpicker({
         size: 4,
         liveSearch: true,
         liveSearchPlaceholder: 'Buscar sector.',
@@ -373,6 +395,7 @@
     })
     reload_form()
 </script>
+
 <script>
     attach_edit()
     proaud_rep()
@@ -418,6 +441,7 @@
         )
     })
 </script>
+
 <script>
     $('.team').click(function () {
         $('#idaud').parent().parent().parent().hide()
@@ -647,46 +671,127 @@
     })
 
     $('.hlgfort').click(function () {
+        $('#form-hlfr').addClass('scroll-own')
         $('#idaud').parent().parent().parent().hide()
-        del_aud = [];
         obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
-        console.log(obj)
 
-        var tablehl = $('#table_hlg').DataTable({
-            language: {
-                "url": "/resources/js/spanish.json"
-            },
-            "pageLength": 5
-        });
-
-        var tablefr = $('#table_fort').DataTable({
-            language: {
-                "url": "/resources/js/spanish.json"
-            },
-            "pageLength": 5
-        });
-        $('#id-aud').parent().hide()
-
-        /*ajax_call_get("/auditoria_editar",{
+        ajax_call_get("/auditoria_editar",{
             object: obj
         },function(response){
-            let self = JSON.parse(response)*/
-                
-        $('#form-hlfr').modal('show')
-        //})
-    })
+            let self = JSON.parse(response)
 
+            ajax_call_get("/fortaleza_listall",{
+                object: obj
+            },function(responsef){
+                let dataf = JSON.parse(responsef)
+
+                ajax_call_get("/hallazgo_listall",{
+                    object: obj
+                },function(responseh){
+                    let datah = JSON.parse(responseh)
+
+                    $('#id-aud').val(self.id)
+                    $('#codigo-aud').val(self.codigo)
+                    $('#sector-aud').val(self.fkgas.fksector.nombre)
+
+                    var tablefr = $('#table_fort').DataTable();
+                    var tablehl = $('#table_hlg').DataTable();
+                    tablefr.destroy();
+                    tablehl.destroy();
+
+                    var datafr = [];
+                    for(var i = 0; i < dataf.length; i++){
+                        let acn_frt = ''
+                        {% if 'fortaleza_editar' in permisos %}
+                            acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
+                        {% endif %}
+                        {% if 'fortaleza_eliminar' in permisos %}  
+                            acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
+                        {% endif %}
+
+                        datafr.push( [
+                            dataf[i].id, dataf[i].ordinal,
+                            dataf[i].descripcion, dataf[i].responsable,
+                            dataf[i].fecharegistro, acn_frt
+                        ]);
+                    }
+                    $('#table_fort').DataTable({
+                        data: datafr,
+                        "order": [[ 0, 'desc' ]],
+                        language: {
+                            "url": "/resources/js/spanish.json"
+                        },
+                        "pageLength": 10
+                    });
+
+                    var datahl = [];
+                    for(var j = 0; j < datah.length; j++){
+                        let acn_hlg = ''
+                        {% if 'hallazgo_editar' in permisos %}
+                            acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                        {% endif %}
+                        {% if 'hallazgo_eliminar' in permisos %}  
+                            acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                        {% endif %}
+
+                        datahl.push( [
+                            datah[j].id, datah[j].fktipo.nombre,
+                            datah[j].titulo, datah[j].evidencia,
+                            datah[j].documento, datah[j].puntoiso,
+                            datah[j].fkimpacto.nombre, acn_hlg
+                        ]);
+                    }
+                    $('#table_hlg').DataTable({
+                        data: datahl,
+                        "order": [[ 0, 'desc' ]],
+                        language: {
+                            "url": "/resources/js/spanish.json"
+                        },
+                        "pageLength": 10
+                    });
+                    
+                    $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
+                    $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
+
+                    $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
+                    
+                    fortaleza_edit()
+                    fortaleza_delete()
+                    hallazgo_edit()
+                    hallazgo_delete()
+
+                    $('#id-aud').parent().hide()
+                    $('#form-hlfr').modal('show')
+                })
+            })
+        })
+    })
+    
     $('#close-form').click(function () {
         $('#form-hlfr').modal('hide')
     })
 </script>
+
 <script>
     $('#new-hlg').click(function () {
+        $('#fkauditoriahlg').val($('#id-aud').val())
+        $('#fkauditoriahlg').selectpicker('render')
+        $('#id_div_hlg').hide()
+        $('#insert-hlg').show()
+        $('#update-hlg').hide()
         $('#form-hlg').modal('show')
     })
     $('#new-frt').click(function () {
+        $('#fkauditoriafrt').val($('#id-aud').val())
+        $('#fkauditoriafrt').selectpicker('render')
+        $('#id_div_frt').hide()
+        $('#insert-frt').show()
+        $('#update-frt').hide()
         $('#form-frt').modal('show')
     })
 </script>

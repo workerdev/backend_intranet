@@ -21,7 +21,7 @@
     <div class="row clearfix">
         <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
         {% if 'fortaleza_insertar' in permisos %} 
-            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+            <button id="new-frt" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="fortaleza" data-form="form-frt">
                 <i class="material-icons">add</i>
             </button>
         {% endif %}  
@@ -54,6 +54,7 @@
 {%endblock%}
 {% block javascripts %}
 <script src="resources/js/functions.js"></script>
+<script src="resources/js/fortaleza.js"></script>
 
 <script>
     main_route = '/fortaleza'
@@ -66,106 +67,6 @@
         ascendant = true
     }
     default_values()
-</script>
-
-<script>
-    attach_validators()
-
-    $('#fkauditoria').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar auditoría.',
-        title: 'Seleccione una auditoría.'
-    })
-
-    $('#new').click(function () {
-        $('#ordinal').val('')
-        $('#descripcion').val('')
-        $('#responsable').val('')
-        $('#fecharegistro').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form-frt').modal('show')
-    })
-    
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ordinal': $('#ordinal').val(),
-            'descripcion': $('#descripcion').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-            
-            'auditoria': $('#fkauditoria').val()
-        })
-        ajax_call_validation("/fortaleza_insertar", {object: objeto}, null, main_route)
-    })
-
-    
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/fortaleza_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#ordinal').val(self.ordinal)
-                $('#descripcion').val(self.descripcion)
-                $('#responsable').val(self.responsable)
-                $('#fecharegistro').val(self.fecharegistro)
-                
-                $('#fkauditoria').val(self.fkauditoria.id)
-                $('#fkauditoria').selectpicker('render')
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form-frt').modal('show')
-            })
-        })
-    }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'ordinal': $('#ordinal').val(),
-            'descripcion': $('#descripcion').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-            
-            'auditoria': $('#fkauditoria').val()
-        })
-       ajax_call_validation("/fortaleza_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
-</script>
-<script>
-    attach_edit()
-
-    $('.delete').click(function () {
-
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: "¿Desea dar de baja los datos de la fortaleza?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#004c99",
-            cancelButtonColor: "#F44336",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(function () {
-            ajax_call("/fortaleza_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-        })
-    })
 </script>
 
 {% endblock %}

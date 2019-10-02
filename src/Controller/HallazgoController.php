@@ -234,7 +234,7 @@ class HallazgoController extends Controller
             $id = $sx['id'];
             $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->find($id);
             $fecreg = $hallazgo->getFecharegistro();
-            $rsfcr = $fecreg->format('Y-m-d');
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
             
             $sendinf = [
                 "id" => $hallazgo->getId(),
@@ -359,6 +359,59 @@ class HallazgoController extends Controller
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+
+    /**
+     * @Route("/hallazgo_listall", methods={"POST"}, name="hallazgo_listall")
+     */
+    public function listall()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(array('estado' => '1', 'fkauditoria' => $id), array('id' => 'DESC'));
+
+            $datahlg = array();
+            foreach ($hallazgos as $hlg) {
+                $hallazgo = (object) $hlg;
+                $fecreg = $hallazgo->getFecharegistro();
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                
+                $info = [
+                    "id" => $hallazgo->getId(),
+                    "fkauditoria" => $hallazgo->getFkauditoria(),
+                    "fktipo" => $hallazgo->getFktipo(),
+                    "ordinal" => $hallazgo->getOrdinal(),
+                    "titulo" => $hallazgo->getTitulo(),
+                    "descripcion" => $hallazgo->getDescripcion(),
+                    "evidencia" => $hallazgo->getEvidencia(),
+                    "documento" => $hallazgo->getDocumento(),
+                    "puntoiso" => $hallazgo->getPuntoiso(),
+                    "fkimpacto" => $hallazgo->getFkimpacto(),
+                    "fkprobabilidad" => $hallazgo->getFkprobabilidad(),
+                    "analisiscausaraiz" => $hallazgo->getAnalisiscausaraiz(),
+                    "recomendaciones" => $hallazgo->getRecomendaciones(),
+                    "cargoauditado" => $hallazgo->getCargoauditado(),
+                    "nombreauditado" => $hallazgo->getNombreauditado(),
+                    "responsable" => $hallazgo->getResponsable(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datahlg[] = $info;
+            }       
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($datahlg, 'json');
+            $resultado = array(
+                'response'=>$json,'success' => true,
+                'message' => 'Hallazgos listados correctamente.'
+            );
+            $resultados = json_encode($resultado);
+            return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
 }
