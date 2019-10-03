@@ -3,3 +3,10 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_theme: 'bootstrap_3_layout.html.twig'
+    globals:
+        title_page: 'ELFEC'
+        logo_page: 'resources/elfec.ico'
+        logo_login: 'resources/images/elfeclgw.png'
+        close_image: 'resources/images/elfec.png'
+        main_image: 'resources/images/elfec.png'
+        menu_top_image: 'resources/images/logo.png'

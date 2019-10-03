@@ -9,30 +9,14 @@
             margin: 80px 0 0 182px !important;
         }
     </style>
-    <script src="{{ 'http://' ~ dominio ~ '/resources/js/transporte.js' }}"></script>
-    <script src="{{ 'http://' ~ dominio ~ '/resources/js/functions.js' }}"></script>
-    <script>
-        /*var obj = JSON.parse({{organigrama}});
-        console.log(obj);*/
-        main_route = '/organigrama'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
+
 {% block body %}
     {{ include('personalcargo/form_asignar_cargo') }}
+
     <div class="header bg-indigo"><h2>PROCESOS CARGO</h2>
     </div>
-    <!--button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-        <i class="material-icons">add</i>
-    </button-->
+
     <div class="body">
         <label>Cargo</label>
             <select id="ft-cargo" class="form-control">
@@ -42,6 +26,7 @@
             </select>
             </br>
             </br> 
+
         <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; height: 500px"></div>
         <button id="btnsave" class="btn btn-primary">Confirmar cambios</button>
         <textarea id="resultado" style="display: none;"></textarea>
@@ -54,12 +39,27 @@
         <input id="cantidad" style="display: none" value="{{cantidad}}">
 
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/momentjs/moment.js' }}"></script>
-    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/momentjs/locale/es.j' }}s"></script>
-    <script src="{{ 'http://' ~ dominio ~ '/resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' }}"></script>
-    <script type="text/javascript">
+    <script src="{{ 'http://' ~ dominio ~ '/resources/js/transporte.js' }}"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/resources/js/functions.js' }}"></script>
+    <script src="{{ 'http://' ~ dominio ~ '/Plugins/gojs/go-debug.js' }}"></script>
+    
+    <script>
+        main_route = '/organigrama'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
+
+    <script>
         $('#ft-cargo').selectpicker({
             size: 4,
             liveSearch: true,
@@ -81,15 +81,16 @@
                 original: modelo2,
                 cambio:modelasText
             });
-            ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 2000);});
+            ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 1000);});
         })
     </script>
-    <script src="{{ 'http://' ~ dominio ~ '/Plugins/gojs/go-debug.js' }}"></script>
+
     <script id="code">
         var nombre = '[VACANTE]';
         var id = 0;
         var nodo = 0;
         var numero_seleccionado = 0;
+
         function getNextKey() {
             var key = nodeIdCounter;
             while (myDiagram.model.findNodeDataForKey(key) !== null) {
@@ -114,6 +115,7 @@
                 $('#form').modal('hide');
             })
         }
+
         function crear(a,b,id,nombre){
             nodo++;
             a.archetypeNodeData = {
@@ -128,6 +130,7 @@
             }
             return;
         }
+
         function abrir_modal2(e, obj, myDiagram){
             $('#form').modal('show');
             $('#insert').click(function(){
@@ -138,6 +141,7 @@
                 $('#form').modal('hide');
             })
         }
+
         function crear2(e, obj, myDiagram, id, nombre){
             nodo++;
             var clicked = obj.part;
@@ -175,7 +179,6 @@
                 $('#form').modal('hide');
             })
         }
-
 
         function init() {
             var $ = go.GraphObject.make;  // for conciseness in defining templates
@@ -513,14 +516,12 @@
                 });
         }
 
-
         // Assume that the SideTreeLayout determines whether a node is an "assistant" if a particular data property is true.
         // You can adapt this code to decide according to your app's needs.
         function isassistant(n) {
             if (n === null) return false;
             return n.data.isassistant;
         }
-
 
         // This is a custom TreeLayout that knows about "assistants".
         // A Node for which isassistant(n) is true will be placed at the side below the parent node
@@ -656,6 +657,7 @@
             document.getElementById("mySavedModel").value = myDiagram.model.toJson();
             myDiagram.isModified = true;
         }
+
         function load() {
             myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
         }
@@ -673,8 +675,7 @@
             ajax_call_get("/personalcargo_filtrar",{
                 object: obj
             },function(response){
-                var self = JSON.parse(response);
-               
+                var self = JSON.parse(response);  
             })
         })        
     </script>

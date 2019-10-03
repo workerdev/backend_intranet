@@ -4,22 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>{% block title %}ELFEC{% endblock %}</title>
-    <link rel="icon" href="resources/elfec.ico" type="image/x-icon">
+    <title>{% block title %}{{ title_page }}{% endblock %}</title>
+    <link rel="icon" href="{{ logo_page }}" type="image/x-icon">
     <link href="resources/css/iconfont/material-icons.css" rel="stylesheet">
     <link href="resources/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="resources/plugins/node-waves/waves.css" rel="stylesheet" />
     <link href="resources/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" />
     <link href="resources/plugins/animate-css/animate.css" rel="stylesheet" />
-    <link href="resources/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
-    <link href="resources/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
-    <link href="resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
     <link href="resources/css/style.css" rel="stylesheet">
     <link href="resources/css/themes/all-themes.css" rel="stylesheet" />
     <link href="resources/plugins/nestable/jquery-nestable.css" rel="stylesheet">
     <link href="resources/css/main.css" rel="stylesheet" />
-    <link href="resources/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
-          
+    
     {% block stylesheets %}
     <style>
         .login-page { 
@@ -42,6 +38,10 @@
         .txt-lower{
             text-transform: lowercase;
         }
+        .img-own{
+            height: 250px !important;
+            width: auto !important;
+        }
     </style>
     {% endblock %}
 </head>
@@ -50,7 +50,7 @@
     <div class="login-box">
         <div class="logo" style="margin: 0px">
             <center>
-                <img class="img-responsive" width="250" height="250" src="resources/images/elfeclgw.png">
+                <img class="img-responsive img-own" src="{{ logo_login }}">
             </center>
         </div>
         <div class="card">
@@ -73,7 +73,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de usuario" required autofocus>
+                            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de usuario" autocomplete="username" required autofocus>
                         </div>
                     </div>
                     <div class="input-group" id="bf-btn">
@@ -81,7 +81,7 @@
                             <i class="material-icons">lock</i>
                         </span>
                         <div class="form-line">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" autocomplete="current-password" required>
                         </div>
                         <span class="input-group-addon" id="see-pass" style="cursor: pointer;" title="Mostrar">
                             <i class="material-icons" style="color: grey" id="ic-pass">visibility_off</i>
@@ -116,17 +116,12 @@
     <script src="resources/plugins/bootstrap/js/bootstrap.js"></script>
     <script src="resources/plugins/node-waves/waves.js"></script>
     <script src="resources/js/admin.js"></script>
-    <script src="resources/plugins/momentjs/moment.js"></script>
     <script src="resources/plugins/bootstrap-notify/bootstrap-notify.js"></script>
     <script src="resources/plugins/fileinput/js/fileinput.min.js"></script>
-    <script src="resources/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="resources/plugins/bootstrap-select/js/bootstrap-select.js"></script>
     <script src="resources/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="resources/plugins/nestable/jquery.nestable.js"></script>
     <script src="resources/js/jquery.toast.js"></script>
-    <script src="resources/js/functions.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>         
+    <script src="resources/js/functions.js"></script>      
     <script>
         $('#iniciar').click(function () {
             if($('#usuario').val() == '' || $('#password').val() == ''){
@@ -159,7 +154,7 @@
                         $('#lgfail').fadeIn(2000)
                         setTimeout(function(){ $('#lgfail').fadeOut(2000) }, 4000)
                     }else{
-                    setTimeout(function(){window.location="/"}, 500)
+                        setTimeout(function(){window.location="/"}, 500)
                     }
                 });
             }

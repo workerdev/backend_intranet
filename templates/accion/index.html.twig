@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
         .accion{ 
             cursor:pointer 
@@ -8,25 +9,9 @@
             font-size: 16px !important;
         }
     </style>
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/accion'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('accion/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>ACCIÓN</h2></div>
@@ -74,132 +59,141 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
 
     <script>
-    attach_validators()
+        main_route = '/accion'
 
-    $('#fkhallazgo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar auditoría.',
-        title: 'Seleccione una auditoría.'
-    })
-
-    $('#estadoaccion ').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar estado.',
-        title: 'Seleccione un estado.'
-    })
-
-    $('#new').click(function () {
-        $('#ordinal').val('')
-        $('#descripcion').val('')
-        $('#fechaimplementacion').val('')
-        $('#responsableimplementacion').val('')
-        $('#responsableregistro').val('')
-        $('#fecharegistro').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ordinal': $('#ordinal').val(),
-            'descripcion': $('#descripcion').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-            'responsableimplementacion': $('#responsableimplementacion').val(),
-            'responsableregistro': $('#responsableregistro').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-
-            'hallazgo': $('#fkhallazgo').val(),
-            'estadoaccion': $('#estadoaccion ').val()
-        })
-        ajax_call_validation("/accion_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/accion_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/accion_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#ordinal').val(self.ordinal)
-                $('#descripcion').val(self.descripcion)
-                $('#fechaimplementacion').val(self.fechaimplementacion)
-                $('#responsableimplementacion').val(self.responsableimplementacion)
-                $('#responsableregistro').val(self.responsableregistro)
-                $('#fecharegistro').val(self.fecharegistro)
-
-                $('#estadoaccion ').val(self.estadoaccion)
-                $('#estadoaccion ').selectpicker('render')
-
-                $('#fkhallazgo').val(self.fkhallazgo.id)
-                $('#fkhallazgo').selectpicker('render')
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
-            })
-        })
-    }
-
-    function verifacc_rep() {
-        $('.eficrep').click(function () {
-            obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_reptb("/accion_verif",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                let urlfile = self.url;
-                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#new");
-                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
-            })
-        })
-    }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'ordinal': $('#ordinal').val(),
-            'descripcion': $('#descripcion').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-            'responsableimplementacion': $('#responsableimplementacion').val(),
-            'responsableregistro': $('#responsableregistro').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-
-            'hallazgo': $('#fkhallazgo').val(),
-            'estadoaccion': $('#estadoaccion ').val()
-        })
-      ajax_call_validation("/accion_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/accion_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        //
-        // $('#form').modal('hide')
-    })
-    reload_form()
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
     </script>
+
+    <script>
+        attach_validators()
+
+        $('#fkhallazgo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar auditoría.',
+            title: 'Seleccione una auditoría.'
+        })
+
+        $('#estadoaccion ').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar estado.',
+            title: 'Seleccione un estado.'
+        })
+
+        $('#new').click(function () {
+            $('#ordinal').val('')
+            $('#descripcion').val('')
+            $('#fechaimplementacion').val('')
+            $('#responsableimplementacion').val('')
+            $('#responsableregistro').val('')
+            $('#fecharegistro').val('')
+
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'ordinal': $('#ordinal').val(),
+                'descripcion': $('#descripcion').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+                'responsableimplementacion': $('#responsableimplementacion').val(),
+                'responsableregistro': $('#responsableregistro').val(),
+                'fecharegistro': $('#fecharegistro').val(),
+
+                'hallazgo': $('#fkhallazgo').val(),
+                'estadoaccion': $('#estadoaccion ').val()
+            })
+            ajax_call_validation("/accion_insertar", {object: objeto}, null, main_route)
+        })
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get("/accion_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    $('#id').val(self.id)
+                    $('#ordinal').val(self.ordinal)
+                    $('#descripcion').val(self.descripcion)
+                    $('#fechaimplementacion').val(self.fechaimplementacion)
+                    $('#responsableimplementacion').val(self.responsableimplementacion)
+                    $('#responsableregistro').val(self.responsableregistro)
+                    $('#fecharegistro').val(self.fecharegistro)
+
+                    $('#estadoaccion ').val(self.estadoaccion)
+                    $('#estadoaccion ').selectpicker('render')
+
+                    $('#fkhallazgo').val(self.fkhallazgo.id)
+                    $('#fkhallazgo').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
+            })
+        }
+
+        function verifacc_rep() {
+            $('.eficrep').click(function () {
+                obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_reptb("/accion_verif",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    let urlfile = self.url;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#new");
+                    setTimeout(function(){ $("#lnkrp").remove() }, 10000);
+                })
+            })
+        }
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'ordinal': $('#ordinal').val(),
+                'descripcion': $('#descripcion').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+                'responsableimplementacion': $('#responsableimplementacion').val(),
+                'responsableregistro': $('#responsableregistro').val(),
+                'fecharegistro': $('#fecharegistro').val(),
+
+                'hallazgo': $('#fkhallazgo').val(),
+                'estadoaccion': $('#estadoaccion ').val()
+            })
+        ajax_call_validation("/accion_actualizar", {object: objeto}, null, main_route)
+        })
+        reload_form()
+    </script>
+
     <script>
         attach_edit()
         verifacc_rep()
@@ -242,50 +236,50 @@
             )
         })
     </script>
+
     <script>
-    function format (d) {
-        return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td class="bold">Responsable de Implementación:</td>'+
-                '<td>'+d[6]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Estado:</td>'+
-                '<td>'+d[7]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Responsable de Registro:</td>'+
-                '<td>'+d[8]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha de Registro:</td>'+
-                '<td>'+d[9]+'</td>'+
-            '</tr>'+
-        '</table></div>';
-    }
- 
-    $(document).ready(function() {
-        table = $('#data_tabletr').DataTable();
-        $('#data_tabletr tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
+        function format (d) {
+            return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="bold">Responsable de Implementación:</td>'+
+                    '<td>'+d[6]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Estado:</td>'+
+                    '<td>'+d[7]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Responsable de Registro:</td>'+
+                    '<td>'+d[8]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha de Registro:</td>'+
+                    '<td>'+d[9]+'</td>'+
+                '</tr>'+
+            '</table></div>';
+        }
+    
+        $(document).ready(function() {
+            table = $('#data_tabletr').DataTable();
+            $('#data_tabletr tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
 
-            let idet = 'a'+row.data()[1];
-            if ( row.child.isShown()) {
-                row.child.hide();
-                tr.removeClass('shown');
-                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
-                $("#"+idet).attr('title', 'Mostrar más');
-            }
-            else {
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
-                $("#"+idet).attr('title', 'Ver menos');
-            }
+                let idet = 'a'+row.data()[1];
+                if ( row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                    $("#"+idet).attr('title', 'Mostrar más');
+                }
+                else {
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                    $("#"+idet).attr('title', 'Ver menos');
+                }
+            });
         });
-    });
-</script>
-
+    </script>
 {% endblock %}

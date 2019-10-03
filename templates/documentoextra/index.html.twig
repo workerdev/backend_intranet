@@ -4,8 +4,8 @@
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('documentoextra/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>DOCUMENTO EXTRA</h2></div>
@@ -45,7 +45,8 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -64,105 +65,106 @@
     </script>
 
     <script>
-    attach_validators()
+        attach_validators()
 
-    $('#documento_extra_fkproceso').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de ficha.',
-        title: 'Seleccione un tipo de ficha.'
-    })
+        $('#documento_extra_fkproceso').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de ficha.',
+            title: 'Seleccione un tipo de ficha.'
+        })
 
-    $('#documento_extra_fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar documento tipo extra.',
-        title: 'Seleccione un documento tipo extra.'
-    })
+        $('#documento_extra_fktipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar documento tipo extra.',
+            title: 'Seleccione un documento tipo extra.'
+        })
 
-    $('#documento_extra_vigente').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
-    
-    $('#new').click(function () {
-        $('#lnkva').remove();
-        $('#documento_extra_id').hide()
-        $("#documento_extra_id").siblings().hide()
-
-        $('#documento_extra_codigo').val('')
-        $('#documento_extra_titulo').val('')
-        $('#documento_extra_fechapublicacion').val('')
-        $('#documento_extra_vinculoarchivo').val('')
+        $('#documento_extra_vigente').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
         
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
+        $('#new').click(function () {
+            $('#lnkva').remove();
+            $('#documento_extra_id').hide()
+            $("#documento_extra_id").siblings().hide()
 
-        document.getElementById("documento_extra_submit").innerHTML= "Guardar"
-        $('#documento_extra_id').val(0)
-        $('#form').modal('show')
-    })
-
-    $('#form').submit(function(){
-        var botonSubmit = document.getElementById('documento_extra_submit')
-        botonSubmit.innerText = "Guardando..."
-        botonSubmit.disabled = true
-    })
-
-    $("#documento_extra_vinculoarchivo").change(function(){
-        $("#lnkva").hide();
-    });
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            $("#documento_extra_id").attr("readonly", "readonly")
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/documentoextra_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)   
-                           
-                $('#documento_extra_id').val(self.id)
-                $('#documento_extra_codigo').val(self.codigo)
-                $('#documento_extra_titulo').val(self.titulo)
-                $('#documento_extra_fechapublicacion').val(self.fechapublicacion)
-
-                document.getElementById('documento_extra_vigente').value = self.vigente
-                $('#documento_extra_vigente').selectpicker('render')
-
-                document.getElementById('documento_extra_fkproceso').value = self.fkproceso.id
-                $('#documento_extra_fkproceso').selectpicker('render')
-
-                document.getElementById('documento_extra_fktipo').value = self.fktipo.id
-                $('#documento_extra_fktipo').selectpicker('render')
-
-                if(self.vinculoarchivo != 'N/A') {
-                    $('#lnkva').remove();
-                    let urlfile = self.vinculoarchivo;
-                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_extra_vinculoarchivo");
-                }
-            })
+            $('#documento_extra_codigo').val('')
+            $('#documento_extra_titulo').val('')
+            $('#documento_extra_fechapublicacion').val('')
+            $('#documento_extra_vinculoarchivo').val('')
+            
             clean_form()
             verif_inputs()
-            $('#id_div').show()
-            $('#insert').hide()
-            $('#update').show()
-            
-            document.getElementById("documento_extra_submit").innerHTML = "Modificar"
-            setTimeout(function(){$('#form').modal('show')}, 500);
-        })
-    }
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
 
-    reload_form()
+            document.getElementById("documento_extra_submit").innerHTML= "Guardar"
+            $('#documento_extra_id').val(0)
+            $('#form').modal('show')
+        })
+
+        $('#form').submit(function(){
+            var botonSubmit = document.getElementById('documento_extra_submit')
+            botonSubmit.innerText = "Guardando..."
+            botonSubmit.disabled = true
+        })
+
+        $("#documento_extra_vinculoarchivo").change(function(){
+            $("#lnkva").hide();
+        });
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#documento_extra_id").attr("readonly", "readonly")
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/documentoextra_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)   
+                            
+                    $('#documento_extra_id').val(self.id)
+                    $('#documento_extra_codigo').val(self.codigo)
+                    $('#documento_extra_titulo').val(self.titulo)
+                    $('#documento_extra_fechapublicacion').val(self.fechapublicacion)
+
+                    document.getElementById('documento_extra_vigente').value = self.vigente
+                    $('#documento_extra_vigente').selectpicker('render')
+
+                    document.getElementById('documento_extra_fkproceso').value = self.fkproceso.id
+                    $('#documento_extra_fkproceso').selectpicker('render')
+
+                    document.getElementById('documento_extra_fktipo').value = self.fktipo.id
+                    $('#documento_extra_fktipo').selectpicker('render')
+
+                    if(self.vinculoarchivo != 'N/A') {
+                        $('#lnkva').remove();
+                        let urlfile = self.vinculoarchivo;
+                        let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                        $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_extra_vinculoarchivo");
+                    }
+                })
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                
+                document.getElementById("documento_extra_submit").innerHTML = "Modificar"
+                setTimeout(function(){$('#form').modal('show')}, 500);
+            })
+        }
+
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -178,9 +180,8 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/documentoextra_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/documentoextra_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
     </script>
-
 {% endblock %}

@@ -10,8 +10,8 @@
         }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('documento/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>DOCUMENTO</h2></div>
@@ -56,9 +56,9 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
 
@@ -76,122 +76,124 @@
     </script>
 
     <script>
-    $('#documento_fkficha').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de ficha.',
-        title: 'Seleccione un tipo de ficha.'
-    })
-     $('#documento_fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de documento.',
-        title: 'Seleccione un tipo de documento.'
-    })
-     $('#documento_fkaprobador').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar aprobador.',
-        title: 'Seleccione un aprobador.'
-    })
-    
-    $('#new').click(function () {
-        $('#lnkva').remove();
-        $('#lnkvd').remove();
-        $('#documento_id').hide()
-        $("#documento_id").siblings().hide()
+        $('#documento_fkficha').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de ficha.',
+            title: 'Seleccione un tipo de ficha.'
+        })
 
-        $('#documento_codigo').val('')
-        $('#documento_titulo').val('')
-        $('#documento_versionvigente').val('')
-        $('#documento_vinculoarchivodig').val('')
-        $('#documento_vinculodiagflujo').val('')
-        $('#documento_carpetaOperativa').val('')
-        $('#documento_fechaPublicacion').val('')
+        $('#documento_fktipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de documento.',
+            title: 'Seleccione un tipo de documento.'
+        })
 
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
+        $('#documento_fkaprobador').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar aprobador.',
+            title: 'Seleccione un aprobador.'
+        })
+        
+        $('#new').click(function () {
+            $('#lnkva').remove();
+            $('#lnkvd').remove();
+            $('#documento_id').hide()
+            $("#documento_id").siblings().hide()
 
-        document.getElementById("documento_submit").innerHTML= "Guardar"
-        $('#documento_id').val(0)
-        $('#form').modal('show')
-    })
+            $('#documento_codigo').val('')
+            $('#documento_titulo').val('')
+            $('#documento_versionvigente').val('')
+            $('#documento_vinculoarchivodig').val('')
+            $('#documento_vinculodiagflujo').val('')
+            $('#documento_carpetaOperativa').val('')
+            $('#documento_fechaPublicacion').val('')
 
-    $("#documento_vinculoarchivodig").change(function(){
-        $("#lnkva").hide();
-    });
-
-    $("#documento_vinculodiagflujo").change(function(){
-        $("#lnkvd").hide();
-    });
-
-    $('#form').submit(function(){
-        var botonSubmit = document.getElementById('documento_submit')
-        botonSubmit.innerText = "Guardando..."
-        botonSubmit.disabled = true
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            $("#documento_id").attr("readonly", "readonly")
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/documento_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)
-                console.log(self)
-                             
-                $('#documento_id').val(self.id)
-                $('#documento_codigo').val(self.codigo)
-                $('#documento_titulo').val(self.titulo)
-                $('#documento_versionvigente').val(self.versionVigente)
-
-                $('#documento_carpetaOperativa').val(self.carpetaOperativa)
-                $('#documento_fechaPublicacion').val(self.fechaPublicacion)
-
-                document.getElementById('documento_fkficha').value = self.fkficha.id
-                $('#documento_fkficha').selectpicker('render')
-    
-                document.getElementById('documento_fktipo').value = self.fktipo.id
-                $('#documento_fktipo').selectpicker('render')
-
-                document.getElementById('documento_fkaprobador').value = self.fkaprobador.id
-                $('#documento_fkaprobador').selectpicker('render')
-
-                if(self.vinculoarchivodig != 'N/A') {
-                    $('#lnkva').remove();
-                    let urlfile = self.vinculoarchivodig;
-                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_vinculoarchivodig");
-                }
-                else $('#lnkva').hide();
-
-                if(self.vinculodiagflujo != 'N/A') {
-                    $('#lnkvd').remove();
-                    let urldown = self.vinculodiagflujo;
-                    let vdown = urldown.substring(urldown.lastIndexOf("/")+1, urldown.length);
-                    $("<a id='lnkvd' href='"+urldown+"'>"+vdown+"</a>").insertAfter("#documento_vinculodiagflujo");
-                }
-                else $('#lnkvd').hide();
-            })
             clean_form()
             verif_inputs()
-            $('#id_div').show()
-            $('#insert').hide()
-            $('#update').show()
-            
-            document.getElementById("documento_submit").innerHTML = "Modificar"
-            setTimeout(function(){$('#form').modal('show')}, 500);
-        })
-    }
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
 
-    reload_form()
+            document.getElementById("documento_submit").innerHTML= "Guardar"
+            $('#documento_id').val(0)
+            $('#form').modal('show')
+        })
+
+        $("#documento_vinculoarchivodig").change(function(){
+            $("#lnkva").hide();
+        });
+
+        $("#documento_vinculodiagflujo").change(function(){
+            $("#lnkvd").hide();
+        });
+
+        $('#form').submit(function(){
+            var botonSubmit = document.getElementById('documento_submit')
+            botonSubmit.innerText = "Guardando..."
+            botonSubmit.disabled = true
+        })
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#documento_id").attr("readonly", "readonly")
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/documento_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)
+                                
+                    $('#documento_id').val(self.id)
+                    $('#documento_codigo').val(self.codigo)
+                    $('#documento_titulo').val(self.titulo)
+                    $('#documento_versionvigente').val(self.versionVigente)
+
+                    $('#documento_carpetaOperativa').val(self.carpetaOperativa)
+                    $('#documento_fechaPublicacion').val(self.fechaPublicacion)
+
+                    document.getElementById('documento_fkficha').value = self.fkficha.id
+                    $('#documento_fkficha').selectpicker('render')
+        
+                    document.getElementById('documento_fktipo').value = self.fktipo.id
+                    $('#documento_fktipo').selectpicker('render')
+
+                    document.getElementById('documento_fkaprobador').value = self.fkaprobador.id
+                    $('#documento_fkaprobador').selectpicker('render')
+
+                    if(self.vinculoarchivodig != 'N/A') {
+                        $('#lnkva').remove();
+                        let urlfile = self.vinculoarchivodig;
+                        let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                        $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_vinculoarchivodig");
+                    }
+                    else $('#lnkva').hide();
+
+                    if(self.vinculodiagflujo != 'N/A') {
+                        $('#lnkvd').remove();
+                        let urldown = self.vinculodiagflujo;
+                        let vdown = urldown.substring(urldown.lastIndexOf("/")+1, urldown.length);
+                        $("<a id='lnkvd' href='"+urldown+"'>"+vdown+"</a>").insertAfter("#documento_vinculodiagflujo");
+                    }
+                    else $('#lnkvd').hide();
+                })
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                
+                document.getElementById("documento_submit").innerHTML = "Modificar"
+                setTimeout(function(){$('#form').modal('show')}, 500);
+            })
+        }
+
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -210,35 +212,35 @@
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             documento_previous(id)
-            setTimeout(function(){
-                let quest = message + " ¿Está seguro en dar de baja el documento??" 
-                enabled = false
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/documento_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
+
+            let quest = message + " ¿Está seguro en dar de baja el documento??" 
+            enabled = false
+            swal({
+                title: quest,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/documento_eliminar", { 
+                    id, enabled,_xsrf: getCookie("_xsrf")}, 
+                    null, 
+                    function () {
+                        setTimeout(function(){ window.location=main_route }, 1000);
                 })
-                }, 1000
-            )
+            })
         })
     </script>
+
     <script>
         function format (d) {
             let urlfile = d[5];
             let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
             let urldown = d[6];
             let vdown = urldown.substring(urldown.lastIndexOf("/") + 1, urldown.length); 
+
             html = '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
             '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
@@ -302,5 +304,4 @@
             });
         });
     </script>
-
 {% endblock %}

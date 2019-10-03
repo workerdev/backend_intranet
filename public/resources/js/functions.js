@@ -322,9 +322,6 @@ function ajax_call_reptb(url, data, callback) {
         data: data,
         async: true,
         beforeSend: function() {
-            $('html, body').animate({
-                scrollTop: $(".header").offset().top
-            }, 1000);
             $('html, body').animate({scrollTop: 0}, 'slow');
             $("#spn-grep").fadeIn(800);
         },

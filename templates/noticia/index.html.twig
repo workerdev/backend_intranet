@@ -9,8 +9,8 @@
     }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('noticia/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>NOTICIA</h2></div>
@@ -47,7 +47,8 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
 <script src="resources/plugins/tinymce/tinymce.js"></script>
 <script src="resources/js/functions.js"></script>
@@ -143,7 +144,6 @@
         var categorias =  new Array();
         $('.categoria:checked').each(
             function() {
-                //console.log("El checkbox con valor " + $(this).val() + " está seleccionado");
                 categorias.push($(this).val());
             }
         );
@@ -155,7 +155,7 @@
             'fecha': $("#fecha").val(),
             'categorias': categorias
         })
-        ajax_call("/noticia_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        ajax_call("/noticia_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         $('#form').modal('hide')
     })
 
@@ -163,13 +163,12 @@
         $('.edit').click(function () {
             $('#cont-tpnt').show()
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get("/noticia_editar",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(self)
 
                 if (self.tipo == 'Urgente' || self.tipo == 'Destacados') $('#cont-tpnt').hide()
                 else $('#cont-tpnt').show()
@@ -211,13 +210,13 @@
             'tipo': $('#tipo').val(),
             'fecha': $('#fecha').val()
         })
-        ajax_call("/noticia_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        ajax_call("/noticia_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         $('#form').modal('hide')
     })
     reload_form()
 </script>
-<script>
 
+<script>
     attach_edit()
 
     $('.delete').click(function () {
@@ -232,10 +231,8 @@
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/noticia_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            ajax_call("/noticia_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         })
     })
-
 </script>
-
 {% endblock %}

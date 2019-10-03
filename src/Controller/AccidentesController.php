@@ -69,10 +69,8 @@ class AccidentesController extends AbstractController
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(array('estado' => '1'));
-        $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(
-            ['estado' => '1'],
-            ['id' => 'ASC']
-        );
+        $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->findBy(['estado' => '1'], ['id' => 'ASC']);
+        
         return $this->render('accidentes/index.html.twig', array('objects' => $accidentes, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
@@ -99,7 +97,9 @@ class AccidentesController extends AbstractController
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-     /**
+
+
+    /**
      * @Route("/accidentes_actualizar", methods={"POST"}, name="accidentes_actualizar")
      */
     public function actualizar(ValidatorInterface $validator)
@@ -110,15 +110,19 @@ class AccidentesController extends AbstractController
             $id = $sx['id'];
             $fechainicio = $sx['fechainicio'];
             $accidentes = $this->getDoctrine()->getRepository(Accidentes::class)->find($id);
+            $accident_ant = $this->getDoctrine()->getRepository(Accidentes::class)->findBY(array('fechaFin' => $accidentes->getFechaInicio()));
             $accidentes->setFechaInicio(new \DateTime($fechainicio));
+            if(!empty($accident_ant)){
+                $accident_ant[0]->setFechaFin(new \DateTime($fechainicio));
+                $cx->merge($accident_ant[0]);
+                $cx->flush();
+            }
             $errors = $validator->validate($accidentes);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -134,7 +138,7 @@ class AccidentesController extends AbstractController
     }
 
 
-      /**
+    /**
      * @Route("/accidentes_editar", methods={"POST"}, name="accidentes_editar")
      */
     public function editar()
@@ -146,8 +150,9 @@ class AccidentesController extends AbstractController
             $fpb = $accidentes->getFechaInicio();
             $result = $fpb->format('Y-m-d');
             $sendinf = [
+                "id" => $accidentes->getId(),
                 "fechainicio" => $result                
-                ];
+            ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
            
             $json = $serializer->serialize($sendinf, 'json');
@@ -170,12 +175,8 @@ class AccidentesController extends AbstractController
             $cx = $this->getDoctrine()->getManager();
             $sx = json_decode($request->getContent(), true);
             $tipo = $_POST['tipo'];
-            $accidenteAnterior = $this->getDoctrine()
-            ->getRepository(Accidentes::class)
-            ->findOneBy(
-                array('estado'=>1),
-                array('id' => 'DESC')
-            );
+            $accidenteAnterior = $this->getDoctrine()->getRepository(Accidentes::class)->findOneBy(array('estado'=>1), array('id' => 'DESC'));
+            
             if($accidenteAnterior != null){
                 $accidente = $accidenteAnterior;
                 $accidente->setFechaFin(new \DateTime());

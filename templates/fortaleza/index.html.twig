@@ -12,8 +12,8 @@
     }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('fortaleza/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>FORTALEZA</h2></div>
@@ -51,7 +51,8 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
 <script src="resources/js/functions.js"></script>
 <script src="resources/js/fortaleza.js"></script>
@@ -68,5 +69,4 @@
     }
     default_values()
 </script>
-
 {% endblock %}

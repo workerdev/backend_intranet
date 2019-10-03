@@ -3,24 +3,9 @@
     <style>
         .accion{ cursor:pointer }
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/seguimientoplan'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('seguimientoplan/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>SEGUIMIENTO DE PLAN</h2></div>
@@ -59,111 +44,122 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
 
     <script>
-    // attach_validators()
+        main_route = '/seguimientoplan'
 
-    $('#fkplan').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar plan de accion.',
-        title: 'Seleccione un plan de accion.'
-    })
-      $('#fkestado').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar estado de plan.',
-        title: 'Seleccione un estado de plan.'
-    })
-    
-    $('#new').click(function () {
-        $('#responsable').val('')
-        $('#fecha').val('')
-        $('#observaciones').val('')
-        $('#fechaimplementacion').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'responsable': $('#responsable').val(),
-            'fecha': $('#fecha').val(),
-            'observaciones': $('#observaciones').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-
-            'plan': $('#fkplan').val(),
-            'estado': $('#fkestado').val()
-        })
-        ajax_call_validation("/seguimientoplan_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientoplan_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/seguimientoplan_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)                
-                $('#id').val(self.id)
-                $('#responsable').val(self.responsable)
-                $('#fecha').val(self.fecha)
-                $('#observaciones').val(self.observaciones)
-                $('#fechaimplementacion').val(self.fechaimplementacion)
-
-                $('#fkplan').val(self.fkplan.id)
-                $('#fkplan').selectpicker('render')
-
-                $('#fkestado').val(self.fkestado.id)
-                $('#fkestado').selectpicker('render')
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
-            })
-        })
-    }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'responsable': $('#responsable').val(),
-            'fecha': $('#fecha').val(),
-            'observaciones': $('#observaciones').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-
-            'plan': $('#fkplan').val(),
-            'estado': $('#fkestado').val()
-        })
-        ajax_call_validation("/seguimientoplan_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/seguimientoplan_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
-    reload_form()
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
     </script>
+
+    <script>
+        $('#fkplan').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar plan de accion.',
+            title: 'Seleccione un plan de accion.'
+        })
+
+        $('#fkestado').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar estado de plan.',
+            title: 'Seleccione un estado de plan.'
+        })
+        
+        $('#new').click(function () {
+            $('#responsable').val('')
+            $('#fecha').val('')
+            $('#observaciones').val('')
+            $('#fechaimplementacion').val('')
+
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'responsable': $('#responsable').val(),
+                'fecha': $('#fecha').val(),
+                'observaciones': $('#observaciones').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+
+                'plan': $('#fkplan').val(),
+                'estado': $('#fkestado').val()
+            })
+            ajax_call_validation("/seguimientoplan_insertar", {object: objeto}, null, main_route)
+        })
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/seguimientoplan_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)                
+                    $('#id').val(self.id)
+                    $('#responsable').val(self.responsable)
+
+                    $('#fecha').val(self.fecha)
+                    $('#observaciones').val(self.observaciones)
+                    $('#fechaimplementacion').val(self.fechaimplementacion)
+
+                    $('#fkplan').val(self.fkplan.id)
+                    $('#fkplan').selectpicker('render')
+
+                    $('#fkestado').val(self.fkestado.id)
+                    $('#fkestado').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
+            })
+        }
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'responsable': $('#responsable').val(),
+                'fecha': $('#fecha').val(),
+                'observaciones': $('#observaciones').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+
+                'plan': $('#fkplan').val(),
+                'estado': $('#fkestado').val()
+            })
+            ajax_call_validation("/seguimientoplan_actualizar", {object: objeto}, null, main_route)
+        })
+        reload_form()
+    </script>
+
     <script>
         attach_edit()
 
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
+
             swal({
                 title: "¿Desea dar de baja el seguimiento del plan?",
                 type: "warning",
@@ -173,9 +169,8 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/seguimientoplan_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/seguimientoplan_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
     </script>
-
 {% endblock %}

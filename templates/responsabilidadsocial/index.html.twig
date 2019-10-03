@@ -11,8 +11,8 @@
     }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('responsabilidadsocial/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>RESPONSABILIDAD SOCIAL</h2></div>
@@ -48,9 +48,9 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/locale/es.js"></script>
 <script src="resources/plugins/tinymce/tinymce.js"></script>
 <script src="resources/js/functions.js"></script>
 
@@ -128,20 +128,17 @@
     })
     
     $('#insert').click(function () {
-
         tinyMCE.triggerSave();
         objeto = JSON.stringify({
             'contenido': $("#contenido").val()
         })
         ajax_call_validation("/responsabilidad_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/responsabilidad_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
             ajax_call_get(" /responsabilidad_editar",{
                 object: obj
@@ -161,47 +158,38 @@
                 $('#id').show()
                 $('#insert').hide()
                 
-               
-                
                 $('#update').show()
                 $('#form').modal('show')
             })
         })
     }
 
-        $('.view').click(function () {
-            obj = JSON.stringify({
+    $('.view').click(function () {
+        obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get(" /responsabilidad_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-
-                tinyMCE.get('contenido').setContent(self.contenido)
-                $("#contenido").html(self.contenido)
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').hide()
-                $('#cabecera').hide()
-                
-                $('#insert').hide()
-                $('#update').hide()
-            $('.mce-toolbar').hide(); 
-                tinymce.activeEditor.setMode('readonly');
-                $('#id').hide()
-                $('#form').modal('show')
-            })
         })
+        ajax_call_get(" /responsabilidad_editar",{
+            object: obj
+        },function(response){
+            var self = JSON.parse(response);
+            $('#id').val(self.id)
 
+            tinyMCE.get('contenido').setContent(self.contenido)
+            $("#contenido").html(self.contenido)
 
-    
-    
-    
-
-   
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#cabecera').hide()
+            
+            $('#insert').hide()
+            $('#update').hide()
+        $('.mce-toolbar').hide(); 
+            tinymce.activeEditor.setMode('readonly');
+            $('#id').hide()
+            $('#form').modal('show')
+        })
+    })
 
     $('#update').click(function () {
         tinyMCE.triggerSave();
@@ -210,13 +198,11 @@
             'contenido': $('#contenido').val()
         })
         ajax_call_validation("/responsabilidad_actualizar", {object: objeto}, null,main_route)
-        // ajax_call("/responsabilidad_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
-<script>
 
+<script>
     attach_edit()
 
     $('.delete').click(function () {
@@ -231,10 +217,8 @@
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/responsabilidad_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            ajax_call("/responsabilidad_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         })
     })
-
 </script>
-
 {% endblock %}

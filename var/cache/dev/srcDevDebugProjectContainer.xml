@@ -3198,6 +3198,30 @@
       <call method="addRuntimeLoader">
         <argument type="service" id="twig.runtime_loader"/>
       </call>
+      <call method="addGlobal">
+        <argument>title_page</argument>
+        <argument>ELFEC</argument>
+      </call>
+      <call method="addGlobal">
+        <argument>logo_page</argument>
+        <argument>resources/elfec.ico</argument>
+      </call>
+      <call method="addGlobal">
+        <argument>logo_login</argument>
+        <argument>resources/images/elfeclgw.png</argument>
+      </call>
+      <call method="addGlobal">
+        <argument>close_image</argument>
+        <argument>resources/images/elfec.png</argument>
+      </call>
+      <call method="addGlobal">
+        <argument>main_image</argument>
+        <argument>resources/images/elfec.png</argument>
+      </call>
+      <call method="addGlobal">
+        <argument>menu_top_image</argument>
+        <argument>resources/images/logo.png</argument>
+      </call>
       <configurator service="twig.configurator.environment" method="configure"/>
     </service>
     <service id="twig.app_variable" class="Symfony\Bridge\Twig\AppVariable" public="false">

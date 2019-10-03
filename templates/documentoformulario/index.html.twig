@@ -10,8 +10,8 @@
     }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('documentoformulario/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>DOCUMENTO FORMULARIO</h2></div>
@@ -54,9 +54,9 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/locale/es.js"></script>
 <script src="resources/js/functions.js"></script>
 
 <script>
@@ -145,7 +145,6 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(self)
                 
                 $('#documento_formulario_id').val(self.id)
                 $('#documento_formulario_codigo').val(self.codigo)
@@ -187,12 +186,14 @@
     }
     reload_form()
 </script>
+
 <script>
     attach_edit()
 
     $('.delete').click(function () {
         id = parseInt(JSON.parse($(this).attr('data-json')))
         enabled = false
+
         swal({
             title: "¿Desea dar de baja al documento formulario?",
             type: "warning",
@@ -202,17 +203,19 @@
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/documentoformulario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            ajax_call("/documentoformulario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         })
     })
 
 </script>
+
 <script>
     function format (d) {
         let urlfile = d[8];
         let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
         let urldown = d[9];
         let vdown = urldown.substring(urldown.lastIndexOf("/") + 1, urldown.length); 
+        
         html = '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
         '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+

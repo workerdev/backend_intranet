@@ -64,10 +64,13 @@
         .loader-own{
             text-align: center;
         }
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('documentoproceso/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>DOCUMENTO EN PROCESO</h2></div>
@@ -146,6 +149,7 @@
         {% endif %}
     </div>
 {% endblock %}
+
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -769,7 +773,6 @@
                 if($(this).attr("rv-id")){
                     if(!del_rev.includes($(this).attr("rv-id"))) del_rev.push($(this).attr("rv-id"))
                 }
-                //console.log(del_rev)
 
                 idrmv = $(this).attr('data-id');
                 var dltable = $('#table_revision').DataTable();
@@ -1105,7 +1108,7 @@
                 $("select[name=aprobadores]").each(function (index) { 
                     let i = $(this).val(); 
                     let el_crt = document.getElementById($(this).attr('id'))
-                    //console.log(el_crt.disabled)
+                    
                     if(el_crt.disabled == false && el_crt.value != '') list.push(i);
                 });
                 $("td[name=same-vl]").each(function (index) { 
@@ -1126,14 +1129,10 @@
                     'website': urlserv,
                     'action': 'update'
                 })
-                //console.log(objeto)
 
                 var table = $('#table_revision').DataTable()
-                //console.log((table.rows().count() - l_sm.length))
-                //console.log(list.length)
                 if((table.rows().count() - l_sm.length) == list.length){
                     if($('#aprobadordoc').val() == list[list.length-1]){
-                    //console.log('Send Ajax...')
                     ajax_call_get_nwr("/revision_actualizar", {
                         object: objeto
                     }, function(msg){
@@ -1506,6 +1505,7 @@
             })  
         });
     </script>
+
     <script>
         $("#aprobar-rev").click(function() {
             $('#form-revision').modal('hide')

@@ -4,6 +4,7 @@
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
+
 {% block body %}
     {{ include('files/form.html.twig') }}
 
@@ -40,7 +41,8 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -62,14 +64,7 @@
 
     function init(){ };
 
-    function view_image(object) {
-        /*console.log(object)            
-        var create;           
-        create = "<img src='"+object.src+"' style='height: 100%;width: 100%;' />";            
-        $('#cont-image').empty();
-        $('#cont-image').append(create);
-        $('#exampleModalLong').modal('show')*/
-    }
+    function view_image(object) { }
 
     $('#btn-own').click(function () {
         $(this).parent().modal('hidden');
@@ -131,7 +126,7 @@
             $('#files_id').val('')
             $('#files_id').show()
             $( "#files_id" ).siblings().show()
-            //$('#files_id').attr('disabled', 'disabled')
+            
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($(this).attr('data-json')))
             })
@@ -139,11 +134,8 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response)  
-                //console.log(self)
                 
                 $('#files_id').val(self.id)
-                //$('#files_ruta').val(self.ruta)
-                //document.getElementById('files_ruta').filename = self.ruta
                 if(self.ruta != 'N/A') {
                    $('#lnkva').remove();
                    let urlfile = self.ruta;
@@ -151,10 +143,8 @@
                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#files_ruta");
                 }    
                 document.getElementById('files_tipo').value = self.tipo
-                //$('#files_tipo').val(self.tipo)
                 $('#files_tipo').selectpicker('render')
                 
-                //$('#files_galeria').val(self.fkgaleria.id)
                 document.getElementById('files_fkgaleria').value = self.fkgaleria.id
                 $('#files_fkgaleria').selectpicker('render')
             })

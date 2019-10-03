@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}ELFEC{% endblock %}</title>
-        <link rel="icon" href="resources/elfec.ico" type="image/x-icon">
+        <title>{% block title %}{{ title_page }}{% endblock %}</title>
+        <link rel="icon" href="{{ logo_page }}" type="image/x-icon">
         <link href="resources/css/iconfont/material-icons.css" rel="stylesheet">
         <link href="resources/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="resources/plugins/node-waves/waves.css" rel="stylesheet" />
@@ -23,8 +23,8 @@
                 padding: 2px;
                 width: auto;
             }   
-            .slimScrollBar{
-                width: 15px !important;
+            .slimScrollBar-own{
+                width: 8px !important;
             }
         </style>
         {% endblock %}
@@ -50,8 +50,8 @@
                     <a href="javascript:void(0);" class="bars"></a>
                     <a href="/" class="navbar-brand">
                         <center>
-                            <img class="nav-img" src="resources/images/logo.png">
-                            ELFEC
+                            <img class="nav-img" src="{{ menu_top_image }}">
+                            {{ title_page }}
                         </center>
                     </a>
                 </div>
@@ -160,13 +160,17 @@
         <script src="resources/js/scripts.js"></script>
         <script src="resources/js/validations.js"></script>
         <script>
+            $(document).ready(function() {
+                $('.slimScrollBar').addClass('slimScrollBar-own')
+            })
+
             function iniciar(){
                 setTimeout(function(){window.location="/login"}, 500)
             }
             function salir(){
                 swal({
                     title: "¿Desea cerrar su sesión?",
-                    imageUrl: 'resources/images/elfec.png',
+                    imageUrl: '{{ close_image }}',
                     showCancelButton: true,
                     confirmButtonColor: "#3F51B5",
                     cancelButtonColor: "#F44336",

@@ -19,8 +19,8 @@
         }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('hallazgo/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>HALLAZGO</h2></div>
@@ -70,7 +70,8 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -88,6 +89,7 @@
         }
         default_values()
     </script>
+
     <script>
         function formathlg (d) {
             return '<div class="card" style="width: 95%; background-color: rgba(0, 76, 153, .15)">'+
@@ -128,26 +130,19 @@
         }
     
         $(document).ready(function() {
-            // Add event listener for opening and closing details
             table = $('#data_tabletr').DataTable();
             $('#data_tabletr tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
-                console.log(row.data());
 
                 let idet = 'h'+row.data()[1];
-                console.log(idet);
-                //let s = idet.replace(/[\/\] ]+/g, '');
                 if ( row.child.isShown()) {
-                    // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
-                    //console.log(s);
                     $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
                     $("#"+idet).attr('title', 'Mostrar más');
                 }
                 else {
-                    // Open this row
                     row.child(formathlg(row.data())).show();
                     tr.addClass('shown');
                     $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
@@ -156,5 +151,4 @@
             });
         });
     </script>
-
 {% endblock %}

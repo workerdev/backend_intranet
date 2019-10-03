@@ -2197,8 +2197,8 @@ class ServiciosController extends AbstractController
     {
         $sx = json_decode($request->getContent(), true);
 
-        $username = 'Administrador'; //'ctcloudbit';
-        $password = 'P@ssw0rd1234'; //'Elfec2019';
+        $username = $_SERVER['LDAPUSER'];
+        $password = $_SERVER['LDAPPASS'];
         $process = 'init';
 
         $user = $sx['user'];
@@ -2229,10 +2229,9 @@ class ServiciosController extends AbstractController
 
             $process = 'connect';
             $ldap = Ldap::create('ext_ldap', array(
-                'host' => '192.168.0.6',
-                //'host' => '172.17.1.139',
+                'host' => $_SERVER['LDAPIP'],
                 'encryption' => 'none',
-                'port' => '389',
+                'port' => $_SERVER['LDAPPORT'],
             ));
             $attributes = ['givenName' /*Nombres*/, 'department' /*gerencia*/, 'sn' /*appellidos*/, 'title' /*cargo*/, 'dn' /*dn*/, 'mail' /*email*/, 'name' /*primernombre*/, 'physicalDeliveryOfficeName' /* cargo */, 'sAMAccountName' /*login*/, 'userPrincipalName' /*loginparaloguear@elfec.com*/];
             

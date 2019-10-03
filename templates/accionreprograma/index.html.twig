@@ -2,7 +2,7 @@
 {% block stylesheets %}
     <style>
         .accion{ cursor:pointer }
-	.modal-dialog{
+	    .modal-dialog{
              width: 100% !important;
         }    
         .open {
@@ -10,24 +10,9 @@
         } 
 
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/accionreprograma'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('accionreprograma/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>REPROGRAMA DE LA ACCIÓN</h2></div>
@@ -67,59 +52,70 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
 
     <script>
-    attach_validators()
+        main_route = '/accionreprograma'
 
-    $('#fkaccion').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar acción.',
-        title: 'Seleccione una acción.'
-    })
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-    $('#new').click(function () {
-        $('#fechaanterior').val('')
-        $('#fechaimplementacion').val('')
-        $('#motivojustificacion').val('')
-        $('#autoriza').val('')
-        $('#responsableregistro').val('')
-        $('#fecharegistro').val('')
-        $('#fkaccion').val('')
+    <script>
+        attach_validators()
 
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'fechaanterior': $('#fechaanterior').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-            'motivojustificacion': $('#motivojustificacion').val(),
-            'autoriza': $('#autoriza').val(),
-            'responsableregistro': $('#responsableregistro').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-
-            'accion': $('#fkaccion').val()
+        $('#fkaccion').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar acción.',
+            title: 'Seleccione una acción.'
         })
-        ajax_call_validation("/accionreprograma_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/accionreprograma_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
 
-    function addDate(){
-        id = $('#fkaccion').val()
+        $('#new').click(function () {
+            $('#fechaanterior').val('')
+            $('#fechaimplementacion').val('')
+            $('#motivojustificacion').val('')
+            $('#autoriza').val('')
+            $('#responsableregistro').val('')
+            $('#fecharegistro').val('')
+            $('#fkaccion').val('')
 
-        obj = JSON.stringify({
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'fechaanterior': $('#fechaanterior').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+                'motivojustificacion': $('#motivojustificacion').val(),
+                'autoriza': $('#autoriza').val(),
+                'responsableregistro': $('#responsableregistro').val(),
+                'fecharegistro': $('#fecharegistro').val(),
+
+                'accion': $('#fkaccion').val()
+            })
+            ajax_call_validation("/accionreprograma_insertar", {object: objeto}, null, main_route)
+        })
+
+        function addDate(){
+            id = $('#fkaccion').val()
+
+            obj = JSON.stringify({
                 'id': id
             });
             ajax_call_get("/dateformat",{
@@ -128,56 +124,55 @@
                 var self = JSON.parse(response);
                 $('#fechaanterior').val(self.fechaimplementacion)
             })
-    }
+        }
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/accionreprograma_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#fechaanterior').val(self.fechaanterior)
-                $('#fechaimplementacion').val(self.fechaimplementacion)
-                $('#motivojustificacion').val(self.motivojustificacion)
-                $('#autoriza').val(self.autoriza)
-                $('#responsableregistro').val(self.responsableregistro)
-                $('#fecharegistro').val(self.fecharegistro)
-                
-                $('#fkaccion').val(self.fkaccion.id)
-                $('#fkaccion').selectpicker('render')
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get("/accionreprograma_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    $('#id').val(self.id)
+                    $('#fechaanterior').val(self.fechaanterior)
+                    $('#fechaimplementacion').val(self.fechaimplementacion)
+                    $('#motivojustificacion').val(self.motivojustificacion)
+                    $('#autoriza').val(self.autoriza)
+                    $('#responsableregistro').val(self.responsableregistro)
+                    $('#fecharegistro').val(self.fecharegistro)
+                    
+                    $('#fkaccion').val(self.fkaccion.id)
+                    $('#fkaccion').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
             })
-        })
-    }
+        }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'fechaanterior': $('#fechaanterior').val(),
-            'fechaimplementacion': $('#fechaimplementacion').val(),
-            'motivojustificacion': $('#motivojustificacion').val(),
-            'autoriza': $('#autoriza').val(),
-            'responsableregistro': $('#responsableregistro').val(),
-            'fecharegistro': $('#fecharegistro').val(),
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'fechaanterior': $('#fechaanterior').val(),
+                'fechaimplementacion': $('#fechaimplementacion').val(),
+                'motivojustificacion': $('#motivojustificacion').val(),
+                'autoriza': $('#autoriza').val(),
+                'responsableregistro': $('#responsableregistro').val(),
+                'fecharegistro': $('#fecharegistro').val(),
 
-            'accion': $('#fkaccion').val()
+                'accion': $('#fkaccion').val()
+            })
+            ajax_call_validation("/accionreprograma_actualizar", {object: objeto}, null, main_route)
         })
-        ajax_call_validation("/accionreprograma_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/accionreprograma_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
-    })
-    reload_form()
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -193,9 +188,8 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/accionreprograma_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/accionreprograma_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
     </script>
-
 {% endblock %}

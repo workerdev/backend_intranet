@@ -42,8 +42,8 @@ class SecurityController extends AbstractController
         $sx = json_decode($_POST['object'], true);
         $process = 'init';
 
-        $user = 'Administrador'; //'ctcloudbit';
-        $password = 'P@ssw0rd1234'; //'Elfec2019';
+        $user = $_SERVER['LDAPUSER']; //'ctcloudbit';
+        $password = $_SERVER['LDAPPASS']; //'Elfec2019';
 
         $usuario = $sx['user'];
         $pass = $sx['password'];
@@ -69,9 +69,9 @@ class SecurityController extends AbstractController
 
             $process = 'connect';
             $ldap = Ldap::create('ext_ldap', array(
-                'host' => '192.168.0.3',
+                'host' => $_SERVER['LDAPIP'],
                 'encryption' => 'none',
-                'port' => '389',
+                'port' => $_SERVER['LDAPPORT'],
             ));
             // $attributes = ['givenName'/*Nombres*/, 'sn'/*appellidos*/, 'mail'/*email*/,'name'/*primernombre*/, 'physicalDeliveryOfficeName'/* cargo */,'sAMAccountName'/*login*/,'title','userPrincipalName'/*loginparaloguear@elfec.com*/];
 
@@ -347,20 +347,20 @@ class SecurityController extends AbstractController
     {
         $sx = json_decode($_POST['object'], true);
 
-        $user = 'ctcloudbit';
-        $password = 'Elfec2019';
+        $user = $_SERVER['LDAPUSER'];
+        $password = $_SERVER['LDAPPASS'];
 
         $s_user = $this->get('session')->get('s_user');
         $usuario = $s_user['username'];
         $pass = $sx['password'];
 
-        $dn = "CN=" . $user . ",OU=Personal Regular,OU=UTI,OU=ELFEC,DC=elfec,DC=com";
+        //$dn = "CN=" . $user . ",OU=Personal Regular,OU=UTI,OU=ELFEC,DC=elfec,DC=com";
+        $dn="cn=".$user.",CN=Users,DC=elfec,DC=com";
 
         $ldap = Ldap::create('ext_ldap', array(
-            'host' => '192.168.30.10',
-            //'host' => '172.17.1.150',
+            'host' => $_SERVER['LDAPIP'],
             'encryption' => 'none',
-            'port' => '389',
+            'port' => $_SERVER['LDAPPORT'],
         ));
 
         try {

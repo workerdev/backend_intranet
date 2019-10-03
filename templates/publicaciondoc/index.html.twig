@@ -26,8 +26,8 @@
     }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('publicaciondoc/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>PUBLICACIÓN DE DOCUMENTOS</h2></div>
@@ -66,9 +66,9 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/locale/es.js"></script>
 <script src="resources/js/functions.js"></script>
 
 <script>
@@ -87,6 +87,7 @@
 <script>
     var global_check = [];
     var global_data = '';
+
     $(document).ready(function (){
         $('#checkdoc').prop( "checked", false);
         $('.check-own').prop('checked', false);
@@ -213,5 +214,4 @@
         ajax_call_validation_pbl("/publicaciondoc_publicar", {object: objeto}, null, main_route)
     })
 </script>
-
 {% endblock %}

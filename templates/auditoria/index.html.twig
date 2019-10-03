@@ -37,7 +37,6 @@
 {% endblock %}
 
 {% block body %}
-
 {{ include('auditoria/form.html.twig') }}
 {{ include('fortaleza/form.html.twig') }}
 {{ include('hallazgo/form.html.twig') }}
@@ -244,8 +243,6 @@
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
-        // ajax_call("/auditoria_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
@@ -258,7 +255,6 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(self)
                 $('#id').val(self.id)
                 $('#codigo').val(self.codigo)
                 
@@ -268,7 +264,6 @@
                 $('#fktipo').selectpicker('render')
 
                 var fechaprog = moment(self.fechaprogramada)
-                //console.log(fechaprog.format("YYYY-MM-DD"))
                 $('#fechaprogramada').val(fechaprog.format("YYYY-MM-DD"))
                 $('#duracionestimada').val(self.duracionestimada)
                 $('#lugar').val(self.lugar)
@@ -276,18 +271,15 @@
                 $('#objetivos').val(self.objetivos)
                 var d = self.fechahorainicio
                 var fi = d.replace(" ","T")
-                //console.log(fi)
                 $('#fechahorainicio').val(d)
                 var d2= self.fechahorafin
                 if(d2 != null){
                     var ff = d2.replace(" ","T")
-                    //console.log(ff)
                     $('#fechahorafin').val(d2)
                 }else $('#fechahorafin').val(ff)
                 $('#conclusiones').val(self.conclusiones)
                 $('#responsable').val(self.responsable)
                 var fecharegistro = moment(self.fecharegistro)
-                //console.log(fechaprog.format("YYYY-MM-DD"))
 
                 $('#fecharegistro').val(fecharegistro.format("YYYY-MM-DD"))
 
@@ -310,7 +302,6 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                //console.log(response);
             })
             $('#form_aud').modal('hide')
         })
@@ -390,8 +381,6 @@
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
-        // ajax_call("/auditoria_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
@@ -418,27 +407,25 @@
     $('.delete').click(function () {
         id = parseInt(JSON.parse($(this).attr('data-json')))
         aud_previous(id)
-        setTimeout(function(){
-            let quest = message + " ¿Está seguro en dar de baja los datos de la auditoría?" 
-            enabled = false
-            swal({
-                title: quest,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
-                ajax_call("/auditoria_eliminar", { 
-                    id, enabled,_xsrf: getCookie("_xsrf")}, 
-                    null, 
-                    function () {
-                        setTimeout(function(){ window.location=main_route }, 2000);
-                })
+
+        let quest = message + " ¿Está seguro en dar de baja los datos de la auditoría?" 
+        enabled = false
+        swal({
+            title: quest,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#004c99",
+            cancelButtonColor: "#F44336",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(function () {
+            ajax_call("/auditoria_eliminar", { 
+                id, enabled,_xsrf: getCookie("_xsrf")}, 
+                null, 
+                function () {
+                    setTimeout(function(){ window.location=main_route }, 1000);
             })
-            }, 1000
-        )
+        })
     })
 </script>
 
@@ -449,7 +436,6 @@
         obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
-        console.log(obj)
 
         ajax_call_get("/auditoria_editar",{
             object: obj
@@ -459,7 +445,6 @@
             ajax_call_get("/equipoaud_editar",{
                 object: obj
             },function(responses){
-                console.log(JSON.parse(responses))
                 let data = JSON.parse(responses)
 
                 $('#idaud').val(self.id)
@@ -603,8 +588,6 @@
         });
         $("button[name=change-vl]").each(function (index) { 
             let btn_crt = document.getElementById($(this).attr('id'))
-            /*console.log(btn_crt)
-            console.log(btn_crt.getAttribute('aud-id'))*/
             list_ideq.push(btn_crt.getAttribute('aud-id'));
         });
         if (list_aud.length == 0){
@@ -658,7 +641,6 @@
                             'warning'
                         )
                     }
-                    console.log(objeto)
                 }else{
                     swal(
                         'Error de datos',

@@ -8,23 +8,9 @@
         font-size: 16px !important;
     }
 </style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/gciarsector'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('gciarsector/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>GERENCIA, ÁREA Y SECTOR</h2></div>
@@ -45,7 +31,7 @@
             <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                 <thead>
                 <tr>
-                    <th class="order_by_th" data-name="names">Codigo </th>
+                    <th class="order_by_th" data-name="names">Código </th>
                     <th class="order_by_th" data-name="phone">Vigente </th>                 
                     <th class="order_by_th" data-name="phone">Gerencia </th>
                     <th class="order_by_th" data-name="phone">Área </th>
@@ -64,11 +50,23 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/gciarsector'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     attach_validators()
@@ -83,8 +81,8 @@
     $('#fkarea').selectpicker({
         size: 4,
         liveSearch: true,
-        liveSearchPlaceholder: 'Buscar area.',
-        title: 'Seleccione una area.'
+        liveSearchPlaceholder: 'Buscar área.',
+        title: 'Seleccione una área.'
     })
 
     $('#fksector').selectpicker({
@@ -130,14 +128,12 @@
             'sector': $('#fksector').val()
         })
         ajax_call_validation("/gciarsector_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/gciarsector_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
             ajax_call_get("/gciarsector_editar",{
                 object: obj
@@ -180,13 +176,11 @@
             'sector': $('#fksector').val()
         })
         ajax_call_validation("/gciarsector_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/gciarsector_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
-<script>
 
+<script>
     attach_edit()
 
     let message= ''
@@ -205,46 +199,40 @@
         id = parseInt(JSON.parse($(this).attr('data-json')))
         gciarsector_prev(id)
 
-        setTimeout(function(){
-            let quest = message
-            enabled = false
+        let quest = message
+        enabled = false
 
-            if((quest.split(" ").length) > 12){
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
+        if((quest.split(" ").length) > 12){
+            swal({
+                title: quest,
+                type: "warning",
+                showConfirmButton: false,
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
 
+            })
+        }else{
+            swal({
+                title: quest,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/gciarsector_eliminar", { 
+                    id, enabled,_xsrf: getCookie("_xsrf")}, 
+                    null, 
+                    function () {
+                        setTimeout(function(){ window.location=main_route }, 1000);
                 })
-            }else{
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/gciarsector_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
-                })
-            }
-
-            }, 1500
-        )
+            })
+        }
     })
-
 </script>
-
 {% endblock %}

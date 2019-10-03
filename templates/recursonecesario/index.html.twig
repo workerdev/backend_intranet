@@ -4,8 +4,8 @@
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('recursonecesario/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>RECURSO NECESARIO</h2></div>
@@ -41,7 +41,8 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
@@ -60,92 +61,95 @@
     </script>
 
     <script>
-    attach_validators()
+        attach_validators()
 
-    $('#fkficha').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de ficha de procesos.',
-        title: 'Seleccione un tipo de ficha de procesos.'
-    })
-     $('#fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de recurso.',
-        title: 'Seleccione un tipo de recurso.'
-    })
-    
-    $('#new').click(function () {
-        $('#detalle').val('')
-        $('#fkficha').val('')
-        $('#fkficha').selectpicker('render')
-
-        $('#fktipo').val('')
-        $('#fktipo').selectpicker('render')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'detalle': $('#detalle').val(),
-            'fichaprocesos': $('#fkficha').val(),
-            'recurso': $('#fktipo').val()
+        $('#fkficha').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de ficha de procesos.',
+            title: 'Seleccione un tipo de ficha de procesos.'
         })
-        ajax_call_validation("/recursonecesario_insertar", {object: objeto}, null, main_route)
-    })
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+        $('#fktipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de recurso.',
+            title: 'Seleccione un tipo de recurso.'
+        })
+        
+        $('#new').click(function () {
+            $('#detalle').val('')
+            $('#fkficha').val('')
+            $('#fkficha').selectpicker('render')
+
+            $('#fktipo').val('')
+            $('#fktipo').selectpicker('render')
+
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'detalle': $('#detalle').val(),
+                'fichaprocesos': $('#fkficha').val(),
+                'recurso': $('#fktipo').val()
             })
-            ajax_call_get("/recursonecesario_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)                
-                $('#id').val(self.id)
-                $('#detalle').val(self.detalle)
+            ajax_call_validation("/recursonecesario_insertar", {object: objeto}, null, main_route)
+        })
 
-              
-                $('#fkficha').val(self.fkficha.id)
-                $('#fkficha').selectpicker('render')
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/recursonecesario_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)                
+                    $('#id').val(self.id)
+                    $('#detalle').val(self.detalle)
 
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
+                
+                    $('#fkficha').val(self.fkficha.id)
+                    $('#fkficha').selectpicker('render')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                    $('#fktipo').val(self.fktipo.id)
+                    $('#fktipo').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
             })
-        })
-    }
+        }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'detalle': $('#detalle').val(),
-            'fichaprocesos': $('#fkficha').val(),
-            'recurso': $('#fktipo').val()
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'detalle': $('#detalle').val(),
+                'fichaprocesos': $('#fkficha').val(),
+                'recurso': $('#fktipo').val()
+            })
+            ajax_call_validation("/recursonecesario_actualizar", {object: objeto}, null, main_route)
         })
-        ajax_call_validation("/recursonecesario_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
+
             swal({
                 title: "¿Desea dar de baja el recurso necesario?",
                 type: "warning",
@@ -155,9 +159,8 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/recursonecesario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/recursonecesario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
     </script>
-
 {% endblock %}

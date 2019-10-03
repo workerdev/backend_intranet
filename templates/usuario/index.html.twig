@@ -3,34 +3,16 @@
 <style>
     .accion{ cursor:pointer }
 </style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/usuario'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('usuario/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>USUARIO</h2></div>
 <div class="body">
     <div class="row clearfix">
         <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'usuario_insertar' in permisos %}    
-            <!--button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                <i class="material-icons">add</i>
-            </button-->
-        {% endif %}   
+           
         </div>
     </div>
     {% if 'home_usuario' in permisos and objects %}
@@ -57,11 +39,23 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/usuario'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     attach_validators()
@@ -99,19 +93,20 @@
             'rol': $('#rol').val()
         })
         
-        ajax_call("/usuario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+        ajax_call("/usuario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         $('#form').modal('hide')
     })
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
             ajax_call_get("/usuario_editar",{
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
+
                 $('#id').val(self.id)
                 $('#nombre').val(self.nombre)
                 $('#apellido').val(self.apellido)
@@ -166,13 +161,13 @@
                           )
                     }
                     $('#form').modal('hide')
-                    setTimeout(function(){window.location=main_route}, 2000)
+                    setTimeout(function(){window.location=main_route}, 1000)
             })
 
     })
     reload_form()
 
-    $('.upd-pass').click(function () { console.log('upd-pass');
+    $('.upd-pass').click(function () {
         var id = $(this).attr('data-json');
         $('#user_id').val(id);
     }) 
@@ -180,16 +175,16 @@
     $('#modal_update_password').on('shown.bs.modal', function () {
         $('#new_pass').focus();
     })
-    function Open_Modal()
-    {
+
+    function Open_Modal(){
         $('#new_pass').val('')
         $('#new_rpass').val('')
         $('#new_pass').parent().addClass('focused')
         $('#new_rpass').parent().addClass('focused')
         $('#modal_update_password').modal('show');
     }
-    function Update_Password()
-    {
+
+    function Update_Password(){
         id = $('#user_id').val()
         newp = $('#new_pass').val()
         newp1 = $('#new_rpass').val()
@@ -231,24 +226,8 @@
         }
     }
 </script>
+
 <script>
     attach_edit()
-
-    $('.delete').click(function () {
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: "¿Desea dar de baja al usuario?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#004c99",
-            cancelButtonColor: "#F44336",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(function () {
-            //ajax_call("/usuario_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
-        })
-    })
 </script>
-
 {% endblock %}

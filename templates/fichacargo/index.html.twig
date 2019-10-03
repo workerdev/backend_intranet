@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style> 
         .accion{ 
             cursor:pointer 
@@ -8,25 +9,9 @@
             font-size: 16px !important;
         }
     </style>
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/fichacargo'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('fichacargo/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>FICHA DE CARGO</h2></div>
@@ -85,185 +70,199 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
 
     <script>
-    var aprobarjf = false;
-    var rechazarjf = false;
-    var aprobargr = false;
-    var rechazargr = false;
-    var idfc = 0;
+        main_route = '/fichacargo'
 
-    $('#ficha_cargo_fkarea').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar un tipo de área, gerencia y sector.',
-        title: 'Seleccione un tipo de área, gerencia y sector.'
-    })
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-    $('#ficha_cargo_fkjefeaprobador').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar jefe inmediato superior.',
-        title: 'Seleccione un jefe inmediato superior.'
-    })
+    <script>
+        var aprobarjf = false;
+        var rechazarjf = false;
+        var aprobargr = false;
+        var rechazargr = false;
+        var idfc = 0;
 
-    $('#ficha_cargo_fkgerenteaprobador').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar gerente de área.',
-        title: 'Seleccione un gerente de área.'
-    })
+        $('#ficha_cargo_fkarea').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar un tipo de área, gerencia y sector.',
+            title: 'Seleccione un tipo de área, gerencia y sector.'
+        })
 
-    $('#ficha_cargo_firmajefe').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
+        $('#ficha_cargo_fkjefeaprobador').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar jefe inmediato superior.',
+            title: 'Seleccione un jefe inmediato superior.'
+        })
 
-    $('#ficha_cargo_firmagerente').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
+        $('#ficha_cargo_fkgerenteaprobador').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar gerente de área.',
+            title: 'Seleccione un gerente de área.'
+        })
 
-    $('#new').click(function () {
-        $('#lnkha').remove();
-        $('#ficha_cargo_id').hide()
-        $("#ficha_cargo_id").siblings().hide()
+        $('#ficha_cargo_firmajefe').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
 
-        $('#ficha_cargo_nombre').val('')
-        $('#ficha_cargo_objetivo').val('')
-        $('#ficha_cargo_responsabilidades').val('')
-        $('#ficha_cargo_experiencia').val('')
-        $('#ficha_cargo_conocimientos').val('')
-        $('#ficha_cargo_formacion').val('')
-        $('#ficha_cargo_caracteristicas').val('')
-        $('#ficha_cargo_fechaaprobacion').val('')
-        $('#ficha_cargo_hipervinculo').val('')
+        $('#ficha_cargo_firmagerente').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
+
+        $('#new').click(function () {
+            $('#lnkha').remove();
+            $('#ficha_cargo_id').hide()
+            $("#ficha_cargo_id").siblings().hide()
+
+            $('#ficha_cargo_nombre').val('')
+            $('#ficha_cargo_objetivo').val('')
+            $('#ficha_cargo_responsabilidades').val('')
+            $('#ficha_cargo_experiencia').val('')
+            $('#ficha_cargo_conocimientos').val('')
+            $('#ficha_cargo_formacion').val('')
+            $('#ficha_cargo_caracteristicas').val('')
+            $('#ficha_cargo_fechaaprobacion').val('')
+            $('#ficha_cargo_hipervinculo').val('')
+            
+            $('#ficha_cargo_fkjefeaprobador').val('')
+            $('#ficha_cargo_fkgerenteaprobador').val('')
+
+
+            $('#ficha_cargo_firmajefe').selectpicker('render')
+            $('#ficha_cargo_firmajefe').val('Por aprobar')          
+            document.getElementById('ficha_cargo_firmajefe').disabled=true
+            $('#ficha_cargo_firmajefe').selectpicker('refresh')        
         
-        $('#ficha_cargo_fkjefeaprobador').val('')
-        $('#ficha_cargo_fkgerenteaprobador').val('')
+            $('#ficha_cargo_firmagerente').selectpicker('render')
+            $('#ficha_cargo_firmagerente').val('Por aprobar')   
+            
+            document.getElementById('ficha_cargo_firmagerente').disabled=true     
+            $('#ficha_cargo_firmagerente').selectpicker('refresh')
 
-
-        $('#ficha_cargo_firmajefe').selectpicker('render')
-        $('#ficha_cargo_firmajefe').val('Por aprobar')          
-        document.getElementById('ficha_cargo_firmajefe').disabled=true
-        $('#ficha_cargo_firmajefe').selectpicker('refresh')        
-      
-        $('#ficha_cargo_firmagerente').selectpicker('render')
-        $('#ficha_cargo_firmagerente').val('Por aprobar')   
-        
-        document.getElementById('ficha_cargo_firmagerente').disabled=true     
-        $('#ficha_cargo_firmagerente').selectpicker('refresh')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-
-        document.getElementById("ficha_cargo_submit").innerHTML= "Guardar"
-        $('#ficha_cargo_id').val(0)
-        $('#form').modal('show')
-    })
-
-    $('#apbjf').click(function () {
-        $('#form-fcj').modal('show');
-    })
-
-    $('#apbgr').click(function () {
-        $('#form-fcg').modal('show');
-    })
-
-    $("#ficha_cargo_hipervinculo").change(function(){
-        $("#lnkha").hide();
-    });
-
-    $('#cjf-pass').mousedown(function(){
-        $("#ic-jfpass").css("color", "lightgrey");
-        $("#clavejf").prop("type", "text");
-    });
-    
-    $("#cjf-pass").mouseup(function(){
-        $("#ic-jfpass").css("color", "grey");
-        $("#clavejf").prop("type", "password");
-    });
-
-    $('#cgr-pass').mousedown(function(){
-        $("#ic-grpass").css("color", "lightgrey");
-        $("#clavegr").prop("type", "text");
-    });
-    
-    $("#cgr-pass").mouseup(function(){
-        $("#ic-grpass").css("color", "grey");
-        $("#clavegr").prop("type", "password");
-    });
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            $("#ficha_cargo_id").attr("readonly", "readonly")
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/fichacargo_editar",{
-                object: obj
-            },function(response){   
-                var self = JSON.parse(response)   
-                            
-                $('#ficha_cargo_id').val(self.id)
-                $('#ficha_cargo_nombre').val(self.nombre)
-                
-                $('#ficha_cargo_fkarea').val(self.fkarea.id)
-                $('#ficha_cargo_fkarea').selectpicker('render')
-
-                $('#ficha_cargo_objetivo').val(self.objetivo)
-                $('#ficha_cargo_responsabilidades').val(self.responsabilidades)
-                $('#ficha_cargo_experiencia').val(self.experiencia)
-                $('#ficha_cargo_conocimientos').val(self.conocimientos)
-                $('#ficha_cargo_formacion').val(self.formacion)
-                $('#ficha_cargo_caracteristicas').val(self.caracteristicas)
-                $('#ficha_cargo_fechaaprobacion').val(self.fechaaprobacion)
-
-                $('#ficha_cargo_fkjefeaprobador').val(self.fkjefeaprobador.id)
-                $('#ficha_cargo_fkjefeaprobador').selectpicker('render')
-
-                $('#ficha_cargo_fkgerenteaprobador').val(self.fkgerenteaprobador.id)
-                $('#ficha_cargo_fkgerenteaprobador').selectpicker('render')
-		document.getElementById('ficha_cargo_firmajefe').disabled=false
-                $('#ficha_cargo_firmajefe').val(self.firmajefe)
-                $('#ficha_cargo_firmajefe').selectpicker('render')
-		
-		document.getElementById('ficha_cargo_firmagerente').disabled=false
-                $('#ficha_cargo_firmagerente').val(self.firmagerente)
-                $('#ficha_cargo_firmagerente').selectpicker('render')
-                
-                if(self.hipervinculo != 'N/A') {
-                    $('#lnkha').remove();
-                    let urlfile = self.hipervinculo;
-                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                    $("<a id='lnkha' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#ficha_cargo_hipervinculo");
-                }
-            })
             clean_form()
             verif_inputs()
-            $('#id_div').show()
-            $('#insert').hide()
-            $('#update').show()
-            
-            document.getElementById("ficha_cargo_submit").innerHTML = "Modificar"
-            setTimeout(function(){$('#form').modal('show')}, 500);
-        })
-    }
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
 
-    reload_form()
+            document.getElementById("ficha_cargo_submit").innerHTML= "Guardar"
+            $('#ficha_cargo_id').val(0)
+            $('#form').modal('show')
+        })
+
+        $('#apbjf').click(function () {
+            $('#form-fcj').modal('show');
+        })
+
+        $('#apbgr').click(function () {
+            $('#form-fcg').modal('show');
+        })
+
+        $("#ficha_cargo_hipervinculo").change(function(){
+            $("#lnkha").hide();
+        });
+
+        $('#cjf-pass').mousedown(function(){
+            $("#ic-jfpass").css("color", "lightgrey");
+            $("#clavejf").prop("type", "text");
+        });
+        
+        $("#cjf-pass").mouseup(function(){
+            $("#ic-jfpass").css("color", "grey");
+            $("#clavejf").prop("type", "password");
+        });
+
+        $('#cgr-pass').mousedown(function(){
+            $("#ic-grpass").css("color", "lightgrey");
+            $("#clavegr").prop("type", "text");
+        });
+        
+        $("#cgr-pass").mouseup(function(){
+            $("#ic-grpass").css("color", "grey");
+            $("#clavegr").prop("type", "password");
+        });
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#ficha_cargo_id").attr("readonly", "readonly")
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/fichacargo_editar",{
+                    object: obj
+                },function(response){   
+                    var self = JSON.parse(response)   
+                                
+                    $('#ficha_cargo_id').val(self.id)
+                    $('#ficha_cargo_nombre').val(self.nombre)
+                    
+                    $('#ficha_cargo_fkarea').val(self.fkarea.id)
+                    $('#ficha_cargo_fkarea').selectpicker('render')
+
+                    $('#ficha_cargo_objetivo').val(self.objetivo)
+                    $('#ficha_cargo_responsabilidades').val(self.responsabilidades)
+                    $('#ficha_cargo_experiencia').val(self.experiencia)
+                    $('#ficha_cargo_conocimientos').val(self.conocimientos)
+                    $('#ficha_cargo_formacion').val(self.formacion)
+                    $('#ficha_cargo_caracteristicas').val(self.caracteristicas)
+                    $('#ficha_cargo_fechaaprobacion').val(self.fechaaprobacion)
+
+                    $('#ficha_cargo_fkjefeaprobador').val(self.fkjefeaprobador.id)
+                    $('#ficha_cargo_fkjefeaprobador').selectpicker('render')
+
+                    $('#ficha_cargo_fkgerenteaprobador').val(self.fkgerenteaprobador.id)
+                    $('#ficha_cargo_fkgerenteaprobador').selectpicker('render')
+                    document.getElementById('ficha_cargo_firmajefe').disabled=false
+                    $('#ficha_cargo_firmajefe').val(self.firmajefe)
+                    $('#ficha_cargo_firmajefe').selectpicker('render')
+            
+                    document.getElementById('ficha_cargo_firmagerente').disabled=false
+                    $('#ficha_cargo_firmagerente').val(self.firmagerente)
+                    $('#ficha_cargo_firmagerente').selectpicker('render')
+                    
+                    if(self.hipervinculo != 'N/A') {
+                        $('#lnkha').remove();
+                        let urlfile = self.hipervinculo;
+                        let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                        $("<a id='lnkha' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#ficha_cargo_hipervinculo");
+                    }
+                })
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                
+                document.getElementById("ficha_cargo_submit").innerHTML = "Modificar"
+                setTimeout(function(){$('#form').modal('show')}, 500);
+            })
+        }
+
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -283,45 +282,38 @@
             id = parseInt(JSON.parse($(this).attr('data-json')))
             ficha_prev(id)
 
-            setTimeout(function(){
-                let quest = message
-                enabled = false
+            let quest = message
+            enabled = false
 
-                if((quest.split(" ").length) > 8){
-                    swal({
-                        title: quest,
-                        type: "warning",
-                        showConfirmButton: false,
-                        showCancelButton: true,
-                        confirmButtonColor: "#004c99",
-                        cancelButtonColor: "#F44336",
-                        confirmButtonText: "Aceptar",
-                        cancelButtonText: "Cancelar"
-                    }).then(function () {
-
+            if((quest.split(" ").length) > 8){
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () { })
+            }else{
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+                    ajax_call("/fichacargo_eliminar", { 
+                        id, enabled,_xsrf: getCookie("_xsrf")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 2000);
                     })
-
-                }else{
-                    swal({
-                        title: quest,
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#004c99",
-                        cancelButtonColor: "#F44336",
-                        confirmButtonText: "Aceptar",
-                        cancelButtonText: "Cancelar"
-                    }).then(function () {
-                        ajax_call("/fichacargo_eliminar", { 
-                            id, enabled,_xsrf: getCookie("_xsrf")}, 
-                            null, 
-                            function () {
-                                setTimeout(function(){ window.location=main_route }, 2000);
-                        })
-                    })
-                }
-
-                }, 1500
-            )
+                })
+            }
         })
 
         $('#confirmjf').click(function () {
@@ -482,6 +474,7 @@
             });
         }
     </script>
+
     <script>
         aprobar_fcj()
         rechazar_fcj()
@@ -559,5 +552,4 @@
             });
         });
     </script>
-
 {% endblock %}

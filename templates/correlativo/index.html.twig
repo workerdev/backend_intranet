@@ -9,24 +9,9 @@
             font-size: 16px !important;
         }
     </style>
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
-    <script>
-        main_route = '/correlativo'
-
-        function default_values() {
-            page_nr = 1
-            max_entries = 10
-            like_search = ""
-            order_by = ""
-            ascendant = true
-        }
-        default_values()
-    </script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('correlativo/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>CORRELATIVO</h2></div>
@@ -71,7 +56,6 @@
                             <th class="d-none" data-name="phone">Referencia </th>
                             <th class="d-none" data-name="phone">Centro de control correlativo </th>
                             <th class="d-none" data-name="phone">Tipo de nota </th>
-                            <th class="d-none" data-name="phone">Equipo </th>
                             <th class="d-none" data-name="phone">IP </th>
                             <th class="order_by_th" data-name="phone">URL </th>
                             <th class="d-none" data-name="phone">Antecedente </th>
@@ -94,11 +78,24 @@
             <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
         {% endif %}
     </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/moment.js"></script>
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
-    <script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="resources/js/transporte.js"></script>
+    <script src="resources/js/functions.js"></script>
+
+    <script>
+        main_route = '/correlativo'
+
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
     <script>
     $('#correlativo_fkcorrelativo').selectpicker({
@@ -107,6 +104,7 @@
         liveSearchPlaceholder: 'Buscar control correlativo.',
         title: 'Seleccione un control correlativo.'
     })
+
     $('#correlativo_fktiponota').selectpicker({
         size: 4,
         liveSearch: true,
@@ -171,7 +169,7 @@
                 title: 'Seleccione una unidad.'
             })
             $('#form').modal('show')
-            }, 2000
+            }, 1000
         )
     })
 
@@ -202,7 +200,6 @@
                 combo_unidad()
 
                 var self = JSON.parse(response)    
-                console.log(self)  
                 $('#correlativo_id').show()
                 $("#correlativo_id").siblings().show()
                 $("#correlativo_id").attr("readonly", "readonly")
@@ -277,36 +274,33 @@
                 document.getElementById('correlativo_fkunidad').value = fu
                 $('#correlativo_fkunidad').selectpicker('render')
                 $('#form').modal('show')
-            }, 2000);
+            }, 1000);
         })
     }
 
     function combo_unidad() {
-        //$('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': 0
-            })
-            ajax_call_get("/obtener_unidad",{
-                object: obj
-            },function(response){ 
-                var self = JSON.parse(response)    
-                console.log(self)  
-                html = "<div class='btn-group bootstrap-select form-line form-label form-control'>"+
-                    "<select id='correlativo_fkunidad' name='correlativo[fkunidad]' class='form-line form-label form-control' tabindex='-98'>"
-                for (var i = 0; i < self.length; i++) {
-                    html += "<option value='"+self[i].id+"'>"+self[i].nombre+"</option>"
-                    console.log(self[i].id+"_"+self[i].nombre)
-                }
-                html += "</select>"+
-                    "</div>"
-                $(html).insertAfter('#lbl-unit')
-            })
-        //})
+        obj = JSON.stringify({
+            'id': 0
+        })
+        ajax_call_get("/obtener_unidad",{
+            object: obj
+        },function(response){ 
+            var self = JSON.parse(response)    
+            
+            html = "<div class='btn-group bootstrap-select form-line form-label form-control'>"+
+                "<select id='correlativo_fkunidad' name='correlativo[fkunidad]' class='form-line form-label form-control' tabindex='-98'>"
+            for (var i = 0; i < self.length; i++) {
+                html += "<option value='"+self[i].id+"'>"+self[i].nombre+"</option>"
+            }
+            html += "</select>"+
+                "</div>"
+            $(html).insertAfter('#lbl-unit')
+        })
     }
     </script>
     <script>
         attach_edit()
-        //combo_unidad()
+        
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
@@ -319,14 +313,14 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/correlativo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/correlativo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })      
     </script>
     <script>
         function format (d) {
             let frg = '<div class="card" style="width: 100%; ';
-            console.log(d[14]);
+            
             let estadocr = d[14];
             if(estadocr.localeCompare("Anulado") == 0) frg = frg + 'background-color: rgba(204, 0, 0, .12)">';
             else frg = frg + 'background-color: rgba(0, 76, 153, .15)">';

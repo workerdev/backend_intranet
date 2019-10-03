@@ -4,8 +4,8 @@
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
     {{ include('documentobaja/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>DOCUMENTO DE BAJA</h2></div>
@@ -52,8 +52,8 @@
         {% endif %}
     </div>
 {% endblock %}
+
 {% block javascripts %}
-    <script src="resources/plugins/momentjs/locale/es.js"></script>
     <script src="resources/js/transporte.js"></script>
     <script src="resources/js/functions.js"></script>
 
@@ -71,123 +71,125 @@
     </script>
 
     <script>
-    $('#documento_baja_fkficha').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar proceso.',
-        title: 'Seleccione un proceso.'
-    })
-    
-    $('#documento_baja_fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo.',
-        title: 'Seleccione un tipo de tipo.'
-    })
-    
-    $('#documento_baja_fkaprobador').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar aprobador.',
-        title: 'Seleccione un aprobador.'
-    })
-    
-    $('#documento_baja_versionvigente').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
-    
-    $('#new').click(function () {
-        $('#lnkva').remove();
-        $('#documento_baja_id').hide()
-        $("#documento_baja_id").siblings().hide()
+        $('#documento_baja_fkficha').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar proceso.',
+            title: 'Seleccione un proceso.'
+        })
         
-        $('#documento_baja_codigo').val('')
-        $('#documento_baja_titulo').val('')
-        $('#documento_baja_versionvigente').val('')
-        $('#documento_baja_fechapublicacion').val('')
-        $('#documento_baja_carpetaoperativa').val('')
-        $('#documento_baja_vinculoarchivo').val('')
+        $('#documento_baja_fktipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo.',
+            title: 'Seleccione un tipo de tipo.'
+        })
+        
+        $('#documento_baja_fkaprobador').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar aprobador.',
+            title: 'Seleccione un aprobador.'
+        })
+        
+        $('#documento_baja_versionvigente').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
+        
+        $('#new').click(function () {
+            $('#lnkva').remove();
+            $('#documento_baja_id').hide()
+            $("#documento_baja_id").siblings().hide()
+            
+            $('#documento_baja_codigo').val('')
+            $('#documento_baja_titulo').val('')
+            $('#documento_baja_versionvigente').val('')
+            $('#documento_baja_fechapublicacion').val('')
+            $('#documento_baja_carpetaoperativa').val('')
+            $('#documento_baja_vinculoarchivo').val('')
 
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-
-        document.getElementById("documento_baja_submit").innerHTML= "Guardar"
-        $('#documento_baja_id').val(0)
-        $('#form').modal('show')
-    })
-
-    $("#documento_baja_vinculoarchivo").change(function(){
-        $("#lnkva").hide();
-    });
-
-    $('#form').submit(function(){
-        var botonSubmit = document.getElementById('documento_baja_submit')
-        botonSubmit.innerText = "Guardando..."
-        botonSubmit.disabled = true
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            $("#documento_baja_id").attr("readonly", "readonly")
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/bajadocumento_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)   
-                            
-                $('#documento_baja_id').val(self.id)
-                $('#documento_baja_codigo').val(self.codigo)
-                $('#documento_baja_titulo').val(self.titulo)
-                $('#documento_baja_versionvigente').val(self.versionvigente)
-                $('#documento_baja_fechapublicacion').val(self.fechapublicacion)
-                $('#documento_baja_carpetaoperativa').val(self.carpetaoperativa)
-
-                $('#documento_baja_fkproceso').val(self.fkproceso.id)
-                $('#documento_baja_fkproceso').selectpicker('render')
-
-                $('#documento_baja_fktipo').val(self.fktipo.id)
-                $('#documento_baja_fktipo').selectpicker('render')
-
-                $('#documento_baja_fkaprobador').val(self.fkaprobador.id)
-                $('#documento_baja_fkaprobador').selectpicker('render')
-
-                $('#documento_baja_versionvigente').val(self.versionvigente)
-                $('#documento_baja_versionvigente').selectpicker('render')
-
-                if(self.vinculoarchivo != 'N/A') {
-                    $('#lnkva').remove();
-                    let urlfile = self.vinculoarchivo;
-                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_baja_vinculoarchivo");
-                }
-            })
             clean_form()
             verif_inputs()
-            $('#id_div').show()
-            $('#insert').hide()
-            $('#update').show()
-            
-            document.getElementById("documento_baja_submit").innerHTML = "Modificar"
-            setTimeout(function(){$('#form').modal('show')}, 500);
-        })
-    }
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
 
-    reload_form()
+            document.getElementById("documento_baja_submit").innerHTML= "Guardar"
+            $('#documento_baja_id').val(0)
+            $('#form').modal('show')
+        })
+
+        $("#documento_baja_vinculoarchivo").change(function(){
+            $("#lnkva").hide();
+        });
+
+        $('#form').submit(function(){
+            var botonSubmit = document.getElementById('documento_baja_submit')
+            botonSubmit.innerText = "Guardando..."
+            botonSubmit.disabled = true
+        })
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#documento_baja_id").attr("readonly", "readonly")
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/bajadocumento_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)   
+                                
+                    $('#documento_baja_id').val(self.id)
+                    $('#documento_baja_codigo').val(self.codigo)
+                    $('#documento_baja_titulo').val(self.titulo)
+                    $('#documento_baja_versionvigente').val(self.versionvigente)
+                    $('#documento_baja_fechapublicacion').val(self.fechapublicacion)
+                    $('#documento_baja_carpetaoperativa').val(self.carpetaoperativa)
+
+                    $('#documento_baja_fkproceso').val(self.fkproceso.id)
+                    $('#documento_baja_fkproceso').selectpicker('render')
+
+                    $('#documento_baja_fktipo').val(self.fktipo.id)
+                    $('#documento_baja_fktipo').selectpicker('render')
+
+                    $('#documento_baja_fkaprobador').val(self.fkaprobador.id)
+                    $('#documento_baja_fkaprobador').selectpicker('render')
+
+                    $('#documento_baja_versionvigente').val(self.versionvigente)
+                    $('#documento_baja_versionvigente').selectpicker('render')
+
+                    if(self.vinculoarchivo != 'N/A') {
+                        $('#lnkva').remove();
+                        let urlfile = self.vinculoarchivo;
+                        let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                        $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#documento_baja_vinculoarchivo");
+                    }
+                })
+                clean_form()
+                verif_inputs()
+                $('#id_div').show()
+                $('#insert').hide()
+                $('#update').show()
+                
+                document.getElementById("documento_baja_submit").innerHTML = "Modificar"
+                setTimeout(function(){$('#form').modal('show')}, 500);
+            })
+        }
+
+        reload_form()
     </script>
+
     <script>
         attach_edit()
         
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
+
             swal({
                 title: "¿Desea dar de baja el documento?",
                 type: "warning",
@@ -197,9 +199,8 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/bajadocumento_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/bajadocumento_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
     </script>
-
 {% endblock %}

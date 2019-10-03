@@ -1,25 +1,12 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
 <style>
     .accion{ cursor:pointer }
 </style>
-<script src="resources/js/functions.js"></script>
-
-<script>
-    main_route = '/auditoriaequipo'
-
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('auditoriaequipo/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>EQUIPO DE AUDITORÍA</h2></div>
@@ -55,11 +42,23 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
+{% endblock %}
+
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="resources/js/functions.js"></script>
+
+<script>
+    main_route = '/auditoriaequipo'
+
+    function default_values() {
+        page_nr = 1
+        max_entries = 10
+        like_search = ""
+        order_by = ""
+        ascendant = true
+    }
+    default_values()
+</script>
 
 <script>
     attach_validators()
@@ -105,14 +104,12 @@
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation("/auditoriaequipo_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/auditoriaequipo_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
             ajax_call_get("/auditoriaequipo_editar",{
                 object: obj
@@ -147,13 +144,11 @@
             'tipo': $('#fktipo').val()
         })
         ajax_call_validation( "/auditoriaequipo_actualizar" , {object: objeto}, null, main_route)
-        // ajax_call("/auditoriaequipo_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
-<script>
 
+<script>
     attach_edit()
 
     $('.delete').click(function () {
@@ -171,7 +166,6 @@
             ajax_call("/auditoriaequipo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
         })
     })
-
 </script>
 
 {% endblock %}

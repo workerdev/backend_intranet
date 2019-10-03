@@ -4,8 +4,8 @@
     .accion{ cursor:pointer }
 </style>
 {% endblock %}
-{% block body %}
 
+{% block body %}
 {{ include('galeria/form.html.twig') }}
 
 <div class="header bg-indigo"><h2>GALERÍA</h2></div>
@@ -40,13 +40,11 @@
     <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
     {% endif %}
 </div>
-{%endblock%}
-{% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+{% endblock %}
 
+{% block javascripts %}
 <script src="resources/js/functions.js"></script>
+
 <script>
     main_route = '/galeria'
 
@@ -59,6 +57,7 @@
     }
     default_values()
 </script>
+
 <script>
     attach_validators()
     $('#new').click(function () {
@@ -79,14 +78,12 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/galeria_insertar", {object: objeto}, null, main_route)
-        // ajax_call("/galeria_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
 
     function attach_edit() {
         $('.edit').click(function () {
             obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
             });
             ajax_call_get("/galeria_editar",{
                 object: obj
@@ -113,13 +110,11 @@
             'descripcion': $('#descripcion').val()
         })
         ajax_call_validation("/galeria_actualizar", {object: objeto}, null, main_route)
-        // ajax_call("/galeria_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        // $('#form').modal('hide')
     })
     reload_form()
 </script>
-<script>
 
+<script>
     attach_edit()
 
     $('.delete').click(function () {
@@ -134,10 +129,8 @@
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/galeria_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+            ajax_call("/galeria_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
         })
     })
-
 </script>
-
 {% endblock %}
