@@ -5,9 +5,9 @@ applications:
    memory: 128M
 
 assetic:
-  node: C:/Program Files/nodejs
+  #node: C:/Program Files/nodejs
   filters:
     uglifyjs2:
-      bin: C:/Users/Sum/AppData/Roaming/npm/node_modules/uglify-js/bin/uglifyjs
-    uglifycss:
-      bin: C:/Users/Sum/AppData/Roaming/npm/node_modules/uglifycss/uglifycss
+      bin: '%kernel.project_dir%/public/uglify-js/bin/uglifyjs'
+    #uglifycss:
+      #bin: C:/Users/Sum/AppData/Roaming/npm/node_modules/uglifycss/uglifycss
