@@ -13,3 +13,11 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
 ];
+
+/*$container->loadFromExtension('assetic', array(
+    'node'      => 'C:/Program Files/nodejs',
+    'uglifyjs2' => array(
+        // the path to the uglifyjs executable
+        'bin' => 'C:/Users/Sum/AppData/Roaming/npm/node_modules/uglify-js/bin/uglifyjs',
+    ),
+));*/

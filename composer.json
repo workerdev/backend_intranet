@@ -11,6 +11,7 @@
         "eightpoints/guzzle-bundle": "^7.3",
         "phpoffice/phpspreadsheet": "^1.6",
         "sensio/framework-extra-bundle": "^5.2",
+        "symfony/asset": "4.1.*",
         "symfony/console": "*",
         "symfony/filesystem": "*",
         "symfony/flex": "^1.1",
