@@ -88,9 +88,11 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         ),
         'S' => 
         array (
+            'Symfony\\WebpackEncoreBundle\\' => 28,
             'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Flex\\' => 13,
+            'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\Validator\\' => 28,
@@ -204,6 +206,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
+        'Symfony\\WebpackEncoreBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/webpack-encore-bundle/src',
+        ),
         'Symfony\\Polyfill\\Php72\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
@@ -215,6 +221,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'Symfony\\Flex\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/flex/src',
+        ),
+        'Symfony\\Contracts\\Service\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
         'Symfony\\Component\\Yaml\\' => 
         array (

@@ -1,0 +1,9 @@
+.nav-img {
+    height: 100%;
+    padding: 2px;
+    width: auto;
+}   
+
+.slimScrollBar-own{
+    width: 8px !important;
+}

@@ -20,6 +20,7 @@
       <parameter key="SwiftmailerBundle">Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle</parameter>
       <parameter key="SecurityBundle">Symfony\Bundle\SecurityBundle\SecurityBundle</parameter>
       <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
+      <parameter key="WebpackEncoreBundle">Symfony\WebpackEncoreBundle\WebpackEncoreBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -65,6 +66,10 @@
       <parameter key="DoctrineFixturesBundle" type="collection">
         <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\doctrine\doctrine-fixtures-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
+      </parameter>
+      <parameter key="WebpackEncoreBundle" type="collection">
+        <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\symfony\webpack-encore-bundle\src</parameter>
+        <parameter key="namespace">Symfony\WebpackEncoreBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -1358,12 +1363,16 @@
         <argument key="form.type.entity" type="service" id="form.type.entity" on-invalid="ignore_uninitialized"/>
         <argument key="swiftmailer.email_sender.listener" type="service" id="swiftmailer.email_sender.listener" on-invalid="ignore_uninitialized"/>
         <argument key="security.token_storage" type="service" id="security.token_storage" on-invalid="ignore_uninitialized"/>
+        <argument key="webpack_encore.tag_renderer" type="service" id="webpack_encore.tag_renderer" on-invalid="ignore_uninitialized"/>
+        <argument key="webpack_encore.entrypoint_lookup[_default]" type="service" id="webpack_encore.entrypoint_lookup[_default]" on-invalid="ignore_uninitialized"/>
       </argument>
       <argument type="collection">
         <argument key="debug.stopwatch">reset</argument>
         <argument key="form.type.entity">reset</argument>
         <argument key="swiftmailer.email_sender.listener">reset</argument>
         <argument key="security.token_storage">setToken</argument>
+        <argument key="webpack_encore.tag_renderer">reset</argument>
+        <argument key="webpack_encore.entrypoint_lookup[_default]">reset</argument>
       </argument>
     </service>
     <service id="fragment.handler" class="Symfony\Component\HttpKernel\DependencyInjection\LazyLoadingFragmentHandler" public="false">
@@ -1695,6 +1704,7 @@
         <argument key="cache.serializer" type="service" id="cache.serializer" on-invalid="ignore_uninitialized"/>
         <argument key="cache.annotations" type="service" id="cache.annotations" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
+        <argument key="cache.webpack_encore" type="service" id="cache.webpack_encore" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
     <service id="cache.global_clearer" class="Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer" public="true">
@@ -1706,6 +1716,7 @@
         <argument key="cache.serializer" type="service" id="cache.serializer" on-invalid="ignore_uninitialized"/>
         <argument key="cache.annotations" type="service" id="cache.annotations" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
+        <argument key="cache.webpack_encore" type="service" id="cache.webpack_encore" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
     <service id="translator.selector" class="Symfony\Component\Translation\MessageSelector" public="false"/>
@@ -1894,9 +1905,12 @@
     <service id="assets.json_manifest_version_strategy" class="Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy" public="false" abstract="true">
       <argument></argument>
     </service>
+    <service id="assets._version__default" class="Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy" public="false">
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend/public/build/manifest.json</argument>
+    </service>
     <service id="assets._default_package" class="Symfony\Component\Asset\PathPackage" public="false">
       <argument></argument>
-      <argument type="service" id="assets.empty_version_strategy"/>
+      <argument type="service" id="assets._version__default"/>
       <argument type="service" id="assets.context"/>
     </service>
     <service id=".1_PhpArrayAdapter~4fa53VS" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" public="false">
@@ -3238,6 +3252,9 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="doctrine.twig.doctrine_extension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="webpack_encore.twig_entry_files_extension"/>
       </call>
       <call method="addGlobal">
         <argument>app</argument>
@@ -4747,6 +4764,62 @@
           <argument type="service" id="App\DataFixtures\UsuarioModFixtures"/>
         </argument>
       </call>
+    </service>
+    <service id=".1_ServiceLocator~ymkO.3y" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="webpack_encore.entrypoint_lookup_collection" type="service" id="webpack_encore.entrypoint_lookup_collection"/>
+        <argument key="webpack_encore.tag_renderer" type="service" id="webpack_encore.tag_renderer"/>
+      </argument>
+    </service>
+    <service id="webpack_encore.entrypoint_lookup_collection" class="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollection" public="false">
+      <argument type="service" id=".service_locator._faFGeI"/>
+      <argument>_default</argument>
+    </service>
+    <service id="webpack_encore.tag_renderer" class="Symfony\WebpackEncoreBundle\Asset\TagRenderer" public="false">
+      <tag name="kernel.reset" method="reset"/>
+      <argument type="service" id="webpack_encore.entrypoint_lookup_collection"/>
+      <argument type="service" id="assets.packages"/>
+      <argument type="collection"/>
+    </service>
+    <service id="webpack_encore.twig_entry_files_extension" class="Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension" public="false">
+      <tag name="twig.extension"/>
+      <argument type="service" id=".1_ServiceLocator~ymkO.3y"/>
+    </service>
+    <service id="webpack_encore.entrypoint_lookup.cache_warmer" class="Symfony\WebpackEncoreBundle\CacheWarmer\EntrypointCacheWarmer" public="false">
+      <tag name="kernel.cache_warmer"/>
+      <argument type="collection">
+        <argument key="_default">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend/public/build/entrypoints.json</argument>
+      </argument>
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\var\cache\dev/webpack_encore.cache.php</argument>
+      <argument type="service" id="cache.webpack_encore"/>
+    </service>
+    <service id="webpack_encore.cache" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" public="false">
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\var\cache\dev/webpack_encore.cache.php</argument>
+      <argument type="service" id="cache.webpack_encore"/>
+      <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
+    </service>
+    <service id="cache.webpack_encore" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <tag name="cache.pool"/>
+      <argument>eH9z7mP5Qd</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\var\cache\dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="webpack_encore.entrypoint_lookup[_default]" class="Symfony\WebpackEncoreBundle\Asset\EntrypointLookup">
+      <tag name="kernel.reset" method="reset"/>
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend/public/build/entrypoints.json</argument>
+      <argument>null</argument>
+      <argument>_default</argument>
+      <argument>true</argument>
+    </service>
+    <service id=".service_locator._faFGeI" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="_default" type="service" id="webpack_encore.entrypoint_lookup[_default]"/>
+      </argument>
     </service>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
@@ -6618,12 +6691,15 @@
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker" public="false"/>
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
+    <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface" alias="webpack_encore.entrypoint_lookup_collection" public="false"/>
+    <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface" alias="webpack_encore.entrypoint_lookup[_default]"/>
     <service id="argument_resolver.controller_locator" alias=".service_locator.TDpIBhO"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>
     <service id=".service_locator.AoifO_3" alias=".2_ServiceLocator~pl6jJ.0" public="false"/>
     <service id=".service_locator.jD4_ZG7" alias=".1_ServiceLocator~od95.nD" public="false"/>
+    <service id=".service_locator.tSKDlY7" alias=".1_ServiceLocator~ymkO.3y" public="false"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver" public="false"/>
     <service id="argument_resolver" alias="debug.argument_resolver" public="false"/>

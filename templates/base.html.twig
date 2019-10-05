@@ -5,30 +5,7 @@
         <title>{% block title %}{{ title_page }}{% endblock %}</title>
 
         {% block stylesheets %}
-            <link rel="icon" href="{{ asset('' ~ logo_page ~ '') }}" type="image/x-icon">
-            <link href="{{ asset('resources/css/iconfont/material-icons.css') }}" rel="stylesheet">
-            <link href="{{ asset('resources/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
-            <link href="{{ asset('resources/plugins/node-waves/waves.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/fileinput/css/fileinput.min.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/animate-css/animate.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/bootstrap-select/css/bootstrap-select.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/css/style.css') }}" rel="stylesheet">
-            <link href="{{ asset('resources/css/themes/all-themes.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/nestable/jquery-nestable.css') }}" rel="stylesheet">
-            <link href="{{ asset('resources/css/main.css') }}" rel="stylesheet" />
-            <link href="{{ asset('resources/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
-            
-            <style>
-                .nav-img {
-                    height: 100%;
-                    padding: 2px;
-                    width: auto;
-                }   
-                .slimScrollBar-own{
-                    width: 8px !important;
-                }
-            </style>
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
 
@@ -136,9 +113,8 @@
             </section>
         {% endblock %}
         
-            {% javascripts 'resources/js/admin.js' filter='uglifyjs2' %}
-                <script src="{{ asset_url }}"></script>
-            {% endjavascripts %}
-            
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </body>
 </html>
