@@ -1,780 +1,795 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-<style>
-    .swal2-title{
-        font-size: 16px !important;
-    }
-    .txta-own{
-        background-color: rgba(40, 40, 40, .05);
-        min-width: 100% !important;
-        max-width: 100% !important;
-        padding: 4px !important;
-    }
-    .modal-dialog-own{
-        width: 70%;
-    }
-    .all-w{
-        width: 100% !important;
-    }
-    .scroll-own{
-        overflow-y: scroll;
-    }
-    .error-own{
-        display: block !important;
-        height: 0px !important;
-        padding: 0px !important;
-        margin: 0px !important;
-    }
-    .btn-own{
-        margin-right: 2px;
-        margin-bottom: 2px;
-    }
-    .btn-add-own{
-        margin-bottom: 10px;
-    }
-</style>
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <style>
+        .swal2-title{
+            font-size: 16px !important;
+        }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
+        .modal-dialog-own{
+            width: 70%;
+        }
+        .all-w{
+            width: 100% !important;
+        }
+        .scroll-own{
+            overflow-y: scroll;
+        }
+        .error-own{
+            display: block !important;
+            height: 0px !important;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+        .btn-own{
+            margin-right: 2px;
+            margin-bottom: 2px;
+        }
+        .btn-add-own{
+            margin-bottom: 10px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('auditoria/form.html.twig') }}
-{{ include('fortaleza/form.html.twig') }}
-{{ include('hallazgo/form.html.twig') }}
+    {{ parent() }}
+    {{ include('auditoria/form.html.twig') }}
+    {{ include('fortaleza/form.html.twig') }}
+    {{ include('hallazgo/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>AUDITORÍA</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'auditoria_insertar' in permisos %} 
-            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                <i class="material-icons">add</i>
-            </button>
-            <button id="rep" type="button" class="btn btn-info waves-effect" title="Reporte programa anual">
-                <i class="material-icons">picture_as_pdf</i>
-            </button>
-        {% endif %}  
+                    <div class="header bg-indigo"><h2>AUDITORÍA</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'auditoria_insertar' in permisos %} 
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                                <button id="rep" type="button" class="btn btn-info waves-effect" title="Reporte programa anual">
+                                    <i class="material-icons">picture_as_pdf</i>
+                                </button>
+                            {% endif %}  
+                            </div>
+                        </div>
+                        <div style="text-align:center; margin:auto; width:100%; height:60px;" id="spn-adrp">
+                            <div class="plan-icon-load progress" style='margin:auto; display:none; height:60px;'>
+                                <img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>
+                            </div>
+                        </div>
+                        {% if 'home_auditoria' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="d-none" data-name="phone">ID </th>
+                                        <th class="order_by_th" data-name="names">Código </th>
+                                        <th class="order_by_th" data-name="phone">Sector </th>
+                                        <th class="order_by_th" data-name="phone">Tipo </th>
+                                        <th class="order_by_th" data-name="phone">Fecha programada </th>
+                                        <th class="order_by_th" data-name="phone">Duración estimada </th>
+                                        <th class="order_by_th" data-name="phone">Lugar </th>
+                                        <th class="d-none" data-name="phone">Alcance </th>
+                                        <th class="d-none" data-name="phone">Objetivos </th>
+                                        <th class="d-none" data-name="phone">Fecha/hora de inicio </th>
+                                        <th class="d-none" data-name="phone">Fecha/hora de fin </th>
+                                        <th class="d-none" data-name="phone">Conclusiones </th>
+                                        <th class="d-none" data-name="phone">Responsable </th>
+                                        <th class="d-none" data-name="phone">Fecha de registro </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('auditoria/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    <div style="text-align:center; margin:auto; width:100%; height:60px;" id="spn-adrp">
-        <div class="plan-icon-load progress" style='margin:auto; display:none; height:60px;'>
-            <img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>
-        </div>
-    </div>
-    {% if 'home_auditoria' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th class="d-none" data-name="phone">ID </th>
-                    <th class="order_by_th" data-name="names">Código </th>
-                    <th class="order_by_th" data-name="phone">Sector </th>
-                    <th class="order_by_th" data-name="phone">Tipo </th>
-                    <th class="order_by_th" data-name="phone">Fecha programada </th>
-                    <th class="order_by_th" data-name="phone">Duración estimada </th>
-                    <th class="order_by_th" data-name="phone">Lugar </th>
-                    <th class="d-none" data-name="phone">Alcance </th>
-                    <th class="d-none" data-name="phone">Objetivos </th>
-                    <th class="d-none" data-name="phone">Fecha/hora de inicio </th>
-                    <th class="d-none" data-name="phone">Fecha/hora de fin </th>
-                    <th class="d-none" data-name="phone">Conclusiones </th>
-                    <th class="d-none" data-name="phone">Responsable </th>
-                    <th class="d-none" data-name="phone">Fecha de registro </th>
-                    <th class="actions_header">Acciones </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('auditoria/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/plugins/momentjs/moment.js"></script>
-<script src="resources/plugins/momentjs/locale/es.js"></script>
-<script src="resources/js/functions.js"></script>
-<script src="resources/js/hallazgo.js"></script>
-<script src="resources/js/fortaleza.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/plugins/momentjs/moment.js') }}"></script>
+    <script src="{{ asset('resources/plugins/momentjs/locale/es.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
+    <script src="{{ asset('resources/js/hallazgo.js') }}"></script>
+    <script src="{{ asset('resources/js/fortaleza.js') }}"></script>
 
-<script>
-    main_route = '/auditoria'
+    <script>
+        main_route = '/auditoria'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-<script>
-    var i_aud = 0; 
-    var del_aud = [];
+    <script>
+        var i_aud = 0; 
+        var del_aud = [];
 
-    function format (d) {
-        return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td class="bold">Alcance:</td>'+
-                '<td style="white-space: pre-wrap">'+d[8]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Objetivos:</td>'+
-                '<td style="white-space: pre-wrap">'+d[9]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha/hora de inicio:</td>'+
-                '<td>'+d[10]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha/hora de fin:</td>'+
-                '<td>'+d[11]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Conclusiones:</td>'+
-                '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Responsable:</td>'+
-                '<td>'+d[13]+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td class="bold">Fecha de registro:</td>'+
-                '<td>'+d[14]+'</td>'+
-            '</tr>'+
-        '</table></div>';
-    }
- 
-    $(document).ready(function() {
-        table = $('#data_table').DataTable();
-        $('#data_table tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            let idet = 'aud'+row.data()[1];
-            if ( row.child.isShown()) {
-                row.child.hide();
-                tr.removeClass('shown');
-                $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
-                $("#"+idet).attr('title', 'Mostrar más');
-            }
-            else {
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
-                $("#"+idet).attr('title', 'Ver menos');
-            }
-        });
-        $('.error').addClass("error-own")
-    });
-</script>
-
-<script>
-    $('#fkgas').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar sector.',
-        title: 'Seleccione un sector.'
-    })
-
-    $('#fktipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo.',
-        title: 'Seleccione un tipo.'
-    })
-
-    $('#rep').click(function () {
-        $('#gestion').val('')
-        $('#form_aud').modal('show')
-    })
-
-    $('#new').click(function () {
-        $('#codigo').val('')
-        $('#fechaprogramada').val('')
-        $('#duracionestimada').val('')
-        $('#lugar').val('')
-        $('#alcance').val('')
-        $('#objetivos').val('')
-        $('#fechahorainicio').val('')
-        $('#fechahorafin').val('')
-        $('#conclusiones').val('')
-        $('#responsable').val('')
-        $('#fecharegistro').val('')
-
-        $('#fkgas').val('')
-        $('#fkgas').selectpicker('render')
-        $('#fktipo').val('')
-        $('#fktipo').selectpicker('render')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#conclusiones').parent().hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
+        function format (d) {
+            return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="bold">Alcance:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[8]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Objetivos:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[9]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha/hora de inicio:</td>'+
+                    '<td>'+d[10]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha/hora de fin:</td>'+
+                    '<td>'+d[11]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Conclusiones:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Responsable:</td>'+
+                    '<td>'+d[13]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha de registro:</td>'+
+                    '<td>'+d[14]+'</td>'+
+                '</tr>'+
+            '</table></div>';
+        }
     
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'codigo': $('#codigo').val(),
-            'fechaprogramada': $('#fechaprogramada').val(),
-            'duracionestimada': $('#duracionestimada').val(),
-            'lugar': $('#lugar').val(),
-            'alcance': $('#alcance').val(),
-            'objetivos': $('#objetivos').val(),
-            'fechahorainicio': $('#fechahorainicio').val(),
-            'fechahorafin': $('#fechahorafin').val(),
-            'conclusiones': $('#conclusiones').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-            
-            'sector': $('#fkgas').val(),
-            'tipo': $('#fktipo').val()
-        })
-        ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
-    })
+        $(document).ready(function() {
+            table = $('#data_table').DataTable();
+            $('#data_table tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            $('#conclusiones').parent().show()
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/auditoria_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#codigo').val(self.codigo)
-                
-                $('#fkgas').val(self.fkgas.id)
-                $('#fkgas').selectpicker('render')
-                $('#fktipo').val(self.fktipo.id)
-                $('#fktipo').selectpicker('render')
-
-                var fechaprog = moment(self.fechaprogramada)
-                $('#fechaprogramada').val(fechaprog.format("YYYY-MM-DD"))
-                $('#duracionestimada').val(self.duracionestimada)
-                $('#lugar').val(self.lugar)
-                $('#alcance').val(self.alcance)
-                $('#objetivos').val(self.objetivos)
-                var d = self.fechahorainicio
-                var fi = d.replace(" ","T")
-                $('#fechahorainicio').val(d)
-                var d2= self.fechahorafin
-                if(d2 != null){
-                    var ff = d2.replace(" ","T")
-                    $('#fechahorafin').val(d2)
-                }else $('#fechahorafin').val(ff)
-                $('#conclusiones').val(self.conclusiones)
-                $('#responsable').val(self.responsable)
-                var fecharegistro = moment(self.fecharegistro)
-
-                $('#fecharegistro').val(fecharegistro.format("YYYY-MM-DD"))
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
-            })
-        })
-    }
-
-    function proaud_rep() {
-        $('.prorep').click(function () {
-            obj = JSON.stringify({
-                'anio': $('#gestion').val()
-            });
-            ajax_call_rep("/auditoria_anual",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-            })
-            $('#form_aud').modal('hide')
-        })
-    }
-
-    function proaud_xrep() {
-        $('.proxrep').click(function () {
-            obj = JSON.stringify({
-                'anio': $('#gestion').val()
-            });
-
-            ajax_call_rep("/aud_anual",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                let urlfile = self.url;
-                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
-                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
-            })
-            $('#form_aud').modal('hide')
-        })
-    }
-
-    function notaud_rep() {
-        $('.notifrep').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-
-            ajax_call_reptb("/auditoria_notif",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                let urlfile = self.url;
-                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
-                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
-            })
-        })
-    }
-
-    function genaud_rep() {
-        $('.audrep').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            
-            ajax_call_reptb("/auditoria_rep",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                let urlfile = self.url;
-                let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
-                setTimeout(function(){ $("#lnkrp").remove() }, 10000);
-            })
-        })
-    }
-
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'codigo': $('#codigo').val(),
-            'fechaprogramada': $('#fechaprogramada').val(),
-            'duracionestimada': $('#duracionestimada').val(),
-            'lugar': $('#lugar').val(),
-            'alcance': $('#alcance').val(),
-            'objetivos': $('#objetivos').val(),
-            'fechahorainicio': $('#fechahorainicio').val(),
-            'fechahorafin': $('#fechahorafin').val(),
-            'conclusiones': $('#conclusiones').val(),
-            'responsable': $('#responsable').val(),
-            'fecharegistro': $('#fecharegistro').val(),
-            
-            'sector': $('#fkgas').val(),
-            'tipo': $('#fktipo').val()
-        })
-        ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
-    })
-    reload_form()
-</script>
-
-<script>
-    attach_edit()
-    proaud_rep()
-    proaud_xrep()
-    notaud_rep()
-    genaud_rep()
-
-    let message= ''
-    function aud_previous(id) { 
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse(id))
-        });
-        ajax_call_get("/auditoria_prev",{
-            object: obj
-        },function(response){
-            message = response;
-        });
-    }
-
-    $('.delete').click(function () {
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        aud_previous(id)
-
-        let quest = message + " ¿Está seguro en dar de baja los datos de la auditoría?" 
-        enabled = false
-        swal({
-            title: quest,
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#004c99",
-            cancelButtonColor: "#F44336",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(function () {
-            ajax_call("/auditoria_eliminar", { 
-                id, enabled,_xsrf: getCookie("_xsrf")}, 
-                null, 
-                function () {
-                    setTimeout(function(){ window.location=main_route }, 1000);
-            })
-        })
-    })
-</script>
-
-<script>
-    $('.team').click(function () {
-        $('#idaud').parent().parent().parent().hide()
-        del_aud = [];
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
-        });
-
-        ajax_call_get("/auditoria_editar",{
-            object: obj
-        },function(response){
-            let self = JSON.parse(response)
-
-            ajax_call_get("/equipoaud_editar",{
-                object: obj
-            },function(responses){
-                let data = JSON.parse(responses)
-
-                $('#idaud').val(self.id)
-                $('#codigoaud').val(self.codigo)
-                $('#sectoraud').val(self.fkgas.fksector.nombre)
-                
-                var table = $('#table_team').DataTable({
-                    language: {
-                        "url": "/resources/js/spanish.json"
-                    }
-                });
-                table.clear().draw();
-
-                if(data.length > 0){
-                    for(var i = 0; i < data.length; i++){
-                        $('#new-aud').click()
-
-                        $('#auditor'+i_aud).val(data[i].fkauditor.id);
-                        $('#auditor'+i_aud).selectpicker('render');
-                        $('#tipo'+i_aud).val(data[i].fktipo.id);
-                        $('#tipo'+i_aud).selectpicker('render');
-
-                        $('#bd'+i_aud).attr('aud-id', data[i].id);
-                    }
+                let idet = 'aud'+row.data()[1];
+                if ( row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                    $("#"+idet).attr('title', 'Mostrar más');
                 }
-                
-                $('#form-team').modal('show')
-            })
-        })
-    })
+                else {
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                    $("#"+idet).attr('title', 'Ver menos');
+                }
+            });
+            $('.error').addClass("error-own")
+        });
+    </script>
 
-    $('#new-aud').click(function () {
-        var table = $('#table_team').DataTable();
-        i_aud++;
-        var combo_auditor = '<div class="input-field">'+
-            '<select id="auditor'+i_aud+'" name="auditores" class="auditores show-tick">';
-        var combo_tipo = '<div class="input-field">'+
-            '<select id="tipo'+i_aud+'" name="tipos" class="tipos show-tick">';
-
-        var accion = '';
-        {% for tr in auditor %}
-            combo_auditor += "<option value='"+"{{tr.id}}"+"'>"+"{{tr.nombres ~ ' ' ~ tr.paterno ~ ' ' ~ tr.materno}}"+"</option>";
-        {% endfor %}
-        combo_auditor += '</select>'+
-                    '</div>';
-        {% for t in tpauditor %}
-            combo_tipo += "<option value='"+"{{t.id}}"+"'>"+"{{t.nombre}}"+"</option>";
-        {% endfor %}
-        combo_tipo += '</select>'+
-                    '</div>';
-        accion = '<div class="col-sm-1">'+
-                '   <button id="bd'+i_aud+'" type="button" name="change-vl" class="btn bg-red waves-effect clear_auditor" data-id="'+i_aud+'" aud-id="0" title="Eliminar">'+
-                    '   <i class="material-icons">clear</i>'+
-                '   </button>'+
-                '</div>';
-
-        table.row.add([
-            $('#idaud').val(),
-            combo_auditor,
-            combo_tipo,
-            accion
-        ]).draw(false);
-        
-        $('#auditor'+i_aud).selectpicker({
+    <script>
+        $('#fkgas').selectpicker({
             size: 4,
             liveSearch: true,
-            liveSearchPlaceholder: 'Buscar auditor.',
-            title: 'Seleccione un auditor.'
+            liveSearchPlaceholder: 'Buscar sector.',
+            title: 'Seleccione un sector.'
         })
-        
-        $('#tipo'+i_aud).selectpicker({
+
+        $('#fktipo').selectpicker({
             size: 4,
             liveSearch: true,
             liveSearchPlaceholder: 'Buscar tipo.',
             title: 'Seleccione un tipo.'
-        }) 
+        })
 
-        $('.auditores').change(function() {
-            var valord = $(this).val()
-            var vid = $(this).prop('id')
-            $('select[name="auditores"]').each(function(){
-                if($(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
-                    swal(
-                        'Error de datos',
-                        'No puede duplicarse un auditor.',
-                        'warning'
-                    ) 
-                    $('#'+vid).val('')
-                    $('#'+vid).selectpicker('render')
-                }
-            });
-        });
+        $('#rep').click(function () {
+            $('#gestion').val('')
+            $('#form_aud').modal('show')
+        })
 
-        $('.tipos').change(function() {
-            var valord = $(this).val()
-            var vid = $(this).prop('id')
-            var text = $(this).find(":selected").text();
-            $('select[name="tipos"]').each(function(){
-                if(text == 'AUDITOR LIDER' &&  $(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
-                    swal(
-                        'Error de datos',
-                        'No puede duplicarse el tipo.',
-                        'warning'
-                    ) 
-                    $('#'+vid).val('')
-                    $('#'+vid).selectpicker('render')
-                }
-            });
-        });
+        $('#new').click(function () {
+            $('#codigo').val('')
+            $('#fechaprogramada').val('')
+            $('#duracionestimada').val('')
+            $('#lugar').val('')
+            $('#alcance').val('')
+            $('#objetivos').val('')
+            $('#fechahorainicio').val('')
+            $('#fechahorafin').val('')
+            $('#conclusiones').val('')
+            $('#responsable').val('')
+            $('#fecharegistro').val('')
 
-        $('.auditores').parent().addClass('all-w');
-        $('.tipos').parent().addClass('all-w');
-        $('#bd'+i_aud).parent().parent().parent().attr('id', 'tr'+i_aud)
+            $('#fkgas').val('')
+            $('#fkgas').selectpicker('render')
+            $('#fktipo').val('')
+            $('#fktipo').selectpicker('render')
 
-        $('#table_team').on( 'click', 'tbody tr td div.col-sm-1 button.clear_auditor', function () {
-            if($(this).attr("aud-id")){
-                if(!del_aud.includes($(this).attr("aud-id")) && $(this).attr("aud-id") != '0') del_aud.push($(this).attr("aud-id"))
-            }
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#conclusiones').parent().hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+        
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'codigo': $('#codigo').val(),
+                'fechaprogramada': $('#fechaprogramada').val(),
+                'duracionestimada': $('#duracionestimada').val(),
+                'lugar': $('#lugar').val(),
+                'alcance': $('#alcance').val(),
+                'objetivos': $('#objetivos').val(),
+                'fechahorainicio': $('#fechahorainicio').val(),
+                'fechahorafin': $('#fechahorafin').val(),
+                'conclusiones': $('#conclusiones').val(),
+                'responsable': $('#responsable').val(),
+                'fecharegistro': $('#fecharegistro').val(),
+                
+                'sector': $('#fkgas').val(),
+                'tipo': $('#fktipo').val()
+            })
+            ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
+        })
 
-            idrmv = $(this).attr('data-id');
-            var dltable = $('#table_team').DataTable();
-            dltable.row('#tr'+idrmv).remove().draw(false);
-        });
-    })
-
-    $('#save-team').click(function () {
-        var list_aud = [];
-        var list_type = [];
-        var list_ideq = [];
-        $("select[name=auditores]").each(function (index) { 
-            let i = $(this).val(); 
-
-            let el_crt = document.getElementById($(this).attr('id'))
-            if(el_crt.value != '') list_aud.push(i);
-        });
-        $("select[name=tipos]").each(function (index) { 
-            let i = $(this).val(); 
-
-            let tp_crt = document.getElementById($(this).attr('id'))
-            if(tp_crt.value != '') list_type.push(i);
-        });
-        $("button[name=change-vl]").each(function (index) { 
-            let btn_crt = document.getElementById($(this).attr('id'))
-            list_ideq.push(btn_crt.getAttribute('aud-id'));
-        });
-        if (list_aud.length == 0){
-            if (list_type.length == 0){
-                swal(
-                    'Error de datos',
-                    'Debe seleccionar los auditores y el tipo asociado',
-                    'warning'
-                )
-            }else{
-                swal(
-                    'Error de datos',
-                    'Debe seleccionar los auditores',
-                    'warning'
-                )
-            }
-        }else{
-            if (list_type.length == 0){
-                swal(
-                    'Error de datos',
-                    'Debe seleccionar los auditores y el tipo asociado',
-                    'warning'
-                )
-            }else{
-                objeto = JSON.stringify({
-                    'id': $('#idaud').val(),
-                    'auditores': list_aud,
-                    'tipos': list_type,
-                    'idgroup': list_ideq,
-                    'delgroup': del_aud,
-                    'accion': 'insert'
-                })
-
-                var table = $('#table_team').DataTable()
-                if(table.rows().count() == list_aud.length){
-                    if(table.rows().count() == list_type.length){
-                        ajax_call_get_nwr("/equipoaud_insertar", {
-                            object: objeto
-                        }, function(msg){
-                            msg = JSON.parse(msg)
-                            datos = msg
-                            
-                            showMessage(msg.message, "success", "ok");
-                            $('#form-team').modal('hide');
-                            setTimeout(function(){window.location = main_route; }, 1000); 
-                        })
-                    }else{
-                        swal(
-                            'Error de datos',
-                            'Seleccione todos los tipos asociados a cada auditor',
-                            'warning'
-                        )
-                    }
-                }else{
-                    swal(
-                        'Error de datos',
-                        'Seleccione todos los auditores',
-                        'warning'
-                    )
-                }
-            }
-        }
-    })
-
-    $('.hlgfort').click(function () {
-        $('#form-hlfr').addClass('scroll-own')
-        $('#idaud').parent().parent().parent().hide()
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
-        });
-
-        ajax_call_get("/auditoria_editar",{
-            object: obj
-        },function(response){
-            let self = JSON.parse(response)
-
-            ajax_call_get("/fortaleza_listall",{
-                object: obj
-            },function(responsef){
-                let dataf = JSON.parse(responsef)
-
-                ajax_call_get("/hallazgo_listall",{
+        function attach_edit() {
+            $('.edit').click(function () {
+                $('#conclusiones').parent().show()
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get("/auditoria_editar",{
                     object: obj
-                },function(responseh){
-                    let datah = JSON.parse(responseh)
-
-                    $('#id-aud').val(self.id)
-                    $('#codigo-aud').val(self.codigo)
-                    $('#sector-aud').val(self.fkgas.fksector.nombre)
-
-                    var tablefr = $('#table_fort').DataTable();
-                    var tablehl = $('#table_hlg').DataTable();
-                    tablefr.destroy();
-                    tablehl.destroy();
-
-                    var datafr = [];
-                    for(var i = 0; i < dataf.length; i++){
-                        let acn_frt = ''
-                        {% if 'fortaleza_editar' in permisos %}
-                            acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
-                        {% endif %}
-                        {% if 'fortaleza_eliminar' in permisos %}  
-                            acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
-                        {% endif %}
-
-                        datafr.push( [
-                            dataf[i].id, dataf[i].ordinal,
-                            dataf[i].descripcion, dataf[i].responsable,
-                            dataf[i].fecharegistro, acn_frt
-                        ]);
-                    }
-                    $('#table_fort').DataTable({
-                        data: datafr,
-                        "order": [[ 0, 'desc' ]],
-                        language: {
-                            "url": "/resources/js/spanish.json"
-                        },
-                        "pageLength": 10
-                    });
-
-                    var datahl = [];
-                    for(var j = 0; j < datah.length; j++){
-                        let acn_hlg = ''
-                        {% if 'hallazgo_editar' in permisos %}
-                            acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
-                        {% endif %}
-                        {% if 'hallazgo_eliminar' in permisos %}  
-                            acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
-                        {% endif %}
-
-                        datahl.push( [
-                            datah[j].id, datah[j].fktipo.nombre,
-                            datah[j].titulo, datah[j].evidencia,
-                            datah[j].documento, datah[j].puntoiso,
-                            datah[j].fkimpacto.nombre, acn_hlg
-                        ]);
-                    }
-                    $('#table_hlg').DataTable({
-                        data: datahl,
-                        "order": [[ 0, 'desc' ]],
-                        language: {
-                            "url": "/resources/js/spanish.json"
-                        },
-                        "pageLength": 10
-                    });
+                },function(response){
+                    var self = JSON.parse(response);
+                    $('#id').val(self.id)
+                    $('#codigo').val(self.codigo)
                     
-                    $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
-                    $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
+                    $('#fkgas').val(self.fkgas.id)
+                    $('#fkgas').selectpicker('render')
+                    $('#fktipo').val(self.fktipo.id)
+                    $('#fktipo').selectpicker('render')
 
-                    $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
-                    
-                    fortaleza_edit()
-                    fortaleza_delete()
-                    hallazgo_edit()
-                    hallazgo_delete()
+                    var fechaprog = moment(self.fechaprogramada)
+                    $('#fechaprogramada').val(fechaprog.format("YYYY-MM-DD"))
+                    $('#duracionestimada').val(self.duracionestimada)
+                    $('#lugar').val(self.lugar)
+                    $('#alcance').val(self.alcance)
+                    $('#objetivos').val(self.objetivos)
+                    var d = self.fechahorainicio
+                    var fi = d.replace(" ","T")
+                    $('#fechahorainicio').val(d)
+                    var d2= self.fechahorafin
+                    if(d2 != null){
+                        var ff = d2.replace(" ","T")
+                        $('#fechahorafin').val(d2)
+                    }else $('#fechahorafin').val(ff)
+                    $('#conclusiones').val(self.conclusiones)
+                    $('#responsable').val(self.responsable)
+                    var fecharegistro = moment(self.fecharegistro)
 
-                    $('#id-aud').parent().hide()
-                    $('#form-hlfr').modal('show')
+                    $('#fecharegistro').val(fecharegistro.format("YYYY-MM-DD"))
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
+            })
+        }
+
+        function proaud_rep() {
+            $('.prorep').click(function () {
+                obj = JSON.stringify({
+                    'anio': $('#gestion').val()
+                });
+                ajax_call_rep("/auditoria_anual",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                })
+                $('#form_aud').modal('hide')
+            })
+        }
+
+        function proaud_xrep() {
+            $('.proxrep').click(function () {
+                obj = JSON.stringify({
+                    'anio': $('#gestion').val()
+                });
+
+                ajax_call_rep("/aud_anual",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    let urlfile = self.url;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                    setTimeout(function(){ $("#lnkrp").remove() }, 10000);
+                })
+                $('#form_aud').modal('hide')
+            })
+        }
+
+        function notaud_rep() {
+            $('.notifrep').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+
+                ajax_call_reptb("/auditoria_notif",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    let urlfile = self.url;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                    setTimeout(function(){ $("#lnkrp").remove() }, 10000);
+                })
+            })
+        }
+
+        function genaud_rep() {
+            $('.audrep').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                
+                ajax_call_reptb("/auditoria_rep",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    let urlfile = self.url;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#rep");
+                    setTimeout(function(){ $("#lnkrp").remove() }, 10000);
+                })
+            })
+        }
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'codigo': $('#codigo').val(),
+                'fechaprogramada': $('#fechaprogramada').val(),
+                'duracionestimada': $('#duracionestimada').val(),
+                'lugar': $('#lugar').val(),
+                'alcance': $('#alcance').val(),
+                'objetivos': $('#objetivos').val(),
+                'fechahorainicio': $('#fechahorainicio').val(),
+                'fechahorafin': $('#fechahorafin').val(),
+                'conclusiones': $('#conclusiones').val(),
+                'responsable': $('#responsable').val(),
+                'fecharegistro': $('#fecharegistro').val(),
+                
+                'sector': $('#fkgas').val(),
+                'tipo': $('#fktipo').val()
+            })
+            ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
+        })
+        reload_form()
+    </script>
+
+    <script>
+        attach_edit()
+        proaud_rep()
+        proaud_xrep()
+        notaud_rep()
+        genaud_rep()
+
+        let message= ''
+        function aud_previous(id) { 
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get("/auditoria_prev",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            aud_previous(id)
+
+            let quest = message + " ¿Está seguro en dar de baja los datos de la auditoría?" 
+            enabled = false
+            swal({
+                title: quest,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/auditoria_eliminar", { 
+                    id, enabled,_xsrf: getCookie("_xsrf")}, 
+                    null, 
+                    function () {
+                        setTimeout(function(){ window.location=main_route }, 1000);
                 })
             })
         })
-    })
-    
-    $('#close-form').click(function () {
-        $('#form-hlfr').modal('hide')
-    })
-</script>
+    </script>
 
-<script>
-    $('#new-hlg').click(function () {
-        $('#fkauditoriahlg').val($('#id-aud').val())
-        $('#fkauditoriahlg').selectpicker('render')
-        $('#id_div_hlg').hide()
-        $('#insert-hlg').show()
-        $('#update-hlg').hide()
-        $('#form-hlg').modal('show')
-    })
-    $('#new-frt').click(function () {
-        $('#fkauditoriafrt').val($('#id-aud').val())
-        $('#fkauditoriafrt').selectpicker('render')
-        $('#id_div_frt').hide()
-        $('#insert-frt').show()
-        $('#update-frt').hide()
-        $('#form-frt').modal('show')
-    })
-</script>
+    <script>
+        $('.team').click(function () {
+            $('#idaud').parent().parent().parent().hide()
+            del_aud = [];
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
+            });
+
+            ajax_call_get("/auditoria_editar",{
+                object: obj
+            },function(response){
+                let self = JSON.parse(response)
+
+                ajax_call_get("/equipoaud_editar",{
+                    object: obj
+                },function(responses){
+                    let data = JSON.parse(responses)
+
+                    $('#idaud').val(self.id)
+                    $('#codigoaud').val(self.codigo)
+                    $('#sectoraud').val(self.fkgas.fksector.nombre)
+                    
+                    var table = $('#table_team').DataTable({
+                        language: {
+                            "url": "/resources/js/spanish.json"
+                        }
+                    });
+                    table.clear().draw();
+
+                    if(data.length > 0){
+                        for(var i = 0; i < data.length; i++){
+                            $('#new-aud').click()
+
+                            $('#auditor'+i_aud).val(data[i].fkauditor.id);
+                            $('#auditor'+i_aud).selectpicker('render');
+                            $('#tipo'+i_aud).val(data[i].fktipo.id);
+                            $('#tipo'+i_aud).selectpicker('render');
+
+                            $('#bd'+i_aud).attr('aud-id', data[i].id);
+                        }
+                    }
+                    
+                    $('#form-team').modal('show')
+                })
+            })
+        })
+
+        $('#new-aud').click(function () {
+            var table = $('#table_team').DataTable();
+            i_aud++;
+            var combo_auditor = '<div class="input-field">'+
+                '<select id="auditor'+i_aud+'" name="auditores" class="auditores show-tick">';
+            var combo_tipo = '<div class="input-field">'+
+                '<select id="tipo'+i_aud+'" name="tipos" class="tipos show-tick">';
+
+            var accion = '';
+            {% for tr in auditor %}
+                combo_auditor += "<option value='"+"{{tr.id}}"+"'>"+"{{tr.nombres ~ ' ' ~ tr.paterno ~ ' ' ~ tr.materno}}"+"</option>";
+            {% endfor %}
+            combo_auditor += '</select>'+
+                        '</div>';
+            {% for t in tpauditor %}
+                combo_tipo += "<option value='"+"{{t.id}}"+"'>"+"{{t.nombre}}"+"</option>";
+            {% endfor %}
+            combo_tipo += '</select>'+
+                        '</div>';
+            accion = '<div class="col-sm-1">'+
+                    '   <button id="bd'+i_aud+'" type="button" name="change-vl" class="btn bg-red waves-effect clear_auditor" data-id="'+i_aud+'" aud-id="0" title="Eliminar">'+
+                        '   <i class="material-icons">clear</i>'+
+                    '   </button>'+
+                    '</div>';
+
+            table.row.add([
+                $('#idaud').val(),
+                combo_auditor,
+                combo_tipo,
+                accion
+            ]).draw(false);
+            
+            $('#auditor'+i_aud).selectpicker({
+                size: 4,
+                liveSearch: true,
+                liveSearchPlaceholder: 'Buscar auditor.',
+                title: 'Seleccione un auditor.'
+            })
+            
+            $('#tipo'+i_aud).selectpicker({
+                size: 4,
+                liveSearch: true,
+                liveSearchPlaceholder: 'Buscar tipo.',
+                title: 'Seleccione un tipo.'
+            }) 
+
+            $('.auditores').change(function() {
+                var valord = $(this).val()
+                var vid = $(this).prop('id')
+                $('select[name="auditores"]').each(function(){
+                    if($(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
+                        swal(
+                            'Error de datos',
+                            'No puede duplicarse un auditor.',
+                            'warning'
+                        ) 
+                        $('#'+vid).val('')
+                        $('#'+vid).selectpicker('render')
+                    }
+                });
+            });
+
+            $('.tipos').change(function() {
+                var valord = $(this).val()
+                var vid = $(this).prop('id')
+                var text = $(this).find(":selected").text();
+                $('select[name="tipos"]').each(function(){
+                    if(text == 'AUDITOR LIDER' &&  $(this).val() == valord && $(this).prop('id') != vid && $(this).val() != ''){
+                        swal(
+                            'Error de datos',
+                            'No puede duplicarse el tipo.',
+                            'warning'
+                        ) 
+                        $('#'+vid).val('')
+                        $('#'+vid).selectpicker('render')
+                    }
+                });
+            });
+
+            $('.auditores').parent().addClass('all-w');
+            $('.tipos').parent().addClass('all-w');
+            $('#bd'+i_aud).parent().parent().parent().attr('id', 'tr'+i_aud)
+
+            $('#table_team').on( 'click', 'tbody tr td div.col-sm-1 button.clear_auditor', function () {
+                if($(this).attr("aud-id")){
+                    if(!del_aud.includes($(this).attr("aud-id")) && $(this).attr("aud-id") != '0') del_aud.push($(this).attr("aud-id"))
+                }
+
+                idrmv = $(this).attr('data-id');
+                var dltable = $('#table_team').DataTable();
+                dltable.row('#tr'+idrmv).remove().draw(false);
+            });
+        })
+
+        $('#save-team').click(function () {
+            var list_aud = [];
+            var list_type = [];
+            var list_ideq = [];
+            $("select[name=auditores]").each(function (index) { 
+                let i = $(this).val(); 
+
+                let el_crt = document.getElementById($(this).attr('id'))
+                if(el_crt.value != '') list_aud.push(i);
+            });
+            $("select[name=tipos]").each(function (index) { 
+                let i = $(this).val(); 
+
+                let tp_crt = document.getElementById($(this).attr('id'))
+                if(tp_crt.value != '') list_type.push(i);
+            });
+            $("button[name=change-vl]").each(function (index) { 
+                let btn_crt = document.getElementById($(this).attr('id'))
+                list_ideq.push(btn_crt.getAttribute('aud-id'));
+            });
+            if (list_aud.length == 0){
+                if (list_type.length == 0){
+                    swal(
+                        'Error de datos',
+                        'Debe seleccionar los auditores y el tipo asociado',
+                        'warning'
+                    )
+                }else{
+                    swal(
+                        'Error de datos',
+                        'Debe seleccionar los auditores',
+                        'warning'
+                    )
+                }
+            }else{
+                if (list_type.length == 0){
+                    swal(
+                        'Error de datos',
+                        'Debe seleccionar los auditores y el tipo asociado',
+                        'warning'
+                    )
+                }else{
+                    objeto = JSON.stringify({
+                        'id': $('#idaud').val(),
+                        'auditores': list_aud,
+                        'tipos': list_type,
+                        'idgroup': list_ideq,
+                        'delgroup': del_aud,
+                        'accion': 'insert'
+                    })
+
+                    var table = $('#table_team').DataTable()
+                    if(table.rows().count() == list_aud.length){
+                        if(table.rows().count() == list_type.length){
+                            ajax_call_get_nwr("/equipoaud_insertar", {
+                                object: objeto
+                            }, function(msg){
+                                msg = JSON.parse(msg)
+                                datos = msg
+                                
+                                showMessage(msg.message, "success", "ok");
+                                $('#form-team').modal('hide');
+                                setTimeout(function(){window.location = main_route; }, 1000); 
+                            })
+                        }else{
+                            swal(
+                                'Error de datos',
+                                'Seleccione todos los tipos asociados a cada auditor',
+                                'warning'
+                            )
+                        }
+                    }else{
+                        swal(
+                            'Error de datos',
+                            'Seleccione todos los auditores',
+                            'warning'
+                        )
+                    }
+                }
+            }
+        })
+
+        $('.hlgfort').click(function () {
+            $('#form-hlfr').addClass('scroll-own')
+            $('#idaud').parent().parent().parent().hide()
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).attr('data-json')))
+            });
+
+            ajax_call_get("/auditoria_editar",{
+                object: obj
+            },function(response){
+                let self = JSON.parse(response)
+
+                ajax_call_get("/fortaleza_listall",{
+                    object: obj
+                },function(responsef){
+                    let dataf = JSON.parse(responsef)
+
+                    ajax_call_get("/hallazgo_listall",{
+                        object: obj
+                    },function(responseh){
+                        let datah = JSON.parse(responseh)
+
+                        $('#id-aud').val(self.id)
+                        $('#codigo-aud').val(self.codigo)
+                        $('#sector-aud').val(self.fkgas.fksector.nombre)
+
+                        var tablefr = $('#table_fort').DataTable();
+                        var tablehl = $('#table_hlg').DataTable();
+                        tablefr.destroy();
+                        tablehl.destroy();
+
+                        var datafr = [];
+                        for(var i = 0; i < dataf.length; i++){
+                            let acn_frt = ''
+                            {% if 'fortaleza_editar' in permisos %}
+                                acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
+                            {% endif %}
+                            {% if 'fortaleza_eliminar' in permisos %}  
+                                acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
+                            {% endif %}
+
+                            datafr.push( [
+                                dataf[i].id, dataf[i].ordinal,
+                                dataf[i].descripcion, dataf[i].responsable,
+                                dataf[i].fecharegistro, acn_frt
+                            ]);
+                        }
+                        $('#table_fort').DataTable({
+                            data: datafr,
+                            "order": [[ 0, 'desc' ]],
+                            language: {
+                                "url": "/resources/js/spanish.json"
+                            },
+                            "pageLength": 10
+                        });
+
+                        var datahl = [];
+                        for(var j = 0; j < datah.length; j++){
+                            let acn_hlg = ''
+                            {% if 'hallazgo_editar' in permisos %}
+                                acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                            {% endif %}
+                            {% if 'hallazgo_eliminar' in permisos %}  
+                                acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                            {% endif %}
+
+                            datahl.push( [
+                                datah[j].id, datah[j].fktipo.nombre,
+                                datah[j].titulo, datah[j].evidencia,
+                                datah[j].documento, datah[j].puntoiso,
+                                datah[j].fkimpacto.nombre, acn_hlg
+                            ]);
+                        }
+                        $('#table_hlg').DataTable({
+                            data: datahl,
+                            "order": [[ 0, 'desc' ]],
+                            language: {
+                                "url": "/resources/js/spanish.json"
+                            },
+                            "pageLength": 10
+                        });
+                        
+                        $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
+                        $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
+
+                        $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
+                        $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
+                        $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
+                        $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
+                        
+                        fortaleza_edit()
+                        fortaleza_delete()
+                        hallazgo_edit()
+                        hallazgo_delete()
+
+                        $('#id-aud').parent().hide()
+                        $('#form-hlfr').modal('show')
+                    })
+                })
+            })
+        })
+        
+        $('#close-form').click(function () {
+            $('#form-hlfr').modal('hide')
+        })
+    </script>
+
+    <script>
+        $('#new-hlg').click(function () {
+            $('#fkauditoriahlg').val($('#id-aud').val())
+            $('#fkauditoriahlg').selectpicker('render')
+            $('#id_div_hlg').hide()
+            $('#insert-hlg').show()
+            $('#update-hlg').hide()
+            $('#form-hlg').modal('show')
+        })
+        $('#new-frt').click(function () {
+            $('#fkauditoriafrt').val($('#id-aud').val())
+            $('#fkauditoriafrt').selectpicker('render')
+            $('#id_div_frt').hide()
+            $('#insert-frt').show()
+            $('#update-frt').hide()
+            $('#form-frt').modal('show')
+        })
+    </script>
 {% endblock %}

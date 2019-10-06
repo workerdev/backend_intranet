@@ -1,14 +1,14 @@
 {% block stylesheets %}
     <meta charset="UTF-8">
     <meta name="Report" content="Aud-Anual">
-    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('resources/bootstrap4/css/bootstrap.min.css') }}">
 {% endblock %}
    
 {% block body %}   
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <img src="resources/images/image_rep.png" width="47" height="50" alt="">
+                <img src="{{ asset('resources/images/image_rep.png') }}" width="47" height="50" alt="">
             </div>
         </div>
         <div class="row">
@@ -176,5 +176,5 @@
  {% endblock %}
 
 {% block javascripts %}
-<script src="resources/bootstrap4/js/bootstrap.min.js"></script>
+<script src="{{ asset('resources/bootstrap4/js/bootstrap.min.js') }}"></script>
 {% endblock %}

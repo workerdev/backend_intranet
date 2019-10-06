@@ -1,51 +1,66 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('seguimientoelaboracion/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>SEGUIMIENTO DE ELABORACIÓN</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'seguimientoelaboracion_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            </div>
-            {% endif %}
-        </div>
-        {% if 'home_seguimientoelaboracion' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="names">Documento </th>
-                            <th class="order_by_th" data-name="phone">Estado </th>
-                            <th class="order_by_th" data-name="phone">Revisor </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('seguimientoelaboracion/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>SEGUIMIENTO DE ELABORACIÓN</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'seguimientoelaboracion_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if 'home_seguimientoelaboracion' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="names">Documento </th>
+                                            <th class="order_by_th" data-name="phone">Estado </th>
+                                            <th class="order_by_th" data-name="phone">Revisor </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('seguimientoelaboracion/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
     <script>
         main_route = '/seguimientoelaboracion'

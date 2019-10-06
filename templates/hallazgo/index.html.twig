@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <style>
         #fkprobabilidadaccion{ 
             cursor:pointer 
@@ -21,6 +24,7 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('hallazgo/form.html.twig') }}
 
     <div class="header bg-indigo"><h2>HALLAZGO</h2></div>
@@ -73,9 +77,10 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-    <script src="resources/js/hallazgo.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
+    <script src="{{ asset('resources/js/hallazgo.js') }}"></script>
 
     <script>
         main_route = '/hallazgo'

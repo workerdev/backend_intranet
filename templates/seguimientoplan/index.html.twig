@@ -1,54 +1,69 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('seguimientoplan/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>SEGUIMIENTO DE PLAN</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'seguimientoplan_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
-            </div>
-        </div>
-        {% if 'home_seguimientoplan' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="phone">Responsable </th>
-                            <th class="order_by_th" data-name="names">Fecha </th>
-                            <th class="order_by_th" data-name="phone">Observaciones </th>
-                            <th class="order_by_th" data-name="phone">Fecha de Implementación </th>
-                            <th class="order_by_th" data-name="phone">Plan de Acción </th>
-                            <th class="order_by_th" data-name="phone">Estado del Plan</th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('seguimientoplan/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>SEGUIMIENTO DE PLAN</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'seguimientoplan_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_seguimientoplan' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="phone">Responsable </th>
+                                            <th class="order_by_th" data-name="names">Fecha </th>
+                                            <th class="order_by_th" data-name="phone">Observaciones </th>
+                                            <th class="order_by_th" data-name="phone">Fecha de Implementación </th>
+                                            <th class="order_by_th" data-name="phone">Plan de Acción </th>
+                                            <th class="order_by_th" data-name="phone">Estado del Plan</th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('seguimientoplan/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
     <script>
         main_route = '/seguimientoplan'

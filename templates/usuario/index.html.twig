@@ -1,233 +1,248 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ cursor:pointer }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ cursor:pointer }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('usuario/form.html.twig') }}
+    {{ parent() }}
+    {{ include('usuario/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>USUARIO</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-           
+                    <div class="header bg-indigo"><h2>USUARIO</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            
+                            </div>
+                        </div>
+                        {% if 'home_usuario' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="order_by_th" data-name="names">Nombre </th>
+                                        <th class="order_by_th" data-name="phone">Apellido </th>                    
+                                        <th class="order_by_th" data-name="phone">Correo </th>
+                                        <th class="order_by_th" data-name="phone">Username </th>
+                                        <th class="order_by_th" data-name="phone">Rol </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('usuario/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    {% if 'home_usuario' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th class="order_by_th" data-name="names">Nombre </th>
-                    <th class="order_by_th" data-name="phone">Apellido </th>                    
-                    <th class="order_by_th" data-name="phone">Correo </th>
-                    <th class="order_by_th" data-name="phone">Username </th>
-                    <th class="order_by_th" data-name="phone">Rol </th>
-                    <th class="actions_header">Acciones </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('usuario/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/usuario'
+    <script>
+        main_route = '/usuario'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-<script>
-    attach_validators()
+    <script>
+        attach_validators()
 
-    $('#rol').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar rol.',
-        title: 'Seleccione un rol.'
-    })
+        $('#rol').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar rol.',
+            title: 'Seleccione un rol.'
+        })
 
-    $('#new').click(function () {
-        $('#nombre').val('')
-        $('#apellido').val('')
-        $('#correo').val('')
-        $('#username').val('')
-        $('#password').val('')
+        $('#new').click(function () {
+            $('#nombre').val('')
+            $('#apellido').val('')
+            $('#correo').val('')
+            $('#username').val('')
+            $('#password').val('')
 
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-    
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'nombre': $('#nombre').val(),
-            'apellido': $('#apellido').val(),
-            'correo': $('#correo').val(),
-            'username': $('#username').val(),
-            'password': $('#password').val(),
-
-            'rol': $('#rol').val()
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
         })
         
-        ajax_call("/usuario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
-        $('#form').modal('hide')
-    })
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'nombre': $('#nombre').val(),
+                'apellido': $('#apellido').val(),
+                'correo': $('#correo').val(),
+                'username': $('#username').val(),
+                'password': $('#password').val(),
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/usuario_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-
-                $('#id').val(self.id)
-                $('#nombre').val(self.nombre)
-                $('#apellido').val(self.apellido)
-                $('#correo').val(self.correo)
-                $('#username').val(self.username)
-
-                $('#rol').val(self.fkrol.id)
-                $('#rol').selectpicker('render')
-
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#cont-pass').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                'rol': $('#rol').val()
             })
+            
+            ajax_call("/usuario_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+            $('#form').modal('hide')
         })
-    }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'nombre': $('#nombre').val(),
-            'apellido': $('#apellido').val(),
-            'correo': $('#correo').val(),
-            'username': $('#username').val(),
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get("/usuario_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
 
-            'rol': $('#rol').val()
-        })
-        
-        $.ajax({
-                url: "/usuario_actualizar",
-                type: "post",
-                data: {object:objeto, _xsrf: getCookie("_xsrf")},
-            }).done(function (response) {
-                    valor=JSON.parse(response)
-                    if(valor.success)
-                    {
-                        swal(
-                            'Usuario modificado.',
-                            'Se modificó los datos correctamente.',
-                            'success'
-                          )
-                    }
-                    else
-                    {
-                        swal(
-                            'Fallo en la actualización.',
-                            'No se modificó la contraseña.',
-                            'error'
-                          )
-                    }
-                    $('#form').modal('hide')
-                    setTimeout(function(){window.location=main_route}, 1000)
+                    $('#id').val(self.id)
+                    $('#nombre').val(self.nombre)
+                    $('#apellido').val(self.apellido)
+                    $('#correo').val(self.correo)
+                    $('#username').val(self.username)
+
+                    $('#rol').val(self.fkrol.id)
+                    $('#rol').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#cont-pass').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
             })
+        }
 
-    })
-    reload_form()
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'nombre': $('#nombre').val(),
+                'apellido': $('#apellido').val(),
+                'correo': $('#correo').val(),
+                'username': $('#username').val(),
 
-    $('.upd-pass').click(function () {
-        var id = $(this).attr('data-json');
-        $('#user_id').val(id);
-    }) 
-
-    $('#modal_update_password').on('shown.bs.modal', function () {
-        $('#new_pass').focus();
-    })
-
-    function Open_Modal(){
-        $('#new_pass').val('')
-        $('#new_rpass').val('')
-        $('#new_pass').parent().addClass('focused')
-        $('#new_rpass').parent().addClass('focused')
-        $('#modal_update_password').modal('show');
-    }
-
-    function Update_Password(){
-        id = $('#user_id').val()
-        newp = $('#new_pass').val()
-        newp1 = $('#new_rpass').val()
-        objeto =JSON.stringify({'id' : id,'new_password' : newp, 'new_password_2':newp1})
-        
-        if(newp==newp1)
-        {
+                'rol': $('#rol').val()
+            })
+            
             $.ajax({
-                url: "/usuario_update_password",
-                type: "post",
-                data: {object:objeto, _xsrf: getCookie("_xsrf")},
-            }).done(function (response) {
-                    valor=JSON.parse(response)
-                    if(valor.success)
-                    {
-                        swal(
-                            'Contraseña modificada.',
-                            'Se modificó la contraseña correctamente.',
-                            'success'
-                          )
-                    }
-                    else
-                    {
-                        swal(
-                            'Contraseña actual errónea.',
-                            'No se modificó la contraseña.',
-                            'error'
-                          )
-                    }
-            })
-        }
-        else
-        {
-            swal(
-                'Error de datos.',
-                'Las contraseñas no son iguales.',
-                'error'
-              )
-        }
-    }
-</script>
+                    url: "/usuario_actualizar",
+                    type: "post",
+                    data: {object:objeto, _xsrf: getCookie("_xsrf")},
+                }).done(function (response) {
+                        valor=JSON.parse(response)
+                        if(valor.success)
+                        {
+                            swal(
+                                'Usuario modificado.',
+                                'Se modificó los datos correctamente.',
+                                'success'
+                            )
+                        }
+                        else
+                        {
+                            swal(
+                                'Fallo en la actualización.',
+                                'No se modificó la contraseña.',
+                                'error'
+                            )
+                        }
+                        $('#form').modal('hide')
+                        setTimeout(function(){window.location=main_route}, 1000)
+                })
 
-<script>
-    attach_edit()
-</script>
+        })
+        reload_form()
+
+        $('.upd-pass').click(function () {
+            var id = $(this).attr('data-json');
+            $('#user_id').val(id);
+        }) 
+
+        $('#modal_update_password').on('shown.bs.modal', function () {
+            $('#new_pass').focus();
+        })
+
+        function Open_Modal(){
+            $('#new_pass').val('')
+            $('#new_rpass').val('')
+            $('#new_pass').parent().addClass('focused')
+            $('#new_rpass').parent().addClass('focused')
+            $('#modal_update_password').modal('show');
+        }
+
+        function Update_Password(){
+            id = $('#user_id').val()
+            newp = $('#new_pass').val()
+            newp1 = $('#new_rpass').val()
+            objeto =JSON.stringify({'id' : id,'new_password' : newp, 'new_password_2':newp1})
+            
+            if(newp==newp1)
+            {
+                $.ajax({
+                    url: "/usuario_update_password",
+                    type: "post",
+                    data: {object:objeto, _xsrf: getCookie("_xsrf")},
+                }).done(function (response) {
+                        valor=JSON.parse(response)
+                        if(valor.success)
+                        {
+                            swal(
+                                'Contraseña modificada.',
+                                'Se modificó la contraseña correctamente.',
+                                'success'
+                            )
+                        }
+                        else
+                        {
+                            swal(
+                                'Contraseña actual errónea.',
+                                'No se modificó la contraseña.',
+                                'error'
+                            )
+                        }
+                })
+            }
+            else
+            {
+                swal(
+                    'Error de datos.',
+                    'Las contraseñas no son iguales.',
+                    'error'
+                )
+            }
+        }
+    </script>
+
+    <script>
+        attach_edit()
+    </script>
 {% endblock %}

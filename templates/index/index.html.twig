@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ title_page }}{% endblock %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -22,6 +22,7 @@
 
 {% block body %}
     {{ parent() }}
+    
     <section id="content" class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -48,5 +49,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('index') }}
 {% endblock %}

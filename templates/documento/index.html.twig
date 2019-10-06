@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <style>
         .accion{ 
             cursor:pointer 
@@ -12,55 +15,67 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('documento/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>DOCUMENTO</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'documento_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
-            </div>
-        </div>
-        {% if 'home_documento' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th class="d-none" data-name="phone">ID </th>
-                            <th class="order_by_th" data-name="names">Código </th>
-                            <th class="order_by_th" data-name="names">Título </th>
-                            <th class="d-none" data-name="phone">Versión vigente </th>
-                            <th class="d-none" data-name="phone">Vínculo archivo digital</th>
-                            <th class="d-none" data-name="phone">Vínculo diagrama flujo</th>
-                            <th class="d-none" data-name="phone">Carpeta operativa </th>
-                            <th class="d-none" data-name="phone">Fecha de publicación </th>
-                            <th class="order_by_th" data-name="names">Ficha </th>
-                            <th class="order_by_th" data-name="phone">Tipo </th>
-                            <th class="order_by_th" data-name="phone">Apobador </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('documento/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>DOCUMENTO</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'documento_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_documento' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="d-none" data-name="phone">ID </th>
+                                            <th class="order_by_th" data-name="names">Código </th>
+                                            <th class="order_by_th" data-name="names">Título </th>
+                                            <th class="d-none" data-name="phone">Versión vigente </th>
+                                            <th class="d-none" data-name="phone">Vínculo archivo digital</th>
+                                            <th class="d-none" data-name="phone">Vínculo diagrama flujo</th>
+                                            <th class="d-none" data-name="phone">Carpeta operativa </th>
+                                            <th class="d-none" data-name="phone">Fecha de publicación </th>
+                                            <th class="order_by_th" data-name="names">Ficha </th>
+                                            <th class="order_by_th" data-name="phone">Tipo </th>
+                                            <th class="order_by_th" data-name="phone">Apobador </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('documento/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
     <script>
         main_route = '/documento'

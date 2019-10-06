@@ -1,72 +1,87 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ 
-        cursor:pointer 
-    }
-    .txta-own{
-        background-color: rgba(40, 40, 40, .05);
-        min-width: 100% !important;
-        max-width: 100% !important;
-        padding: 4px !important;
-    }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ 
+            cursor:pointer 
+        }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('fortaleza/form.html.twig') }}
+    {{ parent() }}
+    {{ include('fortaleza/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>FORTALEZA</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'fortaleza_insertar' in permisos %} 
-            <button id="new-frt" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="fortaleza" data-form="form-frt">
-                <i class="material-icons">add</i>
-            </button>
-        {% endif %}  
+                    <div class="header bg-indigo"><h2>FORTALEZA</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'fortaleza_insertar' in permisos %} 
+                                <button id="new-frt" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="fortaleza" data-form="form-frt">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}  
+                            </div>
+                        </div>
+                        {% if 'home_fortaleza' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="order_by_th" data-name="names">Auditoría </th>
+                                        <th class="order_by_th" data-name="phone">Ordinal </th>
+                                        <th class="order_by_th" data-name="phone">Descripción </th>
+                                        <th class="order_by_th" data-name="phone">Responsable </th>
+                                        <th class="order_by_th" data-name="phone">Fecha de registro </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('fortaleza/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    {% if 'home_fortaleza' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th class="order_by_th" data-name="names">Auditoría </th>
-                    <th class="order_by_th" data-name="phone">Ordinal </th>
-                    <th class="order_by_th" data-name="phone">Descripción </th>
-                    <th class="order_by_th" data-name="phone">Responsable </th>
-                    <th class="order_by_th" data-name="phone">Fecha de registro </th>
-                    <th class="actions_header">Acciones </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('fortaleza/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/js/functions.js"></script>
-<script src="resources/js/fortaleza.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.') }}"></script>
+    <script src="{{ asset('resources/js/fortaleza.js') }}"></script>
 
-<script>
-    main_route = '/fortaleza'
+    <script>
+        main_route = '/fortaleza'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 {% endblock %}

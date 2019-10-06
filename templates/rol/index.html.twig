@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -185,240 +186,240 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/rol'
+    <script>
+        main_route = '/rol'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
-
-<script>
-    attach_validators()
-    $('#new').click(function () {
-        $('#nombre').val('')
-        $('#descripcion').val('')
-        $("#cont-mods input[type=radio]").prop( "checked", false);
-        $("#cont-mods input[type=checkbox]").prop( "checked", false);
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    function check_all(e){
-        if($(e).is(':checked')){
-            $("#usl-all").prop( "checked", false);
-            $("input[type=checkbox]").each(function (index) {
-			    $(".padre").prop( "checked", true);
-                check_content(this);
-            });
-		}
-	}
-
-    function uncheck_all(e){
-        if($(e).is(':checked')){
-            $("#slt-all").prop( "checked", false);
-            $("input[type=checkbox]").each(function (index) {
-			    $(".padre").prop( "checked", false);
-                check_content(this);
-            });
-		}
-	}
-
-    //Primer caso cuando elijo un paquete
-	function check_mod(e){
-		if($(e).is(':checked')){
-			var res = $(e).parent().attr('id');
-			$("#"+res+" input[type=checkbox]").prop( "checked", true);
-
-		}else{
-			var res = $(e).parent().attr('id');
-			$("#"+res+" input[type=checkbox]").prop( "checked", false);
-		}
-	}
-	//Segundo caso cuando es hijo selecciona a su padre y su sus hijos
-	function check_content(e){
-		if($(e).is(':checked')){
-            var parent = $(e).parent().parent();
-			parent.siblings().prop( "checked", true);
-			var res = $(e).parent().attr('id');
-		    $("#"+res+" input[type=checkbox]").prop( "checked", true);
-
-		}else{// Tercer caso 
-			if($(e).parent().siblings().children().is(':checked')){
-				var res = $(e).parent().attr('id');
-		    	$("#"+res+" input[type=checkbox]").prop( "checked", false);
-			}
-			else{
-				$(e).parent().parent().prev().prop( "checked", false);
-				var res = $(e).parent().attr('id');
-		    	$("#"+res+" input[type=checkbox]").prop( "checked", false);
-			}
-			
-		}
-	}
-
-	function check_action(e){
-        if($(e).is(':checked')){
-			var parent = $(e).parent().parent();
-			parent.siblings().prop( "checked", true);
-			parent.parent().parent().siblings().prop( "checked", true);
-		}   
-	}
-       
-    $('#insert').click(function () {
-        if(!validate_fields(['nombre', 'descripcion'])){
-            return
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
         }
-        
-        var modulos = []
-        $("input[type=checkbox]").each(function (index) {
-            parent = $(this).attr("data-parent") 
-            
-            if($(this).is(':checked')){
-                modulos.push($(this).attr("data-id"))
-            }
-        });
-    
-        objeto = JSON.stringify({
-            'nombre': $('#nombre').val(),
-            'descripcion': $('#descripcion').val(),
-            'modules': modulos,
-            'action': 'insert'
-        })
-        
-        ajax_call_rol("/rol_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
-        //$('#form').modal('hide')
-    })
+        default_values()
+    </script>
 
-    function clean_check(){
-        $("input[type=checkbox]").each(function (index) {
-            $(this).attr("checked", false)
-        });
-    }
-
-    function attach_edit() {
-        $('.edit').click(function () {
+    <script>
+        attach_validators()
+        $('#new').click(function () {
+            $('#nombre').val('')
+            $('#descripcion').val('')
             $("#cont-mods input[type=radio]").prop( "checked", false);
             $("#cont-mods input[type=checkbox]").prop( "checked", false);
-            
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get_mods("/rol_editar",{
-                object: obj
-            },function(response){
-                roldata = JSON.parse(response[0])
-                modules = JSON.parse(response[1])
-                for (var i in modules) {
-                    item = modules[i]
-                    
-                    idmod = item.fkmodulo.id
-                    $("input[type=checkbox]").each(function (index) {
-                        if ($(this).attr("data-id") == idmod){
-                            $(this).prop("checked", true)
-                        }
-                    });
-                }
-                $('#id').val(roldata.id)
-                $('#nombre').val(roldata.nombre)
-                $('#descripcion').val(roldata.descripcion)
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
-            })
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
         })
-    }
 
-    $('#update').click(function () {
-        var modulos = []
-        $("input[type=checkbox]").each(function (index) {
-            parent = $(this).attr("data-parent") 
-            if($(this).is(':checked')){
-                modulos.push($(this).attr("data-id"))
+        function check_all(e){
+            if($(e).is(':checked')){
+                $("#usl-all").prop( "checked", false);
+                $("input[type=checkbox]").each(function (index) {
+                    $(".padre").prop( "checked", true);
+                    check_content(this);
+                });
             }
-        });
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'nombre': $('#nombre').val(),
-            'descripcion': $('#descripcion').val(),
-            'modules': modulos,
-            'action': 'update'
-        })
-        ajax_call_rol("/rol_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
-    })
-    reload_form()
-</script>
+        }
 
-<script>
-    attach_edit()
+        function uncheck_all(e){
+            if($(e).is(':checked')){
+                $("#slt-all").prop( "checked", false);
+                $("input[type=checkbox]").each(function (index) {
+                    $(".padre").prop( "checked", false);
+                    check_content(this);
+                });
+            }
+        }
 
-    let message= ''
-    function rol_prev(id) {
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse(id))
-        });
-        ajax_call_get("/rol_prev",{
-            object: obj
-        },function(response){
-            message = response;
-        });
-    }
+        //Primer caso cuando elijo un paquete
+        function check_mod(e){
+            if($(e).is(':checked')){
+                var res = $(e).parent().attr('id');
+                $("#"+res+" input[type=checkbox]").prop( "checked", true);
 
-    $('.delete').click(function () {
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        rol_prev(id)
+            }else{
+                var res = $(e).parent().attr('id');
+                $("#"+res+" input[type=checkbox]").prop( "checked", false);
+            }
+        }
+        //Segundo caso cuando es hijo selecciona a su padre y su sus hijos
+        function check_content(e){
+            if($(e).is(':checked')){
+                var parent = $(e).parent().parent();
+                parent.siblings().prop( "checked", true);
+                var res = $(e).parent().attr('id');
+                $("#"+res+" input[type=checkbox]").prop( "checked", true);
 
-        let quest = message
-        enabled = false
+            }else{// Tercer caso 
+                if($(e).parent().siblings().children().is(':checked')){
+                    var res = $(e).parent().attr('id');
+                    $("#"+res+" input[type=checkbox]").prop( "checked", false);
+                }
+                else{
+                    $(e).parent().parent().prev().prop( "checked", false);
+                    var res = $(e).parent().attr('id');
+                    $("#"+res+" input[type=checkbox]").prop( "checked", false);
+                }
+                
+            }
+        }
 
-        if((quest.split(" ").length) > 6){
-            swal({
-                title: quest,
-                type: "warning",
-                showConfirmButton: false,
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
-
+        function check_action(e){
+            if($(e).is(':checked')){
+                var parent = $(e).parent().parent();
+                parent.siblings().prop( "checked", true);
+                parent.parent().parent().siblings().prop( "checked", true);
+            }   
+        }
+        
+        $('#insert').click(function () {
+            if(!validate_fields(['nombre', 'descripcion'])){
+                return
+            }
+            
+            var modulos = []
+            $("input[type=checkbox]").each(function (index) {
+                parent = $(this).attr("data-parent") 
+                
+                if($(this).is(':checked')){
+                    modulos.push($(this).attr("data-id"))
+                }
+            });
+        
+            objeto = JSON.stringify({
+                'nombre': $('#nombre').val(),
+                'descripcion': $('#descripcion').val(),
+                'modules': modulos,
+                'action': 'insert'
             })
-        }else{
-            swal({
-                title: quest,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
-                ajax_call("/rol_eliminar", { 
-                    id, enabled,_xsrf: getCookie("_xsrf")}, 
-                    null, 
-                    function () {
-                        setTimeout(function(){ window.location=main_route }, 1000);
+            
+            ajax_call_rol("/rol_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
+            //$('#form').modal('hide')
+        })
+
+        function clean_check(){
+            $("input[type=checkbox]").each(function (index) {
+                $(this).attr("checked", false)
+            });
+        }
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#cont-mods input[type=radio]").prop( "checked", false);
+                $("#cont-mods input[type=checkbox]").prop( "checked", false);
+                
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get_mods("/rol_editar",{
+                    object: obj
+                },function(response){
+                    roldata = JSON.parse(response[0])
+                    modules = JSON.parse(response[1])
+                    for (var i in modules) {
+                        item = modules[i]
+                        
+                        idmod = item.fkmodulo.id
+                        $("input[type=checkbox]").each(function (index) {
+                            if ($(this).attr("data-id") == idmod){
+                                $(this).prop("checked", true)
+                            }
+                        });
+                    }
+                    $('#id').val(roldata.id)
+                    $('#nombre').val(roldata.nombre)
+                    $('#descripcion').val(roldata.descripcion)
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
                 })
             })
         }
-    })
-</script>
+
+        $('#update').click(function () {
+            var modulos = []
+            $("input[type=checkbox]").each(function (index) {
+                parent = $(this).attr("data-parent") 
+                if($(this).is(':checked')){
+                    modulos.push($(this).attr("data-id"))
+                }
+            });
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'nombre': $('#nombre').val(),
+                'descripcion': $('#descripcion').val(),
+                'modules': modulos,
+                'action': 'update'
+            })
+            ajax_call_rol("/rol_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location = main_route}, 1000);})
+        })
+        reload_form()
+    </script>
+
+    <script>
+        attach_edit()
+
+        let message= ''
+        function rol_prev(id) {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get("/rol_prev",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            rol_prev(id)
+
+            let quest = message
+            enabled = false
+
+            if((quest.split(" ").length) > 6){
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+
+                })
+            }else{
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+                    ajax_call("/rol_eliminar", { 
+                        id, enabled,_xsrf: getCookie("_xsrf")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 1000);
+                    })
+                })
+            }
+        })
+    </script>
 {% endblock %}

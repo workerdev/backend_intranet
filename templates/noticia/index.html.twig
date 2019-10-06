@@ -1,238 +1,253 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ 
-        cursor:pointer 
-    }
-    .swal2-title{
-        font-size: 16px !important;
-    }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ 
+            cursor:pointer 
+        }
+        .swal2-title{
+            font-size: 16px !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('noticia/form.html.twig') }}
+    {{ parent() }}
+    {{ include('noticia/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>NOTICIA</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'noticia_insertar' in permisos %}
-            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                <i class="material-icons">add</i>
-            </button>
-        {% endif %}
+                    <div class="header bg-indigo"><h2>NOTICIA</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'noticia_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_noticia' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="order_by_th" data-name="names">Título </th>
+                                        <th class="order_by_th" data-name="phone">Subtítulo </th>
+                                        <th class="order_by_th" data-name="phone">Tipo </th>
+                                        <th class="order_by_th" data-name="phone">Fecha </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('noticia/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    {% if 'home_noticia' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th class="order_by_th" data-name="names">Título </th>
-                    <th class="order_by_th" data-name="phone">Subtítulo </th>
-                    <th class="order_by_th" data-name="phone">Tipo </th>
-                    <th class="order_by_th" data-name="phone">Fecha </th>
-                    <th class="actions_header">Acciones </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('noticia/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/plugins/tinymce/tinymce.js"></script>
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/plugins/tinymce/tinymce.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/noticia'
+    <script>
+        main_route = '/noticia'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
-
-<script>
-    //TinyMCE
-    tinymce.init({
-        selector: "textarea#contenido",
-        language : "es_MX",
-        theme: "modern",
-        resize: false,
-        
-        height: 350,
-        menubar: false,
-        toolbar1: 'imageupload | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-        image_advtab: false,
-        statusbar: false,
-        setup: function(editor) {
-            var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
-            $(editor.getElement()).parent().append(inp);
-
-            inp.on("change",function(){
-                var input = inp.get(0);
-                var file = input.files[0];
-                var fr = new FileReader();
-                fr.onload = function() {
-                    var img = new Image();
-                    img.src = fr.result;
-                    editor.insertContent('<img src="'+img.src+'"/>');
-                    inp.val('');
-                }
-                fr.readAsDataURL(file);
-            });
-
-            editor.addButton( 'imageupload', {
-                icon: "image",
-                onclick: function(e) {
-                    inp.trigger('click');
-                }
-            });
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
         }
-    });
-    tinymce.suffix = ".min";
-    tinyMCE.baseURL = 'resources/plugins/tinymce'
+        default_values()
+    </script>
 
-    $('#tipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo constitucional.',
-        title: 'Seleccione un tipo constitucional.'
-    })
+    <script>
+        tinymce.init({
+            selector: "textarea#contenido",
+            language : "es_MX",
+            theme: "modern",
+            resize: false,
+            
+            height: 350,
+            menubar: false,
+            toolbar1: 'imageupload | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            image_advtab: false,
+            statusbar: false,
+            setup: function(editor) {
+                var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
+                $(editor.getElement()).parent().append(inp);
 
-    function hideContenido(e){
-        if ($(e).val() == 'Urgente' || $(e).val() == 'Destacados') $('#cont-tpnt').hide()
-        else $('#cont-tpnt').show()
-    }
+                inp.on("change",function(){
+                    var input = inp.get(0);
+                    var file = input.files[0];
+                    var fr = new FileReader();
+                    fr.onload = function() {
+                        var img = new Image();
+                        img.src = fr.result;
+                        editor.insertContent('<img src="'+img.src+'"/>');
+                        inp.val('');
+                    }
+                    fr.readAsDataURL(file);
+                });
 
-    $('#new').click(function () {
-        $('#titulo').val('')
-        $('#subtitulo').val('')
-        $('#contenido').val('')
-        $("#fecha").val('')
-
-        $('input:checkbox').attr('checked', false);
-        $('#tipo').val('')
-        $('#tipo').selectpicker('render')
-
-
-        clean_form()
-        verif_inputs()
-        $('#cont-tpnt').show()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-    
-    $('#insert').click(function () {
-        tinyMCE.triggerSave();
-        var categorias =  new Array();
-        $('.categoria:checked').each(
-            function() {
-                categorias.push($(this).val());
+                editor.addButton( 'imageupload', {
+                    icon: "image",
+                    onclick: function(e) {
+                        inp.trigger('click');
+                    }
+                });
             }
-        );
-        objeto = JSON.stringify({
-            'titulo': $('#titulo').val(),
-            'subtitulo': $('#subtitulo').val(),
-            'contenido': $("#contenido").val(),
-            'tipo': $("#tipo").val(),
-            'fecha': $("#fecha").val(),
-            'categorias': categorias
-        })
-        ajax_call("/noticia_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
-        $('#form').modal('hide')
-    })
+        });
+        tinymce.suffix = ".min";
+        tinyMCE.baseURL = 'resources/plugins/tinymce'
 
-    function attach_edit() {
-        $('.edit').click(function () {
+        $('#tipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo constitucional.',
+            title: 'Seleccione un tipo constitucional.'
+        })
+
+        function hideContenido(e){
+            if ($(e).val() == 'Urgente' || $(e).val() == 'Destacados') $('#cont-tpnt').hide()
+            else $('#cont-tpnt').show()
+        }
+
+        $('#new').click(function () {
+            $('#titulo').val('')
+            $('#subtitulo').val('')
+            $('#contenido').val('')
+            $("#fecha").val('')
+
+            $('input:checkbox').attr('checked', false);
+            $('#tipo').val('')
+            $('#tipo').selectpicker('render')
+
+
+            clean_form()
+            verif_inputs()
             $('#cont-tpnt').show()
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/noticia_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-
-                if (self.tipo == 'Urgente' || self.tipo == 'Destacados') $('#cont-tpnt').hide()
-                else $('#cont-tpnt').show()
-
-                $('#id').val(self.id)
-                $('#titulo').val(self.titulo)
-                $('#subtitulo').val(self.subtitulo)
-
-                $('#tipo').val(self.tipo)
-                $('#tipo').selectpicker('render')
-
-                $('#fecha').val(self.fecha)
-
-                tinyMCE.get('contenido').setContent(self.contenido)
-                $("#contenido").html(self.contenido)
-                
-                for (const prop in self.categorias) {
-                    let idrs = self.categorias[prop].fkcategoria.id;
-                    $('#'+idrs).attr('checked', true);
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+        
+        $('#insert').click(function () {
+            tinyMCE.triggerSave();
+            var categorias =  new Array();
+            $('.categoria:checked').each(
+                function() {
+                    categorias.push($(this).val());
                 }
+            );
+            objeto = JSON.stringify({
+                'titulo': $('#titulo').val(),
+                'subtitulo': $('#subtitulo').val(),
+                'contenido': $("#contenido").val(),
+                'tipo': $("#tipo").val(),
+                'fecha': $("#fecha").val(),
+                'categorias': categorias
+            })
+            ajax_call("/noticia_insertar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+            $('#form').modal('hide')
+        })
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+        function attach_edit() {
+            $('.edit').click(function () {
+                $('#cont-tpnt').show()
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/noticia_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+
+                    if (self.tipo == 'Urgente' || self.tipo == 'Destacados') $('#cont-tpnt').hide()
+                    else $('#cont-tpnt').show()
+
+                    $('#id').val(self.id)
+                    $('#titulo').val(self.titulo)
+                    $('#subtitulo').val(self.subtitulo)
+
+                    $('#tipo').val(self.tipo)
+                    $('#tipo').selectpicker('render')
+
+                    $('#fecha').val(self.fecha)
+
+                    tinyMCE.get('contenido').setContent(self.contenido)
+                    $("#contenido").html(self.contenido)
+                    
+                    for (const prop in self.categorias) {
+                        let idrs = self.categorias[prop].fkcategoria.id;
+                        $('#'+idrs).attr('checked', true);
+                    }
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
+            })
+        }
+
+        $('#update').click(function () {
+            tinyMCE.triggerSave();
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'titulo': $('#titulo').val(),
+                'subtitulo': $('#subtitulo').val(),
+                'contenido': $('#contenido').val(),
+                'tipo': $('#tipo').val(),
+                'fecha': $('#fecha').val()
+            })
+            ajax_call("/noticia_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+            $('#form').modal('hide')
+        })
+        reload_form()
+    </script>
+
+    <script>
+        attach_edit()
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            enabled = false
+            
+            swal({
+                title: "¿Desea dar de baja los datos de la noticia?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#004c99",
+                cancelButtonColor: "#F44336",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then(function () {
+                ajax_call("/noticia_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
-    }
-
-    $('#update').click(function () {
-        tinyMCE.triggerSave();
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'titulo': $('#titulo').val(),
-            'subtitulo': $('#subtitulo').val(),
-            'contenido': $('#contenido').val(),
-            'tipo': $('#tipo').val(),
-            'fecha': $('#fecha').val()
-        })
-        ajax_call("/noticia_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
-        $('#form').modal('hide')
-    })
-    reload_form()
-</script>
-
-<script>
-    attach_edit()
-
-    $('.delete').click(function () {
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        enabled = false
-        swal({
-            title: "¿Desea dar de baja los datos de la noticia?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#004c99",
-            cancelButtonColor: "#F44336",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(function () {
-            ajax_call("/noticia_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
-        })
-    })
-</script>
+    </script>
 {% endblock %}

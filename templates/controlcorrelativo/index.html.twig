@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ 
             cursor:pointer 
@@ -11,47 +14,59 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('controlcorrelativo/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>CENTRO DE CONTROL CORRELATIVO</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'controlcorrelativo_insertar' in permisos %}    
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}   
-            </div>
-        </div>
-        {% if 'home_controlcorrelativo' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="phone">Nombre </th>
-                            <th class="order_by_th" data-name="names">Código </th>
-                            <th class="order_by_th" data-name="phone">Descripción </th>
-                            <th class="order_by_th" data-name="phone">Gerencia </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('controlcorrelativo/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>CENTRO DE CONTROL CORRELATIVO</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'controlcorrelativo_insertar' in permisos %}    
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}   
+                            </div>
+                        </div>
+                        {% if 'home_controlcorrelativo' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="phone">Nombre </th>
+                                            <th class="order_by_th" data-name="names">Código </th>
+                                            <th class="order_by_th" data-name="phone">Descripción </th>
+                                            <th class="order_by_th" data-name="phone">Gerencia </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('controlcorrelativo/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
     <script>
         main_route = '/controlcorrelativo'
@@ -67,77 +82,78 @@
     </script>
 
     <script>
-    $('#fkgerencia').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar gerencia.',
-        title: 'Seleccione una gerencia.'
-    })
-    
-    $('#new').click(function () {
-        $('#nombre').val('')
-        $('#codigo').val('')
-        $('#descripcion').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'nombre': $('#nombre').val(),
-            'codigo': $('#codigo').val(),
-            'descripcion': $('#descripcion').val(),
-
-            'gerencia': $('#fkgerencia').val()
+        $('#fkgerencia').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar gerencia.',
+            title: 'Seleccione una gerencia.'
         })
-        ajax_call_validation("/controlcorrelativo_insertar", {object: objeto}, null, main_route)
-    })
+        
+        $('#new').click(function () {
+            $('#nombre').val('')
+            $('#codigo').val('')
+            $('#descripcion').val('')
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'nombre': $('#nombre').val(),
+                'codigo': $('#codigo').val(),
+                'descripcion': $('#descripcion').val(),
+
+                'gerencia': $('#fkgerencia').val()
             })
-            ajax_call_get("/controlcorrelativo_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)                
-                $('#id').val(self.id)
-                $('#nombre').val(self.nombre)
-                $('#codigo').val(self.codigo)
-                $('#descripcion').val(self.descripcion)
+            ajax_call_validation("/controlcorrelativo_insertar", {object: objeto}, null, main_route)
+        })
 
-                $('#fkgerencia').val(self.fkgerencia.id)
-                $('#fkgerencia').selectpicker('render')
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/controlcorrelativo_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)                
+                    $('#id').val(self.id)
+                    $('#nombre').val(self.nombre)
+                    $('#codigo').val(self.codigo)
+                    $('#descripcion').val(self.descripcion)
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+                    $('#fkgerencia').val(self.fkgerencia.id)
+                    $('#fkgerencia').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
             })
-        })
-    }
+        }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'nombre': $('#nombre').val(),
-            'codigo': $('#codigo').val(),
-            'descripcion': $('#descripcion').val(),
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'nombre': $('#nombre').val(),
+                'codigo': $('#codigo').val(),
+                'descripcion': $('#descripcion').val(),
 
-            'gerencia': $('#fkgerencia').val()
+                'gerencia': $('#fkgerencia').val()
+            })
+            ajax_call_validation("/controlcorrelativo_actualizar", {object: objeto}, null, main_route)
         })
-        ajax_call_validation("/controlcorrelativo_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -177,5 +193,4 @@
             })
         })
     </script>
-
 {% endblock %}

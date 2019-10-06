@@ -1,51 +1,66 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('files/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>File</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'file_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
-            </div>
-        </div>
-        {% if 'home_file' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="names">Archivo </th>
-                            <th class="order_by_th" data-name="phone">Tipo </th>
-                            <th class="order_by_th" data-name="phone">Galería </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('files/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>File</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'file_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_file' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="names">Archivo </th>
+                                            <th class="order_by_th" data-name="phone">Tipo </th>
+                                            <th class="order_by_th" data-name="phone">Galería </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('files/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
     <script>
         main_route = '/files'
 
@@ -60,118 +75,119 @@
     </script>
 
     <script>
-    attach_validators()
+        attach_validators()
 
-    function init(){ };
+        function init(){ };
 
-    function view_image(object) { }
+        function view_image(object) { }
 
-    $('#btn-own').click(function () {
-        $(this).parent().modal('hidden');
-    })
-
-    $('#files_galeria').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo de galería.',
-        title: 'Seleccione un tipo de galería.'
-    })
-
-    $('#files_tipo').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo.',
-        title: 'Seleccione un tipo.'
-    })
-    
-    $('#new').click(function () {
-        $('#files_id').hide()
-        $( "#files_id" ).siblings().hide()
-        $('#files_id').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-        document.getElementById("files_submit").innerHTML= "Guardar"
-        $('#files_id').val(0)
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'ruta': $('#ruta').val(),
-            'tipo': $('#tipo').val(),
-            'galeria': $('#galeria').val()
+        $('#btn-own').click(function () {
+            $(this).parent().modal('hidden');
         })
-        ajax_call("/file", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        $('#form').modal('hide')
-    })
 
-    $("#files_ruta").change(function(){
-        $("#lnkva").hide();
-    });
+        $('#files_galeria').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo de galería.',
+            title: 'Seleccione un tipo de galería.'
+        })
 
-    $('#form').submit(function(){
-        var botonSubmit = document.getElementById('files_submit')
-        botonSubmit.innerText = "Guardando..."
-        botonSubmit.disabled = true
-    })
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            $("#files_id").attr("readonly", "readonly")
-
+        $('#files_tipo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo.',
+            title: 'Seleccione un tipo.'
+        })
+        
+        $('#new').click(function () {
+            $('#files_id').hide()
+            $( "#files_id" ).siblings().hide()
             $('#files_id').val('')
-            $('#files_id').show()
-            $( "#files_id" ).siblings().show()
-            
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/files_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response)  
-                
-                $('#files_id').val(self.id)
-                if(self.ruta != 'N/A') {
-                   $('#lnkva').remove();
-                   let urlfile = self.ruta;
-                   let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                   $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#files_ruta");
-                }    
-                document.getElementById('files_tipo').value = self.tipo
-                $('#files_tipo').selectpicker('render')
-                
-                document.getElementById('files_fkgaleria').value = self.fkgaleria.id
-                $('#files_fkgaleria').selectpicker('render')
-            })
+
             clean_form()
             verif_inputs()
             $('#id_div').hide()
             $('#insert').show()
             $('#update').hide()
             $('#form').modal('show')
-            setTimeout(function(){$('#form').modal('show')}, 1000);
-            document.getElementById("files_submit").innerHTML = "Modificar"
+            document.getElementById("files_submit").innerHTML= "Guardar"
+            $('#files_id').val(0)
         })
-    }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'ruta': $('#ruta').val(),
-            'tipo': $('#files_tipo').val(),
-            'galeria': $('#files_fkgaleria').val()
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'ruta': $('#ruta').val(),
+                'tipo': $('#tipo').val(),
+                'galeria': $('#galeria').val()
+            })
+            ajax_call("/file", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+            $('#form').modal('hide')
         })
-        ajax_call("/files_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
-        
-        $('#form').modal('hide')
-    })
-    reload_form()
+
+        $("#files_ruta").change(function(){
+            $("#lnkva").hide();
+        });
+
+        $('#form').submit(function(){
+            var botonSubmit = document.getElementById('files_submit')
+            botonSubmit.innerText = "Guardando..."
+            botonSubmit.disabled = true
+        })
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                $("#files_id").attr("readonly", "readonly")
+
+                $('#files_id').val('')
+                $('#files_id').show()
+                $( "#files_id" ).siblings().show()
+                
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/files_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response)  
+                    
+                    $('#files_id').val(self.id)
+                    if(self.ruta != 'N/A') {
+                    $('#lnkva').remove();
+                    let urlfile = self.ruta;
+                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
+                    $("<a id='lnkva' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#files_ruta");
+                    }    
+                    document.getElementById('files_tipo').value = self.tipo
+                    $('#files_tipo').selectpicker('render')
+                    
+                    document.getElementById('files_fkgaleria').value = self.fkgaleria.id
+                    $('#files_fkgaleria').selectpicker('render')
+                })
+                clean_form()
+                verif_inputs()
+                $('#id_div').hide()
+                $('#insert').show()
+                $('#update').hide()
+                $('#form').modal('show')
+                setTimeout(function(){$('#form').modal('show')}, 1000);
+                document.getElementById("files_submit").innerHTML = "Modificar"
+            })
+        }
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'ruta': $('#ruta').val(),
+                'tipo': $('#files_tipo').val(),
+                'galeria': $('#files_fkgaleria').val()
+            })
+            ajax_call("/files_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
+            
+            $('#form').modal('hide')
+        })
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 
@@ -191,5 +207,4 @@
             })
         })
     </script>
-
 {% endblock %}

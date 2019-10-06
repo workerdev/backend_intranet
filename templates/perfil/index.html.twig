@@ -1,222 +1,237 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ cursor:pointer }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ cursor:pointer }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('perfil/form.html.twig') }}
+    {{ parent() }}
+    {{ include('perfil/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>PERFIL DE USUARIO</h2></div>
-<div class="body">
-    <form class="form-horizontal">
-        <input type="hidden" value="{{profile.id}}" id="user_id">
-        <div class="row clearfix">
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                <label for="name_profile">Nombre</label>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input  type="text" id="name_profile" class="form-control nombres" value="{{profile.nombre}}">
+                    <div class="header bg-indigo"><h2>PERFIL DE USUARIO</h2></div>
+                    <div class="body">
+                        <form class="form-horizontal">
+                            <input type="hidden" value="{{profile.id}}" id="user_id">
+                            <div class="row clearfix">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                    <label for="name_profile">Nombre</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input  type="text" id="name_profile" class="form-control nombres" value="{{profile.nombre}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                    <label for="name_profile">Apellido</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input  type="text" id="lastname_profile" class="form-control nombres" value="{{profile.apellido  }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                    <label for="name_profile">Correo electrónico</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" id="mail_profile" class="form-control" value="{{profile.correo}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                    <label for="name_empresa_profile">Rol</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" id="rol_profile" class="form-control" value="{{profile.fkrol.nombre}}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                    <label for="username_profile">Nombre de usuario</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" id="username_profile" class="form-control" value="{{profile.username}}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                                    <button type="button" class="btn btn-primary m-t-15 waves-effect" onclick="Modificar_Perfil();">GUARDAR</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                <label for="name_profile">Apellido</label>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input  type="text" id="lastname_profile" class="form-control nombres" value="{{profile.apellido  }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                <label for="name_profile">Correo electrónico</label>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input type="text" id="mail_profile" class="form-control" value="{{profile.correo}}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                <label for="name_empresa_profile">Rol</label>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input type="text" id="rol_profile" class="form-control" value="{{profile.fkrol.nombre}}" readonly>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                <label for="username_profile">Nombre de usuario</label>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input type="text" id="username_profile" class="form-control" value="{{profile.username}}" readonly>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                <button type="button" class="btn btn-primary m-t-15 waves-effect" onclick="Modificar_Perfil();">GUARDAR</button>
-            </div>
-        </div>
-    </form>
-</div>
 
-<div id="modal_modificar_password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="user_tittle" class="modal-title">Modificar contraseña</h3>
-                <h4 id="user_enable" class=""></h4>
-            </div>
-            <div class="modal-body">
-                <div id="user_form_body" class="box-body">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="new_pass" type="text" class="form-control">
-                            <label class="form-label">Nueva contraseña</label>
+                    <div id="modal_modificar_password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h3 id="user_tittle" class="modal-title">Modificar contraseña</h3>
+                                    <h4 id="user_enable" class=""></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="user_form_body" class="box-body">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input id="new_pass" type="text" class="form-control">
+                                                <label class="form-label">Nueva contraseña</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input id="new_rpass" type="text" class="form-control">
+                                                <label class="form-label">Repita su contraseña</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="modify_pass" type="button" class="btn btn-success" data-dismiss="modal" onclick="Modificar_Password();"><i class="material-icons">save</i> Guardar</button>
+                                    <button id="close" type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">delete</i> Cancelar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="new_rpass" type="text" class="form-control">
-                            <label class="form-label">Repita su contraseña</label>
-                        </div>
-                    </div>
+
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="modify_pass" type="button" class="btn btn-success" data-dismiss="modal" onclick="Modificar_Password();"><i class="material-icons">save</i> Guardar</button>
-                <button id="close" type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">delete</i> Cancelar</button>
-            </div>
         </div>
-    </div>
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/perfil'
+    <script>
+        main_route = '/perfil'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-<script>
-    attach_validators()
+    <script>
+        attach_validators()
 
-    $('#modal_modificar_password').on('shown.bs.modal', function () {
-        $('#new_pass').focus();
-    })
+        $('#modal_modificar_password').on('shown.bs.modal', function () {
+            $('#new_pass').focus();
+        })
 
-    function Open_Modal_Pass(){
-        $('#new_pass').val('')
-        $('#new_rpass').val('')
-        $('#new_pass').parent().addClass('focused')
-        $('#new_rpass').parent().addClass('focused')
-        $('#modal_modificar_password').modal('show');
-    }
+        function Open_Modal_Pass(){
+            $('#new_pass').val('')
+            $('#new_rpass').val('')
+            $('#new_pass').parent().addClass('focused')
+            $('#new_rpass').parent().addClass('focused')
+            $('#modal_modificar_password').modal('show');
+        }
 
-    function Modificar_Password(){
-        id = $('#user_id').val()
-        newp = $('#new_pass').val()
-        newp1 = $('#new_rpass').val()
-        objeto =JSON.stringify({'id' : id,'new_password' : newp, 'new_password_2':newp1})
-        if(newp==newp1)
+        function Modificar_Password(){
+            id = $('#user_id').val()
+            newp = $('#new_pass').val()
+            newp1 = $('#new_rpass').val()
+            objeto =JSON.stringify({'id' : id,'new_password' : newp, 'new_password_2':newp1})
+            if(newp==newp1)
+            {
+                $.ajax({
+                    url: "/usuario_update_password",
+                    type: "post",
+                    data: {object:objeto, _xsrf: getCookie("_xsrf")},
+                }).done(function (response) {
+                        valor=JSON.parse(response)
+                        if(valor.success)
+                        {
+                            swal(
+                                'Contraseña modificada.',
+                                'Se modificó la contraseña correctamente.',
+                                'success'
+                            )
+                        }
+                        else
+                        {
+                            swal(
+                                'Contraseña actual errónea.',
+                                'No se modificó la contraseña.',
+                                'error'
+                            )
+                        }
+                })
+            }
+            else
+            {
+                swal(
+                    'Error de datos.',
+                    'Las contraseñas no son iguales.',
+                    'error'
+                )
+            }
+        }
+
+        function Modificar_Perfil()
         {
+            id = $('#user_id').val()
+            mail = $('#mail_profile').val()
+            name = $('#name_profile').val()
+            lastname = $('#lastname_profile').val()
+            objeto =JSON.stringify({'id' : id,'nombre' : name,'apellido' : lastname,'correo':mail})
+
             $.ajax({
-                url: "/usuario_update_password",
-                type: "post",
-                data: {object:objeto, _xsrf: getCookie("_xsrf")},
-            }).done(function (response) {
-                    valor=JSON.parse(response)
-                    if(valor.success)
-                    {
-                        swal(
-                            'Contraseña modificada.',
-                            'Se modificó la contraseña correctamente.',
-                            'success'
-                          )
-                    }
-                    else
-                    {
-                        swal(
-                            'Contraseña actual errónea.',
-                            'No se modificó la contraseña.',
-                            'error'
-                          )
-                    }
-            })
+                    url: "/usuario_update_profile",
+                    type: "post",
+                    data: {object:objeto, _xsrf: getCookie("_xsrf")},
+                }).done(function (response) {
+                        valor=JSON.parse(response)
+                        if(valor.success)
+                        {
+                            swal(
+                                'Perfil modificado.',
+                                'Se modificó el perfil de usuario correctamente.',
+                                'success'
+                            )
+                        }
+                        else
+                        {
+                            swal(
+                                'Perfil no modificado.',
+                                'No se modificó el perfil de usuario.',
+                                'error'
+                            )
+                        }
+                })
         }
-        else
-        {
-            swal(
-                'Error de datos.',
-                'Las contraseñas no son iguales.',
-                'error'
-              )
-        }
-    }
-
-    function Modificar_Perfil()
-    {
-        id = $('#user_id').val()
-        mail = $('#mail_profile').val()
-        name = $('#name_profile').val()
-        lastname = $('#lastname_profile').val()
-        objeto =JSON.stringify({'id' : id,'nombre' : name,'apellido' : lastname,'correo':mail})
-
-        $.ajax({
-                url: "/usuario_update_profile",
-                type: "post",
-                data: {object:objeto, _xsrf: getCookie("_xsrf")},
-            }).done(function (response) {
-                    valor=JSON.parse(response)
-                    if(valor.success)
-                    {
-                        swal(
-                            'Perfil modificado.',
-                            'Se modificó el perfil de usuario correctamente.',
-                            'success'
-                          )
-                    }
-                    else
-                    {
-                        swal(
-                            'Perfil no modificado.',
-                            'No se modificó el perfil de usuario.',
-                            'error'
-                          )
-                    }
-            })
-    }
-    reload_form()
-</script>
+        reload_form()
+    </script>
 {% endblock %}

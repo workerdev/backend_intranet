@@ -1,55 +1,70 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ cursor:pointer }
     </style>
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('accioneficacia/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>EFICACIA DE LA ACCIÓN</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'accioneficacia_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
-            </div>
-        </div>
-        {% if 'home_accioneficacia' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="phone">Acción </th>
-                            <th class="order_by_th" data-name="phone">Eficaz </th>
-                            <th class="order_by_th" data-name="phone">Resultado </th>
-                            <th class="order_by_th" data-name="phone">Fecha </th>
-                            <th class="order_by_th" data-name="phone">Responsable </th>
-                            <th class="order_by_th" data-name="phone">Nombre del Verificador </th>
-                            <th class="order_by_th" data-name="phone">Cargo del Verificador </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('accioneficacia/table.html.twig') }}
-                        </tbody>
-                    </table>
+                    <div class="header bg-indigo"><h2>EFICACIA DE LA ACCIÓN</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'accioneficacia_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_accioneficacia' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="phone">Acción </th>
+                                            <th class="order_by_th" data-name="phone">Eficaz </th>
+                                            <th class="order_by_th" data-name="phone">Resultado </th>
+                                            <th class="order_by_th" data-name="phone">Fecha </th>
+                                            <th class="order_by_th" data-name="phone">Responsable </th>
+                                            <th class="order_by_th" data-name="phone">Nombre del Verificador </th>
+                                            <th class="order_by_th" data-name="phone">Cargo del Verificador </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('accioneficacia/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
     <script>
         main_route = '/accioneficacia'
@@ -65,98 +80,99 @@
     </script>
 
     <script>
-    attach_validators()
+        attach_validators()
 
-    $('#fkaccion').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar acción.',
-        title: 'Seleccione una acción.'
-    })
-
-    $('#eficaz').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
-
-    $('#new').click(function () {
-        $('#eficaz').val('')
-        $('#resultado').val('')
-        $('#fecha').val('')
-        $('#responsable').val('')
-        $('#nombreverificador').val('')
-        $('#cargoverificador').val('')
-
-        clean_form()
-        verif_inputs()
-        $('#id_div').hide()
-        $('#insert').show()
-        $('#update').hide()
-        $('#form').modal('show')
-    })
-
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'eficaz': $('#eficaz').val(),
-            'resultado': $('#resultado').val(),
-            'fecha': $('#fecha').val(),
-            'responsable': $('#responsable').val(),
-            'nombreverificador': $('#nombreverificador').val(),
-            'cargoverificador': $('#cargoverificador').val(),
-
-            'accion': $('#fkaccion').val()
+        $('#fkaccion').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar acción.',
+            title: 'Seleccione una acción.'
         })
-       ajax_call_validation("/accioneficacia_insertar", {object: objeto}, null, main_route)
-    })
 
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            });
-            ajax_call_get("/accioneficacia_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#eficaz').val(self.eficaz)
-                $('#resultado').val(self.resultado)
-                $('#fecha').val(self.fecha)
-                $('#responsable').val(self.responsable)
-                $('#nombreverificador').val(self.nombreverificador)
-                $('#cargoverificador').val(self.cargoverificador)
+        $('#eficaz').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
 
-                $('#fkaccion').val(self.fkaccion.id)
-                $('#fkaccion').selectpicker('render')
+        $('#new').click(function () {
+            $('#eficaz').val('')
+            $('#resultado').val('')
+            $('#fecha').val('')
+            $('#responsable').val('')
+            $('#nombreverificador').val('')
+            $('#cargoverificador').val('')
 
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
+            clean_form()
+            verif_inputs()
+            $('#id_div').hide()
+            $('#insert').show()
+            $('#update').hide()
+            $('#form').modal('show')
+        })
+
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'eficaz': $('#eficaz').val(),
+                'resultado': $('#resultado').val(),
+                'fecha': $('#fecha').val(),
+                'responsable': $('#responsable').val(),
+                'nombreverificador': $('#nombreverificador').val(),
+                'cargoverificador': $('#cargoverificador').val(),
+
+                'accion': $('#fkaccion').val()
             })
+        ajax_call_validation("/accioneficacia_insertar", {object: objeto}, null, main_route)
         })
-    }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'eficaz': $('#eficaz').val(),
-            'resultado': $('#resultado').val(),
-            'fecha': $('#fecha').val(),
-            'responsable': $('#responsable').val(),
-            'nombreverificador': $('#nombreverificador').val(),
-            'cargoverificador': $('#cargoverificador').val(),
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_get("/accioneficacia_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    $('#id').val(self.id)
+                    $('#eficaz').val(self.eficaz)
+                    $('#resultado').val(self.resultado)
+                    $('#fecha').val(self.fecha)
+                    $('#responsable').val(self.responsable)
+                    $('#nombreverificador').val(self.nombreverificador)
+                    $('#cargoverificador').val(self.cargoverificador)
 
-            'accion': $('#fkaccion').val()
+                    $('#fkaccion').val(self.fkaccion.id)
+                    $('#fkaccion').selectpicker('render')
+
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
+                })
+            })
+        }
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'eficaz': $('#eficaz').val(),
+                'resultado': $('#resultado').val(),
+                'fecha': $('#fecha').val(),
+                'responsable': $('#responsable').val(),
+                'nombreverificador': $('#nombreverificador').val(),
+                'cargoverificador': $('#cargoverificador').val(),
+
+                'accion': $('#fkaccion').val()
+            })
+            ajax_call_validation("/accioneficacia_actualizar", {object: objeto}, null, main_route)
         })
-        ajax_call_validation("/accioneficacia_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
+        reload_form()
     </script>
+
     <script>
         attach_edit()
 

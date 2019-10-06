@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         .accion{ cursor:pointer }
 	    .modal-dialog{
@@ -12,46 +15,57 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
     {{ include('noticiacategoria/form.html.twig') }}
 
-    <div class="header bg-indigo"><h2>NOTICIA CATEGORÍA</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'noticiacategoria_insertar' in permisos %}
-                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
+
+                    <div class="header bg-indigo"><h2>NOTICIA CATEGORÍA</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'noticiacategoria_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_noticiacategoria' in permisos and objects %}
+                            <div class="row">
+                                <div class="body table-responsive">
+                                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="order_by_th" data-name="names">Noticia </th>
+                                            <th class="order_by_th" data-name="phone">Categoria </th>
+                                            <th class="actions_header">Acciones </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table_content">
+                                        {{ include('noticiacategoria/table.html.twig') }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>    
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-        {% if 'home_noticiacategoria' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th class="order_by_th" data-name="names">Noticia </th>
-                            <th class="order_by_th" data-name="phone">Categoria </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('noticiacategoria/table.html.twig') }}
-                        </tbody>
-                    </table>
-                </div>
-            </div>    
-        {% else %}
-        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="resources/js/transporte.js"></script>
-    <script src="resources/js/functions.js"></script>
-
+    {{ parent() }}
+    <script src="{{ asset('resources/js/transporte.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
+    
     <script>
         main_route = '/noticiacategoria'
 
@@ -147,6 +161,7 @@
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
+
             swal({
                 title: "¿Desea dar de baja los datos de la noticia categoría?",
                 type: "warning",

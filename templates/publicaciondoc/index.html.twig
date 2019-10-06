@@ -1,217 +1,232 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ 
-        cursor:pointer 
-    }
-    .swal2-title{
-        font-size: 16px !important;
-    }
-    .check-own{
-        position: static !important;
-        left: 0px !important;
-        opacity: 1 !important;
-    }
-    .padding-own{
-        padding: 12px;
-    }
-    .modal-dialog-own {
-        width: 50% !important;
-    }
-    .modal-dialog-own {
-        width: 80% !important;
-    }
-    .loader-own{
-        text-align: center;
-    }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ 
+            cursor:pointer 
+        }
+        .swal2-title{
+            font-size: 16px !important;
+        }
+        .check-own{
+            position: static !important;
+            left: 0px !important;
+            opacity: 1 !important;
+        }
+        .padding-own{
+            padding: 12px;
+        }
+        .modal-dialog-own {
+            width: 50% !important;
+        }
+        .modal-dialog-own {
+            width: 80% !important;
+        }
+        .loader-own{
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('publicaciondoc/form.html.twig') }}
+    {{ parent() }}
+    {{ include('publicaciondoc/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>PUBLICACIÓN DE DOCUMENTOS</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'publicaciondoc_insertar' in permisos %}
-            <button id="new" type="button" class="btn bg-blue waves-effect" title="Publicar">
-                <i class="material-icons">markunread_mailbox</i>
-            </button>
-        {% endif %}
+                    <div class="header bg-indigo"><h2>PUBLICACIÓN DE DOCUMENTOS</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'publicaciondoc_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-blue waves-effect" title="Publicar">
+                                    <i class="material-icons">markunread_mailbox</i>
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_publicaciondoc' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="order_by_th" data-name="phone">Marcar </th>
+                                        <th class="order_by_th" data-name="phone">Tipo </th>
+                                        <th class="order_by_th" data-name="phone">Área </th>
+                                        <th class="order_by_th" data-name="phone">Código </th>
+                                        <th class="order_by_th" data-name="names">Título </th>
+                                        <th class="order_by_th" data-name="names">Versión </th>
+                                        <th class="order_by_th" data-name="names">Vínculo </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('publicaciondoc/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    {% if 'home_publicaciondoc' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th class="order_by_th" data-name="phone">Marcar </th>
-                    <th class="order_by_th" data-name="phone">Tipo </th>
-                    <th class="order_by_th" data-name="phone">Área </th>
-                    <th class="order_by_th" data-name="phone">Código </th>
-                    <th class="order_by_th" data-name="names">Título </th>
-                    <th class="order_by_th" data-name="names">Versión </th>
-                    <th class="order_by_th" data-name="names">Vínculo </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('publicaciondoc/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/publicaciondoc'
+    <script>
+        main_route = '/publicaciondoc'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 100
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
-
-<script>
-    var global_check = [];
-    var global_data = '';
-
-    $(document).ready(function (){
-        $('#checkdoc').prop( "checked", false);
-        $('.check-own').prop('checked', false);
-    });
-
-    var table = $('#data_table').DataTable({
-        drawCallback: function(){
-            $('.paginate_button', this.api().table().container())          
-                .on('click', function(){
-                if($('#checkdoc').prop('checked')){
-                    $('.hidden-own').removeClass('d-none')
-                }
-                else{
-                    $('.hidden-own').addClass('d-none')
-                }
-            });       
+        function default_values() {
+            page_nr = 1
+            max_entries = 100
+            like_search = ""
+            order_by = ""
+            ascendant = true
         }
-    });
+        default_values()
+    </script>
 
-    function init(){ }
+    <script>
+        var global_check = [];
+        var global_data = '';
 
-    function changeval(idc){
-        if($('#'+idc).is(':checked')){
-            let id = $('#'+idc).attr('data-id'); 
-            let tipo = $('#'+idc).attr('data-type');
-            let objdoc = {
-                'id': id,
-                'tipo': tipo
-            }; 
-            global_check.push(objdoc);
-        }else{
-            let id = $('#'+idc).attr('data-id'); 
-            let tipo = $('#'+idc).attr('data-type');
-            for( var i = 0; i < global_check.length; i++){ 
-                if ( global_check[i].id === id && global_check[i].tipo === tipo ) {
-                    global_check.splice(i, 1); 
-                }
+        $(document).ready(function (){
+            $('#checkdoc').prop( "checked", false);
+            $('.check-own').prop('checked', false);
+        });
+
+        var table = $('#data_table').DataTable({
+            drawCallback: function(){
+                $('.paginate_button', this.api().table().container())          
+                    .on('click', function(){
+                    if($('#checkdoc').prop('checked')){
+                        $('.hidden-own').removeClass('d-none')
+                    }
+                    else{
+                        $('.hidden-own').addClass('d-none')
+                    }
+                });       
             }
-        }
-    }
+        });
 
-    $('#checkdoc').change(function(){
-        if($(this).prop('checked')){
-            $('.hidden-own').removeClass('d-none')
-        }
-        else{
-            $('.hidden-own').addClass('d-none')
-        }
-    })
+        function init(){ }
 
-    $('#new').click(function () {
-        var list = global_check;
-
-        obj = JSON.stringify({
-            'docs': list
-        })
-        ajax_call_get("/publicaciondoc_listar",{
-            object: obj
-        },function(response){
-            var ldoc = JSON.parse(response);
-            global_data = ldoc;
-
-            var table = $('#table_docs').DataTable();
-            table.clear().draw();
-
-            for(var i=0; i<ldoc.length; i++){
-                if(ldoc[i].isform == 'true'){
-                    table.row.add([
-                        "Formulario",
-                        ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
-                        ldoc[i].codigo,
-                        ldoc[i].titulo,
-                        ldoc[i].versionvigente,
-                        ldoc[i].vinculofiledig
-                    ]).draw(false);
-                }else{
-                    if(ldoc[i].isdisabled == 'true'){
-                        table.row.add([
-                            'BAJA '  + ldoc[i].fktipo.nombre,
-                            ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
-                            ldoc[i].codigo,
-                            ldoc[i].titulo,
-                            ldoc[i].versionvigente,
-                            ldoc[i].vinculoarchivo
-                        ]).draw(false);
-                    }else{
-                        table.row.add([
-                            ldoc[i].fktipo.nombre,
-                            ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
-                            ldoc[i].codigo,
-                            ldoc[i].titulo,
-                            ldoc[i].versionvigente,
-                            ldoc[i].vinculoarchivodig
-                        ]).draw(false);
+        function changeval(idc){
+            if($('#'+idc).is(':checked')){
+                let id = $('#'+idc).attr('data-id'); 
+                let tipo = $('#'+idc).attr('data-type');
+                let objdoc = {
+                    'id': id,
+                    'tipo': tipo
+                }; 
+                global_check.push(objdoc);
+            }else{
+                let id = $('#'+idc).attr('data-id'); 
+                let tipo = $('#'+idc).attr('data-type');
+                for( var i = 0; i < global_check.length; i++){ 
+                    if ( global_check[i].id === id && global_check[i].tipo === tipo ) {
+                        global_check.splice(i, 1); 
                     }
                 }
             }
+        }
 
-            if(list.length > 0){
-                clean_form()
-                $('#form').modal('show')
-            }else{
-                swal(
-                    'Error de datos',
-                    'Seleccione al menos un doc. para publicar.',
-                    'warning'
-                )
+        $('#checkdoc').change(function(){
+            if($(this).prop('checked')){
+                $('.hidden-own').removeClass('d-none')
+            }
+            else{
+                $('.hidden-own').addClass('d-none')
             }
         })
-    })
-    
-    $('#btn-publicar').click(function () {
-        var grupos = []
-        $("input[name=gp-check]").each(function (index) {
-            if($(this).is(':checked')){
-                grupos.push($(this).attr("data-id"))
-            }
-        });
 
-        objeto = JSON.stringify({
-            'datadoc': global_data,
-            'grupos': grupos
-        });
-        ajax_call_validation_pbl("/publicaciondoc_publicar", {object: objeto}, null, main_route)
-    })
-</script>
+        $('#new').click(function () {
+            var list = global_check;
+
+            obj = JSON.stringify({
+                'docs': list
+            })
+            ajax_call_get("/publicaciondoc_listar",{
+                object: obj
+            },function(response){
+                var ldoc = JSON.parse(response);
+                global_data = ldoc;
+
+                var table = $('#table_docs').DataTable();
+                table.clear().draw();
+
+                for(var i=0; i<ldoc.length; i++){
+                    if(ldoc[i].isform == 'true'){
+                        table.row.add([
+                            "Formulario",
+                            ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
+                            ldoc[i].codigo,
+                            ldoc[i].titulo,
+                            ldoc[i].versionvigente,
+                            ldoc[i].vinculofiledig
+                        ]).draw(false);
+                    }else{
+                        if(ldoc[i].isdisabled == 'true'){
+                            table.row.add([
+                                'BAJA '  + ldoc[i].fktipo.nombre,
+                                ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
+                                ldoc[i].codigo,
+                                ldoc[i].titulo,
+                                ldoc[i].versionvigente,
+                                ldoc[i].vinculoarchivo
+                            ]).draw(false);
+                        }else{
+                            table.row.add([
+                                ldoc[i].fktipo.nombre,
+                                ldoc[i].fkficha.fkareagerenciasector.fkarea.nombre,
+                                ldoc[i].codigo,
+                                ldoc[i].titulo,
+                                ldoc[i].versionvigente,
+                                ldoc[i].vinculoarchivodig
+                            ]).draw(false);
+                        }
+                    }
+                }
+
+                if(list.length > 0){
+                    clean_form()
+                    $('#form').modal('show')
+                }else{
+                    swal(
+                        'Error de datos',
+                        'Seleccione al menos un doc. para publicar.',
+                        'warning'
+                    )
+                }
+            })
+        })
+        
+        $('#btn-publicar').click(function () {
+            var grupos = []
+            $("input[name=gp-check]").each(function (index) {
+                if($(this).is(':checked')){
+                    grupos.push($(this).attr("data-id"))
+                }
+            });
+
+            objeto = JSON.stringify({
+                'datadoc': global_data,
+                'grupos': grupos
+            });
+            ajax_call_validation_pbl("/publicaciondoc_publicar", {object: objeto}, null, main_route)
+        })
+    </script>
 {% endblock %}

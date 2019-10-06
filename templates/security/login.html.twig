@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>{% block title %}{{ title_page }}{% endblock %}</title>
-    <link rel="icon" href="{{ logo_page }}" type="image/x-icon">
-    <link href="resources/css/iconfont/material-icons.css" rel="stylesheet">
-    <link href="resources/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="resources/plugins/node-waves/waves.css" rel="stylesheet" />
-    <link href="resources/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" />
-    <link href="resources/plugins/animate-css/animate.css" rel="stylesheet" />
-    <link href="resources/css/style.css" rel="stylesheet">
-    <link href="resources/css/themes/all-themes.css" rel="stylesheet" />
-    <link href="resources/plugins/nestable/jquery-nestable.css" rel="stylesheet">
-    <link href="resources/css/main.css" rel="stylesheet" />
+    <link rel="icon" href="{{ asset('' ~ logo_page ~ '') }}" type="image/x-icon">
+    <link href="{{ asset('resources/css/iconfont/material-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/plugins/node-waves/waves.css') }}" rel="stylesheet" />
+    <link href="{{ asset('resources/plugins/fileinput/css/fileinput.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('resources/plugins/animate-css/animate.css') }}" rel="stylesheet" />
+    <link href="{{ asset('resources/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/css/themes/all-themes.css') }}" rel="stylesheet" />
+    <link href="{{ asset('resources/plugins/nestable/jquery-nestable.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/css/main.css') }}" rel="stylesheet" />
     
     {% block stylesheets %}
     <style>
@@ -50,7 +50,7 @@
     <div class="login-box">
         <div class="logo" style="margin: 0px">
             <center>
-                <img class="img-responsive img-own" src="{{ logo_login }}">
+                <img class="img-responsive img-own" src="{{ asset('' ~ logo_login ~ '') }}">
             </center>
         </div>
         <div class="card">
@@ -111,17 +111,17 @@
         </div>
     </div>
     
-    <script src="resources/plugins/jquery/jquery.min.js"></script>
-    <script src="resources/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-    <script src="resources/plugins/bootstrap/js/bootstrap.js"></script>
-    <script src="resources/plugins/node-waves/waves.js"></script>
-    <script src="resources/js/admin.js"></script>
-    <script src="resources/plugins/bootstrap-notify/bootstrap-notify.js"></script>
-    <script src="resources/plugins/fileinput/js/fileinput.min.js"></script>
-    <script src="resources/plugins/jquery-validation/jquery.validate.js"></script>
-    <script src="resources/plugins/nestable/jquery.nestable.js"></script>
-    <script src="resources/js/jquery.toast.js"></script>
-    <script src="resources/js/functions.js"></script>      
+    <script src="{{ asset('resources/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('resources/plugins/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('resources/plugins/bootstrap/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('resources/plugins/node-waves/waves.js') }}"></script>
+    <script src="{{ asset('resources/js/admin.js') }}"></script>
+    <script src="{{ asset('resources/plugins/bootstrap-notify/bootstrap-notify.js') }}"></script>
+    <script src="{{ asset('resources/plugins/fileinput/js/fileinput.min.js') }}"></script>
+    <script src="{{ asset('resources/plugins/jquery-validation/jquery.validate.js') }}"></script>
+    <script src="{{ asset('resources/plugins/nestable/jquery.nestable.js') }}"></script>
+    <script src="{{ asset('resources/js/jquery.toast.js') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>      
     <script>
         $('#iniciar').click(function () {
             if($('#usuario').val() == '' || $('#password').val() == ''){

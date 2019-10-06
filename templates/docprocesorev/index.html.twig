@@ -1,361 +1,376 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }}{% endblock %}
+
 {% block stylesheets %}
-<style>
-    .accion{ 
-        cursor:pointer 
-    }
-    .swal2-title{
-        font-size: 16px !important;
-    }
-</style>
+    {{ parent() }}
+    <style>
+        .accion{ 
+            cursor:pointer 
+        }
+        .swal2-title{
+            font-size: 16px !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-{{ include('docprocesorev/form.html.twig') }}
+    {{ parent() }}
+    {{ include('docprocesorev/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-<div class="header bg-indigo"><h2>DOCUMENTO EN REVISIÓN</h2></div>
-<div class="body">
-    <div class="row clearfix">
-        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-        {% if 'docprocesorev_insertar' in permisos %}
-            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                <i class="material-icons">add</i>
-            </button>
-            {% if docderiv %}
-            <button id="apb" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
-                <i class="material-icons">folder</i>
-            </button>
-            {% endif %}
-        {% endif %}
+                    <div class="header bg-indigo"><h2>DOCUMENTO EN REVISIÓN</h2></div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            {% if 'docprocesorev_insertar' in permisos %}
+                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                    <i class="material-icons">add</i>
+                                </button>
+                                {% if docderiv %}
+                                <button id="apb" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
+                                    <i class="material-icons">folder</i>
+                                </button>
+                                {% endif %}
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% if 'home_docprocesorev' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="order_by_th" data-name="phone">Fecha </th>
+                                        <th class="order_by_th" data-name="phone">Responsable </th>
+                                        <th class="order_by_th" data-name="phone">Firma </th>
+                                        <th class="order_by_th" data-name="phone">Estado documento </th>
+                                        <th class="order_by_th" data-name="names">Documento en proceso </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('docprocesorev/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
-    {% if 'home_docprocesorev' in permisos and objects %}
-    <div class="row">
-        <div class="body table-responsive">
-            <table id="data_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                <thead>
-                <tr>
-                    <th class="order_by_th" data-name="phone">Fecha </th>
-                    <th class="order_by_th" data-name="phone">Responsable </th>
-                    <th class="order_by_th" data-name="phone">Firma </th>
-                    <th class="order_by_th" data-name="phone">Estado documento </th>
-                    <th class="order_by_th" data-name="names">Documento en proceso </th>
-                    <th class="actions_header">Acciones </th>
-                </tr>
-                </thead>
-                <tbody id="table_content">
-                {{ include('docprocesorev/table.html.twig') }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-    {% endif %}
-</div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
-<script src="resources/js/functions.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
 
-<script>
-    main_route = '/docprocesorev'
+    <script>
+        main_route = '/docprocesorev'
 
-    function default_values() {
-        page_nr = 1
-        max_entries = 10
-        like_search = ""
-        order_by = ""
-        ascendant = true
-    }
-    default_values()
-</script>
+        function default_values() {
+            page_nr = 1
+            max_entries = 10
+            like_search = ""
+            order_by = ""
+            ascendant = true
+        }
+        default_values()
+    </script>
 
-<script>
-    var derivar = false;
-    var aprobar = false;
-    var rechazar = false;
-    var idrev = 0;
+    <script>
+        var derivar = false;
+        var aprobar = false;
+        var rechazar = false;
+        var idrev = 0;
 
-    $('#fkdoc').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar tipo documento.',
-        title: 'Seleccione un documento.'
-    })
- 
-    $('#estadodoc').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar opción.',
-        title: 'Seleccione una opción.'
-    })
-
-    $('#responsable').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar responsable.',
-        title: 'Seleccione un responsable.'
-    })
-
-    $('#dresponsable').selectpicker({
-        size: 4,
-        liveSearch: true,
-        liveSearchPlaceholder: 'Buscar responsable.',
-        title: 'Seleccione un responsable.'
-    })
-
-    $('#new').click(function () {
-        $('#firma').val('Por revisar');
-        
-        clean_form();
-        verif_inputs();
-        $('#id_div').hide();
-        $('#insert').show();
-        $('#update').hide();
-        $('#form').modal('show');
-    })
-
-    $('#apb').click(function () {
-        $('#form-rev').modal('show');
-    })
-
-    $('#cdc-pass').mousedown(function(){
-        $("#ic-dpass").css("color", "lightgrey");
-        $("#clave").prop("type", "text");
-    });
+        $('#fkdoc').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar tipo documento.',
+            title: 'Seleccione un documento.'
+        })
     
-    $("#cdc-pass").mouseup(function(){
-        $("#ic-dpass").css("color", "grey");
-        $("#clave").prop("type", "password");
-    });
-    
-    $('#insert').click(function () {
-        objeto = JSON.stringify({
-            'fecha': $('#fecha').val(),
-            'responsable': $('#responsable').val(),
-            'firma': $("#firma").val(),
-            'estadodoc': $("#estadodoc").val(),
-            'fkdocs': $("#fkdoc").val()
-        });
-        ajax_call_validation("/docprocesorev_insertar", {object: objeto}, null, main_route)
-    })
+        $('#estadodoc').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar opción.',
+            title: 'Seleccione una opción.'
+        })
 
-    $('#confirm').click(function () {
-        objeto = JSON.stringify({
-            'password': $('#clave').val()
-        });
-        $.ajax({
-            method: "POST",
-            url: "/valid_action",
-            data: {object : objeto},
-            async: false,
-            beforeSend: function () {
-                $("<div id='spn-vld' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
-                    "<div style='margin:auto;display:block; height:55px;'>"+
-                        "<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>"+
-                    "</div>"+
-                "</div>").insertAfter("#cnfdc_form_body");
-            },
-            success: function (data, textStatus) {
-                $("#spn-vld").fadeOut(800);
-            }
-        }).done(function (response) {
-            let message = "";
-            if(response == "vacio"){
-                message = 'Por favor ingrese su password.'; 
-                document.getElementById('msgv').innerHTML = message;
-                $("#msgv").show();
-                setTimeout(function(){ $("#msgv").fadeOut() }, 1000);
-            }
-            if(response == "error"){ 
-                message = 'Datos invalidos, intente de nuevo.';
-                document.getElementById('msgv').innerHTML = message;
-                $("#msgv").show();
-                setTimeout(function(){ 
-                        $("#msgv").fadeOut();
-                        $('#clave').val(''); 
-                    }
-                , 3000);
-            }
-            if(response == "exitoso"){
-                if(derivar){ 
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': $('#dresponsable').val(),
-                        'firma': 'DERIVADO',
-                        'estadodoc': 'DERIVADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_derivar", {object: objeto}, null, main_route)
-                }
-                if(aprobar){
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': null,
-                        'firma': 'APROBADO',
-                        'estadodoc': 'APROBADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
-                }
-                if(rechazar){ 
-                    objeto = JSON.stringify({
-                        'id': idrev,
-                        'fecha': null,
-                        'responsable': null,
-                        'firma': 'RECHAZADO',
-                        'estadodoc': 'RECHAZADO',
-                        'fkdocs': null
-                    });
-                    ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
-                }
-                $('#form-valid').hide();
-                $('#form-rev').hide();
-                $('#form-valid').modal('hide');
-                $('#form-rev').modal('hide');
-            }
-        });
-    })
+        $('#responsable').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar responsable.',
+            title: 'Seleccione un responsable.'
+        })
 
-    function derivar_doc() {
-        $('.drdoc').click(function () {
-            derivar = true;
-            aprobar = false;
-            rechazar = false;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')));
-            vrep = $('#dresponsable').val();
+        $('#dresponsable').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar responsable.',
+            title: 'Seleccione un responsable.'
+        })
+
+        $('#new').click(function () {
+            $('#firma').val('Por revisar');
             
-            if(vrep == "") alert('Por favor, seleccione un responsable.');
-            else $('#form-valid').modal('show');
-        });
-    }
-
-    function aprobar_doc() {
-        $('.apdoc').click(function () {
-            derivar = false;
-            aprobar = true;
-            rechazar = false;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')))
-            $('#msgv').modal('hide')
-            $('#form-valid').modal('show')
-        });
-    }
-
-    function rechazar_doc() {
-        $('.rcdoc').click(function () {
-            derivar = false;
-            aprobar = false;
-            rechazar = true;
-            idrev = parseInt(JSON.parse($(this).attr('data-json')))
-            $('#form-valid').modal('show')
-        });
-    }
-
-    function attach_edit() {
-        $('.edit').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-            })
-            ajax_call_get("/docprocesorev_editar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);
-                $('#id').val(self.id)
-                $('#fecha').val(self.fecha)
-                $('#firma').val(self.firma)
-
-                $('#responsable').val(self.responsable)
-                $('#responsable').selectpicker('render')
-
-                $('#estadodoc').val(self.estadodoc)
-                $('#estadodoc').selectpicker('render')
-
-                $('#fkdoc').val(self.fkdoc.id)
-                $('#fkdoc').selectpicker('render')
-           
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                $('#form').modal('show')
-            })
+            clean_form();
+            verif_inputs();
+            $('#id_div').hide();
+            $('#insert').show();
+            $('#update').hide();
+            $('#form').modal('show');
         })
-    }
 
-    $('#update').click(function () {
-        objeto = JSON.stringify({
-            'id': parseInt(JSON.parse($('#id').val())),
-            'fecha': $('#fecha').val(),
-            'responsable': $('#responsable').val(),
-            'firma': $('#firma').val(),
-            'estadodoc': $('#estadodoc').val(),
-            'fkdocs': $('#fkdoc').val()
+        $('#apb').click(function () {
+            $('#form-rev').modal('show');
         })
-        ajax_call_validation("/docprocesorev_actualizar", {object: objeto}, null, main_route)
-    })
-    reload_form()
-</script>
 
-<script>
-    attach_edit()
-    derivar_doc()
-    aprobar_doc()
-    rechazar_doc()
-
-    let message= ''
-    function docrev_prev(id) {
-        obj = JSON.stringify({
-            'id': parseInt(JSON.parse(id))
+        $('#cdc-pass').mousedown(function(){
+            $("#ic-dpass").css("color", "lightgrey");
+            $("#clave").prop("type", "text");
         });
-        ajax_call_get("/docrev_prev",{
-            object: obj
-        },function(response){
-            message = response;
+        
+        $("#cdc-pass").mouseup(function(){
+            $("#ic-dpass").css("color", "grey");
+            $("#clave").prop("type", "password");
         });
-    }
+        
+        $('#insert').click(function () {
+            objeto = JSON.stringify({
+                'fecha': $('#fecha').val(),
+                'responsable': $('#responsable').val(),
+                'firma': $("#firma").val(),
+                'estadodoc': $("#estadodoc").val(),
+                'fkdocs': $("#fkdoc").val()
+            });
+            ajax_call_validation("/docprocesorev_insertar", {object: objeto}, null, main_route)
+        })
 
-    $('.delete').click(function () {
-        id = parseInt(JSON.parse($(this).attr('data-json')))
-        docrev_prev(id)
-       
-        let quest = message
-        enabled = false
+        $('#confirm').click(function () {
+            objeto = JSON.stringify({
+                'password': $('#clave').val()
+            });
+            $.ajax({
+                method: "POST",
+                url: "/valid_action",
+                data: {object : objeto},
+                async: false,
+                beforeSend: function () {
+                    $("<div id='spn-vld' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
+                        "<div style='margin:auto;display:block; height:55px;'>"+
+                            "<img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>"+
+                        "</div>"+
+                    "</div>").insertAfter("#cnfdc_form_body");
+                },
+                success: function (data, textStatus) {
+                    $("#spn-vld").fadeOut(800);
+                }
+            }).done(function (response) {
+                let message = "";
+                if(response == "vacio"){
+                    message = 'Por favor ingrese su password.'; 
+                    document.getElementById('msgv').innerHTML = message;
+                    $("#msgv").show();
+                    setTimeout(function(){ $("#msgv").fadeOut() }, 1000);
+                }
+                if(response == "error"){ 
+                    message = 'Datos invalidos, intente de nuevo.';
+                    document.getElementById('msgv').innerHTML = message;
+                    $("#msgv").show();
+                    setTimeout(function(){ 
+                            $("#msgv").fadeOut();
+                            $('#clave').val(''); 
+                        }
+                    , 3000);
+                }
+                if(response == "exitoso"){
+                    if(derivar){ 
+                        objeto = JSON.stringify({
+                            'id': idrev,
+                            'fecha': null,
+                            'responsable': $('#dresponsable').val(),
+                            'firma': 'DERIVADO',
+                            'estadodoc': 'DERIVADO',
+                            'fkdocs': null
+                        });
+                        ajax_call_validation("/docprocesorev_derivar", {object: objeto}, null, main_route)
+                    }
+                    if(aprobar){
+                        objeto = JSON.stringify({
+                            'id': idrev,
+                            'fecha': null,
+                            'responsable': null,
+                            'firma': 'APROBADO',
+                            'estadodoc': 'APROBADO',
+                            'fkdocs': null
+                        });
+                        ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
+                    }
+                    if(rechazar){ 
+                        objeto = JSON.stringify({
+                            'id': idrev,
+                            'fecha': null,
+                            'responsable': null,
+                            'firma': 'RECHAZADO',
+                            'estadodoc': 'RECHAZADO',
+                            'fkdocs': null
+                        });
+                        ajax_call_validation("/docprocesorev_aprorec", {object: objeto}, null, main_route)
+                    }
+                    $('#form-valid').hide();
+                    $('#form-rev').hide();
+                    $('#form-valid').modal('hide');
+                    $('#form-rev').modal('hide');
+                }
+            });
+        })
 
-        if((quest.split(" ").length) > 8){
-            swal({
-                title: quest,
-                type: "warning",
-                showConfirmButton: false,
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
+        function derivar_doc() {
+            $('.drdoc').click(function () {
+                derivar = true;
+                aprobar = false;
+                rechazar = false;
+                idrev = parseInt(JSON.parse($(this).attr('data-json')));
+                vrep = $('#dresponsable').val();
+                
+                if(vrep == "") alert('Por favor, seleccione un responsable.');
+                else $('#form-valid').modal('show');
+            });
+        }
 
-            })
-        }else{
-            swal({
-                title: quest,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
-                ajax_call("/docprocesorev_eliminar", { 
-                    id, enabled,_xsrf: getCookie("_xsrf")}, 
-                    null, 
-                    function () {
-                        setTimeout(function(){ window.location=main_route }, 1000);
+        function aprobar_doc() {
+            $('.apdoc').click(function () {
+                derivar = false;
+                aprobar = true;
+                rechazar = false;
+                idrev = parseInt(JSON.parse($(this).attr('data-json')))
+                $('#msgv').modal('hide')
+                $('#form-valid').modal('show')
+            });
+        }
+
+        function rechazar_doc() {
+            $('.rcdoc').click(function () {
+                derivar = false;
+                aprobar = false;
+                rechazar = true;
+                idrev = parseInt(JSON.parse($(this).attr('data-json')))
+                $('#form-valid').modal('show')
+            });
+        }
+
+        function attach_edit() {
+            $('.edit').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                })
+                ajax_call_get("/docprocesorev_editar",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    $('#id').val(self.id)
+                    $('#fecha').val(self.fecha)
+                    $('#firma').val(self.firma)
+
+                    $('#responsable').val(self.responsable)
+                    $('#responsable').selectpicker('render')
+
+                    $('#estadodoc').val(self.estadodoc)
+                    $('#estadodoc').selectpicker('render')
+
+                    $('#fkdoc').val(self.fkdoc.id)
+                    $('#fkdoc').selectpicker('render')
+            
+                    clean_form()
+                    verif_inputs()
+                    $('#id_div').show()
+                    $('#insert').hide()
+                    $('#update').show()
+                    $('#form').modal('show')
                 })
             })
         }
-    })
-</script>
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'fecha': $('#fecha').val(),
+                'responsable': $('#responsable').val(),
+                'firma': $('#firma').val(),
+                'estadodoc': $('#estadodoc').val(),
+                'fkdocs': $('#fkdoc').val()
+            })
+            ajax_call_validation("/docprocesorev_actualizar", {object: objeto}, null, main_route)
+        })
+        reload_form()
+    </script>
+
+    <script>
+        attach_edit()
+        derivar_doc()
+        aprobar_doc()
+        rechazar_doc()
+
+        let message= ''
+        function docrev_prev(id) {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get("/docrev_prev",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            docrev_prev(id)
+        
+            let quest = message
+            enabled = false
+
+            if((quest.split(" ").length) > 8){
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+
+                })
+            }else{
+                swal({
+                    title: quest,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+                    ajax_call("/docprocesorev_eliminar", { 
+                        id, enabled,_xsrf: getCookie("_xsrf")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 1000);
+                    })
+                })
+            }
+        })
+    </script>
 {% endblock %}
