@@ -37,8 +37,6 @@ interface AuthenticatorInterface extends AuthenticationEntryPointInterface
      *
      * If this returns false, the authenticator will be skipped.
      *
-     * @param Request $request
-     *
      * @return bool
      */
     public function supports(Request $request);
@@ -51,16 +49,14 @@ interface AuthenticatorInterface extends AuthenticationEntryPointInterface
      *
      * For example, for a form login, you might:
      *
-     *      return array(
+     *      return [
      *          'username' => $request->request->get('_username'),
      *          'password' => $request->request->get('_password'),
-     *      );
+     *      ];
      *
      * Or for an API token that's on a header, you might use:
      *
-     *      return array('api_key' => $request->headers->get('X-API-TOKEN'));
-     *
-     * @param Request $request
+     *      return ['api_key' => $request->headers->get('X-API-TOKEN')];
      *
      * @return mixed Any non-null value
      *

@@ -80,8 +80,8 @@ class Hour
     /**
      * @var int|null
      *
-     * @Serializer\Property("int")
-     * @Serializer\Type("float")
+     * @Serializer\Property("wind_degree")
+     * @Serializer\Type("int")
      * @Serializer\IgnoreNull()
      */
     private $windDegree;
@@ -89,8 +89,8 @@ class Hour
     /**
      * @var string|null
      *
-     * @Serializer\Property("string")
-     * @Serializer\Type("float")
+     * @Serializer\Property("wind_dir")
+     * @Serializer\Type("string")
      * @Serializer\IgnoreNull()
      */
     private $windDirection;
@@ -274,6 +274,24 @@ class Hour
      * @Serializer\IgnoreNull()
      */
     private $visMiles;
+
+    /**
+     * @var float|null
+     *
+     * @Serializer\Property("gust_mph")
+     * @Serializer\Type("float")
+     * @Serializer\IgnoreNull()
+     */
+    private $gustMph;
+
+    /**
+     * @var float|null
+     *
+     * @Serializer\Property("gust_kph")
+     * @Serializer\Type("float")
+     * @Serializer\IgnoreNull()
+     */
+    private $gustKph;
 
     /**
      * @return int|null
@@ -513,5 +531,21 @@ class Hour
     public function getVisMiles() : ?float
     {
         return $this->visMiles;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getGustMph() : ?float
+    {
+        return $this->gustMph;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getGustKph() : ?float
+    {
+        return $this->gustKph;
     }
 }

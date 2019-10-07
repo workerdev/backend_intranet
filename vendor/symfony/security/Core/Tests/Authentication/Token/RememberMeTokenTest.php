@@ -24,7 +24,7 @@ class RememberMeTokenTest extends TestCase
 
         $this->assertEquals('fookey', $token->getProviderKey());
         $this->assertEquals('foo', $token->getSecret());
-        $this->assertEquals(array(new Role('ROLE_FOO')), $token->getRoles());
+        $this->assertEquals([new Role('ROLE_FOO')], $token->getRoles());
         $this->assertSame($user, $token->getUser());
         $this->assertTrue($token->isAuthenticated());
     }
@@ -41,13 +41,13 @@ class RememberMeTokenTest extends TestCase
         );
     }
 
-    protected function getUser($roles = array('ROLE_FOO'))
+    protected function getUser($roles = ['ROLE_FOO'])
     {
         $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
         $user
             ->expects($this->any())
             ->method('getRoles')
-            ->will($this->returnValue($roles))
+            ->willReturn($roles)
         ;
 
         return $user;

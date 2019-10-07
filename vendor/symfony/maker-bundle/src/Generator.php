@@ -152,6 +152,11 @@ class Generator
         return new ClassNameDetails($className, $fullNamespacePrefix, $suffix);
     }
 
+    public function getRootDirectory(): string
+    {
+        return $this->fileManager->getRootDirectory();
+    }
+
     private function addOperation(string $targetPath, string $templateName, array $variables)
     {
         if ($this->fileManager->fileExists($targetPath)) {
@@ -216,8 +221,24 @@ class Generator
             $controllerTemplatePath,
             $parameters +
             [
-                'parent_class_name' => \method_exists(AbstractController::class, 'getParameter') ? 'AbstractController' : 'Controller',
+                'parent_class_name' => method_exists(AbstractController::class, 'getParameter') ? 'AbstractController' : 'Controller',
             ]
+        );
+    }
+
+    /**
+     * Generate a template file.
+     *
+     * @param string $targetPath
+     * @param string $templateName
+     * @param array  $variables
+     */
+    public function generateTemplate(string $targetPath, string $templateName, array $variables)
+    {
+        $this->generateFile(
+            $this->fileManager->getPathForTemplate($targetPath),
+            $templateName,
+            $variables
         );
     }
 }

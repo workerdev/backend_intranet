@@ -131,7 +131,7 @@ class EightPointsGuzzleExtension extends Extension
             $handlerService = new Definition($options['handler']);
             $container->setDefinition($handlerServiceName, $handlerService);
 
-            $handler->addArgument($handlerService);
+            $handler->addArgument(new Reference($handlerServiceName));
         }
         $handler->setPublic(true);
         $handler->setLazy($options['lazy']);
@@ -139,18 +139,20 @@ class EightPointsGuzzleExtension extends Extension
         $handlerStackServiceName = sprintf('eight_points_guzzle.handler_stack.%s', $clientName);
         $container->setDefinition($handlerStackServiceName, $handler);
 
-        if ($logging) {
-            $this->defineLogMiddleware($container, $handler, $clientName);
-            $this->defineRequestTimeMiddleware($container, $handler, $clientName);
-            $this->attachSymfonyLogMiddlewareToHandler($handler);
-        }
-
         if ($profiling) {
             $this->defineProfileMiddleware($container, $handler, $clientName);
         }
 
         foreach ($this->plugins as $plugin) {
-            $plugin->loadForClient($options['plugin'][$plugin->getPluginName()], $container, $clientName, $handler);
+            if (isset($options['plugin'][$plugin->getPluginName()])) {
+                $plugin->loadForClient($options['plugin'][$plugin->getPluginName()], $container, $clientName, $handler);
+            }
+        }
+
+        if ($logging) {
+            $this->defineLogMiddleware($container, $handler, $clientName);
+            $this->defineRequestTimeMiddleware($container, $handler, $clientName);
+            $this->attachSymfonyLogMiddlewareToHandler($handler);
         }
 
         // goes on the end of the stack.

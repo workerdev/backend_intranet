@@ -7,16 +7,18 @@ use Apixu\Exception\ErrorException;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
-    $api = \Apixu\Factory::create($_SERVER['APIXUKEY']);
+    $language = 'ru';
+    $api = \Apixu\Factory::create($_SERVER['APIXUKEY'], $language);
 } catch (ApixuException $e) {
     die($e->getMessage());
 }
 
 $q = 'London';
-$days = 1;
+$days = 2;
+$hour = 13; // paid license only / null for all hours
 
 try {
-    $forecast = $api->forecast($q, $days);
+    $forecast = $api->forecast($q, $days, $hour);
 } catch (InternalServerErrorException $e) {
     die($e->getMessage());
 } catch (ErrorException $e) {
@@ -34,6 +36,18 @@ foreach ($forecast->getForecast()->getForecastDay() as $forecastDay) {
     echo $forecastDay->getDateEpoch(); echo "\n";
     echo $forecastDay->getDay()->getMaxTempCelsius(); echo "\n";
     echo $forecastDay->getAstro()->getSunrise(); echo "\n";
+
+    if ($forecastDay->getHour() !== null) {
+        /** @var \Apixu\Response\Forecast\Hour $hour */
+        foreach ($forecastDay->getHour() as $hour) {
+            echo $hour->getTimeEpoch(); echo "\n";
+            echo $hour->getTime()->format('H:i:s'); echo "\n";
+            echo $hour->getCondition()->getText();  echo "\n";
+            echo $hour->getVisKM();  echo "\n";
+            echo $hour->getGustMph();  echo "\n";
+            echo $hour->getGustKph();  echo "\n";
+        }
+    }
 }
 
 echo '<pre>';print_r(\Serializer\SerializerBuilder::instance()->build()->toArray($forecast));exit;

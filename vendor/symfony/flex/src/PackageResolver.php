@@ -22,7 +22,6 @@ class PackageResolver
 {
     private static $SYMFONY_VERSIONS = ['lts', 'previous', 'stable', 'next'];
     private static $aliases;
-    private static $versions;
     private $downloader;
 
     public function __construct(Downloader $downloader)
@@ -80,21 +79,19 @@ class PackageResolver
         return array_unique($requires);
     }
 
-    private function parseVersion(string $package, string $version, bool $isRequire): string
+    public function parseVersion(string $package, string $version, bool $isRequire): string
     {
         if (0 !== strpos($package, 'symfony/')) {
             return $version ? ':'.$version : '';
         }
 
-        if (null === self::$versions) {
-            self::$versions = $this->downloader->get('/versions.json')->getBody();
-        }
+        $versions = $this->downloader->getVersions();
 
-        if (!isset(self::$versions['splits'][$package])) {
+        if (!isset($versions['splits'][$package])) {
             return $version ? ':'.$version : '';
         }
 
-        if (!$version) {
+        if (!$version || '*' === $version) {
             try {
                 $config = @json_decode(file_get_contents(Factory::getComposerFile()), true);
             } finally {
@@ -104,9 +101,9 @@ class PackageResolver
             }
             $version = $config['extra']['symfony']['require'] ?? $config['require']['symfony/framework-bundle'];
         } elseif ('next' === $version) {
-            $version = '^'.self::$versions[$version].'@dev';
+            $version = '^'.$versions[$version].'@dev';
         } elseif (\in_array($version, self::$SYMFONY_VERSIONS, true)) {
-            $version = '^'.self::$versions[$version];
+            $version = '^'.$versions[$version];
         }
 
         return ':'.$version;

@@ -83,6 +83,10 @@ class SwitchUserListener implements ListenerInterface
             return;
         }
 
+        if (null === $this->tokenStorage->getToken()) {
+            throw new AuthenticationCredentialsNotFoundException('Could not find original Token object.');
+        }
+
         if (self::EXIT_VALUE === $username) {
             $this->tokenStorage->setToken($this->attemptExitUser($request));
         } else {
@@ -128,7 +132,7 @@ class SwitchUserListener implements ListenerInterface
 
         $user = $this->provider->loadUserByUsername($username);
 
-        if (false === $this->accessDecisionManager->decide($token, array($this->role), $user)) {
+        if (false === $this->accessDecisionManager->decide($token, [$this->role], $user)) {
             $exception = new AccessDeniedException();
             $exception->setAttributes($this->role);
 
@@ -136,7 +140,7 @@ class SwitchUserListener implements ListenerInterface
         }
 
         if (null !== $this->logger) {
-            $this->logger->info('Attempting to switch to user.', array('username' => $username));
+            $this->logger->info('Attempting to switch to user.', ['username' => $username]);
         }
 
         $this->userChecker->checkPostAuth($user);
@@ -165,7 +169,7 @@ class SwitchUserListener implements ListenerInterface
      */
     private function attemptExitUser(Request $request)
     {
-        if (null === ($currentToken = $this->tokenStorage->getToken()) || false === $original = $this->getOriginalToken($currentToken)) {
+        if (false === $original = $this->getOriginalToken($this->tokenStorage->getToken())) {
             throw new AuthenticationCredentialsNotFoundException('Could not find original Token object.');
         }
 
