@@ -63,7 +63,7 @@ class ControlCorrelativoController extends Controller
         }
         
         $controlcorrelativo = $this->getDoctrine()->getRepository(controlcorrelativo::class)->findBy(array('estado' => '1'));
-        $Gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findBy(array('estado' => '1'));
+        $Gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
