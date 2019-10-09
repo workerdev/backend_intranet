@@ -58,13 +58,13 @@ class PermisoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        
-        $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('estado' => '1'));
+        $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $permiso = $this->getDoctrine()->getRepository(Permiso::class)->findBy(array('estado' => '1'));
-        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
+        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         return $this->render('permiso/index.html.twig', array('objects' => $permiso, 'unidad' => $unidad, 'usuario' => $usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 

@@ -98,6 +98,15 @@
         })
         
         $('#new').click(function () {
+            $('#fkusuario').val('')
+            $('#fkusuario').selectpicker('render')
+
+            $('#tipo').val('')
+            $('#tipo').selectpicker('render')
+
+            $('#fkunidad').val('')
+            $('#fkunidad').selectpicker('render')
+
             clean_form()
             verif_inputs()
             $('#id_div').hide()
