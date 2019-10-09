@@ -4,8 +4,8 @@
 /public/bundles/
 /var/
 /vendor/
-/src/Controller/ServiciosController.php
-/src/Controller/SecurityController.php
+#/src/Controller/ServiciosController.php
+#/src/Controller/SecurityController.php
 
 ###< symfony/framework-bundle ###
 
@@ -20,3 +20,5 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+/.idea
