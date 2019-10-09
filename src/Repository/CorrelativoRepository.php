@@ -53,6 +53,7 @@ class CorrelativoRepository extends ServiceEntityRepository
         
         return $query->execute(); // returns an array of Correltivo objects
     }
+
     public function findPermissionByUserjccg($idu): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -94,6 +95,7 @@ class CorrelativoRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();
     }
+
     public function filterByPermissionsid($idu): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -104,6 +106,22 @@ class CorrelativoRepository extends ServiceEntityRepository
         WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id
             AND cb_unidad_estado=1 AND cb_permiso_estado=1 AND cb_usuario_id=:id AND cb_permiso_tipo IN (\'Crear\', \'Completo\')
             ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $idu]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+    
+    public function filterPermissionsByIdu($idu): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT cb_unidad_id AS idund, cb_unidad_nombre AS unidad, cb_permiso_tipo AS permiso
+        FROM cb_correlativo_permiso, cb_usuario_usuario, cb_correlativo_unidad
+        WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id
+            AND cb_unidad_estado=1 AND cb_permiso_estado=1 AND cb_usuario_id=:id AND cb_permiso_tipo IN (\'Visualizar\', \'Completo\')';
+
         $stmt = $conn->prepare($sql);
         $stmt->execute(['id' => $idu]);
 

@@ -272,7 +272,7 @@ class DocumentoController extends Controller
             $id = $sx['id'];
             $Documento = $this->getDoctrine()->getRepository(Documento::class)->find($id);
             $fpb = $Documento->getFechaPublicacion();
-            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i'); else $result = $fpb;
             $sendinf = [
                 "id" => $Documento->getId(),
                 "codigo" => $Documento->getCodigo(),
@@ -392,7 +392,7 @@ class DocumentoController extends Controller
             }
 
             date_default_timezone_set('America/La_Paz');
-            $fecha = date("Y-m-d H:i:s");
+            $fecha = date("Y-m-d H:i");
             $bajadoc = new DocumentoBaja();
             $bajadoc->setCodigo($Documento->getCodigo());
             $bajadoc->setTitulo($Documento->getTitulo());
@@ -437,7 +437,7 @@ class DocumentoController extends Controller
                 $documento = (object) $doc;
                 $item = $this->getDoctrine()->getRepository(Documento::class)->find($documento->getId());
                 $fcpb = $documento->getFechaPublicacion();
-                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i:s'); else $result = $fcpb;
+                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i'); else $result = $fcpb;
 
                 $info = [
                     "id" => $documento->getId(),
@@ -484,7 +484,7 @@ class DocumentoController extends Controller
                 $documento = (object) $doc;
                 $item = $this->getDoctrine()->getRepository(Documento::class)->find($documento->getId());
                 $fcpb = $documento->getFechaPublicacion();
-                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i:s'); else $result = $fcpb;
+                if ($fcpb !== null) $result = $fcpb->format('Y-m-d H:i'); else $result = $fcpb;
 
                 $info = [
                     "id" => $documento->getId(),

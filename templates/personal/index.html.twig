@@ -11,6 +11,9 @@
         .swal2-title{
             font-size: 20px !important;
         }
+        .modal-dialog-own{
+            width: 60%;
+        }
     </style>
 {% endblock %}
 
@@ -190,7 +193,7 @@
                 }
             }).done(function (data) {
                 msg = JSON.parse(data) 
-                //console.log(msg)
+                
                 if(msg.response == 'Empty'){ 
                     swal(
                         'Error',
@@ -267,24 +270,6 @@
                 })
             })
         }
-
-        $('#update').click(function () {
-            objeto = JSON.stringify({
-                'id': parseInt(JSON.parse($('#id').val())),
-                'nombre': $('#nombre').val(),
-                'apellido': $('#apellido').val(),
-                'ci': $('#ci').val(),
-                'correo': $('#correo').val(),
-                'telefono': $('#telefono').val(),
-                'fnac': $('#fnac').val(),
-                'personalcargo': $('#fkprocesoscargo').val(),
-                'estadopersonal': $('#fkestadopersonal').val(),
-                'sector': $('#fksector').val(),
-                'area': $('#fkarea').val()
-            })
-        ajax_call_validation("/personal_actualizar", {object: objeto}, null, main_route)
-        })
-        reload_form()
     </script>
 
     <script>

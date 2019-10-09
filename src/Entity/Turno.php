@@ -27,7 +27,7 @@ class Turno
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_turno_telefono", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_turno_telefono", type="string", length=20, nullable=false)
      * @Assert\NotBlank
      */
     private $telefono;
@@ -35,7 +35,7 @@ class Turno
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_turno_celular", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_turno_celular", type="string", length=20, nullable=false)
      *
      */
     private $celular;
@@ -88,6 +88,7 @@ class Turno
     {
         return $this->id;
     }
+
     public function setId(string $id): self
     {
         $this->id = $id;
@@ -121,6 +122,7 @@ class Turno
     {
         return $this->fechainicio;
     }
+
     public function setFechainicio(\DateTimeInterface $fechainicio): self
     {
         $this->fechainicio = $fechainicio;
@@ -132,6 +134,7 @@ class Turno
     {
         return $this->fechafin;
     }
+
     public function setFechafin(\DateTimeInterface $fechafin): self
     {
         $this->fechafin = $fechafin;

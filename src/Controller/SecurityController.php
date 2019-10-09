@@ -42,8 +42,8 @@ class SecurityController extends AbstractController
         $sx = json_decode($_POST['object'], true);
         $process = 'init';
 
-        $user = $_SERVER['LDAPUSER']; //'ctcloudbit';
-        $password = $_SERVER['LDAPPASS']; //'Elfec2019';
+        $user = $_SERVER['LDAPUSER'];
+        $password = $_SERVER['LDAPPASS'];
 
         $usuario = $sx['user'];
         $pass = $sx['password'];
@@ -466,7 +466,7 @@ class SecurityController extends AbstractController
             return new Response($resultado);
         }
     }
-
+    
     /**
      * @Route("/valid_action", methods={"POST"}, name="valid_action")
      */

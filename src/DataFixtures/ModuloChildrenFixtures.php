@@ -15,27 +15,27 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const PERFIL_CHILD = 'child-perf';
 
     /** MODULO DE CONFIGURACION **/
-    public const RESPONSABILIDADSOCIAL_CHILD = 'child-respsc';
     public const MENU_CHILD = 'child-menu';
     public const ENLACES_CHILD = 'child-enl';
     public const CATALOGO_CHILD = 'child-catlg';
     public const ACCIDENTE_CHILD = 'child-accdn';
     public const SIG_CHILD = 'child-sig';
     public const CORREO_CHILD = 'child-mail';
+    public const DELAUTORIDAD_CHILD = 'child-delaut';
 
     /** MODULO DE GESTION **/
-    public const DOCEXTRA_CHILD = 'child-dcext';
     public const NORMA_CHILD = 'child-nrm';
-    public const TIPODOC_CHILD = 'child-tpdoc';
     public const TIPONORMA_CHILD = 'child-tpnrm';
-    public const BAJADOC_CHILD = 'child-bjdoc';
-    public const DOCFORM_CHILD = 'child-dcfrm';
-    public const DOCTIPOEXT_CHILD = 'child-dctpext';
     public const ESTADODOC_CHILD = 'child-estdoc';
     public const ESTADOSEG_CHILD = 'child-estseg';
     public const SEGUIMIENTOELAB_CHILD = 'child-segelb';
 
     /** MODULO DE DOCUMENTOS **/
+    public const DOCEXTRA_CHILD = 'child-dcext';
+    public const TIPODOC_CHILD = 'child-tpdoc';
+    public const BAJADOC_CHILD = 'child-bjdoc';
+    public const DOCFORM_CHILD = 'child-dcfrm';
+    public const DOCTIPOEXT_CHILD = 'child-dctpext';
     public const DOCPROCESO_CHILD = 'child-dcproc';
     public const DOCPROCREV_CHILD = 'child-dcprorv';
     public const DOCUMENTO_CHILD = 'child-doc';
@@ -107,6 +107,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const NOTICIACAT_CHILD = 'child-notcat';
     public const GALERIA_CHILD = 'child-gal';
     public const FILE_CHILD = 'child-file';
+    public const RESPONSABILIDADSOCIAL_CHILD = 'child-respsc';
 
     /** MODULO DE CONSULTA **/
     public const ORGANIGRAMA_CHILD = 'child-org';
@@ -118,6 +119,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const ESTADOPERSONAL_CHILD = 'child-estper';
     public const PERSONAL_CHILD = 'child-prsnl';
     public const TURNO_CHILD = 'child-turn';
+    public const TIPOTURNO_CHILD = 'child-tpturn';
     public const FICHACARGO_CHILD = 'child-fcargo';
     public const DOCUMENTOASO_CHILD = 'child-docaso';
 
@@ -153,15 +155,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
 
 
         /** MODULO DE CONFIGURACION **/
-        $respscprt = new Modulo();
-        $respscprt->setNombre('responsabilidad_social');
-        $respscprt->setTitulo('Responsabilidad social');
-        $respscprt->setRuta('/responsabilidad');
-        $respscprt->setIcono('business');
-        $respscprt->setMenu(1);
-        $respscprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
-        $manager->persist($respscprt);
-
         $menuprt = new Modulo();
         $menuprt->setNombre('menu_modulo');
         $menuprt->setTitulo('Menú');
@@ -215,36 +208,18 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $mailprt->setMenu(1);
         $mailprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
         $manager->persist($mailprt);
+        
+        $delautprt = new Modulo();
+        $delautprt->setNombre('delautoridad_modulo');
+        $delautprt->setTitulo('Delegación de autoridad');
+        $delautprt->setRuta('/delautoridad');
+        $delautprt->setIcono('recent_actors');
+        $delautprt->setMenu(1);
+        $delautprt->setFkmodulo($this->getReference(ModuloFixtures::CONFIGURACION_MOD));
+        $manager->persist($delautprt);
 
         
         /** MODULO DE GESTION **/
-        $tpdocprt = new Modulo();
-        $tpdocprt->setNombre('tipodocumento');
-        $tpdocprt->setTitulo('Tipo de documento');
-        $tpdocprt->setRuta('/tipodocumento');
-        $tpdocprt->setIcono('business');
-        $tpdocprt->setMenu(1);
-        $tpdocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($tpdocprt);
-
-        $doctpexprt = new Modulo();
-        $doctpexprt->setNombre('doctipoextra');
-        $doctpexprt->setTitulo('Documento tipo extra');
-        $doctpexprt->setRuta('/doctipoextra');
-        $doctpexprt->setIcono('business');
-        $doctpexprt->setMenu(1);
-        $doctpexprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($doctpexprt);
-
-        $docaddprt = new Modulo();
-        $docaddprt->setNombre('documentoextra');
-        $docaddprt->setTitulo('Documento extra');
-        $docaddprt->setRuta('/documentoextra');
-        $docaddprt->setIcono('business');
-        $docaddprt->setMenu(1);
-        $docaddprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($docaddprt);
-        
         $tpnrmprt = new Modulo();
         $tpnrmprt->setNombre('tiponorma');
         $tpnrmprt->setTitulo('Tipo de norma');
@@ -262,24 +237,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $nrmdocprt->setMenu(1);
         $nrmdocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
         $manager->persist($nrmdocprt);
-
-        $bajadocprt = new Modulo();
-        $bajadocprt->setNombre('bajadocumento');
-        $bajadocprt->setTitulo('Documento de baja');
-        $bajadocprt->setRuta('/bajadocumento');
-        $bajadocprt->setIcono('business');
-        $bajadocprt->setMenu(1);
-        $bajadocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($bajadocprt);
-
-        $docfrmprt = new Modulo();
-        $docfrmprt->setNombre('documentoformulario');
-        $docfrmprt->setTitulo('Documento formulario');
-        $docfrmprt->setRuta('/documentoformulario');
-        $docfrmprt->setIcono('business');
-        $docfrmprt->setMenu(1);
-        $docfrmprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
-        $manager->persist($docfrmprt);
 
         $estdocprt = new Modulo();
         $estdocprt->setNombre('estadodocumento');
@@ -310,6 +267,51 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
 
         
         /** MODULO DE DOCUMENTOS **/
+        $tpdocprt = new Modulo();
+        $tpdocprt->setNombre('tipodocumento');
+        $tpdocprt->setTitulo('Tipo de documento');
+        $tpdocprt->setRuta('/tipodocumento');
+        $tpdocprt->setIcono('business');
+        $tpdocprt->setMenu(1);
+        $tpdocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
+        $manager->persist($tpdocprt);
+
+        $doctpexprt = new Modulo();
+        $doctpexprt->setNombre('doctipoextra');
+        $doctpexprt->setTitulo('Documento tipo extra');
+        $doctpexprt->setRuta('/doctipoextra');
+        $doctpexprt->setIcono('business');
+        $doctpexprt->setMenu(1);
+        $doctpexprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
+        $manager->persist($doctpexprt);
+
+        $docaddprt = new Modulo();
+        $docaddprt->setNombre('documentoextra');
+        $docaddprt->setTitulo('Documento extra');
+        $docaddprt->setRuta('/documentoextra');
+        $docaddprt->setIcono('business');
+        $docaddprt->setMenu(1);
+        $docaddprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
+        $manager->persist($docaddprt);
+
+        $bajadocprt = new Modulo();
+        $bajadocprt->setNombre('bajadocumento');
+        $bajadocprt->setTitulo('Documento de baja');
+        $bajadocprt->setRuta('/bajadocumento');
+        $bajadocprt->setIcono('business');
+        $bajadocprt->setMenu(1);
+        $bajadocprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
+        $manager->persist($bajadocprt);
+
+        $docfrmprt = new Modulo();
+        $docfrmprt->setNombre('documentoformulario');
+        $docfrmprt->setTitulo('Documento formulario');
+        $docfrmprt->setRuta('/documentoformulario');
+        $docfrmprt->setIcono('business');
+        $docfrmprt->setMenu(1);
+        $docfrmprt->setFkmodulo($this->getReference(ModuloFixtures::GESTION_MOD));
+        $manager->persist($docfrmprt);
+
         $docprocprt = new Modulo();
         $docprocprt->setNombre('documentoproceso');
         $docprocprt->setTitulo('Documento en proceso');
@@ -502,15 +504,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $ctlctvoprt->setMenu(1);
         $ctlctvoprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
         $manager->persist($ctlctvoprt);
-        
-        /*$estctvoprt = new Modulo();
-        $estctvoprt->setNombre('estadocorrelativo');
-        $estctvoprt->setTitulo('Estado correlativo');
-        $estctvoprt->setRuta('/estadocorrelativo');
-        $estctvoprt->setIcono('business');
-        $estctvoprt->setMenu(1);
-        $estctvoprt->setFkmodulo($this->getReference(ModuloFixtures::ASIGNCRTV_MOD));
-        $manager->persist($estctvoprt);*/
         
         $tpnotaprt = new Modulo();
         $tpnotaprt->setNombre('tiponota');
@@ -862,6 +855,15 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $fileprt->setMenu(1);
         $fileprt->setFkmodulo($this->getReference(ModuloFixtures::COMUNICACION_MOD));
         $manager->persist($fileprt);
+        
+        $respscprt = new Modulo();
+        $respscprt->setNombre('responsabilidad_social');
+        $respscprt->setTitulo('Responsabilidad social');
+        $respscprt->setRuta('/responsabilidad');
+        $respscprt->setIcono('business');
+        $respscprt->setMenu(1);
+        $respscprt->setFkmodulo($this->getReference(ModuloFixtures::COMUNICACION_MOD));
+        $manager->persist($respscprt);
 
 
         /** MODULO DE CONSULTA **/
@@ -921,6 +923,15 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $prsnlprt->setFkmodulo($this->getReference(ModuloFixtures::PERSONAL_MOD));
         $manager->persist($prsnlprt);
 
+        $tpturnprt = new Modulo();
+        $tpturnprt->setNombre('tipoturno_modulo');
+        $tpturnprt->setTitulo('Tipo de turno');
+        $tpturnprt->setRuta('/tipoturno');
+        $tpturnprt->setIcono('business');
+        $tpturnprt->setMenu(1);
+        $tpturnprt->setFkmodulo($this->getReference(ModuloFixtures::PERSONAL_MOD));
+        $manager->persist($tpturnprt);
+
         $turnprt = new Modulo();
         $turnprt->setNombre('turno');
         $turnprt->setTitulo('Turno');
@@ -954,26 +965,26 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::USUARIO_CHILD, $userprt);
         $this->addReference(self::ROL_CHILD, $rolprt);
         $this->addReference(self::PERFIL_CHILD, $perfprt);
-
-        $this->addReference(self::RESPONSABILIDADSOCIAL_CHILD, $respscprt);
+        
         $this->addReference(self::MENU_CHILD, $menuprt);
         $this->addReference(self::ENLACES_CHILD, $enlcprt);
         $this->addReference(self::CATALOGO_CHILD, $catlgprt);
         $this->addReference(self::ACCIDENTE_CHILD, $tsaccprt);
         $this->addReference(self::SIG_CHILD, $sigprt);
         $this->addReference(self::CORREO_CHILD, $mailprt);
-
-        $this->addReference(self::DOCEXTRA_CHILD, $docaddprt);
-        $this->addReference(self::TIPODOC_CHILD, $tpdocprt);
+        $this->addReference(self::DELAUTORIDAD_CHILD, $delautprt);
+        
         $this->addReference(self::NORMA_CHILD, $nrmdocprt);
         $this->addReference(self::TIPONORMA_CHILD, $tpnrmprt);
-        $this->addReference(self::BAJADOC_CHILD, $bajadocprt);
-        $this->addReference(self::DOCFORM_CHILD, $docfrmprt);
-        $this->addReference(self::DOCTIPOEXT_CHILD, $doctpexprt);
         $this->addReference(self::ESTADODOC_CHILD, $estdocprt);
         $this->addReference(self::ESTADOSEG_CHILD, $estsegprt);
         $this->addReference(self::SEGUIMIENTOELAB_CHILD, $segelbprt);
 
+        $this->addReference(self::DOCEXTRA_CHILD, $docaddprt);
+        $this->addReference(self::TIPODOC_CHILD, $tpdocprt);
+        $this->addReference(self::BAJADOC_CHILD, $bajadocprt);
+        $this->addReference(self::DOCFORM_CHILD, $docfrmprt);
+        $this->addReference(self::DOCTIPOEXT_CHILD, $doctpexprt);
         $this->addReference(self::DOCPROCESO_CHILD, $docprocprt);
         $this->addReference(self::DOCPROCREV_CHILD, $dcprorvprt);
         $this->addReference(self::DOCUMENTO_CHILD, $dctoprt);
@@ -1036,6 +1047,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::NOTICIACAT_CHILD, $notcatprt);
         $this->addReference(self::GALERIA_CHILD, $galprt);
         $this->addReference(self::FILE_CHILD, $fileprt);
+        $this->addReference(self::RESPONSABILIDADSOCIAL_CHILD, $respscprt);
 
         $this->addReference(self::ORGANIGRAMA_CHILD, $orgprt);
         $this->addReference(self::ORGANIGRAMAGERENCIA_CHILD, $orgciaprt);        
@@ -1044,6 +1056,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::CARGO_CHILD, $cargoprt);
         $this->addReference(self::ESTADOPERSONAL_CHILD, $estpsnprt);
         $this->addReference(self::PERSONAL_CHILD, $prsnlprt);
+        $this->addReference(self::TIPOTURNO_CHILD, $tpturnprt);
         $this->addReference(self::TURNO_CHILD, $turnprt);
         $this->addReference(self::FICHACARGO_CHILD, $fcargoprt);
         $this->addReference(self::DOCUMENTOASO_CHILD, $docuasoprt);

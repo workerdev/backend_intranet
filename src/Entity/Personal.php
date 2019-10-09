@@ -24,7 +24,7 @@ class Personal
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_personal_nombre", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_personal_nombre", type="string", length=150, nullable=false)
      * @Assert\NotBlank
      */
     private $nombre;
@@ -32,7 +32,7 @@ class Personal
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_personal_apellido", type="string", length=50, nullable=true)
+     * @ORM\Column(name="cb_personal_apellido", type="string", length=150, nullable=true)
      * @Assert\NotBlank
      */
     private $apellido;
@@ -151,6 +151,7 @@ class Personal
     {
         return $this->id;
     }
+
     public function setId(int $id): self
     {
         $this->id = $id;
@@ -169,6 +170,7 @@ class Personal
 
         return $this;
     }
+
     public function getApellido(): ?string
     {
         return $this->apellido;
@@ -180,6 +182,7 @@ class Personal
 
         return $this;
     }
+
     public function getNombre(): ?string
     {
         return $this->nombre;
@@ -191,6 +194,7 @@ class Personal
 
         return $this;
     }
+
     public function getTelefono(): ?int
     {
         return $this->telefono;
@@ -202,6 +206,7 @@ class Personal
 
         return $this;
     }
+
     public function getCi(): ?int
     {
         return $this->ci;

@@ -151,7 +151,7 @@ class DocumentoFormularioController extends AbstractController
             $id = $sx['id'];
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
             $fpb = $DocumentoFormulario->getFechaPublicacion();
-            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i'); else $result = $fpb;
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),
                 "codigo" => $DocumentoFormulario->getCodigo(),
@@ -189,7 +189,7 @@ class DocumentoFormularioController extends AbstractController
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
 
             date_default_timezone_set('America/La_Paz');
-            $fecha = date("Y-m-d H:i:s");
+            $fecha = date("Y-m-d H:i");
             $bajadoc = new DocumentoBaja();
             $bajadoc->setCodigo($DocumentoFormulario->getCodigo());
             $bajadoc->setTitulo($DocumentoFormulario->getTitulo());

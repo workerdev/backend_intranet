@@ -2634,14 +2634,6 @@
         <argument>2048</argument>
       </call>
       <call method="addListener">
-        <argument>console.command</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument type="service" id="router_listener"/>
@@ -5554,10 +5546,6 @@
         <argument key="validator" type="service" id="validator"/>
       </argument>
     </service>
-    <service id=".service_locator.5kQK0Uk" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
-      <tag name="container.service_locator"/>
-      <argument type="collection"/>
-    </service>
     <service id=".service_locator.Y7rVXjI" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection"/>
@@ -5615,7 +5603,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.TDpIBhO" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.VLSZ_u4" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccidentesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5702,7 +5690,6 @@
         <argument key="App\Controller\PermisoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PersonalCargoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PersonalCargoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\PersonalController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PlanAccionController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PlanAccionController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ProbabilidadController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -5848,7 +5835,6 @@
         <argument key="App\Controller\PermisoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PersonalCargoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PersonalCargoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
-        <argument key="App\Controller\PersonalController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PlanAccionController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\PlanAccionController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ProbabilidadController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6487,7 +6473,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.TDpIBhO"/>
+      <argument type="service" id=".service_locator.VLSZ_u4"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -6771,7 +6757,7 @@
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
     <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface" alias="webpack_encore.entrypoint_lookup_collection" public="false"/>
     <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface" alias="webpack_encore.entrypoint_lookup[_default]"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.TDpIBhO"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.VLSZ_u4"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>

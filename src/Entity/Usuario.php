@@ -28,7 +28,7 @@ class Usuario implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_usuario_nombre", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_usuario_nombre", type="string", length=150, nullable=false)
      */
     private $nombre;
 
@@ -42,23 +42,17 @@ class Usuario implements UserInterface, \Serializable
      /**
      * @var string
      *
-     * @ORM\Column(name="cb_usuario_apellido", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_usuario_apellido", type="string", length=150, nullable=false)
      */
     private $apellido;
 
-//    /**
- //    * @var int
- //    *
- //    * @ORM\Column(name="cb_usuario_ci", type="integer", nullable=false)
- //    */
- //   private $ci;
-
-     /**
+    /**
      * @var string
      *
-     * @ORM\Column(name="cb_usuario_correo", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_usuario_correo", type="string", length=90, nullable=false)
      */
     private $correo;
+
     /**
      * @var string
      *
@@ -90,10 +84,12 @@ class Usuario implements UserInterface, \Serializable
      */
     private $estado;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function setId(int $id): self
     {
         $this->id = $id;
@@ -112,17 +108,6 @@ class Usuario implements UserInterface, \Serializable
 
         return $this;
     }
-    //public function getCi(): ?int
-    //{
-    //    return $this->ci;
-    //}
-//
-    //public function setCi(int $ci): self
-    //{
-    //    $this->ci = $ci;
-//
-    //    return $this;
-   // }
     
     public function getNombre(): ?string
     {
@@ -157,7 +142,8 @@ class Usuario implements UserInterface, \Serializable
         $this->apellido = $apellido;
 
         return $this;
-    }   
+    }
+
     public function getCorreo(): ?string
     {
         return $this->correo;
@@ -168,7 +154,8 @@ class Usuario implements UserInterface, \Serializable
         $this->correo = $correo;
 
         return $this;
-    }   
+    }  
+
     public function getUsername(): ?string
     {
         return $this->username;
@@ -180,6 +167,7 @@ class Usuario implements UserInterface, \Serializable
 
         return $this;
     }  
+    
     public function getPassword(): ?string
     {
         return $this->password;

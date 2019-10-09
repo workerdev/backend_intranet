@@ -139,7 +139,7 @@ class DocumentoBajaController extends Controller
             $id = $sx['id'];
             $bajadocumento = $this->getDoctrine()->getRepository(DocumentoBaja::class)->find($id);
             $fpb = $bajadocumento->getFechapublicacion();
-            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i:s'); else $result = $fpb;
+            if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i'); else $result = $fpb;
             $sendinf = [
                 "id" => $bajadocumento->getId(),
                 "codigo" => $bajadocumento->getCodigo(),

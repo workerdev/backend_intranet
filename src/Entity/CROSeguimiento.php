@@ -50,7 +50,7 @@ class CROSeguimiento
     /**
     * @var string
     *
-    * @ORM\Column(name="cb_croseguimiento_observaciones", type="string", length=300, nullable=false)
+    * @ORM\Column(name="cb_croseguimiento_observaciones", type="text", nullable=false)
     */
     private $observaciones;
 
@@ -66,6 +66,7 @@ class CROSeguimiento
     {
         return $this->id;
     }
+
     public function setId(int $id): self
     {
         $this->id = $id;
@@ -84,6 +85,7 @@ class CROSeguimiento
 
         return $this;
     }
+    
     public function getResponsable(): ?string
     {
         return $this->responsable;

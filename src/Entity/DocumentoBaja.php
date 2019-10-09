@@ -26,7 +26,7 @@ class DocumentoBaja
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_bajadocumento_codigo", type="string", length=20, nullable=false)
+     * @ORM\Column(name="cb_bajadocumento_codigo", type="text", nullable=false)
      * @Assert\NotBlank
      */
     private $codigo;
@@ -56,7 +56,7 @@ class DocumentoBaja
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_bajadocumento_titulo", type="string", length=50, nullable=false)
+     * @ORM\Column(name="cb_bajadocumento_titulo", type="text", nullable=false)
      * @Assert\NotBlank
      */
     private $titulo;
@@ -115,6 +115,7 @@ class DocumentoBaja
     {
         return $this->id;
     }
+
     public function setId(string $id): self
     {
         $this->id = $id;
@@ -145,6 +146,7 @@ class DocumentoBaja
 
         return $this;
     }
+
     public function getFktipo(): ?TipoDocumento
     {
         return $this->fktipo;
@@ -196,6 +198,7 @@ class DocumentoBaja
     {
         return $this->fkaprobador;
     }
+
     public function setFkaprobador(?Usuario $fkaprobador): self
     {
         $this->fkaprobador = $fkaprobador;
@@ -238,6 +241,4 @@ class DocumentoBaja
 
         return $this;
     }
-
-   
 }

@@ -135,8 +135,9 @@ class PersonalController extends Controller
 
                     if(!empty($file["foto"]["type"])){
                         $fileName = $file['foto']['name'];
+                        $extension = substr($fileName, strrpos($fileName, "."), strlen($fileName));
                         $sourcePath = $file['foto']['tmp_name'];
-                        $targetPath = $this->getParameter('Directorio_Personal') . '/' . $picture_name;
+                        $targetPath = $this->getParameter('Directorio_Personal') . '/' . $picture_name . $extension;
                         
                         if(move_uploaded_file($sourcePath, $targetPath)){
                             $uploadedFile = $picture_name;
@@ -198,69 +199,6 @@ class PersonalController extends Controller
                 $resultado = json_encode($resultado);
                 return new Response($resultado);
             }
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
-        }
-    }
-
-
-    /**
-     * @Route("/personal_actualizar", methods={"POST"}, name="personal_actualizar")
-     */
-    public function actualizar(ValidatorInterface $validator)
-    {
-        try {
-            $cx = $this->getDoctrine()->getManager();
-
-            $sx = json_decode($_POST['object'], true);
-            $id = $sx['id'];
-            $nombre = $sx['nombre'];
-            $apellido = $sx['apellido'];
-            $ci = $sx['ci'];
-            $correo = $sx['correo'];
-            $telefono = $sx['telefono'];
-            $fnac = $sx['fnac'];
-            $procesoscargo = $sx['personalcargo'];
-            $estadopersonal = $sx['estadopersonal'];
-            $sector = $sx['sector'];
-            $area = $sx['area'];
-
-            $personal = $this->getDoctrine()->getRepository(Personal::class)->find($id);
-            $personal->setId($id);
-            $personal->setNombre($nombre);
-            $personal->setApellido($apellido);
-            if($ci != '' && is_numeric($ci))$personal->setCi($ci);
-            $personal->setCorreo($correo);
-            if($telefono != '' && is_numeric($telefono)) $personal->setTelefono($telefono);
-            $personal->setFnac(new \DateTime($fnac));
-            $personal->setEstado(1);
-
-            $procesoscargo != '' ? $procesoscargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($procesoscargo): $procesoscargo =null;
-            $estadopersonal != '' ? $estadopersonal = $this->getDoctrine()->getRepository(EstadoPersonal::class)->find($estadopersonal): $estadopersonal=null;
-            $sector != '' ? $sector = $this->getDoctrine()->getRepository(Sector::class)->find($sector): $sector =null;
-            $area != '' ? $area = $this->getDoctrine()->getRepository(Area::class)->find($area):$area=null;
-            $personal->setFkPersonalCargo($procesoscargo);
-            $personal->setFkestadopersonal($estadopersonal);   
-            $personal->setFksector($sector);    
-            $personal->setFkarea($area);
-            $personal->setEstado(1);
-            $errors = $validator->validate($personal);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return  new  Response(json_encode($array)) ;
-            }
-
-            $cx->merge($personal);
-            $cx->flush();
-
-            $resultado = array('success' => true,
-                    'message' => 'Personal actualizado correctamente.');
-            $resultado = json_encode($resultado);
-            return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }

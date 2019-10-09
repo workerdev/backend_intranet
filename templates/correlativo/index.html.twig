@@ -25,30 +25,7 @@
 
                     <div class="header bg-indigo"><h2>CORRELATIVO</h2></div>
                     <div class="body">
-                        <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-                            {% set cn = 0 %}
-                            {% for p in permissions %}
-                                {% if 'Completo' in p or 'Crear' in p %}
-                                    {% set cn = cn + 1 %}
-                                {% endif %}
-                            {% endfor %}
-
-                            {% if 'correlativo_insertar' in permisos %}  
-                                {% if cn > 0 %}  
-                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                                    <i class="material-icons">add</i>
-                                </button>
-                                {% endif %}
-                            {% endif %}   
-                            </div>
-                        </div>
-                        {% for message in app.flashes('success') %}
-                            <div id="e-msg" class="flash-notice alert bg-teal alert-dismissible" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+                        <div class="row clearfix"></div>
                         {% if 'home_correlativo' in permisos and objects %}
                             <div class="row">
                                 <div class="body table-responsive">
@@ -62,7 +39,7 @@
                                             <th class="order_by_th" data-name="phone">Solicitante </th>
                                             <th class="order_by_th" data-name="phone">Redactor </th>
                                             <th class="d-none" data-name="phone">Destinatario </th>
-                                            <th class="d-none" data-name="phone">Referencia </th>
+                                            <th class="order_by_th" data-name="phone">Referencia </th>
                                             <th class="d-none" data-name="phone">Centro de control correlativo </th>
                                             <th class="d-none" data-name="phone">Tipo de nota </th>
                                             <th class="d-none" data-name="phone">IP </th>
@@ -74,7 +51,6 @@
                                             <th class="d-none" data-name="phone">Fecha de entrega </th>
                                             <th class="d-none" data-name="phone">Unidad </th>
                                             <th class="order_by_th" data-name="phone">URL origen </th>
-                                            <th class="actions_header">Acciones </th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_content">
@@ -96,8 +72,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('resources/js/transporte.js') }}"></script>
-    <script src="{{ asset('resources/js/functions.js') }}"></script>
+    <script src="{{ asset('resources/js/fileSaver.js') }}"></script>
+    <script src="{{ asset('resources/js/base64.js') }}"></script>
 
     <script>
         main_route = '/correlativo'
@@ -113,242 +89,16 @@
     </script>
 
     <script>
-        $('#correlativo_fkcorrelativo').selectpicker({
-            size: 4,
-            liveSearch: true,
-            liveSearchPlaceholder: 'Buscar control correlativo.',
-            title: 'Seleccione un control correlativo.'
-        })
-
-        $('#correlativo_fktiponota').selectpicker({
-            size: 4,
-            liveSearch: true,
-            liveSearchPlaceholder: 'Buscar tipo de nota.',
-            title: 'Seleccione un tipo de nota.'
-        })
-    
-        $('#correlativo_fkunidad').selectpicker({
-            size: 4,
-            liveSearch: true,
-            liveSearchPlaceholder: 'Buscar unidad.',
-            title: 'Seleccione una unidad.'
-        })
-
-        function init(){ };
-        
-        $('#new').click(function () {
-            combo_unidad()
-            $('#correlativo_numcorrelativo').siblings().remove()
-            $('#correlativo_ip').siblings().remove()
-
-            var label = $("label[for='" + $('#correlativo_fksolicitante').attr('id') + "']")
-            label.remove()
-
-            $('#correlativo_id').hide()
-            $("#correlativo_id").siblings().hide()
-            $("#correlativo_id").attr("readonly", "readonly")
-
-            var labelu = $("label[for='" + $('#correlativo_fkunidad').attr('id') + "']")
-            labelu.attr('id', 'lbl-unit')
-            labelu.siblings().remove()
-
-            $('#correlativo_fechareg').val('')
-            $('#correlativo_redactor').val('')
-            $('#correlativo_destinatario').val('')
-            $('#correlativo_referencia').val('')
-            $('#correlativo_equipo').val('')
-            $('#correlativo_url').val('')
-            $('#correlativo_antecedente').val('')
-            $('#correlativo_item').val('')
-            $('#correlativo_urleditable').val('')
-            $('#correlativo_entrega').val('')
-            $('#correlativo_urlorigen').val('')
-
-            $('#lnk').remove();
-            $('#lnke').remove();
-            $('#lnko').remove();
-
-            clean_form()
-            verif_inputs()
-            $('#id_div').hide()
-            $('#insert').show()
-            $('#update').hide()
-            document.getElementById("correlativo_submit").innerHTML= "Guardar"
-            $('#correlativo_id').val(0)
-
-            setTimeout(function(){ 
-                $('#correlativo_fkunidad').selectpicker({
-                    size: 4,
-                    liveSearch: true,
-                    liveSearchPlaceholder: 'Buscar unidad.',
-                    title: 'Seleccione una unidad.'
-                })
-                $('#form').modal('show')
-                }, 1000
-            )
-        })
-
-        $("#correlativo_url").change(function(){
-            $("#lnk").hide();
-        });
-
-        $("#correlativo_urleditable").change(function(){
-            $("#lnke").hide();
-        });
-
-        $("#correlativo_urlorigen").change(function(){
-            $("#lnko").hide();
-        });
-
-        function attach_edit() {
-            $('.edit').click(function () {
-                obj = JSON.stringify({
-                    'id': parseInt(JSON.parse($(this).attr('data-json')))
-                })
-                var fu = 0
-                ajax_call_get("/correlativo_editar",{
-                    object: obj
-                },function(response){
-                    var labelu = $("label[for='" + $('#correlativo_fkunidad').attr('id') + "']")
-                    labelu.attr('id', 'lbl-unit')
-                    labelu.siblings().remove()
-                    combo_unidad()
-
-                    var self = JSON.parse(response)    
-                    $('#correlativo_id').show()
-                    $("#correlativo_id").siblings().show()
-                    $("#correlativo_id").attr("readonly", "readonly")
-
-                    $('#correlativo_numcorrelativo').siblings().remove()
-                    $('#correlativo_ip').siblings().remove()
-                    var label = $("label[for='" + $('#correlativo_fksolicitante').attr('id') + "']")
-                    label.remove()
-                
-                    $('#correlativo_id').val(self.id)
-                    $('#correlativo_antecedente').val(self.antecedente)
-                    $('#correlativo_item').val(self.item)
-                    $('#correlativo_entrega').val(self.entrega)
-                    $('#correlativo_fechareg').val(self.fechareg)
-                
-                    $('#correlativo_redactor').val(self.redactor)
-                    
-                    $('#correlativo_destinatario').val(self.destinatario)
-                    $('#correlativo_referencia').val(self.referencia)
-                    $('#correlativo_equipo').val(self.equipo)
-        
-                    document.getElementById('correlativo_fkcorrelativo').value = self.fkcorrelativo.id
-                    $('#correlativo_fkcorrelativo').selectpicker('render')
-
-                    document.getElementById('correlativo_fktiponota').value = self.fktiponota.id
-                    $('#correlativo_fktiponota').selectpicker('render')
-
-                    document.getElementById('correlativo_estadocorrelativo').value = self.estadocorrelativo
-                    $('#correlativo_estadocorrelativo').selectpicker('render')
-            
-                    if(self.url != 'N/A' && self.url != null) {
-                        $('#lnk').remove();
-                        let urlfile = self.url;
-                        let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                        $("<a id='lnk' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#correlativo_url");
-                    }
-                    else $('#lnk').remove();
-
-                    if(self.urleditable != 'N/A' && self.urleditable != null) {
-                        $('#lnke').remove();
-                        let urldown = self.urleditable;
-                        let vdown = urldown.substring(urldown.lastIndexOf("/")+1, urldown.length);
-                        $("<a id='lnke' href='"+urldown+"'>"+vdown+"</a>").insertAfter("#correlativo_urleditable");
-                    }
-                    else $('#lnke').remove();
-
-                    if(self.urlorigen != 'N/A' && self.urlorigen != null) {
-                        $('#lnko').remove();
-                        let urlnot = self.urlorigen;
-                        let vnot = urlnot.substring(urlnot.lastIndexOf("/")+1, urlnot.length);
-                        $("<a id='lnko' href='"+urlnot+"'>"+vnot+"</a>").insertAfter("#correlativo_urlorigen");
-                    }
-                    else $('#lnko').remove();
-                    
-                    fu = self.fkunidad.id
-                })
-                clean_form()
-                verif_inputs()
-                $('#id_div').show()
-                $('#insert').hide()
-                $('#update').show()
-                
-                document.getElementById("correlativo_submit").innerHTML = "Modificar"
-                setTimeout(function(){
-                    $('#correlativo_fkunidad').selectpicker({
-                        size: 4,
-                        liveSearch: true,
-                        liveSearchPlaceholder: 'Buscar unidad.',
-                        title: 'Seleccione una unidad.'
-                    })
-
-                    document.getElementById('correlativo_fkunidad').value = fu
-                    $('#correlativo_fkunidad').selectpicker('render')
-                    $('#form').modal('show')
-                }, 1000);
-            })
-        }
-
-        function combo_unidad() {
-            obj = JSON.stringify({
-                'id': 0
-            })
-            ajax_call_get("/obtener_unidad",{
-                object: obj
-            },function(response){ 
-                var self = JSON.parse(response)    
-                
-                html = "<div class='btn-group bootstrap-select form-line form-label form-control'>"+
-                    "<select id='correlativo_fkunidad' name='correlativo[fkunidad]' class='form-line form-label form-control' tabindex='-98'>"
-                for (var i = 0; i < self.length; i++) {
-                    html += "<option value='"+self[i].id+"'>"+self[i].nombre+"</option>"
-                }
-                html += "</select>"+
-                    "</div>"
-                $(html).insertAfter('#lbl-unit')
-            })
-        }
-    </script>
-
-    <script>
-        attach_edit()
-        
-        $('.delete').click(function () {
-            id = parseInt(JSON.parse($(this).attr('data-json')))
-            enabled = false
-            swal({
-                title: "¿Desea dar de baja los datos del correlativo?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#004c99",
-                cancelButtonColor: "#F44336",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then(function () {
-                ajax_call("/correlativo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
-            })
-        })      
-    </script>
-
-    <script>
         function format (d) {
             let frg = '<div class="card" style="width: 100%; ';
             
-            let estadocr = d[14];
+            let estadocr = d[13];
             if(estadocr.localeCompare("Anulado") == 0) frg = frg + 'background-color: rgba(204, 0, 0, .12)">';
             else frg = frg + 'background-color: rgba(0, 76, 153, .15)">';
             frg = frg + '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
                     '<td class="bold">Destinatario:</td>'+
                     '<td>'+d[6]+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td class="bold">Referencia:</td>'+
-                    '<td>'+d[7]+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Centro de control correlativo:</td>'+
@@ -359,32 +109,28 @@
                     '<td>'+d[9]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Equipo:</td>'+
+                    '<td class="bold">IP:</td>'+
                     '<td>'+d[10]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">IP:</td>'+
-                    '<td>'+d[11]+'</td>'+
-                '</tr>'+
-                '<tr>'+
                     '<td class="bold">Antecedente:</td>'+
-                    '<td>'+d[13]+'</td>'+
+                    '<td>'+d[12]+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Estado correlativo:</td>'+
-                    '<td>'+d[14]+'</td>'+
+                    '<td>'+d[13]+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Item:</td>'+
-                    '<td>'+d[15]+'</td>'+
+                    '<td>'+d[14]+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Fecha de entrega:</td>'+
-                    '<td>'+d[17]+'</td>'+
+                    '<td>'+d[16]+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Unidad:</td>'+
-                    '<td>'+d[18]+'</td>'+
+                    '<td>'+d[17]+'</td>'+
                 '</tr>'+
             '</table></div>';
             return frg;
@@ -411,7 +157,26 @@
                 }
             });
         });
-        $('.flash-notice').fadeOut(8000);
-        if($('#e-msg').css("display") == "none") $('#e-msg').remove();
+        
+        $(document).on('click','.urlcrtv', function() {
+            var archivo = this.dataset.file
+            var tipoArchivo = base64MimeType(archivo)
+            var archivoBlob = b64toBlob(archivo,tipoArchivo)
+            saveAs(archivoBlob , "archivo")
+        })
+
+        $(document).on('click','.urledt', function() {
+            var archivo = this.dataset.file
+            var tipoArchivo = base64MimeType(archivo)
+            var archivoBlob = b64toBlob(archivo,tipoArchivo)
+            saveAs(archivoBlob , "archivo")
+        })
+
+        $(document).on('click','.urlorg', function() {
+            var archivo = this.dataset.file
+            var tipoArchivo = base64MimeType(archivo)
+            var archivoBlob = b64toBlob(archivo,tipoArchivo)
+            saveAs(archivoBlob , "archivo")
+        })
     </script>
 {% endblock %}

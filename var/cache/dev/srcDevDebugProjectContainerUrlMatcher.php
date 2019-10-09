@@ -390,7 +390,6 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/personalcargo_eliminar' => [['_route' => 'PersonalCargo_eliminar', '_controller' => 'App\\Controller\\PersonalCargoController::eliminar'], null, ['POST' => 0], null, false],
                     '/personal' => [['_route' => 'personal_listar', '_controller' => 'App\\Controller\\PersonalController::index'], null, null, null, false],
                     '/personal_insertar' => [['_route' => 'personal_insertar', '_controller' => 'App\\Controller\\PersonalController::insertar'], null, ['POST' => 0], null, false],
-                    '/personal_actualizar' => [['_route' => 'personal_actualizar', '_controller' => 'App\\Controller\\PersonalController::actualizar'], null, ['POST' => 0], null, false],
                     '/personal_editar' => [['_route' => 'personal_editar', '_controller' => 'App\\Controller\\PersonalController::editar'], null, ['POST' => 0], null, false],
                     '/personal_eliminar' => [['_route' => 'personal_eliminar', '_controller' => 'App\\Controller\\PersonalController::eliminar'], null, ['POST' => 0], null, false],
                     '/planaccion' => [['_route' => 'planaccion', '_controller' => 'App\\Controller\\PlanAccionController::index'], null, null, null, false],

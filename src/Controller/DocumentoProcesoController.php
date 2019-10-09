@@ -297,7 +297,7 @@ class DocumentoProcesoController extends Controller
             $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($id);
             $fapb = $documentoproceso->getFechaaprobacion();
             if ($fapb != null) {
-                $result = $fapb->format('Y-m-d H:i:s');
+                $result = $fapb->format('Y-m-d H:i');
             } else {
                 $result = $fapb;
             }
@@ -591,7 +591,7 @@ class DocumentoProcesoController extends Controller
             $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($docrevision->getFkdoc()->getId());
             $fapb = $documentoproceso->getFechaaprobacion();
             if ($fapb != null) {
-                $result = $fapb->format('Y-m-d H:i:s');
+                $result = $fapb->format('Y-m-d H:i');
             } else {
                 $result = $fapb;
             }
@@ -676,7 +676,7 @@ class DocumentoProcesoController extends Controller
             $doc_idrv = $docrevision->getId();
 
             date_default_timezone_set('America/La_Paz');
-            $fecha = date("Y-m-d H:i:s");
+            $fecha = date("Y-m-d H:i");
             $docrevision->setFecha(new \DateTime($fecha));
             $docrevision->setFirma('Firmado');
 
@@ -796,7 +796,7 @@ class DocumentoProcesoController extends Controller
             $docproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($id);
 
             date_default_timezone_set('America/La_Paz');
-            $fecha = date("Y-m-d H:i:s");
+            $fecha = date("Y-m-d H:i");
             $docproceso->setFechaaprobacion(new \DateTime($fecha));
             if($accion == 'aprobar') $docproceso->setAprobadorechazado('APROBADO');
             else $docproceso->setAprobadorechazado('RECHAZADO');

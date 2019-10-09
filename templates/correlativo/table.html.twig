@@ -13,15 +13,15 @@
                  <b><i>{{' (Inactivo)' }}</i></b>
             {% endif %}
         </td>
-        <td>{{ tr.redactor }}{{ tr.urlorigen }}</td>
+        <td>{{ tr.redactor }}</td>
         <td class="d-none">{{ tr.destinatario }}</td>
-        <td class="d-none">{{ tr.referencia }}</td>
+        <td>{{ tr.referencia }}</td>
         <td class="d-none">{{ tr.fkcorrelativo.nombre }}</td>
         <td class="d-none">{{ tr.fktiponota.nombre }}</td>
         <td class="d-none">{{ tr.ip }}</td>
 
         {% if tr.url != null and tr.url != 'N/A' %}
-            <td><a href="{{tr.url}}" class="ruta"><i class="material-icons">folder</i> Archivo</a></td>
+            <td><a href="#" data-file="{{tr.url}}" class="urlcrtv"><i class="material-icons">folder</i> Archivo</a></td>
         {% else %}
             <td>{{ tr.url }}</td>
         {% endif %}
@@ -31,7 +31,7 @@
         <td class="d-none">{{ tr.item }}</td>
 
         {% if tr.urleditable != null and tr.urleditable != 'N/A' %}
-            <td><a href="{{tr.urleditable}}" class="ruta"><i class="material-icons">folder_open</i> Archivo</a></td>
+            <td><a href="#" data-file="{{tr.urleditable}}" class="urledt"><i class="material-icons">folder_open</i> Archivo</a></td>
         {% else %}
             <td>{{ tr.urleditable }}</td>
         {% endif %}
@@ -43,22 +43,10 @@
         {% set crp = 'Crear' ~ tr.fkunidad.nombre %}
 
         {% if tr.urlorigen != null and tr.urlorigen != 'N/A' %}
-            <td><a href="{{tr.urlorigen}}" class="ruta"><i class="material-icons">folder_special</i> Archivo</a></td>
+            <td><a href="#" data-file="{{tr.urlorigen}}" class="urlorg"><i class="material-icons">folder_special</i> Archivo</a></td>
         {% else %}
             <td>{{ tr.urlorigen }}</td>
         {% endif %}
-        <td align="center">
-        {% if 'correlativo_editar' in permisos %}
-            {% if cmp in permissions or crp in permissions %}
-            <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
-            {% endif %}
-        {% endif %}
-        {% if 'correlativo_eliminar' in permisos %}  
-            {% if cmp in permissions or crp in permissions %}
-            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
-            {% endif %}
-        {% endif %}
-        </td>
     </tr>
 {% endfor %}
 

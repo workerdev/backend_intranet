@@ -103,6 +103,11 @@
             $('#files_id').hide()
             $( "#files_id" ).siblings().hide()
             $('#files_id').val('')
+            $('#lnkva').remove();
+            $('#files_tipo').val('')
+            $('#files_tipo').selectpicker('render')
+            $('#files_fkgaleria').val('')
+            $('#files_fkgaleria').selectpicker('render')
 
             clean_form()
             verif_inputs()

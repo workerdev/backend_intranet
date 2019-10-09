@@ -515,9 +515,10 @@ function ajax_call_validation_aud(url, data, render, callback) {
                             'success'
                         )
                         $('#'+datos.form).modal('hide');
-                        setTimeout(function () {
+                        /*setTimeout(function () {
                             window.location = callback
-                        }, 1000)
+                        }, 1000)*/
+                        reload_tabhlfr()
                     }else{
                         showMessage(dictionary.message, "success", "ok");
                         $('#'+datos.form).modal('hide');

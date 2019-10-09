@@ -39,7 +39,7 @@ class DocumentoFormulario
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_documento_formulario_codigo", type="string", length=20, nullable=false)
+     * @ORM\Column(name="cb_documento_formulario_codigo", type="text", nullable=false)
      * @Assert\NotBlank
      */
     private $codigo;
@@ -47,7 +47,7 @@ class DocumentoFormulario
      /**
      * @var string
      *
-     * @ORM\Column(name="cb_documento_formulario_titulo", type="string", length=90, nullable=false)
+     * @ORM\Column(name="cb_documento_formulario_titulo", type="text", nullable=false)
       * @Assert\NotBlank
      */
     private $titulo;
@@ -55,7 +55,7 @@ class DocumentoFormulario
     /**
     * @var string
     *
-    * @ORM\Column(name="cb_documento_formulario_versionVigente", type="string", length=10, nullable=false)
+    * @ORM\Column(name="cb_documento_formulario_versionVigente", type="text", nullable=false)
      * @Assert\NotBlank
     */
    private $versionVigente;
@@ -82,14 +82,14 @@ class DocumentoFormulario
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_documento_formulario_vinculoFileDig", type="string", length=200, nullable=true)
+     * @ORM\Column(name="cb_documento_formulario_vinculoFileDig", type="text", nullable=true)
      */
     private $vinculoFileDig;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="cb_documento_formulario_vinculoFileDesc", type="string", length=200, nullable=true)
+     * @ORM\Column(name="cb_documento_formulario_vinculoFileDesc", type="text", nullable=true)
      */
     private $vinculoFileDesc;
 
@@ -105,6 +105,7 @@ class DocumentoFormulario
     {
         return $this->id;
     }
+
     public function setId(int $id): self
     {
         $this->id = $id;
@@ -175,6 +176,7 @@ class DocumentoFormulario
     {
         return $this->fkaprobador;
     }
+    
     public function setFkaprobador(?Usuario $fkaprobador): self
     {
         $this->fkaprobador = $fkaprobador;

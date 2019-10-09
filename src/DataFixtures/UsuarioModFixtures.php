@@ -39,6 +39,7 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $useradm->setApellido('Super-user');
         $useradm->setCorreo('admin@gmail.com');
         $useradm->setUsername('admin');
+        $useradm->setCargo('Administrador del sistema');
         $useradm->setPassword(
             $this->encoder->encodePassword($useradm, 'admin')
         );
@@ -51,6 +52,7 @@ class UsuarioModFixtures extends Fixture implements DependentFixtureInterface
         $user->setApellido('rol-user');
         $user->setCorreo('user@gmail.com');
         $user->setUsername('user');
+        $user->setCargo('Usuario del sistema');
         $user->setPassword(
             $this->encoder->encodePassword($user, '123')
         );

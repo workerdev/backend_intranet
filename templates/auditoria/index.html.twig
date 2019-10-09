@@ -772,6 +772,92 @@
         $('#close-form').click(function () {
             $('#form-hlfr').modal('hide')
         })
+
+        function reload_tabhlfr(){
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id-aud').val()))
+            });
+            ajax_call_get("/fortaleza_listall",{
+                object: obj
+            },function(responsef){
+                let dataf = JSON.parse(responsef)
+
+                ajax_call_get("/hallazgo_listall",{
+                    object: obj
+                },function(responseh){
+                    let datah = JSON.parse(responseh)
+
+                    var tablefr = $('#table_fort').DataTable();
+                    var tablehl = $('#table_hlg').DataTable();
+                    tablefr.destroy();
+                    tablehl.destroy();
+
+                    var datafr = [];
+                    for(var i = 0; i < dataf.length; i++){
+                        let acn_frt = ''
+                        {% if 'fortaleza_editar' in permisos %}
+                            acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
+                        {% endif %}
+                        {% if 'fortaleza_eliminar' in permisos %}  
+                            acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
+                        {% endif %}
+
+                        datafr.push( [
+                            dataf[i].id, dataf[i].ordinal,
+                            dataf[i].descripcion, dataf[i].responsable,
+                            dataf[i].fecharegistro, acn_frt
+                        ]);
+                    }
+                    $('#table_fort').DataTable({
+                        data: datafr,
+                        "order": [[ 0, 'desc' ]],
+                        language: {
+                            "url": "/resources/js/spanish.json"
+                        },
+                        "pageLength": 10
+                    });
+
+                    var datahl = [];
+                    for(var j = 0; j < datah.length; j++){
+                        let acn_hlg = ''
+                        {% if 'hallazgo_editar' in permisos %}
+                            acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                        {% endif %}
+                        {% if 'hallazgo_eliminar' in permisos %}  
+                            acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                        {% endif %}
+
+                        datahl.push( [
+                            datah[j].id, datah[j].fktipo.nombre,
+                            datah[j].titulo, datah[j].evidencia,
+                            datah[j].documento, datah[j].puntoiso,
+                            datah[j].fkimpacto.nombre, acn_hlg
+                        ]);
+                    }
+                    $('#table_hlg').DataTable({
+                        data: datahl,
+                        "order": [[ 0, 'desc' ]],
+                        language: {
+                            "url": "/resources/js/spanish.json"
+                        },
+                        "pageLength": 10
+                    });
+                    
+                    $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
+                    $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
+
+                    $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
+                    $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
+                    
+                    fortaleza_edit()
+                    fortaleza_delete()
+                    hallazgo_edit()
+                    hallazgo_delete()
+                })
+            })
+        }
     </script>
 
     <script>

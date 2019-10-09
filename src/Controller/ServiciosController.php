@@ -111,8 +111,8 @@ class ServiciosController extends AbstractController
             $fecha = date("Y-m-d H:i:s");
 
             $message = (new \Swift_Message('Asunto:   ' . $asunto . '  - COMITÉ DE ÉTICA'))
-            ->setFrom($_SERVER['COMITE_ETICA_REMITENTE']) //intranet@elfec.com
-            ->setTo($_SERVER['COMITE_ETICA_DESTINATARIO']) //cflores@elfec.com
+            ->setFrom($_SERVER['COMITE_ETICA_REMITENTE']) 
+            ->setTo($_SERVER['COMITE_ETICA_DESTINATARIO']) 
             ->setBody($this->renderView('mail/index.html.twig',
                 array(
                     'remitente' => $remitente,
@@ -165,8 +165,8 @@ class ServiciosController extends AbstractController
             $fecha = date("Y-m-d H:i:s");
 
             $message = (new \Swift_Message('Asunto:   ' . $asunto . '  - BUZÓN DE SUGERENCIAS'))
-            ->setFrom($_SERVER['BUZON_SUGERENCIA_REMITENTE']) //intranet@elfec.com
-            ->setTo($_SERVER['BUZON_SUGERENCIA_DESTINATARIO']) //cflores@elfec.com
+            ->setFrom($_SERVER['BUZON_SUGERENCIA_REMITENTE']) 
+            ->setTo($_SERVER['BUZON_SUGERENCIA_DESTINATARIO']) 
             ->setBody($this->renderView('mail/index.html.twig',
                 array(
                     'remitente' => $remitente,
@@ -680,11 +680,11 @@ class ServiciosController extends AbstractController
             $tipo2 = $sx['tipo3'];
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "select n.cb_noticia_id as id_noticia,n.cb_noticia_titulo as titulo_noticia, n.cb_noticia_subtitulo as subtitulo_noticia,
-    n.cb_noticia_fecha as fecha_noticia,n.cb_noticia_tipo as tipo_noticia, c.cb_categorianoticia_id as id_categoria, c.cb_categorianoticia_nombre as nombre_categoria
-    from cb_comunicacion_noticia n, cb_comunicacion_categorianoticia c, cb_comunicacion_noticiacategoria nc
-    where (cb_noticia_tipo =:tipo or cb_noticia_tipo =:tipo3) and nc.cb_noticiacategoria_fknoticia=n.cb_noticia_id and
-    nc.cb_noticiacategoria_fkcategoria = c.cb_categorianoticia_id and n.cb_noticia_estado = 1 and c.cb_categorianoticia_estado = 1
-    ORDER BY n.cb_noticia_fecha DESC";
+                    n.cb_noticia_fecha as fecha_noticia,n.cb_noticia_tipo as tipo_noticia, c.cb_categorianoticia_id as id_categoria, c.cb_categorianoticia_nombre as nombre_categoria
+                    from cb_comunicacion_noticia n, cb_comunicacion_categorianoticia c, cb_comunicacion_noticiacategoria nc
+                    where (cb_noticia_tipo =:tipo or cb_noticia_tipo =:tipo3) and nc.cb_noticiacategoria_fknoticia=n.cb_noticia_id and
+                    nc.cb_noticiacategoria_fkcategoria = c.cb_categorianoticia_id and n.cb_noticia_estado = 1 and c.cb_categorianoticia_estado = 1
+                    ORDER BY n.cb_noticia_fecha DESC";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute(['tipo' => ($tipo), 'tipo3' => ($tipo2)]);
@@ -712,10 +712,10 @@ class ServiciosController extends AbstractController
             $tipo = $sx['tipo'];
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "select N.cb_noticia_id as id_noticia, N.cb_noticia_titulo as titulo_noticia, N.cb_noticia_subtitulo as subtitulo_noticia, N.cb_noticia_contenido as contenido_noticia, N.cb_noticia_fecha as fecha_noticia
-    from cb_comunicacion_noticiacategoria NC
-    join cb_comunicacion_categorianoticia CN on NC.cb_noticiacategoria_fkcategoria = CN.cb_categorianoticia_id join cb_comunicacion_noticia N on NC.cb_noticiacategoria_fknoticia = N.cb_noticia_id
-    WHERE CN.cb_categorianoticia_id=:id and N.cb_noticia_estado = 1 and N.cb_noticia_tipo =:tipo
-    ORDER BY n.cb_noticia_fecha DESC";
+                    from cb_comunicacion_noticiacategoria NC
+                    join cb_comunicacion_categorianoticia CN on NC.cb_noticiacategoria_fkcategoria = CN.cb_categorianoticia_id join cb_comunicacion_noticia N on NC.cb_noticiacategoria_fknoticia = N.cb_noticia_id
+                    WHERE CN.cb_categorianoticia_id=:id and N.cb_noticia_estado = 1 and N.cb_noticia_tipo =:tipo
+                    ORDER BY n.cb_noticia_fecha DESC";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id), 'tipo' => ($tipo)]);
@@ -741,16 +741,16 @@ class ServiciosController extends AbstractController
             $id = $sx['id'];
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "SELECT cb_noticia_titulo as titulo_noticia, cb_noticia_subtitulo as subtitulo_noticia, cb_noticia_contenido as contenido_noticia, cb_noticia_fecha as fecha_noticia FROM
-    cb_comunicacion_noticia N
-    WHERE N.cb_noticia_id =:id and N.cb_noticia_estado = 1";
+                    cb_comunicacion_noticia N
+                    WHERE N.cb_noticia_id =:id and N.cb_noticia_estado = 1";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id)]);
             $Noticia = $stmt->fetchAll();
 
             $sql2 = "SELECT CN.cb_categorianoticia_nombre as nombre_categoria
-    FROM cb_comunicacion_categorianoticia CN join cb_comunicacion_noticiacategoria NC on CN.cb_categorianoticia_id = NC.cb_noticiacategoria_fkcategoria
-    WHERE NC.cb_noticiacategoria_fknoticia =:id ";
+                    FROM cb_comunicacion_categorianoticia CN join cb_comunicacion_noticiacategoria NC on CN.cb_categorianoticia_id = NC.cb_noticiacategoria_fkcategoria
+                    WHERE NC.cb_noticiacategoria_fknoticia =:id ";
 
             $stmt = $cx->prepare($sql2);
             $stmt->execute(['id' => ($id)]);
@@ -777,37 +777,37 @@ class ServiciosController extends AbstractController
             // $tipo = $request->get("tipo");
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "SELECT
-    concat(cb_personal_nombre,' ',cb_personal_apellido) as nombre,
-    cb_personal_fnac as fecha,
-    CASE
-    WHEN concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)) =
-    concat(date_part('year', NOW()),'-',date_part('month', NOW()),'-',date_part('day', NOW()))
-    THEN 'HOY'
-    ELSE
-    CASE
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 7
-    THEN 'DOMINGO'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 1
-    THEN 'LUNES'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 2
-    THEN 'MARTES'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 3
-    THEN 'MIERCOLES'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 4
-    THEN 'JUEVES'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 5
-    THEN 'VIERNES'
-    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 6
-    THEN 'SABADO'
-    END
-    END AS DIA
-    FROM
-    cb_personal_personal
-    WHERE
-    cb_personal_estado = 1
-    AND
-    extract('week' from cast((date_part('year',now())||'-'||date_part('month', cb_personal_fnac)||'-'||date_part('day', cb_personal_fnac)) as date)) = extract('week' from now())
-    ORDER BY concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)) ASC;";
+                    concat(cb_personal_nombre,' ',cb_personal_apellido) as nombre,
+                    cb_personal_fnac as fecha, cb_personal_genero as genero, cb_personal_foto as foto,
+                    CASE
+                    WHEN concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)) =
+                    concat(date_part('year', NOW()),'-',date_part('month', NOW()),'-',date_part('day', NOW()))
+                    THEN 'HOY'
+                    ELSE
+                    CASE
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 7
+                    THEN 'DOMINGO'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 1
+                    THEN 'LUNES'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 2
+                    THEN 'MARTES'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 3
+                    THEN 'MIERCOLES'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 4
+                    THEN 'JUEVES'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 5
+                    THEN 'VIERNES'
+                    WHEN extract(isodow from date (concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)))) = 6
+                    THEN 'SABADO'
+                    END
+                    END AS DIA
+                    FROM
+                    cb_personal_personal
+                    WHERE
+                    cb_personal_estado = 1
+                    AND
+                    extract('week' from cast((date_part('year',now())||'-'||date_part('month', cb_personal_fnac)||'-'||date_part('day', cb_personal_fnac)) as date)) = extract('week' from now())
+                    ORDER BY concat(date_part('year', NOW()),'-',date_part('month', cb_personal_fnac),'-',date_part('day', cb_personal_fnac)) ASC;";
             $stmt = $cx->prepare($sql);
             $stmt->execute();
             $cumpleañeros = $stmt->fetchAll();
@@ -1558,10 +1558,10 @@ class ServiciosController extends AbstractController
             $id = $sx['id'];
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
 
-            $sql = "SELECT cb_docprocrevision_fkdoc AS id_revision, cb_docprocrevision_fecha AS fecha_recibido, cb_docprocrevision_responsable AS responsable_revision,
-                        cb_docprocrevision_estadodoc AS estado, cb_docprocrevision_firma AS firma_electronica
-                    FROM cb_gest_doc_proceso, cb_gest_docprocrevision
-                    WHERE cb_docprocrevision_fkdoc=cb_documento_proceso_id AND cb_docprocrevision_estado=1 AND cb_documento_proceso_id=:id";
+            $sql = "SELECT cb_docprocrevision_fkdoc AS id_revision, cb_docprocrevision_fecha AS fecha_recibido, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable_revision,
+                    cb_docprocrevision_estadodoc AS estado, cb_docprocrevision_firma AS firma_electronica
+                    FROM cb_gest_doc_proceso, cb_gest_docprocrevision, cb_usuario_usuario
+                    WHERE cb_documento_proceso_fkaprobador=cb_usuario_id AND cb_docprocrevision_fkdoc=cb_documento_proceso_id AND cb_docprocrevision_estado=1 AND cb_documento_proceso_id=:id";
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id)]);
             $docrev = $stmt->fetchAll();
@@ -2178,7 +2178,11 @@ class ServiciosController extends AbstractController
                 $mensaje = "error";
                 return new JsonResponse($mensaje);
             } else {
-                $elementos = array('Nombre' => $usuariob[0]->getNombre(), 'Apellido' => $usuariob[0]->getApellido(), 'Cargo' => 'Gerente', 'login' => $user);
+                $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                if (empty($personal)) $item_personal = 0;
+                else $item_personal = $personal->getId();
+
+                $elementos = array('Nombre' => $usuariob[0]->getNombre(), 'Apellido' => $usuariob[0]->getApellido(), 'Cargo' => 'Gerente', 'login' => $user, 'item_personal' => $item_personal);
 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                 $data2 = $serializer->serialize($elementos, 'json');
@@ -2348,6 +2352,10 @@ class ServiciosController extends AbstractController
 
                         }
 
+                        $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                        if (empty($personal)) $item_personal = 0;
+                        else $item_personal = $personal->getId();
+
                         $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'process' => $process);
 
                         $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -2357,7 +2365,7 @@ class ServiciosController extends AbstractController
                 }
             }
             if($process == 'success'){
-                $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'process' => $process);
+                $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                 $data2 = $serializer->serialize($elementos, 'json');
@@ -2439,7 +2447,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $tipo = $cx->getRepository(TipoCRO::class)->findBy(array('estado' => '1'));
+            $tipo = $cx->getRepository(TipoCRO::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data = $serializer->serialize($tipo, 'json');
 
@@ -2461,7 +2469,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $probabilidad = $cx->getRepository(Probabilidad::class)->findBy(array('estado' => '1'));
+            $probabilidad = $cx->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data = $serializer->serialize($probabilidad, 'json');
 
@@ -2483,7 +2491,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $impacto = $cx->getRepository(Impacto::class)->findBy(array('estado' => '1'));
+            $impacto = $cx->getRepository(Impacto::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data = $serializer->serialize($impacto, 'json');
 
@@ -2640,6 +2648,7 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
+    
     /**
      * @Route("/correlativo_gestiones", methods={"POST"}, name="correlativo_gestiones")
      */
@@ -2841,11 +2850,11 @@ class ServiciosController extends AbstractController
             $user = $sx['username'];
             $cx = $this->getDoctrine()->getManager();
 
-            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(array('estado' => '1'));
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new ObjectNormalizer()));
             $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
 
-            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('estado' => '1'));
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new ObjectNormalizer()));
             $datatipo = $serializer->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
 
