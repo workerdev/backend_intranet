@@ -29,7 +29,7 @@
                     
                     <div class="form-group" id="cont-sup">
                     <label>Superior</label>
-                        <select id="fksuperior" class="form-control">
+                        <select id="fksuperior" class="form-control show-tick">
                         {% for t in superior %}
                             <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}
@@ -39,7 +39,7 @@
                     </div>     
                     
                     <label>Tipo de Cargo</label>
-                        <select id="fktipo" class="form-control">
+                        <select id="fktipo" class="form-control show-tick">
                         {% for t in tipo %}
                             <option value="{{t.id}}">{{t.nombre}}</option>
                         {% endfor %}

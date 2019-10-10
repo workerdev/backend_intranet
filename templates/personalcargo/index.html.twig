@@ -5,7 +5,7 @@
     {{ parent() }}
     <style>
         .accion{ 
-            cursor:pointer 
+            cursor: pointer;
         }
         .swal2-title{
             font-size: 16px !important;
@@ -67,7 +67,6 @@
     {{ parent() }}
     <script src="{{ asset('resources/js/transporte.js') }}"></script>
     <script src="{{ asset('resources/js/functions.js') }}"></script>
-    <script src="{{ asset('resources/plugins/jquery/jquery.min.js') }}"></script>
 
     <script>
         main_route = '/personalcargo'
@@ -83,17 +82,11 @@
     </script>
 
     <script>
-        $(document).ready(function() {
-            $('select').material_select();
-        });
-
-        attach_validators()
-
         $('#fktipo').selectpicker({
             size: 4,
             liveSearch: true,
-            liveSearchPlaceholder: 'Buscar tipo de procesos cargo.',
-            title: 'Seleccione un tipo de procesos cargo.'
+            liveSearchPlaceholder: 'Buscar tipo de cargo.',
+            title: 'Seleccione un tipo de cargo.'
         })
 
         $('#fksuperior').selectpicker({
@@ -106,6 +99,12 @@
         $('#new').click(function () {
             $('#nombre').val('')
             $('#descripcion').val('')
+            
+            $('#fktipo').val('')
+            $('#fktipo').selectpicker('render')
+
+            $('#fksuperior').val('')
+            $('#fksuperior').selectpicker('render')
 
             clean_form()
             verif_inputs()
@@ -114,7 +113,9 @@
             $('#update').hide()
             $('#form').modal('show')
         })
+    </script>
 
+    <script>
         $('#insert').click(function () {
             objeto = JSON.stringify({
                 'nombre': $('#nombre').val(),
@@ -122,7 +123,7 @@
                 'superior': $('#fksuperior').val(),
                 'tipocargo': $('#fktipo').val()
             })
-        ajax_call_validation("/personalcargo_insertar", {object: objeto}, null, main_route)
+            ajax_call_validation("/personalcargo_insertar", {object: objeto}, null, main_route)
         })
 
         function attach_edit() {
@@ -158,74 +159,6 @@
                 })
             })
         }
-
-        $('#update').click(function () {
-            objeto = JSON.stringify({
-                'id': parseInt(JSON.parse($('#id').val())),
-                'nombre': $('#nombre').val(),
-                'descripcion': $('#descripcion').val(),
-                'superior': $('#fksuperior').val(),
-                'tipocargo': $('#fktipo').val()
-            })
-            ajax_call_validation("/personalcargo_actualizar", {object: objeto}, null, main_route)
-        })
-        reload_form()
-    </script>
-
-    <script>
         attach_edit()
-
-        let message= ''
-        function cargo_prev(id) {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse(id))
-            });
-            ajax_call_get("/cargo_prev",{
-                object: obj
-            },function(response){
-                message = response;
-            });
-        }
-
-        $('.delete').click(function () {
-            id = parseInt(JSON.parse($(this).attr('data-json')))
-            cargo_prev(id)
-
-            let quest = message
-            enabled = false
-
-            if((quest.split(" ").length) > 8){
-                swal({
-                    title: "¿Desea dar de baja el Cargo?",
-                    type: "warning",
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-
-                })
-
-            }else{
-                swal({
-                    title: "¿Desea dar de baja el Cargo?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/personalcargo_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 1000);
-                    })
-                })
-            }
-        })
     </script>
 {% endblock %}

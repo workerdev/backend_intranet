@@ -3,48 +3,29 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <script src="{{ asset('Plugins/gojs/go-debug.js') }}"></script>
     <style>
         .accion{ cursor:pointer }
-        .sidebar-own{
-            width: 182px!important;
-        }
-        .content-own{
-            margin: 80px 0 0 182px !important;
-        }
     </style>
 {% endblock %}
 
 {% block body %}
     {{ parent() }}
     {{ include('personalcargo/form_asignar_cargo') }}
-
+    
     <section id="content" class="content">
         <div class="container-fluid">
             <div class="block-header">
                 <div class="card" id="render_content">
 
-                    <div class="header bg-indigo"><h2>PROCESOS CARGO</h2>
-                    </div>
-
+                    <div class="header bg-indigo"><h2>PROCESOS CARGO</h2></div>
                     <div class="body">
-                        <label>Cargo</label>
-                            <select id="ft-cargo" class="form-control">
-                            {% for c in cargo %}
-                                <option value="{{c.id}}">{{c.nombre}}</option>
-                            {% endfor %}
-                            </select>
-                            </br>
-                            </br> 
-
                         <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; height: 500px"></div>
                         <button id="btnsave" class="btn btn-primary">Confirmar cambios</button>
                         <textarea id="resultado" style="display: none;"></textarea>
                         <textarea id="mySavedModel" style="width:100%;height:250px;display: none;">
-                        { 
-                            "class": "go.TreeModel",
+                            { "class": "go.TreeModel",
                             "nodeDataArray": {{organigrama}}
-                        }
+                            }
                         </textarea>
                         <input id="cantidad" style="display: none" value="{{cantidad}}">
 
@@ -58,9 +39,10 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('Plugins/gojs/go-debug.js') }}"></script>
     <script src="{{ asset('resources/js/transporte.js') }}"></script>
     <script src="{{ asset('resources/js/functions.js') }}"></script>
-    
+
     <script>
         main_route = '/organigrama'
 
@@ -74,18 +56,19 @@
         default_values()
     </script>
 
-    <script>
-        $('#ft-cargo').selectpicker({
+    <script type="text/javascript">
+        $(document).ready(function() {
+            /*$('#leftsidebar').addClass("sidebar-own");
+            $('#content').addClass("content-own");*/
+            init()
+        });
+
+        $('#persona').selectpicker({
             size: 4,
             liveSearch: true,
-            liveSearchPlaceholder: 'Buscar cargo.',
-            title: 'Seleccione un cargo.'
+            liveSearchPlaceholder: 'Buscar persona.',
+            title: 'Seleccione una persona.'
         })
-
-        $(document).ready(function() {
-            $('#leftsidebar').addClass("sidebar-own");
-            $('#content').addClass("content-own");
-        });
 
         $('#btnsave').click(function(){
             var modelasText = JSON.parse(myDiagram.model.toJson());
@@ -96,7 +79,7 @@
                 original: modelo2,
                 cambio:modelasText
             });
-            ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 1000);});
+            ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 2000);});
         })
     </script>
 
@@ -105,7 +88,6 @@
         var id = 0;
         var nodo = 0;
         var numero_seleccionado = 0;
-
         function getNextKey() {
             var key = nodeIdCounter;
             while (myDiagram.model.findNodeDataForKey(key) !== null) {
@@ -130,7 +112,6 @@
                 $('#form').modal('hide');
             })
         }
-
         function crear(a,b,id,nombre){
             nodo++;
             a.archetypeNodeData = {
@@ -145,7 +126,6 @@
             }
             return;
         }
-
         function abrir_modal2(e, obj, myDiagram){
             $('#form').modal('show');
             $('#insert').click(function(){
@@ -156,7 +136,6 @@
                 $('#form').modal('hide');
             })
         }
-
         function crear2(e, obj, myDiagram, id, nombre){
             nodo++;
             var clicked = obj.part;
@@ -195,14 +174,15 @@
             })
         }
 
+
         function init() {
             var $ = go.GraphObject.make;  // for conciseness in defining templates
 
             myDiagram =
                 $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
                     {
-                        initialContentAlignment: go.Spot.Center,
-                        initialAutoScale: go.Diagram.Uniform,
+                        initialContentAlignment: go.Spot.Top,
+                        initialAutoScale: go.Diagram.None,
                         maxSelectionCount: 1, // users can select only one part at a time
                         validCycle: go.Diagram.CycleDestinationTree, // make sure users can only create trees
                         layout:
@@ -220,7 +200,7 @@
                                     alternateNodeSpacing: 20
                                 }),
                         "undoManager.isEnabled": true // enable undo & redo
-                    });       
+                    });
 
             // when the document is modified, add a "*" to the title and enable the "Save" button
             myDiagram.addDiagramListener("Modified", function(e) {
@@ -417,7 +397,7 @@
                         $(go.TextBlock, "Crear Cargo"),
                         {
                             click: function(e, obj) {
-                                window.location.href = '/procesoscargo'
+                                window.location.href = '/personalcargo'
                             }
                         }
                     ),
@@ -531,12 +511,14 @@
                 });
         }
 
+
         // Assume that the SideTreeLayout determines whether a node is an "assistant" if a particular data property is true.
         // You can adapt this code to decide according to your app's needs.
         function isassistant(n) {
             if (n === null) return false;
             return n.data.isassistant;
         }
+
 
         // This is a custom TreeLayout that knows about "assistants".
         // A Node for which isassistant(n) is true will be placed at the side below the parent node
@@ -672,26 +654,8 @@
             document.getElementById("mySavedModel").value = myDiagram.model.toJson();
             myDiagram.isModified = true;
         }
-
         function load() {
             myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
         }
-
-        $('#ft-cargo').change(function() {
-            let id_cargo = $(this).val(); 
-          
-            window.location.href = main_route + '/' + id_cargo;
-        });
-
-        $('#new').click(function () {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse('2'))
-            })
-            ajax_call_get("/personalcargo_filtrar",{
-                object: obj
-            },function(response){
-                var self = JSON.parse(response);  
-            })
-        })        
     </script>
 {% endblock %}

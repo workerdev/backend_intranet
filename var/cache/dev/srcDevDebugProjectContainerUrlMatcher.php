@@ -380,12 +380,11 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/permiso_editar' => [['_route' => 'permiso_editar', '_controller' => 'App\\Controller\\PermisoController::editar'], null, ['POST' => 0], null, false],
                     '/permiso_eliminar' => [['_route' => 'permiso_eliminar', '_controller' => 'App\\Controller\\PermisoController::eliminar'], null, ['POST' => 0], null, false],
                     '/personalcargo' => [['_route' => 'personalcargo_listar', '_controller' => 'App\\Controller\\PersonalCargoController::index'], null, null, null, false],
-                    '/organigrama' => [['_route' => 'PersonalCargo_listar2', '_controller' => 'App\\Controller\\PersonalCargoController::organigrama'], null, ['GET' => 0], null, false],
+                    '/organigrama' => [['_route' => 'PersonalCargo_listar2', '_controller' => 'App\\Controller\\PersonalCargoController::organigrama'], null, null, null, false],
                     '/organigrama_cambios' => [['_route' => 'organigrama cambios', '_controller' => 'App\\Controller\\PersonalCargoController::cambiosorganigrama'], null, null, null, false],
                     '/personalcargo_insertar' => [['_route' => 'PersonalCargo_insertar', '_controller' => 'App\\Controller\\PersonalCargoController::insertar'], null, ['POST' => 0], null, false],
                     '/personalcargo_actualizar' => [['_route' => 'PersonalCargo_actualizar', '_controller' => 'App\\Controller\\PersonalCargoController::actualizar'], null, ['POST' => 0], null, false],
                     '/personalcargo_editar' => [['_route' => 'PersonalCargo_editar', '_controller' => 'App\\Controller\\PersonalCargoController::editar'], null, ['POST' => 0], null, false],
-                    '/personalcargo_filtrar' => [['_route' => 'PersonalCargo_filtrar', '_controller' => 'App\\Controller\\PersonalCargoController::filtrar'], null, ['POST' => 0], null, false],
                     '/cargo_prev' => [['_route' => 'cargo_prev', '_controller' => 'App\\Controller\\PersonalCargoController::cargo_prev'], null, ['POST' => 0], null, false],
                     '/personalcargo_eliminar' => [['_route' => 'PersonalCargo_eliminar', '_controller' => 'App\\Controller\\PersonalCargoController::eliminar'], null, ['POST' => 0], null, false],
                     '/personal' => [['_route' => 'personal_listar', '_controller' => 'App\\Controller\\PersonalController::index'], null, null, null, false],
@@ -695,8 +694,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                    .'|/organigrama/([^/]++)(*:28)'
-                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:63)'
+                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
                 .')/?$}sD',
         ];
 
@@ -705,8 +703,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                 switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = [
-                            28 => [['_route' => 'organigrama_filtro', '_controller' => 'App\\Controller\\PersonalCargoController::filtro'], ['id'], ['GET' => 0], null, false, true],
-                            63 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
+                            35 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
                         ];
 
                         list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
@@ -743,7 +740,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                         return $ret;
                 }
 
-                if (63 === $m) {
+                if (35 === $m) {
                     break;
                 }
                 $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));

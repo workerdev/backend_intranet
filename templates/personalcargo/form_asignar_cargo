@@ -10,7 +10,7 @@
                 <div id="cliente_form_body" class="box-body">
 
                     <label>Personal disponible</label>
-                    <select id="persona" class="form-control">
+                    <select id="persona" class="form-control show-tick">
                         {% for t in personas %}
                             <option value="{{t.id}}-{{t.nombre}} {{ t.apellido }}">{{t.nombre}} {{ t.apellido }}</option>
                         {% endfor %}
@@ -20,8 +20,8 @@
                     </br>
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar<i class="material-icons">save</i></button>
-                    {#<button id="update" type="button" class="btn bg-indigo waves-effect">Modificar<i class="material-icons">save</i></button>#}
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
+                    {#<button id="update" type="button" class="btn bg-indigo waves-effect">Modifica r<i class="material-icons">refresh</i></button>#}
                 </div>
             </div>
         </div>
