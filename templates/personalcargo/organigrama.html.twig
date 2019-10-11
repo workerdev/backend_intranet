@@ -5,6 +5,20 @@
     {{ parent() }}
     <style>
         .accion{ cursor:pointer }
+        .loader-own{
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        #spn-diag{
+            padding-top: 28px;
+            padding-bottom: 18px;
+        }
+        .inf-own{
+            font-size: 12px;
+        }
     </style>
 {% endblock %}
 
@@ -18,9 +32,22 @@
                 <div class="card" id="render_content">
 
                     <div class="header bg-indigo"><h2>PROCESOS CARGO</h2></div>
-                    <div class="body">
+
+                    <div id="spn-diag" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-blue">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center inf-own">Generando diagrama...</p>
+                    </div>
+
+                    <div class="body" id="diag-cont" style="display: none">
                         <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; height: 500px"></div>
-                        <button id="btnsave" class="btn btn-primary">Confirmar cambios</button>
+                        <button id="btnsave" class="btn btn-primary" style="margin-top: 4px"><i class="material-icons">supervisor_account</i> Confirmar cambios</button>
                         <textarea id="resultado" style="display: none;"></textarea>
                         <textarea id="mySavedModel" style="width:100%;height:250px;display: none;">
                             { "class": "go.TreeModel",
@@ -28,7 +55,6 @@
                             }
                         </textarea>
                         <input id="cantidad" style="display: none" value="{{cantidad}}">
-
                     </div>
 
                 </div>
@@ -60,7 +86,13 @@
         $(document).ready(function() {
             /*$('#leftsidebar').addClass("sidebar-own");
             $('#content').addClass("content-own");*/
-            init()
+            $("#pg-spinner-tmp").fadeOut(200);
+            $("#spn-diag").fadeIn(200);
+            setTimeout(
+                function(){
+                    init()        
+                }, 400
+            );
         });
 
         $('#persona').selectpicker({
@@ -88,6 +120,7 @@
         var id = 0;
         var nodo = 0;
         var numero_seleccionado = 0;
+
         function getNextKey() {
             var key = nodeIdCounter;
             while (myDiagram.model.findNodeDataForKey(key) !== null) {
@@ -151,26 +184,44 @@
         function editar(e, obj, myDiagram, node){
             $('#form').modal('show');
             $('#insert').click(function(){
-                var valor = ($('#persona').val()).split("-");
-                id = parseInt(valor[0],10);
-                nombre = valor[1];
-                var numero_dentro = myDiagram.model.getKeyForNodeData(node);
-                if (node !== null && numero_seleccionado == numero_dentro) {
-                    var thisemp = node.data;
-                    var nombre_personal = node.data.name;
-                    var id_personal = node.data.id_personal;
-                    
-                    $("#persona").append( $("<option></option>").attr("value",id_personal+'-'+nombre_personal).text(nombre_personal)); // Update the content clearing the caret
-                    $("select").material_select;
-                    $("select").closest('.input-field').children('span.caret').remove();
-                    $('select').material_select('update');
-                    $('select').material_select;
-                    myDiagram.startTransaction("edit");
-                    myDiagram.model.setDataProperty(thisemp, "name", nombre);
-                    myDiagram.model.setDataProperty(thisemp, "id_personal", id);
-                    myDiagram.commitTransaction("edit");
+                if($('#persona').val() != ''){
+                    var vl_cmb = $('#persona').val();
+                    var valor = ($('#persona').val()).split("-");
+                    console.log(valor)
+                    id = parseInt(valor[0],10);
+                    nombre = valor[1];
+                    var numero_dentro = myDiagram.model.getKeyForNodeData(node);
+                    if (node !== null && numero_seleccionado == numero_dentro) {
+                        var thisemp = node.data;
+                        var nombre_personal = node.data.name;
+                        var id_personal = node.data.id_personal;
+                        
+                        //$("select").material_select;
+                        /*$("select").closest('.input-field').children('span.caret').remove();
+                        $('select').material_select('update');
+                        $('select').material_select;*/
+                        $("#persona option[value='"+vl_cmb+"']").remove();
+                        console.log(vl_cmb)
+                        console.log(nombre_personal)
+
+                        if(nombre_personal !== '[VACANTE]') $("#persona").append( $("<option></option>").attr("value",id_personal+'-'+nombre_personal).text(nombre_personal)); // Update the content clearing the caret
+                        $('#persona').selectpicker('refresh')
+                        $('#persona').val('')
+                        $('#persona').selectpicker('render')
+                        
+                        myDiagram.startTransaction("edit");
+                        myDiagram.model.setDataProperty(thisemp, "name", nombre);
+                        myDiagram.model.setDataProperty(thisemp, "id_personal", id);
+                        myDiagram.commitTransaction("edit");
+                    }
+                    $('#form').modal('hide');
+                }else{
+                    swal(
+                        'Error de datos',
+                        'Seleccione un persona para la asignación.',
+                        'warning'
+                    )
                 }
-                $('#form').modal('hide');
             })
         }
 
@@ -181,7 +232,7 @@
             myDiagram =
                 $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
                     {
-                        initialContentAlignment: go.Spot.Top,
+                        initialContentAlignment: go.Spot.Center,
                         initialAutoScale: go.Diagram.None,
                         maxSelectionCount: 1, // users can select only one part at a time
                         validCycle: go.Diagram.CycleDestinationTree, // make sure users can only create trees
@@ -402,7 +453,7 @@
                         }
                     ),
                     $("ContextMenuButton",
-                        $(go.TextBlock, "Asignar-Editar Personal "),
+                        $(go.TextBlock, "Asignar - Editar Personal"),
                         {
                             click: function(e, obj) {
                                 var node = obj.part.adornedPart;
@@ -496,8 +547,7 @@
 
             // read in the JSON-format data from the "mySavedModel" element
             load();
-
-
+            
             // support editing the properties of the selected person in HTML
             if (window.Inspector) myInspector = new Inspector("myInspector", myDiagram,
                 {
@@ -646,6 +696,8 @@
                     r.commitRoute();
                 }
             }
+            $("#spn-diag").fadeOut('fast');
+            $("#diag-cont").fadeIn('slow');
         };  // end of SideTreeLayout
 
 
@@ -656,6 +708,18 @@
         }
         function load() {
             myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+
+            myDiagram.nodes.each(function(n) { 
+                console.log(n)
+                console.log(n.Ud.title)
+                if(n.Ud.title == 'GERENTE GENERAL INTERINO') n.collapseTree();
+            })
+
+            /*myDiagram.findTreeRoots().each(function(n) { 
+                console.log(n)
+                console.log(n.Ud.title)
+                if(n.Ud.title === 'GERENTE GENERAL INTERINO') n.collapseTree(); 
+            })*/
         }
     </script>
 {% endblock %}

@@ -10,6 +10,10 @@
         .swal2-title{
             font-size: 16px !important;
         }
+        .bg-dark-blue-own{
+            background-color: #66bb6a;
+            color: white !important;
+        }
     </style>
 {% endblock %}
 
@@ -25,12 +29,15 @@
                     <div class="header bg-indigo"><h2>CARGO</h2></div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                             {% if 'personalcargo_insertar' in permisos %}
                                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                                     <i class="material-icons">add</i>
                                 </button>
                             {% endif %}
+                                <button id="organigrama" type="button" class="btn bg-dark-blue-own waves-effect">
+                                    <i class="material-icons">supervisor_account</i> Organigrama por Gerencia
+                                </button>
                             </div>
                         </div>
                         {% if 'home_personalcargo' in permisos and objects %}
@@ -113,6 +120,10 @@
             $('#update').hide()
             $('#form').modal('show')
         })
+
+        $('#organigrama').click(function () {
+            window.location.href = '/organigrama'
+        })
     </script>
 
     <script>
@@ -134,7 +145,8 @@
                 ajax_call_get("/personalcargo_editar",{
                     object: obj
                 },function(response){
-                    var self = JSON.parse(response)                
+                    var self = JSON.parse(response)    
+                          
                     $('#id').val(self.id)
                     $('#nombre').val(self.nombre)
                     $('#descripcion').val(self.descripcion)
@@ -160,5 +172,74 @@
             })
         }
         attach_edit()
+
+        $('#update').click(function () {
+            objeto = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id').val())),
+                'nombre': $('#nombre').val(),
+                'descripcion': $('#descripcion').val(),
+                'superior': $('#fksuperior').val(),
+                'tipocargo': $('#fktipo').val()
+            })
+            ajax_call_validation("/personalcargo_actualizar", {object: objeto}, null, main_route)
+        })
+        reload_form()
+    </script>
+
+    <script>
+        attach_edit()
+
+        let message= ''
+        function cargo_prev(id) {
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse(id))
+            });
+            ajax_call_get("/cargo_prev",{
+                object: obj
+            },function(response){
+                message = response;
+            });
+        }
+
+        $('.delete').click(function () {
+            id = parseInt(JSON.parse($(this).attr('data-json')))
+            cargo_prev(id)
+
+            let quest = message
+            enabled = false
+
+            if((quest.split(" ").length) > 8){
+                swal({
+                    title: "¿Desea dar de baja el Cargo?",
+                    type: "warning",
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+
+                })
+
+            }else{
+                swal({
+                    title: "¿Desea dar de baja el Cargo?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#004c99",
+                    cancelButtonColor: "#F44336",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then(function () {
+                    ajax_call("/personalcargo_eliminar", { 
+                        id, enabled,_xsrf: getCookie("_xsrf")}, 
+                        null, 
+                        function () {
+                            setTimeout(function(){ window.location=main_route }, 1000);
+                    })
+                })
+            }
+        })
     </script>
 {% endblock %}

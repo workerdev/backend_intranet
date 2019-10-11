@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
 use App\Entity\DocProcRevision;
 use App\Entity\FichaCargo;
-
+use JMS\Serializer\SerializerBuilder;
 
 
 class PersonalCargoController extends Controller
@@ -345,10 +345,12 @@ class PersonalCargoController extends Controller
         try {
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
-            $PersonalCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($id);
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($PersonalCargo, 'json');
-            $resultado = array('response'=>$json,'success' => true,
+            $personal_cargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($id);
+
+            $serializer = SerializerBuilder::create()->build();
+            $jsonObject = $serializer->serialize($personal_cargo, 'json');
+            
+            $resultado = array('response'=>$jsonObject,'success' => true,
                 'message' => 'Cargo del personal listado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);

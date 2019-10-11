@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PackageVersions;
 
 /**
@@ -10,8 +12,8 @@ namespace PackageVersions;
  */
 final class Versions
 {
-    const ROOT_PACKAGE_NAME = '__root__';
-    const VERSIONS = array (
+    public const ROOT_PACKAGE_NAME = '__root__';
+    public const VERSIONS          = array (
   'andreiavrammsd/serializer' => 'v0.5.1@eb55beeee050867d2686db07e2d8239b4d4acbe6',
   'apixu/apixu-php' => 'v1.3.1@bd9f5b70872c1bf1b98133509b8d3dce845566cf',
   'doctrine/annotations' => 'v1.8.0@904dca4eb10715b92569fbcd79e201d5c349b6bc',
@@ -36,7 +38,23 @@ final class Versions
   'guzzlehttp/guzzle' => '6.3.3@407b0cb880ace85c9b63c5f9551db498cb2d50ba',
   'guzzlehttp/promises' => 'v1.3.1@a59da6cf61d80060647ff4d3eb2c03a2bc694646',
   'guzzlehttp/psr7' => '1.6.1@239400de7a173fe9901b9ac7c06497751f00727a',
+  'hoa/compiler' => '3.17.08.08@aa09caf0bf28adae6654ca6ee415ee2f522672de',
+  'hoa/consistency' => '1.17.05.02@fd7d0adc82410507f332516faf655b6ed22e4c2f',
+  'hoa/event' => '1.17.01.13@6c0060dced212ffa3af0e34bb46624f990b29c54',
+  'hoa/exception' => '1.17.01.16@091727d46420a3d7468ef0595651488bfc3a458f',
+  'hoa/file' => '1.17.07.11@35cb979b779bc54918d2f9a4e02ed6c7a1fa67ca',
+  'hoa/iterator' => '2.17.01.10@d1120ba09cb4ccd049c86d10058ab94af245f0cc',
+  'hoa/math' => '1.17.05.16@7150785d30f5d565704912116a462e9f5bc83a0c',
+  'hoa/protocol' => '1.17.01.14@5c2cf972151c45f373230da170ea015deecf19e2',
+  'hoa/regex' => '1.17.01.13@7e263a61b6fb45c1d03d8e5ef77668518abd5bec',
+  'hoa/stream' => '1.17.02.21@3293cfffca2de10525df51436adf88a559151d82',
+  'hoa/ustring' => '4.17.01.16@e6326e2739178799b1fe3fdd92029f9517fa17a0',
+  'hoa/visitor' => '2.17.01.16@c18fe1cbac98ae449e0d56e87469103ba08f224a',
+  'hoa/zformat' => '1.17.01.10@522c381a2a075d4b9dbb42eb4592dd09520e4ac2',
   'jdorn/sql-formatter' => 'v1.2.17@64990d96e0959dff8e059dfcdc1af130728d92bc',
+  'jms/metadata' => '2.1.0@8d8958103485c2cbdd9a9684c3869312ebdaf73a',
+  'jms/serializer' => '3.3.0@4c1e4296734385af7718ca71ec0febb4815b4a87',
+  'jms/serializer-bundle' => '3.4.1@d5af7fe83fead9b791dd6b46a936d5e6e42deed4',
   'markbaker/complex' => '1.4.7@1ea674a8308baf547cbcbd30c5fcd6d301b7c000',
   'markbaker/matrix' => '1.2.0@5348c5a67e3b75cd209d70103f916a93b1f1ed21',
   'nikic/php-parser' => 'v4.2.4@97e59c7a16464196a8b9c77c47df68e4a39a45c4',
@@ -106,13 +124,13 @@ final class Versions
   'symfony/var-dumper' => 'v4.1.12@229cd66245a78088fe580a22bfcc48ba2f014605',
   'symfony/web-profiler-bundle' => 'v4.1.12@3114509724ebf58aa1e30c33e7528015111411df',
   'symfony/web-server-bundle' => 'v4.3.4@dc26b980900ddf3e9feade14e5b21c029e8ca92f',
-  'paragonie/random_compat' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  'symfony/polyfill-ctype' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  'symfony/polyfill-iconv' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  'symfony/polyfill-php71' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  'symfony/polyfill-php70' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  'symfony/polyfill-php56' => '*@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
-  '__root__' => 'dev-master@d680fe973d5d80f94e9c7cedbf44edcaab7f3a75',
+  'paragonie/random_compat' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  'symfony/polyfill-ctype' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  'symfony/polyfill-iconv' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  'symfony/polyfill-php71' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  'symfony/polyfill-php70' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  'symfony/polyfill-php56' => '*@5122dc7e7bf2210ab731ca8b480c06900c471628',
+  '__root__' => 'dev-master@5122dc7e7bf2210ab731ca8b480c06900c471628',
 );
 
     private function __construct()
@@ -120,7 +138,7 @@ final class Versions
     }
 
     /**
-     * @throws \OutOfBoundsException if a version cannot be located
+     * @throws \OutOfBoundsException If a version cannot be located.
      */
     public static function getVersion(string $packageName) : string
     {

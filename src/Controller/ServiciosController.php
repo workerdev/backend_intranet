@@ -2356,7 +2356,7 @@ class ServiciosController extends AbstractController
                         if (empty($personal)) $item_personal = 0;
                         else $item_personal = $personal->getId();
 
-                        $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'process' => $process);
+                        $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
 
                         $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
                         $data2 = $serializer->serialize($elementos, 'json');
@@ -2365,6 +2365,10 @@ class ServiciosController extends AbstractController
                 }
             }
             if($process == 'success'){
+                $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                if (empty($personal)) $item_personal = 0;
+                else $item_personal = $personal->getId();
+
                 $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -2599,7 +2603,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $organigrama = $cx->getRepository(OrganigramaGerencia::class)->findBy(array('estado' => '1'));
+            $organigrama = $cx->getRepository(OrganigramaGerencia::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data = $serializer->serialize($organigrama, 'json');
 

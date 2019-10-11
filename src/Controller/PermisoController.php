@@ -81,6 +81,7 @@ class PermisoController extends Controller
             $usuario = $sx['usuario'];
             $tipo = $sx['tipo'];
             $unidad = $sx['unidad'];
+            if($tipo == 'Crear') $tipo = 'Completo';
 
             $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
@@ -126,6 +127,7 @@ class PermisoController extends Controller
             $usuario = $sx['usuario'];
             $tipo = $sx['tipo'];
             $unidad = $sx['unidad'];
+            if($tipo == 'Crear') $tipo = 'Completo';
 
             $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
