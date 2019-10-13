@@ -409,4 +409,135 @@ class PersonalCargoController extends Controller
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
+
+    public function get_children($array, $id, $idf){
+        $children = [];
+        $aux = $array;
+        foreach ($aux as $ditem){
+            if($ditem['parent'] == $id && $ditem['key'] != $ditem['parent']) array_push($children, $ditem['key']);
+        }
+        return $children;
+    }
+
+    /**
+     * @Route("/organigrama/{id}", name="organigrama_filtro", methods={"GET"})
+     */
+    public function filtro($id)
+    {   
+        $s_user = $this->get('session')->get('s_user');
+        if(empty($s_user)){
+            $redireccion = new RedirectResponse('/login');
+            return $redireccion;
+        }
+        
+        $vid = $s_user['fkrol']['id'];
+        $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('id' => $vid, 'estado' => '1'));
+        $accesos = $this->getDoctrine()->getRepository(Acceso::class)->findBy(array('fkrol' => $rol[0]));
+
+        $mods = array();
+        foreach ($accesos as $access) {
+            $accdt = (object) $access;
+            $item = $this->getDoctrine()->getRepository(Modulo::class)->find($accdt->getFkmodulo()->getId());
+            $mods[] = $item;
+        }
+        $parent = $mods;
+        $child = $mods;
+        $permisos = array();
+        foreach ($mods as $mdl) {
+            $mdldt = (object) $mdl;
+            $item = $mdldt->getNombre();
+            $permisos[] = $item;
+        }
+        try
+        {
+            $cx = $this->getDoctrine()->getManager()->getConnection();
+            $sql = "SELECT CARGO.cb_cargo_id AS KEY,
+                    CASE
+                        WHEN PER.cb_personal_nombre IS NULL THEN
+                        '[VACANTE]' 
+                        WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                        concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
+                        END AS NAME,
+                        CARGO.cb_cargo_nombre AS title,
+                    CASE		
+                        WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
+                        CARGO.cb_cargo_id 
+                        WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
+                        CARGO.cb_cargo_fksuperior 
+                        END AS parent,
+                    CASE
+                        WHEN CARGO.cb_cargo_fktipo = 1 THEN
+                            FALSE 
+                        WHEN CARGO.cb_cargo_fktipo = 2 THEN
+                            TRUE ELSE FALSE 
+                        END AS isAssistant,
+                    CASE
+                        WHEN PER.cb_personal_nombre IS NULL THEN
+                            0 
+                        WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                            PER.cb_personal_id 
+                        END AS id_personal 
+                FROM cb_personal_cargo CARGO
+                            LEFT JOIN (SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido
+                                                FROM cb_personal_personal 
+                                                WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
+                            LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo 
+                WHERE CARGO.cb_cargo_estado = 1
+                ORDER BY 2";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $Personal = $stmt->fetchAll();
+            $lista = $Personal;
+
+            /*if(isset($lista[0]) && $lista[0]['key'] == $id){
+                $redireccion = new RedirectResponse('/organigrama');
+                return $redireccion;*/
+                //$dataorg = $lista;    
+            //}else{
+                $refid = array();
+                $aux = array();
+                $refid[] = $id;
+                $aux[] = $id;
+                while(!empty($aux)){
+                    $item = array_shift($aux);
+                    $child = $this->get_children($lista, $item, $id);
+                    $unite = array_merge($refid, $child);
+                    $united = array_merge($aux, $child);
+                    $refid = $unite;
+                    $aux = $united;
+                }
+
+                $dataorg = [];
+                foreach ($lista as $litem){
+                    if(in_array($litem['key'], $refid)){
+                        $dataorg [] = $litem;
+                    }
+                }
+            //}
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($dataorg, 'json');
+            $data3 = json_encode($data2);
+            $data4 = json_decode($data3);
+
+            $sql2 = "SELECT MAX(cb_cargo_id) AS last_id FROM cb_personal_cargo";
+            $stmt = $cx->prepare($sql2);
+            $stmt->execute();
+            $cantidad = $stmt->fetchAll();
+            $data2 = $serializer->serialize($cantidad, 'json');
+            $data3 = json_encode($data2);
+            $data5 = json_decode($data3);
+
+            $cargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+            $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
+            $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
+            $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+            $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(['estado' => '1', 'fkprocesoscargo' => null], ['nombre' => 'ASC']);
+
+            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'cargo' => $cargo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        }catch(Exception $e){
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
 }

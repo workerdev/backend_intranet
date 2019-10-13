@@ -694,7 +694,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
+                    .'|/organigrama/([^/]++)(*:28)'
+                    .'|/_error/(\\d+)(?:\\.([^/]++))?(*:63)'
                 .')/?$}sD',
         ];
 
@@ -703,7 +704,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                 switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = [
-                            35 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
+                            28 => [['_route' => 'organigrama_filtro', '_controller' => 'App\\Controller\\PersonalCargoController::filtro'], ['id'], ['GET' => 0], null, false, true],
+                            63 => [['_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code', '_format'], null, null, false, true],
                         ];
 
                         list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
@@ -740,7 +742,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                         return $ret;
                 }
 
-                if (35 === $m) {
+                if (63 === $m) {
                     break;
                 }
                 $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));

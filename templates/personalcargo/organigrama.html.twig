@@ -149,9 +149,10 @@
             let id_cargo = $(this).val();
             var optionText = $("#ft-cargo option:selected").text();
           
-            console.log(id_cargo);
-            console.log(optionText);
+            //console.log(id_cargo);
+            //console.log(optionText);
             //window.location.href = main_route + '/' + id_cargo;
+            window.location.href = main_route + '/' + id_cargo;
         });
     </script>
 
@@ -752,22 +753,21 @@
         function load() {
             myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
 
-            myDiagram.nodes.each(function(n) { 
-                //console.log(n)
-                console.log(n.data)
-                if(n.data.title == 'REGISTRO AUXILIAR CARGO') n.collapseTree();
+            var root_node = null;
+            myDiagram.findTreeRoots().each(function(n) { 
+                //console.log(n.data)
+                //console.log(n.data.title)
+                //if(n.data.title === 'GERENTE GENERAL INTERINO') n.collapseTree();
+                root_node = n.data 
             })
 
-            console.log('---------------------')
-            //console.log(myDiagram.part)
-            console.log('---------------------')
+            /*console.log('---------------------')
+            console.log(root_node)
+            console.log('---------------------')*/
 
-            i = 0;
-            myDiagram.findTreeRoots().each(function(n) { 
-                console.log(i)
-                console.log(n.data)
-                console.log(n.data.title)
-                //if(n.data.title === 'GERENTE GENERAL INTERINO') n.collapseTree(); 
+            myDiagram.nodes.each(function(n) { 
+                //console.log(n.data)
+                if(!Object.is(n.data, root_node)) n.collapseTree();
             })
         }
     </script>
