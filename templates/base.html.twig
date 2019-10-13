@@ -111,7 +111,7 @@
                                 {% else %}
                                 <a href="{{mods.ruta}}" class="menu-toggle waves-effect waves-block">
                                 {% endif %}
-                                    <i class="material-icons">{{mods.icono}}</i>
+                                    <i class="material-icons" title="{{mods.titulo}}">{{mods.icono}}</i>
                                     <span>{{mods.titulo}}</span>
                                 </a>
                                 <ul class="ml-menu">
@@ -119,7 +119,7 @@
                                     {% if child.fkmodulo != null and mods.id == child.fkmodulo.id and child.nombre not in ['perfil', 'docprocesorev', 'categorianoticia'] %}
                                         <li>
                                             <a href="{{child.ruta}}" class="">
-                                                <i class="material-icons">{{child.icono}}</i>
+                                                <i class="material-icons" title="{{child.titulo}}">{{child.icono}}</i>
                                                 <span>{{child.titulo}}</span>
                                             </a>
                                         </li>

@@ -95,6 +95,12 @@
             $('#form').modal('show')
         })
 
+        $('#form').submit(function(){
+            var botonSubmit = document.getElementById('organigrama_gerencia_submit')
+            botonSubmit.innerText = "Guardando..."
+            botonSubmit.disabled = true
+        })
+
         $("#organigrama_gerencia_ruta").change(function(){
             $("#lnkva").hide();
         });

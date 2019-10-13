@@ -102,8 +102,8 @@
             liveSearchPlaceholder: 'Buscar superior.',
             title: 'Seleccione un superior.'
         })
-        
-        $('#new').click(function () {
+
+        function clean_data(){
             $('#nombre').val('')
             $('#descripcion').val('')
             
@@ -112,6 +112,10 @@
 
             $('#fksuperior').val('')
             $('#fksuperior').selectpicker('render')
+        }
+        
+        $('#new').click(function () {
+            clean_data()
 
             clean_form()
             verif_inputs()
@@ -139,6 +143,7 @@
 
         function attach_edit() {
             $('.edit').click(function () {
+                clean_data()
                 obj = JSON.stringify({
                     'id': parseInt(JSON.parse($(this).attr('data-json')))
                 })
@@ -146,19 +151,26 @@
                     object: obj
                 },function(response){
                     var self = JSON.parse(response)    
+                    console.log(self)
                           
                     $('#id').val(self.id)
                     $('#nombre').val(self.nombre)
                     $('#descripcion').val(self.descripcion)
 
-                    if(self.fksuperior !== null){
-                        $('#fksuperior').val(self.fksuperior.id)
-                        $('#fksuperior').selectpicker('render')
-                        $('#cont-sup').show()
-                    }else{
+                    if(self.hasOwnProperty('fksuperior')){
+                        if(self.fksuperior !== null){
+                            $('#fksuperior').val(self.fksuperior.id)
+                            $('#fksuperior').selectpicker('render')
+                            $('#cont-sup').show()
+                        }else{
+                            $('#fksuperior').val(self.fksuperior)
+                            $('#cont-sup').hide()
+                        }
+                    }/*else{
                         $('#fksuperior').val(self.fksuperior)
                         $('#cont-sup').hide()
-                    }
+                    }*/
+                    
                     $('#fktipo').val(self.fktipo.id)
                     $('#fktipo').selectpicker('render')
 
@@ -171,7 +183,6 @@
                 })
             })
         }
-        attach_edit()
 
         $('#update').click(function () {
             objeto = JSON.stringify({

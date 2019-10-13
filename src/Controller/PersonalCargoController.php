@@ -101,63 +101,63 @@ class PersonalCargoController extends Controller
         try
         {
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql  = "SELECT
-                        CARGO.cb_cargo_id AS KEY,
-                    CASE
-                        
-                        WHEN PER.cb_personal_nombre IS NULL THEN
-                        '[VACANTE]' 
-                        WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
-                        concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
-                        END AS NAME,
-                        CARGO.cb_cargo_nombre AS title,
-                    CASE		
+            $sql  = "SELECT CARGO.cb_cargo_id AS KEY,
+                        CASE
+                            WHEN PER.cb_personal_nombre IS NULL THEN
+                            '[VACANTE]' 
+                            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                            concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
+                            END AS NAME,
+                            CARGO.cb_cargo_nombre AS title,
+                        CASE		
                             WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
                             CARGO.cb_cargo_id 
                             WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
                             CARGO.cb_cargo_fksuperior 
-                        END AS parent,
-                    CASE
+                            END AS parent,
+                        CASE
                             WHEN CARGO.cb_cargo_fktipo = 1 THEN
-                        FALSE 
+                                FALSE 
                             WHEN CARGO.cb_cargo_fktipo = 2 THEN
-                        TRUE ELSE FALSE 
-                        END AS isAssistant,
-                    CASE
+                                TRUE ELSE FALSE 
+                            END AS isAssistant,
+                        CASE
                             WHEN PER.cb_personal_nombre IS NULL THEN
-                            0 
+                                0 
                             WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
-                            PER.cb_personal_id 
-                        END AS id_personal 
-                    FROM
-                        cb_personal_cargo CARGO
-                        LEFT JOIN ( SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido FROM cb_personal_personal WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
-                        LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo 
-                    WHERE
-                    CARGO.cb_cargo_estado = 1;";
+                                PER.cb_personal_id 
+                            END AS id_personal 
+                    FROM cb_personal_cargo CARGO
+                                LEFT JOIN (SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido
+                                                    FROM cb_personal_personal 
+                                                    WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
+                                LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo 
+                    WHERE CARGO.cb_cargo_estado = 1
+                    ORDER BY 2";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
             $Personal = $stmt->fetchAll();
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($Personal, 'json');
-            $data3=  json_encode($data2);
-            $data4=  json_decode($data3);
+            $data3 = json_encode($data2);
+            $data4 = json_decode($data3);
 
-            $sql2 = "select max(cb_cargo_id) as last_id from cb_personal_cargo";
+            $sql2 = "SELECT MAX(cb_cargo_id) AS last_id FROM cb_personal_cargo;";
             $stmt = $cx->prepare($sql2);
             $stmt->execute();
             $cantidad = $stmt->fetchAll();
             $data2 = $serializer->serialize($cantidad, 'json');
-            $data3=  json_encode($data2);
-            $data5=  json_decode($data3);
-            
+            $data3 = json_encode($data2);
+            $data5 = json_decode($data3);
+
+            $cargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
             $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
             $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
             $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(['estado' => '1', 'fkprocesoscargo' => null], ['nombre' => 'ASC']);
 
-            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'cargo' => $cargo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
         }catch(Exception $e){
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
@@ -349,7 +349,7 @@ class PersonalCargoController extends Controller
 
             $serializer = SerializerBuilder::create()->build();
             $jsonObject = $serializer->serialize($personal_cargo, 'json');
-            
+
             $resultado = array('response'=>$jsonObject,'success' => true,
                 'message' => 'Cargo del personal listado correctamente.');
             $resultado = json_encode($resultado);
