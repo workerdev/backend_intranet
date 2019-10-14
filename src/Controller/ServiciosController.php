@@ -22,6 +22,7 @@ use App\Entity\NoticiaCategoria;
 use App\Entity\OrganigramaGerencia;
 use App\Entity\Permiso;
 use App\Entity\Personal;
+use App\Entity\PersonalCargo;
 use App\Entity\Probabilidad;
 use App\Entity\ResponsabilidadSocial;
 use App\Entity\RiesgosOportunidades;
@@ -50,6 +51,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
+use JMS\Serializer\SerializerBuilder;
 
 class ServiciosController extends AbstractController
 {
@@ -208,49 +210,141 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT
-            CARGO.cb_cargo_id AS KEY,
-            CASE
-
-            WHEN PER.cb_personal_nombre IS NULL THEN
-            '[VACANTE]'
-            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
-            concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido )
-            END AS NAME,
-            CARGO.cb_cargo_nombre AS title,
-            CASE
-            WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
-            CARGO.cb_cargo_id
-            WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
-            CARGO.cb_cargo_fksuperior
-            END AS parent,
-            CASE
-
-            WHEN CARGO.cb_cargo_fktipo = 1 THEN
-            FALSE
-            WHEN CARGO.cb_cargo_fktipo = 2 THEN
-            TRUE ELSE FALSE
-            END AS isAssistant,
-            CASE
-
-            WHEN PER.cb_personal_nombre IS NULL THEN
-            0
-            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
-            PER.cb_personal_id
-            END AS id_personal
-            FROM
-            cb_personal_cargo CARGO
-            LEFT JOIN ( SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido FROM cb_personal_personal WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
-            LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo
-            WHERE
-            CARGO.cb_cargo_estado = 1;
-            ";
+            $sql = "SELECT CARGO.cb_cargo_id AS KEY,
+                        CASE
+                            WHEN PER.cb_personal_nombre IS NULL THEN
+                            '[VACANTE]' 
+                            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                            concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
+                            END AS NAME,
+                            CARGO.cb_cargo_nombre AS title,
+                        CASE		
+                            WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
+                            CARGO.cb_cargo_id 
+                            WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
+                            CARGO.cb_cargo_fksuperior 
+                            END AS parent,
+                        CASE
+                            WHEN CARGO.cb_cargo_fktipo = 1 THEN
+                                FALSE 
+                            WHEN CARGO.cb_cargo_fktipo = 2 THEN
+                                TRUE ELSE FALSE 
+                            END AS isAssistant,
+                        CASE
+                            WHEN PER.cb_personal_nombre IS NULL THEN
+                                0 
+                            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                                PER.cb_personal_id 
+                            END AS id_personal 
+                    FROM cb_personal_cargo CARGO
+                                LEFT JOIN (SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido
+                                                    FROM cb_personal_personal 
+                                                    WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
+                                LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo 
+                    WHERE CARGO.cb_cargo_estado = 1
+                    ORDER BY 2";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
             $Personal = $stmt->fetchAll();
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($Personal, 'json');
+
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    public function get_children($array, $id, $idf){
+        $children = [];
+        $aux = $array;
+        foreach ($aux as $ditem){
+            if($ditem['parent'] == $id && $ditem['key'] != $ditem['parent']) array_push($children, $ditem['key']);
+        }
+        return $children;
+    }
+
+    /**
+     * @Route("/organigrama_por_cargo", name="organigrama_por_cargo")
+     * @Method({"POST"})
+     */
+    public function organigrama_por_cargo(Request $request)
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $sx = json_decode($request->getContent(), true);
+            $id = $sx['id'];
+
+            $sql = "SELECT CARGO.cb_cargo_id AS KEY,
+                        CASE
+                            WHEN PER.cb_personal_nombre IS NULL THEN
+                            '[VACANTE]' 
+                            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                            concat ( PER.cb_personal_nombre, ' ', PER.cb_personal_apellido ) 
+                            END AS NAME,
+                            CARGO.cb_cargo_nombre AS title,
+                        CASE		
+                            WHEN CARGO.cb_cargo_fksuperior IS NULL THEN
+                            CARGO.cb_cargo_id 
+                            WHEN CARGO.cb_cargo_fksuperior IS NOT NULL THEN
+                            CARGO.cb_cargo_fksuperior 
+                            END AS parent,
+                        CASE
+                            WHEN CARGO.cb_cargo_fktipo = 1 THEN
+                                FALSE 
+                            WHEN CARGO.cb_cargo_fktipo = 2 THEN
+                                TRUE ELSE FALSE 
+                            END AS isAssistant,
+                        CASE
+                            WHEN PER.cb_personal_nombre IS NULL THEN
+                                0 
+                            WHEN CARGO.cb_cargo_fktipo IS NOT NULL THEN
+                                PER.cb_personal_id 
+                            END AS id_personal 
+                    FROM cb_personal_cargo CARGO
+                                LEFT JOIN (SELECT cb_personal_id, cb_personal_fkcargo, cb_personal_nombre, cb_personal_apellido
+                                                    FROM cb_personal_personal 
+                                                    WHERE cb_personal_estado = 1 ) PER ON CARGO.cb_cargo_id = PER.cb_personal_fkcargo
+                                LEFT JOIN cb_personal_tipo_cargo TC ON TC.cb_tipo_cargo_id = CARGO.cb_cargo_fktipo 
+                    WHERE CARGO.cb_cargo_estado = 1
+                    ORDER BY 2";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $personal = $stmt->fetchAll();
+
+            $lista = $personal;
+
+            if($id == 0){
+                $dataorg = $personal;
+            }else{
+                $refid = array();
+                $aux = array();
+                $refid[] = $id;
+                $aux[] = $id;
+                while(!empty($aux)){
+                    $item = array_shift($aux);
+                    $child = $this->get_children($lista, $item, $id);
+                    $unite = array_merge($refid, $child);
+                    $united = array_merge($aux, $child);
+                    $refid = $unite;
+                    $aux = $united;
+                }
+
+                $dataorg = [];
+                foreach ($lista as $litem){
+                    if(in_array($litem['key'], $refid)){
+                        $dataorg [] = $litem;
+                    }
+                }
+            }
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($dataorg, 'json');
+
             return new jsonResponse(json_decode($data2));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
@@ -2596,6 +2690,35 @@ class ServiciosController extends AbstractController
     }
 
     /**
+     * @Route("/combo_org_cargo", name="combo_org_cargo")
+     * @Method({"GET"})
+     */
+    public function combo_org_cargo()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+
+            $sql = "SELECT cb_cargo_id AS idc, cb_cargo_nombre AS cargo 
+                    FROM cb_personal_cargo
+                    ORDER BY 2";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $combo = $stmt->fetchAll();
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($combo, 'json');
+
+            return new jsonResponse(json_decode($data));
+        } catch (Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+    /**
      * @Route("/combo_organigrama", name="combo_organigrama")
      * @Method({"GET"})
      */
@@ -2603,7 +2726,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $organigrama = $cx->getRepository(OrganigramaGerencia::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+            $organigrama = $cx->getRepository(OrganigramaGerencia::class)->findBy(['estado' => '1'], ['id' => 'ASC']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data = $serializer->serialize($organigrama, 'json');
 

@@ -441,7 +441,7 @@ class PersonalCargoController extends Controller
             $mods[] = $item;
         }
         $parent = $mods;
-        $child = $mods;
+        $children = $mods;
         $permisos = array();
         foreach ($mods as $mdl) {
             $mdldt = (object) $mdl;
@@ -490,11 +490,10 @@ class PersonalCargoController extends Controller
             $Personal = $stmt->fetchAll();
             $lista = $Personal;
 
-            /*if(isset($lista[0]) && $lista[0]['key'] == $id){
+            if($id == 0){
                 $redireccion = new RedirectResponse('/organigrama');
-                return $redireccion;*/
-                //$dataorg = $lista;    
-            //}else{
+                return $redireccion; //$dataorg = $lista;    
+            }else{
                 $refid = array();
                 $aux = array();
                 $refid[] = $id;
@@ -514,7 +513,7 @@ class PersonalCargoController extends Controller
                         $dataorg [] = $litem;
                     }
                 }
-            //}
+            }
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($dataorg, 'json');
@@ -535,7 +534,7 @@ class PersonalCargoController extends Controller
             $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
             $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(['estado' => '1', 'fkprocesoscargo' => null], ['nombre' => 'ASC']);
 
-            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'cargo' => $cargo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+            return $this->render('personalcargo/organigrama.html.twig', array('organigrama' => $data4, 'cantidad' => $data5, 'personas'=>$Personal, 'cargo' => $cargo, 'parents' => $parent, 'children' => $children, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
         }catch(Exception $e){
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }

@@ -56,9 +56,10 @@
                             <div class="col-sm-8">
                                 <label>Cargo</label>
                                 <select id="ft-cargo" class="form-control show-tick">
-                                {% for c in cargo %}
+                                    <option value="0">Ver Todos</option>
+                                    {% for c in cargo %}
                                     <option value="{{c.id}}">{{c.nombre}}</option>
-                                {% endfor %}
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -147,11 +148,7 @@
 
         $('#ft-cargo').change(function() {
             let id_cargo = $(this).val();
-            var optionText = $("#ft-cargo option:selected").text();
-          
-            //console.log(id_cargo);
-            //console.log(optionText);
-            //window.location.href = main_route + '/' + id_cargo;
+            
             window.location.href = main_route + '/' + id_cargo;
         });
     </script>
