@@ -101,7 +101,7 @@
     </script>
 
     <script type="text/javascript">
-        var gbl_cargo = 0;
+        var gbl_root = null;
 
         $(document).ready(function() {
             // Adiciona una clase propia para minimizar el menú del sistema
@@ -141,7 +141,7 @@
             document.getElementById('resultado').value = myDiagram.model.toJson();
             var data =  JSON.stringify({
                 original: modelo2,
-                cambio:modelasText
+                cambio: modelasText
             });
             ajax_call("/organigrama_cambios", {data: data}, null, function () {setTimeout(function(){window.location=main_route}, 2000);});
         })
@@ -236,11 +236,7 @@
                         var thisemp = node.data;
                         var nombre_personal = node.data.name;
                         var id_personal = node.data.id_personal;
-                        
-                        //$("select").material_select;
-                        /*$("select").closest('.input-field').children('span.caret').remove();
-                        $('select').material_select('update');
-                        $('select').material_select;*/
+
                         $("#persona option[value='"+vl_cmb+"']").remove();
                         console.log(vl_cmb)
                         console.log(nombre_personal)
@@ -272,8 +268,6 @@
             myDiagram =
                 $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
                     {
-                        /*initialDocumentSpot: go.Spot.TopCenter,
-                        initialViewportSpot: go.Spot.TopCenter*/
                         initialContentAlignment: go.Spot.Center,
                         initialAutoScale: go.Diagram.None,
                         maxSelectionCount: 1, // users can select only one part at a time
@@ -516,7 +510,7 @@
                                     myDiagram.model.setKeyForNodeData(thisemp, getNextKey());
                                     myDiagram.model.setDataProperty(thisemp, "name", "[VACANTES]");
                                     myDiagram.model.setDataProperty(thisemp, "id_personal", null);
-                                    myDiagram.model.setDataProperty(thisemp, "isassistant", !node.data.isassistant);
+                                    //myDiagram.model.setDataProperty(thisemp, "isassistant", !node.data.isassistant);
                                     myDiagram.commitTransaction("vacante");
                                 }
                             }
@@ -570,11 +564,20 @@
                             click: function(e, obj) {
                                 // remove the whole subtree, including the node itself
                                 var node = obj.part.adornedPart;
+
                                 if (node !== null) {
-                                    myDiagram.startTransaction("toggle assistant");
-                                    myDiagram.model.setDataProperty(node.data, "isassistant", !node.data.isassistant);
-                                    myDiagram.layout.invalidateLayout();
-                                    myDiagram.commitTransaction("toggle assistant");
+                                    if(!Object.is(node.data, gbl_root)){
+                                        myDiagram.startTransaction("toggle assistant");
+                                        myDiagram.model.setDataProperty(node.data, "isassistant", !node.data.isassistant);
+                                        myDiagram.layout.invalidateLayout();
+                                        myDiagram.commitTransaction("toggle assistant");
+                                    }else{
+                                        swal(
+                                            'Error de datos',
+                                            'Por favor, ingresa a un nivel superior ya que no es posible realizar esta acción en un nodo raíz.',
+                                            'error'
+                                        ) 
+                                    }
                                 }
                             }
                         }
@@ -752,18 +755,11 @@
 
             var root_node = null;
             myDiagram.findTreeRoots().each(function(n) { 
-                //console.log(n.data)
-                //console.log(n.data.title)
-                //if(n.data.title === 'GERENTE GENERAL INTERINO') n.collapseTree();
                 root_node = n.data 
+                gbl_root = root_node;
             })
 
-            /*console.log('---------------------')
-            console.log(root_node)
-            console.log('---------------------')*/
-
             myDiagram.nodes.each(function(n) { 
-                //console.log(n.data)
                 if(!Object.is(n.data, root_node)) n.collapseTree();
             })
         }

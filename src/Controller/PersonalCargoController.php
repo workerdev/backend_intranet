@@ -11,7 +11,6 @@ use App\Entity\Acceso;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\Serializer\Serializer;
@@ -29,8 +28,7 @@ use JMS\Serializer\SerializerBuilder;
 class PersonalCargoController extends Controller
 {
     /**
-     * @Route("/personalcargo", name="personalcargo_listar")
-     * @Method({"GET"})
+     * @Route("/personalcargo", methods={"GET"}, name="personalcargo_listar")
      */
     public function index()
     {
@@ -62,15 +60,14 @@ class PersonalCargoController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        $PersonalCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $personal_cargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $TipoCargo = $this->getDoctrine()->getRepository(TipoCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $superior = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-        return $this->render('personalcargo/index.html.twig', array('objects' => $PersonalCargo, 'tipo' => $TipoCargo, 'superior' => $superior, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('personalcargo/index.html.twig', array('objects' => $personal_cargo, 'tipo' => $TipoCargo, 'superior' => $superior, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
-     * @Route("/organigrama", name="PersonalCargo_listar2")
-     * @Method({"GET"})
+     * @Route("/organigrama", methods={"GET"}, name="PersonalCargo_listar2")
      */
     public function organigrama()
     {   
@@ -100,7 +97,7 @@ class PersonalCargoController extends Controller
         }
         try
         {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql  = "SELECT CARGO.cb_cargo_id AS KEY,
                         CASE
                             WHEN PER.cb_personal_nombre IS NULL THEN
@@ -164,14 +161,13 @@ class PersonalCargoController extends Controller
     }
 
     /**
-     * @Route("/organigrama_cambios", name="organigrama cambios")
-     * @Method({"POST"})
+     * @Route("/organigrama_cambios", methods={"POST"}, name="organigrama cambios")
      */
     public function cambiosorganigrama()
     {
         try
         {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $objeto = json_decode($_POST['data'], true);
             $original = $objeto['original'];
             $modificado = $objeto['cambio'];
@@ -180,7 +176,14 @@ class PersonalCargoController extends Controller
 
             foreach ($arrayOriginal as $nodoOriginal){
                 $repetido = false;
+                //$id_per = [];
+                $name_per = '';
                 foreach ($arrayModificado as $nodoModificado){
+                    if($nodoOriginal['title'] == $nodoModificado['title']){
+                        //$id_per[] = $nodoModificado['id_personal'];
+                        $name_per = $nodoModificado['name'];
+                    }
+
                     if($nodoOriginal['key'] == $nodoModificado['key']){
                         $repetido = true;
                         if($nodoOriginal['id_personal'] != $nodoModificado['id_personal']){
@@ -211,12 +214,16 @@ class PersonalCargoController extends Controller
                             $stmt = $cx->prepare($sqleliminar);
                             $stmt->execute(['id' => $nodoOriginal['key'], 'id_superior' => $nodoModificado['parent']]);
                         }
+                        if($nodoOriginal['title'] != $nodoModificado['title']) $repetido = false;
                     }
                 }
                 if(!$repetido){
-                    $sqleliminar = "UPDATE cb_personal_cargo SET cb_cargo_estado = 0 WHERE cb_cargo_id = :id";
-                    $stmt = $cx->prepare($sqleliminar);
-                    $stmt->execute(['id' => $nodoOriginal['key']]);
+                    if($name_per != '[VACANTES]'){
+                        $sqleliminar = "UPDATE cb_personal_cargo SET cb_cargo_estado = 0 WHERE cb_cargo_id = :id";
+                        $stmt = $cx->prepare($sqleliminar);
+                        $stmt->execute(['id' => $nodoOriginal['key']]);
+                    }
+                    
                     $sqleliminar = "UPDATE cb_personal_personal SET cb_personal_fkcargo = null WHERE cb_personal_fkcargo = :id";
                     $stmt = $cx->prepare($sqleliminar);
                     $stmt->execute(['id' => $nodoOriginal['key']]);
@@ -420,7 +427,7 @@ class PersonalCargoController extends Controller
     }
 
     /**
-     * @Route("/organigrama/{id}", name="organigrama_filtro", methods={"GET"})
+     * @Route("/organigrama/{id}", methods={"GET"}, name="organigrama_filtro")
      */
     public function filtro($id)
     {   

@@ -215,8 +215,17 @@ class PersonalController extends Controller
             $id = $sx['id'];
             $personal = $this->getDoctrine()->getRepository(Personal::class)->find($id);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            
             $fecha = $personal->getFnac();
+            $cargo = $personal->getFkPersonalCargo();
             if($fecha != null) $fechaformat = $fecha->format('Y-m-d'); else $fechaformat = $fecha;
+            if($cargo != null){
+                $id_cargo = $cargo->getId();
+                $nmb_cargo = $cargo->getNombre();
+            }else{
+                $id_cargo = $cargo;
+                $nmb_cargo = '';
+            }
             $sendinf = [
                 "id" => $personal->getId(),
                 "nombre"=> $personal->getNombre(),
@@ -227,8 +236,8 @@ class PersonalController extends Controller
                 "telefono" => $personal->getTelefono(),
                 "fnac"=> $fechaformat,
                 "genero" => $personal->getGenero(),
-                "fkprocesoscargo" => $personal->getFkPersonalCargo()->getId(),
-                "procesoscargo" => $personal->getFkPersonalCargo()->getNombre(),
+                "fkprocesoscargo" => $id_cargo,
+                "procesoscargo" => $nmb_cargo,
                 "fkestadopersonal"=> $personal->getFkestadopersonal(),
                 "fksector"=> $personal->getFksector(),
                 "fkarea"=> $personal->getFkarea()
