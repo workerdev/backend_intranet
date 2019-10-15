@@ -51,7 +51,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
-use JMS\Serializer\SerializerBuilder;
+
 
 class ServiciosController extends AbstractController
 {

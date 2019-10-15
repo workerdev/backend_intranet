@@ -176,11 +176,9 @@ class PersonalCargoController extends Controller
 
             foreach ($arrayOriginal as $nodoOriginal){
                 $repetido = false;
-                //$id_per = [];
                 $name_per = '';
                 foreach ($arrayModificado as $nodoModificado){
                     if($nodoOriginal['title'] == $nodoModificado['title']){
-                        //$id_per[] = $nodoModificado['id_personal'];
                         $name_per = $nodoModificado['name'];
                     }
 
@@ -354,10 +352,34 @@ class PersonalCargoController extends Controller
             $id = $sx['id'];
             $personal_cargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->find($id);
 
-            $serializer = SerializerBuilder::create()->build();
-            $jsonObject = $serializer->serialize($personal_cargo, 'json');
+            $cargo = $personal_cargo->getFksuperior();
+            if($cargo != null){
+                $id_sup = $cargo->getId();
+                $nmb_sup = $cargo->getNombre();
+            }else{
+                $id_sup = $cargo;
+                $nmb_sup = '';
+            }
 
-            $resultado = array('response'=>$jsonObject,'success' => true,
+            $sendinf = [
+                "id" => $personal_cargo->getId(),
+                "nombre" => $personal_cargo->getNombre(),
+                "descripcion" => $personal_cargo->getDescripcion(),
+                "fktipo" => $personal_cargo->getFktipo(),
+                "fksuperior_id" => $id_sup,
+                "fksuperior_nombre" => $nmb_sup
+            ];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+           
+            $json = $serializer->serialize($sendinf, 'json');
+
+            /*$serializer = SerializerBuilder::create()->build();
+            $jsonObject = $serializer->serialize($personal_cargo, 'json');*/
+
+            /*$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($personal_cargo, 'json');*/
+
+            $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Cargo del personal listado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);

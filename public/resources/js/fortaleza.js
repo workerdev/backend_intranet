@@ -32,7 +32,16 @@ $('#insert-frt').click(function () {
         'origin': $('#new-frt').attr('data-origin'),
         'form': $('#new-frt').attr('data-form')
     })
-    ajax_call_validation_aud("/fortaleza_insertar", {object: objeto}, null, main_route)
+    
+    if(!validate_formfrt() || $('#fkauditoriafrt').val() == ''){
+        swal(
+            'Error de datos',
+            'Por favor ingrese todos los datos requeridos.',
+            'warning'
+        )
+    }else{
+        ajax_call_validation_aud("/fortaleza_insertar", {object: objeto}, null, main_route)
+    }
 })
 
 fortaleza_delete()
@@ -86,7 +95,16 @@ $('#update-frt').click(function () {
         'origin': $('#new-frt').attr('data-origin'),
         'form': $('#new-frt').attr('data-form')
     })
-    ajax_call_validation_aud("/fortaleza_actualizar", {object: objeto}, null, main_route)
+
+    if(!validate_formfrt() || $('#fkauditoriafrt').val() == ''){
+        swal(
+            'Error de datos',
+            'Por favor ingrese todos los datos requeridos.',
+            'warning'
+        )
+    }else{
+        ajax_call_validation_aud("/fortaleza_actualizar", {object: objeto}, null, main_route)
+    }
 })
 reload_form()
 
@@ -105,7 +123,14 @@ function fortaleza_delete(){
             confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(function () {
-            ajax_call("/fortaleza_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+            ajax_call(
+                "/fortaleza_eliminar", 
+                {id: id, enabled: enabled, _xsrf: getCookie("_xsrf")}, 
+                null, 
+                function () {
+                    setTimeout(function(){window.location=main_route}, 1000);
+                }
+            )
         })
     })
 }
@@ -151,6 +176,30 @@ function delete_fortaleza(efrt){
         confirmButtonText: "Aceptar",
         cancelButtonText: "Cancelar"
     }).then(function () {
-        ajax_call("/fortaleza_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
+        ajax_call(
+            "/fortaleza_eliminar", 
+            { id: id, enabled: enabled, _xsrf: getCookie("_xsrf")}, 
+            null, 
+            function () {
+                swal(
+                    'Datos eliminados',
+                    '',
+                    'success'
+                )
+                setTimeout(function(){ reload_tabhlfr(); }, 800);
+            }
+        )
     })
+}
+
+function validate_formfrt(){
+    var res = true;
+
+    $('.itemfrt').each(function(){
+        let valif = $(this).val();
+
+        if(valif != 0 && valif != '' && valif != null){}
+        else res = false;
+    });
+    return res;
 }

@@ -204,10 +204,11 @@ function hallazgo_delete(){
         }).then(function () {
             ajax_call("/hallazgo_eliminar", { 
                 id, enabled,_xsrf: getCookie("_xsrf")}, 
-                null, 
+                null,
                 function () {
                     setTimeout(function(){ window.location=main_route }, 1000);
-            })
+                }
+            )
         })
     })
 }
@@ -273,10 +274,16 @@ function delete_hallazgo(ehlg){
         cancelButtonText: "Cancelar"
     }).then(function () {
         ajax_call("/hallazgo_eliminar", { 
-            id, enabled,_xsrf: getCookie("_xsrf")}, 
-            null, 
+            id: id, enabled: enabled, _xsrf: getCookie("_xsrf")}, 
+            null,  
             function () {
-                setTimeout(function(){ window.location=main_route }, 1000);
-        })
+                swal(
+                    'Datos eliminados',
+                    '',
+                    'success'
+                )
+                setTimeout(function(){ reload_tabhlfr(); }, 800);
+            }
+        )
     })
 }

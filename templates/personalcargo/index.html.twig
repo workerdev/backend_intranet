@@ -157,16 +157,17 @@
                     $('#nombre').val(self.nombre)
                     $('#descripcion').val(self.descripcion)
 
-                    if(self.hasOwnProperty('fksuperior')){
-                        if(self.fksuperior !== null){
-                            $('#fksuperior').val(self.fksuperior.id)
+                    //if(self.hasOwnProperty('fksuperior')){
+                        if(self.fksuperior_id !== null){
+                            $('#fksuperior').val(self.fksuperior_id)
                             $('#fksuperior').selectpicker('render')
                             $('#cont-sup').show()
-                        }else{
-                            $('#fksuperior').val(self.fksuperior)
+                        }/*else{
+                            $('#fksuperior').val(self.fksuperior_id)
                             $('#cont-sup').hide()
-                        }
-                    }/*else{
+                        }*/
+                    //}
+                    /*else{
                         $('#fksuperior').val(self.fksuperior)
                         $('#cont-sup').hide()
                     }*/
