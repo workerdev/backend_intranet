@@ -3297,9 +3297,10 @@ class ServiciosController extends AbstractController
             $sql = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior
                     FROM cb_cfg_sig
                     WHERE cb_sig_id IN
-                    (SELECT DISTINCT (a.cb_sig_fksuperior)
-                    FROM cb_cfg_sig a
-                    WHERE a.cb_sig_fksuperior IS NOT NULL)";
+                        (SELECT DISTINCT (a.cb_sig_fksuperior)
+                        FROM cb_cfg_sig a
+                        WHERE a.cb_sig_fksuperior IS NOT NULL)
+                    ORDER BY 2";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
@@ -3308,10 +3309,10 @@ class ServiciosController extends AbstractController
             $sql2 = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior, NULL AS children
                     FROM cb_cfg_sig
                     WHERE cb_sig_fksuperior IS NULL AND cb_sig_id NOT IN
-                    (SELECT DISTINCT (a.cb_sig_fksuperior)
-                    FROM cb_cfg_sig a
-                    WHERE a.cb_sig_fksuperior IS NOT NULL)
-                    ORDER BY 1";
+                        (SELECT DISTINCT (a.cb_sig_fksuperior)
+                        FROM cb_cfg_sig a
+                        WHERE a.cb_sig_fksuperior IS NOT NULL)
+                    ORDER BY 2";
 
             $stmt2 = $cx->prepare($sql2);
             $stmt2->execute();
@@ -3323,7 +3324,7 @@ class ServiciosController extends AbstractController
                 $sql3 = "SELECT cb_sig_id AS id, cb_sig_titulo AS titulo, cb_sig_ruta AS ruta, cb_sig_fksuperior AS fksuperior
                         FROM cb_cfg_sig
                         WHERE cb_sig_fksuperior=:id
-                        ORDER BY 1";
+                        ORDER BY 2";
 
                 $stmt3 = $cx->prepare($sql3);
                 $stmt3->execute(['id' => ($id)]);

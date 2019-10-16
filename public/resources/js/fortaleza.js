@@ -30,7 +30,9 @@ $('#insert-frt').click(function () {
         
         'auditoria': $('#fkauditoriafrt').val(),
         'origin': $('#new-frt').attr('data-origin'),
-        'form': $('#new-frt').attr('data-form')
+        'form': $('#new-frt').attr('data-form'),
+        'spnr': $('#new-frt').attr('data-spn'),
+        'btn_id': $(this).attr('id')
     })
     
     if(!validate_formfrt() || $('#fkauditoriafrt').val() == ''){
@@ -93,7 +95,9 @@ $('#update-frt').click(function () {
         
         'auditoria': $('#fkauditoriafrt').val(),
         'origin': $('#new-frt').attr('data-origin'),
-        'form': $('#new-frt').attr('data-form')
+        'form': $('#new-frt').attr('data-form'),
+        'spnr': $('#new-frt').attr('data-spn'),
+        'btn_id': $(this).attr('id')
     })
 
     if(!validate_formfrt() || $('#fkauditoriafrt').val() == ''){

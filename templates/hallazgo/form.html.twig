@@ -19,7 +19,7 @@
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <label>Auditoría</label>
-                                <select id="fkauditoriahlg" class="form-control">
+                                <select id="fkauditoriahlg" class="form-control show-tick">
                                 {% for t in auditoria %}
                                     <option value="{{t.id}}">{{t.codigo}}</option>
                                 {% endfor %}
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-sm-6">
                             <label>Tipo de Hallazgo</label>
-                                <select id="fktipohlg" class="form-control">
+                                <select id="fktipohlg" class="form-control show-tick">
                                 {% for t in tipo %}
                                     <option value="{{t.id}}">{{t.nombre}}</option>
                                 {% endfor %}
@@ -43,7 +43,7 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="ordinalhlg" name="ordinalhlg" type="text" class="form-control text">
+                                    <input id="ordinalhlg" name="ordinalhlg" type="text" class="form-control text itemhlg">
                                     <label class="form-label">Ordinal</label>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="titulo" name="titulo" type="text" class="form-control text">
+                                    <input id="titulo" name="titulo" type="text" class="form-control text itemhlg">
                                     <label class="form-label">Título</label>
                                 </div>
                             </div>
@@ -60,25 +60,25 @@
 
                     <div class="form-group">
                         <label for="descripcionhlg">Descripción</label>
-                        <textarea class="form-control txta-own" rows="3" id="descripcionhlg" name="descripcionhlg"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="descripcionhlg" name="descripcionhlg"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="evidencia">Evidencia</label>
-                        <textarea class="form-control txta-own" rows="3" id="evidencia" name="evidencia"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="evidencia" name="evidencia"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="documento">Documento</label>
-                        <textarea class="form-control txta-own" rows="3" id="documento" name="documento"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="documento" name="documento"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="puntoiso">Punto ISO</label>
-                        <textarea class="form-control txta-own" rows="3" id="puntoiso" name="puntoiso"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="puntoiso" name="puntoiso"></textarea>
                     </div>
                     
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <label>Nivel de Impacto</label>
-                                <select id="fkimpacto" class="form-control">
+                                <select id="fkimpacto" class="form-control show-tick">
                                 {% for t in impacto %}
                                     <option value="{{t.id}}">{{t.nombre}}</option>
                                 {% endfor %}
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-sm-6">
                             <label>Probabilidad</label>
-                                <select id="fkprobabilidad" class="form-control">
+                                <select id="fkprobabilidad" class="form-control show-tick">
                                 {% for t in probabilidad %}
                                     <option value="{{t.id}}">{{t.nombre}}</option>
                                 {% endfor %}
@@ -100,18 +100,18 @@
 
                     <div class="form-group">
                         <label for="analisiscausaraiz">Análisis causa raíz</label>
-                        <textarea class="form-control txta-own" rows="3" id="analisiscausaraiz" name="analisiscausaraiz"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="analisiscausaraiz" name="analisiscausaraiz"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="recomendaciones">Recomendaciones</label>
-                        <textarea class="form-control txta-own" rows="3" id="recomendaciones" name="recomendaciones"></textarea>
+                        <textarea class="form-control txta-own itemhlg" rows="3" id="recomendaciones" name="recomendaciones"></textarea>
                     </div>
 
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="cargoauditado" name="cargoauditado" type="text" class="form-control text">
+                                    <input id="cargoauditado" name="cargoauditado" type="text" class="form-control text itemhlg">
                                     <label class="form-label">Cargo del auditado</label>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="nombreauditado" name="nombreauditado" type="text" class="form-control text">
+                                    <input id="nombreauditado" name="nombreauditado" type="text" class="form-control text itemhlg">
                                     <label class="form-label">Nombre del auditado</label>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="responsablehlg" name="responsablehlg" type="text" class="form-control text">
+                                    <input id="responsablehlg" name="responsablehlg" type="text" class="form-control text itemhlg">
                                     <label class="form-label">Responsable</label>
                                 </div>
                             </div>
@@ -139,15 +139,28 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="form-label">Fecha de registro</label><br>
-                                    <input id="fecharegistrohlg" name="fecharegistrohlg" type="date" class="form-control">
+                                    <input id="fecharegistrohlg" name="fecharegistrohlg" type="date" class="form-control itemhlg">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div id="spn-hlg" class="loader-wrapper" style="display: none">
+                    <div class="loader loader-own">
+                        <div class="preloader preloader-own">
+                            <div class="spinner-layer pl-indigo">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center inf-own">Guardando...</p>
+                </div>
+
                 <div class="modal-footer">
-                    <button id="insert-hlg" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
-                    <button id="update-hlg" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
+                    <button id="insert-hlg" type="button" class="btn bg-indigo waves-effect hover-own">Guardar <i class="material-icons">save</i></button>
+                    <button id="update-hlg" type="button" class="btn bg-indigo waves-effect hover-own">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
         </div>

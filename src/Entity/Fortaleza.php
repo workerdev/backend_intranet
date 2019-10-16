@@ -61,7 +61,7 @@ class Fortaleza
     private $responsable;
 
     /**
-     * @var datetime
+     * @var date
      *
      * @ORM\Column(name="cb_fortaleza_fecharegistro", type="date", nullable=true)
      * @Assert\NotBlank

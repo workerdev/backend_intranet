@@ -448,12 +448,20 @@ function ajax_call_validation_pbl(url, data, render, callback) {
 
 function ajax_call_validation_aud(url, data, render, callback) {
     var datos = JSON.parse(data['object']);
-    console.log(datos);
+    console.log(datos)
     $.ajax({
         method: "POST",
         url: url,
         data: data,
-        async: true
+        async: true,
+        beforeSend: function () {
+            $('#'+datos.spnr).fadeIn(800);
+            $('#'+datos.btn_id).hide();
+         },
+         success: function (data, textStatus) {
+            $('#'+datos.spnr).fadeOut(800);
+            $('#'+datos.btn_id).show();
+         }
     }).done(function (response) {
         dictionary = JSON.parse(response)
         console.log(dictionary);
@@ -515,9 +523,6 @@ function ajax_call_validation_aud(url, data, render, callback) {
                             'success'
                         )
                         $('#'+datos.form).modal('hide');
-                        /*setTimeout(function () {
-                            window.location = callback
-                        }, 1000)*/
                         reload_tabhlfr()
                     }else{
                         showMessage(dictionary.message, "success", "ok");

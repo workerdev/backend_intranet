@@ -79,9 +79,20 @@ $('#insert-hlg').click(function () {
         'impacto': $('#fkimpacto').val(),
         'probabilidad': $('#fkprobabilidad').val(),
         'origin': $('#new-hlg').attr('data-origin'),
-        'form': $('#new-hlg').attr('data-form')
+        'form': $('#new-hlg').attr('data-form'),
+        'spnr': $('#new-hlg').attr('data-spn'),
+        'btn_id': $(this).attr('id')
     })
-    ajax_call_validation_aud("/hallazgo_insertar", {object: objeto}, null, main_route)
+    
+    if(!validate_formhlg() || validate_comboshlg()){
+        swal(
+            'Error de datos',
+            'Por favor ingrese todos los datos requeridos.',
+            'warning'
+        )
+    }else{ 
+        ajax_call_validation_aud("/hallazgo_insertar", {object: objeto}, null, main_route)
+    }
 })
 
 function add_focushlg(){
@@ -167,9 +178,20 @@ $('#update-hlg').click(function () {
         'impacto': $('#fkimpacto').val(),
         'probabilidad': $('#fkprobabilidad').val(),
         'origin': $('#new-hlg').attr('data-origin'),
-        'form': $('#new-hlg').attr('data-form')
+        'form': $('#new-hlg').attr('data-form'),
+        'spnr': $('#new-hlg').attr('data-spn'),
+        'btn_id': $(this).attr('id')
     })
-    ajax_call_validation_aud("/hallazgo_actualizar", {object: objeto}, null, main_route)
+
+    if(!validate_formhlg() || validate_comboshlg()){
+        swal(
+            'Error de datos',
+            'Por favor ingrese todos los datos requeridos.',
+            'warning'
+        )
+    }else{ 
+        ajax_call_validation_aud("/hallazgo_actualizar", {object: objeto}, null, main_route)
+    }
 })
 reload_form()
 
@@ -286,4 +308,20 @@ function delete_hallazgo(ehlg){
             }
         )
     })
+}
+
+function validate_formhlg(){
+    var res = true;
+
+    $('.itemhlg').each(function(){
+        let valif = $(this).val();
+
+        if(valif != 0 && valif != '' && valif != null){}
+        else res = false;
+    });
+    return res;
+}
+
+function validate_comboshlg(){
+    return ($('#fkauditoriahlg').val() == '' || $('#fktipohlg').val() == '' || $('#fkimpacto').val() == '' || $('#fkprobabilidad').val() == '');
 }

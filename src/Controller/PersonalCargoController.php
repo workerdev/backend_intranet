@@ -272,8 +272,6 @@ class PersonalCargoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -370,14 +368,7 @@ class PersonalCargoController extends Controller
                 "fksuperior_nombre" => $nmb_sup
             ];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-           
             $json = $serializer->serialize($sendinf, 'json');
-
-            /*$serializer = SerializerBuilder::create()->build();
-            $jsonObject = $serializer->serialize($personal_cargo, 'json');*/
-
-            /*$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($personal_cargo, 'json');*/
 
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Cargo del personal listado correctamente.');
@@ -387,7 +378,6 @@ class PersonalCargoController extends Controller
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-    
 
     /**
      * @Route("/cargo_prev", methods={"POST"}, name="cargo_prev")

@@ -1,5 +1,6 @@
 $(function () {
     $('.js-basic-example').DataTable({
+		dom: '<"pull-left"f><"pull-right"l>tip',
         language:{
             "sProcessing":     "Procesando...",
 	"sLengthMenu":     "Mostrar _MENU_ registros.",

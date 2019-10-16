@@ -76,13 +76,14 @@ class AuditoriaController extends AbstractController
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findAllBySector();
         $tipoauditoria = $this->getDoctrine()->getRepository(TipoAuditoria::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['id' => 'DESC']);
+        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['fecharegistro' => 'DESC']);
         $aud_combo = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
         $tipoauditor = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(['estado' => '1'], ['nombres' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 

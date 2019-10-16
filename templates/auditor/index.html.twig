@@ -26,11 +26,15 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-                            {% if 'auditor_insertar' in permisos %}
+                                {% if 'auditor_insertar' in permisos %}
                                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                                     <i class="material-icons">add</i>
                                 </button>
-                            {% endif %}
+                                {% endif %} 
+
+                                <button id="aud-link" type="button" class="btn bg-teal waves-effect">
+                                    <i class="material-icons">spellcheck</i> Auditoría
+                                </button>
                             </div>
                         </div>
                         {% if 'home_auditor' in permisos and objects %}
@@ -97,6 +101,10 @@
             liveSearchPlaceholder: 'Buscar una opción.',
             title: 'Seleccione una opción.'
         })
+
+        $('#aud-link').click(function(){
+            window.location = '/auditoria';
+        });
 
         $('#new').click(function () {
             $('#item').val('')

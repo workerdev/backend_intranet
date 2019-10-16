@@ -13,6 +13,20 @@
             max-width: 100% !important;
             padding: 4px !important;
         }
+        .loader-own{
+            margin-top: 5px;
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
     </style>
 {% endblock %}
 
@@ -28,10 +42,13 @@
                     <div class="header bg-indigo"><h2>FORTALEZA</h2></div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             {% if 'fortaleza_insertar' in permisos %} 
-                                <button id="new-frt" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="fortaleza" data-form="form-frt">
+                                <button id="new-frt" type="button" class="btn bg-indigo waves-effect hidden" title="Nuevo" data-origin="fortaleza" data-form="form-frt" data-spn="spn-frt">
                                     <i class="material-icons">add</i>
+                                </button> 
+                                <button id="aud-link" type="button" class="btn bg-teal waves-effect">
+                                    <i class="material-icons">spellcheck</i> Auditoría
                                 </button>
                             {% endif %}  
                             </div>
@@ -69,7 +86,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('resources/js/functions.') }}"></script>
+    <script src="{{ asset('resources/js/functions.js') }}"></script>
     <script src="{{ asset('resources/js/fortaleza.js') }}"></script>
 
     <script>
@@ -79,9 +96,20 @@
             page_nr = 1
             max_entries = 10
             like_search = ""
-            order_by = ""
-            ascendant = true
+            order_by = "5"
+            ascendant = false
         }
         default_values()
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#data_table').DataTable();
+            table.order([ 4, 'desc'] ).draw();
+        });
+
+        $('#aud-link').click(function(){
+            window.location = '/auditoria';
+        });
     </script>
 {% endblock %}

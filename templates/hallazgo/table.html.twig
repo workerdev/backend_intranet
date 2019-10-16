@@ -12,14 +12,14 @@
         <td style="white-space: pre-wrap">{{ tr.evidencia }}</td>
         <td style="white-space: pre-wrap">{{ tr.documento }}</td>
         <td style="white-space: pre-wrap">{{ tr.puntoiso }}</td>
-        <td>{{ tr.fkimpacto.nombre }}</td>
+        <td>{{ tr.fecharegistro | date ('Y-m-d') }}</td>
+        <td class="d-none">{{ tr.fkimpacto.nombre }}</td>
         <td class="d-none">{{ tr.fkprobabilidad.nombre }}</td>
         <td class="d-none">{{ tr.analisiscausaraiz }}</td>
         <td class="d-none">{{ tr.recomendaciones }}</td>
         <td class="d-none">{{ tr.cargoauditado }}</td>
         <td class="d-none">{{ tr.nombreauditado }}</td>
         <td class="d-none">{{ tr.responsable }}</td>
-        <td class="d-none">{{ tr.fecharegistro | date ('Y-m-d') }}</td>
         <td align="center">
         {% if 'hallazgo_editar' in permisos %}
             <button id="edit-hlg" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>

@@ -64,9 +64,8 @@ class FortalezaController extends AbstractController
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        
-        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(array('estado' => '1'));
-        $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(['estado' => '1'], ['id' => 'DESC']);
+        $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
+        $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(['estado' => '1'], ['fecharegistro' => 'DESC']);
         return $this->render('fortaleza/index.html.twig', array('objects' => $fortaleza, 'auditoria' => $auditoria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
@@ -136,7 +135,9 @@ class FortalezaController extends AbstractController
 
             $fortaleza = $this->getDoctrine()->getRepository(Fortaleza::class)->find($id);
             $fortaleza->setId($id);
+
             if($ordinal !='' && is_numeric($ordinal)) $fortaleza->setOrdinal($ordinal);
+
             $fortaleza->setDescripcion($descripcion);
             $fortaleza->setResponsable($responsable);
             $fortaleza->setFecharegistro(new \DateTime($fecharegistro));
@@ -151,17 +152,15 @@ class FortalezaController extends AbstractController
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
-                return  new  Response(json_encode($array)) ;
+                return new Response(json_encode($array)) ;
             }
             $cx->merge($fortaleza);
             $cx->flush();
 
-            $resultado = array('success' => true,
-                    'message' => 'Fortaleza actualizado correctamente.');
+            $resultado = array('success' => true, 'message' => 'Fortaleza actualizado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

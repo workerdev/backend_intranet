@@ -30,11 +30,31 @@
             margin: 0px !important;
         }
         .btn-own{
-            margin-right: 2px;
-            margin-bottom: 2px;
+            margin-right: 2px;/*
+            margin-bottom: 2px;*/
         }
         .btn-add-own{
             margin-bottom: 10px;
+        }
+        .table_fort-td{
+            white-space: pre-wrap;
+        }
+        .table_hlg-td{
+            white-space: pre-wrap;
+        }
+        .loader-own{
+            margin-top: 5px;
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
         }
     </style>
 {% endblock %}
@@ -53,7 +73,7 @@
                     <div class="header bg-indigo"><h2>AUDITORÍA</h2></div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             {% if 'auditoria_insertar' in permisos %} 
                                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                                     <i class="material-icons">add</i>
@@ -62,6 +82,17 @@
                                     <i class="material-icons">picture_as_pdf</i>
                                 </button>
                             {% endif %}  
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <button id="adtr-link" type="button" class="btn bg-teal waves-effect">
+                                    <i class="material-icons">person_add</i> Auditor
+                                </button>
+                                <button id="fort-link" type="button" class="btn bg-cyan waves-effect">
+                                    <i class="material-icons">zoom_out</i> Fortaleza
+                                </button>
+                                <button id="hlg-link" type="button" class="btn bg-primary hover-own waves-effect">
+                                    <i class="material-icons">zoom_in</i> Hallazgo
+                                </button>
                             </div>
                         </div>
                         <div style="text-align:center; margin:auto; width:100%; height:60px;" id="spn-adrp">
@@ -80,7 +111,7 @@
                                         <th class="order_by_th" data-name="names">Código </th>
                                         <th class="order_by_th" data-name="phone">Sector </th>
                                         <th class="order_by_th" data-name="phone">Tipo </th>
-                                        <th class="order_by_th" data-name="phone">Fecha programada </th>
+                                        <th class="order_by_th" data-name="phone">Fecha de registro </th>
                                         <th class="order_by_th" data-name="phone">Duración estimada </th>
                                         <th class="order_by_th" data-name="phone">Lugar </th>
                                         <th class="d-none" data-name="phone">Alcance </th>
@@ -89,7 +120,7 @@
                                         <th class="d-none" data-name="phone">Fecha/hora de fin </th>
                                         <th class="d-none" data-name="phone">Conclusiones </th>
                                         <th class="d-none" data-name="phone">Responsable </th>
-                                        <th class="d-none" data-name="phone">Fecha de registro </th>
+                                        <th class="d-none" data-name="phone">Fecha programada </th>
                                         <th class="actions_header">Acciones </th>
                                     </tr>
                                     </thead>
@@ -163,7 +194,7 @@
                     '<td>'+d[13]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha de registro:</td>'+
+                    '<td class="bold">Fecha programada:</td>'+
                     '<td>'+d[14]+'</td>'+
                 '</tr>'+
             '</table></div>';
@@ -190,6 +221,18 @@
                 }
             });
             $('.error').addClass("error-own")
+        });
+
+        $('#adtr-link').click(function(){
+            window.location = '/auditor';
+        });
+
+        $('#fort-link').click(function(){
+            window.location = '/fortaleza';
+        });
+
+        $('#hlg-link').click(function(){
+            window.location = '/hallazgo';
         });
     </script>
 
@@ -511,7 +554,7 @@
             combo_tipo += '</select>'+
                         '</div>';
             accion = '<div class="col-sm-1">'+
-                    '   <button id="bd'+i_aud+'" type="button" name="change-vl" class="btn bg-red waves-effect clear_auditor" data-id="'+i_aud+'" aud-id="0" title="Eliminar">'+
+                    '   <button id="bd'+i_aud+'" type="button" name="change-vl" class="btn bg-red waves-effect hover-own clear_auditor" data-id="'+i_aud+'" aud-id="0" title="Eliminar">'+
                         '   <i class="material-icons">clear</i>'+
                     '   </button>'+
                     '</div>';
@@ -702,10 +745,10 @@
                         for(var i = 0; i < dataf.length; i++){
                             let acn_frt = ''
                             {% if 'fortaleza_editar' in permisos %}
-                                acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
+                                acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light hover-own btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
                             {% endif %}
                             {% if 'fortaleza_eliminar' in permisos %}  
-                                acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
+                                acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light hover-own delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
                             {% endif %}
 
                             datafr.push( [
@@ -716,46 +759,48 @@
                         }
                         $('#table_fort').DataTable({
                             data: datafr,
-                            "order": [[ 0, 'desc' ]],
+                            "order": [[ 4, 'desc' ]],
                             language: {
                                 "url": "/resources/js/spanish.json"
                             },
-                            "pageLength": 10
+                            "pageLength": 10,
+                            "createdRow": function(row, data, dataIndex) {
+                                $(row).children(':nth-child(3)').addClass('table_fort-td');
+                                $(row).children(':nth-child(6)').attr('align', 'center');
+                            }
                         });
 
                         var datahl = [];
                         for(var j = 0; j < datah.length; j++){
                             let acn_hlg = ''
                             {% if 'hallazgo_editar' in permisos %}
-                                acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                                acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light hover-own btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
                             {% endif %}
                             {% if 'hallazgo_eliminar' in permisos %}  
-                                acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                                acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light hover-own delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
                             {% endif %}
 
                             datahl.push( [
                                 datah[j].id, datah[j].fktipo.nombre,
                                 datah[j].titulo, datah[j].evidencia,
                                 datah[j].documento, datah[j].puntoiso,
-                                datah[j].fkimpacto.nombre, acn_hlg
+                                datah[j].fecharegistro, acn_hlg
                             ]);
                         }
                         $('#table_hlg').DataTable({
                             data: datahl,
-                            "order": [[ 0, 'desc' ]],
+                            "order": [[ 6, 'desc' ]],
                             language: {
                                 "url": "/resources/js/spanish.json"
                             },
-                            "pageLength": 10
+                            "pageLength": 10,
+                            "createdRow": function(row, data, dataIndex) {
+                                $(row).children(':nth-child(4)').addClass('table_hlg-td');
+                                $(row).children(':nth-child(5)').addClass('table_hlg-td');
+                                $(row).children(':nth-child(6)').addClass('table_hlg-td');
+                                $(row).children(':nth-child(8)').attr('align', 'center');
+                            }
                         });
-                        
-                        $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
-                        $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
-
-                        $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
-                        $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
-                        $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
-                        $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
                         
                         fortaleza_edit()
                         fortaleza_delete()
@@ -796,10 +841,10 @@
                     for(var i = 0; i < dataf.length; i++){
                         let acn_frt = ''
                         {% if 'fortaleza_editar' in permisos %}
-                            acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
+                            acn_frt += '<button id="edit-frt" onclick="edit_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-indigo waves-effect waves-light hover-own btn-own edit-frt" title="Editar"><i class="material-icons">create</i></button>';
                         {% endif %}
                         {% if 'fortaleza_eliminar' in permisos %}  
-                            acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
+                            acn_frt += '<button id="delete-frt" onclick="delete_fortaleza(this)" data-json="'+dataf[i].id+'" type="button" class="btn bg-red waves-effect waves-light hover-own delete-frt" title="Eliminar"><i class="material-icons">clear</i></button>';
                         {% endif %}
 
                         datafr.push( [
@@ -810,53 +855,55 @@
                     }
                     $('#table_fort').DataTable({
                         data: datafr,
-                        "order": [[ 0, 'desc' ]],
+                        "order": [[ 4, 'desc' ]],
                         language: {
                             "url": "/resources/js/spanish.json"
                         },
-                        "pageLength": 10
+                        "pageLength": 10,
+                        "createdRow": function(row, data, dataIndex) {
+                            $(row).children(':nth-child(3)').addClass('table_fort-td');
+                            $(row).children(':nth-child(6)').attr('align', 'center');
+                        }
                     });
 
                     var datahl = [];
                     for(var j = 0; j < datah.length; j++){
                         let acn_hlg = ''
                         {% if 'hallazgo_editar' in permisos %}
-                            acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                            acn_hlg += '<button id="edit-hlg" onclick="edit_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-indigo waves-effect waves-light hover-own btn-own edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
                         {% endif %}
                         {% if 'hallazgo_eliminar' in permisos %}  
-                            acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                            acn_hlg += '<button id="delete-hlg" onclick="delete_hallazgo(this)" data-json="'+datah[j].id+'" type="button" class="btn bg-red waves-effect waves-light hover-own delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
                         {% endif %}
 
                         datahl.push( [
                             datah[j].id, datah[j].fktipo.nombre,
                             datah[j].titulo, datah[j].evidencia,
                             datah[j].documento, datah[j].puntoiso,
-                            datah[j].fkimpacto.nombre, acn_hlg
+                            datah[j].fecharegistro, acn_hlg
                         ]);
                     }
                     $('#table_hlg').DataTable({
                         data: datahl,
-                        "order": [[ 0, 'desc' ]],
+                        "order": [[ 6, 'desc' ]],
                         language: {
                             "url": "/resources/js/spanish.json"
                         },
-                        "pageLength": 10
+                        "pageLength": 10,
+                        "createdRow": function(row, data, dataIndex) {
+                            $(row).children(':nth-child(4)').addClass('table_hlg-td');
+                            $(row).children(':nth-child(5)').addClass('table_hlg-td');
+                            $(row).children(':nth-child(6)').addClass('table_hlg-td');
+                            $(row).children(':nth-child(8)').attr('align', 'center');
+                        }
                     });
-                    
-                    $('#table_fort tbody tr td:nth-child(3)').css('white-space', 'pre-wrap');
-                    $('#table_fort tbody tr td:nth-child(6)').attr('align', 'center');
-
-                    $('#table_hlg tbody tr td:eq(3)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(4)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(5)').css('white-space', 'pre-wrap');
-                    $('#table_hlg tbody tr td:eq(7)').attr('align', 'center');
                     
                     fortaleza_edit()
                     fortaleza_delete()
                     hallazgo_edit()
                     hallazgo_delete()
                 })
-            })
+            })   
         }
     </script>
 

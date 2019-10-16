@@ -327,6 +327,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/hallazgo_prev' => [['_route' => 'hallazgo_prev', '_controller' => 'App\\Controller\\HallazgoController::hallazgo_prev'], null, ['POST' => 0], null, false],
                     '/hallazgo_eliminar' => [['_route' => 'hallazgo_eliminar', '_controller' => 'App\\Controller\\HallazgoController::eliminar'], null, ['POST' => 0], null, false],
                     '/hallazgo_listall' => [['_route' => 'hallazgo_listall', '_controller' => 'App\\Controller\\HallazgoController::listall'], null, ['POST' => 0], null, false],
+                    '/hallazgo_filteraud' => [['_route' => 'hallazgo_filteraud', '_controller' => 'App\\Controller\\HallazgoController::filter_aud'], null, ['POST' => 0], null, false],
                     '/impacto' => [['_route' => 'impacto', '_controller' => 'App\\Controller\\ImpactoController::index'], null, null, null, false],
                     '/impacto_insertar' => [['_route' => 'impacto_insertar', '_controller' => 'App\\Controller\\ImpactoController::insertar'], null, ['POST' => 0], null, false],
                     '/impacto_actualizar' => [['_route' => 'impacto_actualizar', '_controller' => 'App\\Controller\\ImpactoController::actualizar'], null, ['POST' => 0], null, false],

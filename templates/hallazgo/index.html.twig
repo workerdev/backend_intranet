@@ -20,60 +20,116 @@
         .modal-dialog-own{
             width: 65%;
         }
+        .loader-own{
+            margin-top: 5px;
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
+        .tab-td-wrap{
+            white-space: pre-wrap;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
     {{ parent() }}
     {{ include('hallazgo/form.html.twig') }}
+    
+    <section id="content" class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="card" id="render_content">
 
-    <div class="header bg-indigo"><h2>HALLAZGO</h2></div>
-    <div class="body">
-        <div class="row clearfix">
-            <div class="#fkprobabilidadxs-3 col-sm-2 col-md-2 col-lg-2">
-            {% if 'hallazgo_insertar' in permisos %}
-                <button id="new-hlg" type="button" class="btn bg-indigo waves-effect" title="Nuevo" data-origin="hallazgo" data-form="form-hlg">
-                    <i class="material-icons">add</i>
-                </button>
-            {% endif %}
+                <div class="header bg-indigo"><h2>HALLAZGO</h2></div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="#fkprobabilidadxs-3 col-sm-2 col-md-2 col-lg-2">
+                        {% if 'hallazgo_insertar' in permisos %}
+                            <button id="new-hlg" type="button" class="btn bg-indigo waves-effect hidden" title="Nuevo" data-origin="hallazgo" data-form="form-hlg" data-spn="spn-hlg">
+                                <i class="material-icons">add</i>
+                            </button> 
+                            <button id="aud-link" type="button" class="btn bg-teal waves-effect">
+                                <i class="material-icons">spellcheck</i> Auditoría
+                            </button>
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row clearfix text-format">
+                        <div class="col-sm-3">
+                            <label>Filtrar</label>
+                                <select id="auditoriaf" class="form-control show-tick">
+                                    <option value="0">Todas</option>
+                                    {% for a in auditoria %}
+                                        <option value="{{a.id}}">{{a.codigo}}</option>
+                                    {% endfor %}
+                                </select>
+                                </br>
+                        </div>
+                    </div>
+
+                    <div id="dt-loader" class="loader-wrapper" style="display: none">
+                        <div class="loader loader-own">
+                            <div class="preloader preloader-own">
+                                <div class="spinner-layer pl-blue">
+                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center inf-own">Cargando datos...</p>
+                    </div>
+
+                    {% if 'home_hallazgo' in permisos and objects %}
+                        <div class="row">
+                            <div class="body table-responsive">
+                                <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="d-none" data-name="phone">ID </th>
+                                        <th class="order_by_th" data-name="phone">Auditoría </th>
+                                        <th class="order_by_th" data-name="phone">Tipo de Hallazgo</th>
+                                        <th class="order_by_th" data-name="phone">Ordinal </th>
+                                        <th class="order_by_th" data-name="phone">Título </th>
+                                        <th class="d-none" data-name="names">Descripción </th>
+                                        <th class="order_by_th" data-name="phone">Evidencia </th>
+                                        <th class="order_by_th" data-name="phone">Documento </th>
+                                        <th class="order_by_th" data-name="phone">Punto ISO </th>
+                                        <th class="order_by_th" data-name="phone">Fecha de Registro </th>
+                                        <th class="d-none" data-name="phone">Nivel de Impacto </th>
+                                        <th class="d-none" data-name="phone">Probabilidad </th>
+                                        <th class="d-none" data-name="phone">Análisis Causa Raíz </th>
+                                        <th class="d-none" data-name="phone">Recomendaciones </th>
+                                        <th class="d-none" data-name="phone">Cargo del Auditado </th>
+                                        <th class="d-none" data-name="phone">Nombre del Auditado </th>
+                                        <th class="d-none" data-name="phone">Responsable </th>
+                                        <th class="actions_header">Acciones </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table_content">
+                                    {{ include('hallazgo/table.html.twig') }}
+                                    </tbody>
+                                </table>
+                            </div>
+                    {% else %}
+                        <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
+                    {% endif %}
+                </div>
+
+                </div>
             </div>
         </div>
-        {% if 'home_hallazgo' in permisos and objects %}
-            <div class="row">
-                <div class="body table-responsive">
-                    <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th class="d-none" data-name="phone">ID </th>
-                            <th class="order_by_th" data-name="phone">Auditoría </th>
-                            <th class="order_by_th" data-name="phone">Tipo de Hallazgo</th>
-                            <th class="order_by_th" data-name="phone">Ordinal </th>
-                            <th class="order_by_th" data-name="phone">Título </th>
-                            <th class="d-none" data-name="names">Descripción </th>
-                            <th class="order_by_th" data-name="phone">Evidencia </th>
-                            <th class="order_by_th" data-name="phone">Documento </th>
-                            <th class="order_by_th" data-name="phone">Punto ISO </th>
-                            <th class="order_by_th" data-name="phone">Nivel de Impacto </th>
-                            <th class="d-none" data-name="phone">Probabilidad </th>
-                            <th class="d-none" data-name="phone">Análisis Causa Raíz </th>
-                            <th class="d-none" data-name="phone">Recomendaciones </th>
-                            <th class="d-none" data-name="phone">Cargo del Auditado </th>
-                            <th class="d-none" data-name="phone">Nombre del Auditado </th>
-                            <th class="d-none" data-name="phone">Responsable </th>
-                            <th class="d-none" data-name="phone">Fecha de Registro </th>
-                            <th class="actions_header">Acciones </th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_content">
-                        {{ include('hallazgo/table.html.twig') }}
-                        </tbody>
-                    </table>
-                </div>
-        {% else %}
-            <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10"></div>
-        {% endif %}
-    </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
@@ -104,31 +160,31 @@
                     '<td style="white-space: pre-wrap">'+d[6]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Probabilidad:</td>'+
+                    '<td class="bold">Nivel de Impacto:</td>'+
                     '<td>'+d[11]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Análisis Causa Raíz:</td>'+
-                    '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
+                    '<td class="bold">Probabilidad:</td>'+
+                    '<td>'+d[12]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Recomendaciones:</td>'+
+                    '<td class="bold">Análisis Causa Raíz:</td>'+
                     '<td style="white-space: pre-wrap">'+d[13]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Cargo del Auditado:</td>'+
-                    '<td>'+d[14]+'</td>'+
+                    '<td class="bold">Recomendaciones:</td>'+
+                    '<td style="white-space: pre-wrap">'+d[14]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Nombre del Auditado:</td>'+
+                    '<td class="bold">Cargo del Auditado:</td>'+
                     '<td>'+d[15]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Responsable:</td>'+
+                    '<td class="bold">Nombre del Auditado:</td>'+
                     '<td>'+d[16]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha de Registro:</td>'+
+                    '<td class="bold">Responsable:</td>'+
                     '<td>'+d[17]+'</td>'+
                 '</tr>'+
             '</table></div>';
@@ -136,6 +192,8 @@
     
         $(document).ready(function() {
             table = $('#data_tabletr').DataTable();
+            table.order([ 10, 'desc'] ).draw();
+
             $('#data_tabletr tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
@@ -154,6 +212,96 @@
                     $("#"+idet).attr('title', 'Ver menos');
                 }
             });
+        });
+
+        $('#auditoriaf').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar auditoría.',
+            title: 'Seleccione una auditoría.'
+        })
+
+        $('#aud-link').click(function(){
+            window.location = '/auditoria';
+        });
+
+        $('#auditoriaf').change(function() {
+            $("#dt-loader").show();
+            $(this).attr('disabled', 'disabled');
+
+            var table = $('#data_tabletr').DataTable();
+            table.destroy();
+
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($('#auditoriaf').val()))
+            })
+            
+            $.ajax({
+                method: 'POST',
+                url: '/hallazgo_filteraud',
+                data: {object: obj},
+                async: true
+            }).done(function (response) {
+                let self = JSON.parse(response);
+                let datos = JSON.parse(self.response);
+                console.log(datos)
+                
+                var datahl = [];
+                for(var i = 0; i < Object.keys(datos).length; i++){
+                    let dtl_hl = '';
+                    let acn_hl = '';
+
+                    dtl_hl += '<i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="h' + datos[i].id + '"></i>'
+                    {% if 'hallazgo_editar' in permisos %}
+                        acn_hl += '<button id="edit-hlg" data-json="' + datos[i].id + '" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
+                    {% endif %}
+                    {% if 'hallazgo_eliminar' in permisos %}  
+                        acn_hl += '<button id="delete-hlg" data-json="' + datos[i].id + '" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
+                    {% endif %}
+
+                    datahl.push([
+                        dtl_hl, datos[i].id, datos[i].fkauditoria.codigo, datos[i].fktipo.nombre, datos[i].ordinal, 
+                        datos[i].titulo, datos[i].descripcion, datos[i].evidencia, datos[i].documento, datos[i].puntoiso, 
+                        datos[i].fecharegistro, datos[i].fkimpacto.nombre, datos[i].fkprobabilidad.nombre, datos[i].analisiscausaraiz, 
+                        datos[i].recomendaciones, datos[i].cargoauditado, datos[i].nombreauditado, datos[i].responsable, acn_hl
+                    ]);
+                }
+                $('#data_tabletr').DataTable({
+                    data: datahl,
+                    "order": [[ 4, 'desc' ]],
+                    language: {
+                        "url": "/resources/js/spanish.json"
+                    },
+                    "pageLength": 10,
+                    "createdRow": function(row, data, dataIndex) {
+                        $(row).children(':nth-child(1)').addClass('details-control');
+
+                        $(row).children(':nth-child(2)').addClass('d-none');
+                        $(row).children(':nth-child(7)').addClass('d-none');
+
+                        $(row).children(':nth-child(8)').addClass('tab-td-wrap');
+                        $(row).children(':nth-child(9)').addClass('tab-td-wrap');
+                        $(row).children(':nth-child(10)').addClass('tab-td-wrap');
+                        
+                        $(row).children(':nth-child(12)').addClass('d-none');
+                        $(row).children(':nth-child(13)').addClass('d-none');
+                        $(row).children(':nth-child(14)').addClass('d-none');
+                        $(row).children(':nth-child(15)').addClass('d-none');
+                        $(row).children(':nth-child(16)').addClass('d-none');
+                        $(row).children(':nth-child(17)').addClass('d-none');
+                        $(row).children(':nth-child(18)').addClass('d-none');
+
+                        $(row).children(':nth-child(19)').attr('align', 'center');
+                    },
+                    initComplete: function () {
+                        $("#dt-loader").fadeOut('800');
+                        $('#auditoriaf').removeAttr('disabled');
+                    },
+                    dom: '<"pull-left"f><"pull-right"l>tip'
+                });
+                hallazgo_edit();
+                hallazgo_delete();
+            })
         });
     </script>
 {% endblock %}

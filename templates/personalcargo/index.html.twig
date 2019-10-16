@@ -150,27 +150,17 @@
                 ajax_call_get("/personalcargo_editar",{
                     object: obj
                 },function(response){
-                    var self = JSON.parse(response)    
-                    console.log(self)
+                    var self = JSON.parse(response)  
                           
                     $('#id').val(self.id)
                     $('#nombre').val(self.nombre)
                     $('#descripcion').val(self.descripcion)
 
-                    //if(self.hasOwnProperty('fksuperior')){
-                        if(self.fksuperior_id !== null){
-                            $('#fksuperior').val(self.fksuperior_id)
-                            $('#fksuperior').selectpicker('render')
-                            $('#cont-sup').show()
-                        }/*else{
-                            $('#fksuperior').val(self.fksuperior_id)
-                            $('#cont-sup').hide()
-                        }*/
-                    //}
-                    /*else{
-                        $('#fksuperior').val(self.fksuperior)
-                        $('#cont-sup').hide()
-                    }*/
+                    if(self.fksuperior_id !== null){
+                        $('#fksuperior').val(self.fksuperior_id)
+                        $('#fksuperior').selectpicker('render')
+                        $('#cont-sup').show()
+                    }
                     
                     $('#fktipo').val(self.fktipo.id)
                     $('#fktipo').selectpicker('render')

@@ -27,6 +27,9 @@
                 .slimScrollBar-own{
                     width: 8px !important;
                 }
+                .dataTables_filter{
+                    padding-bottom: 12px;
+                }
             </style>
         {% endblock %}
     </head>
@@ -156,7 +159,13 @@
             <script src="{{ asset('resources/js/validations.js') }}"></script>
             <script>
                 $(document).ready(function() {
-                    $('.slimScrollBar').addClass('slimScrollBar-own')
+                    $('.slimScrollBar').addClass('slimScrollBar-own');
+                    $.extend( true, $.fn.dataTable.defaults, {
+                        "language": {
+                                "url": "/js/Spanish.json"
+                            },
+                        dom: '<"pull-left"f><"pull-right"l>tip',
+                    } );
                 })
 
                 function iniciar(){

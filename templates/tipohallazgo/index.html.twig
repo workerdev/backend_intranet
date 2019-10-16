@@ -5,6 +5,12 @@
     {{ parent() }}
     <style>
         .accion{ cursor:pointer }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
     </style>
 {% endblock %}
 
@@ -85,6 +91,8 @@
 
         $('#new').click(function () {
             $('#nombre').val('')
+            $('#nombre').selectpicker('render')
+
             $('#descripcion').val('')
 
             clean_form()

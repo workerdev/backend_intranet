@@ -507,7 +507,7 @@
                                     var thisemp = node.data;
                                     myDiagram.startTransaction("vacante");
                                     // update the key, name, and comments
-                                    myDiagram.model.setKeyForNodeData(thisemp, getNextKey());
+                                    //myDiagram.model.setKeyForNodeData(thisemp, getNextKey());
                                     myDiagram.model.setDataProperty(thisemp, "name", "[VACANTES]");
                                     myDiagram.model.setDataProperty(thisemp, "id_personal", null);
                                     //myDiagram.model.setDataProperty(thisemp, "isassistant", !node.data.isassistant);
@@ -524,21 +524,30 @@
                                 var node = obj.part.adornedPart;
                                 if (node !== null && myDiagram.model.getKeyForNodeData(node) != 1) {
                                     var thisemp = node.data;
-                                        myDiagram.startTransaction("reparent remove");
+                                    myDiagram.startTransaction("reparent remove");
 
-                                        var chl = node.findTreeChildrenNodes();
-                                        // iterate through the children and set their parent key to our selected node's parent key
-                                        while(chl.next()) {
-                                            var emp = chl.value;
-                                            myDiagram.model.setParentKeyForNodeData(emp.data, node.findTreeParentNode().data.key);
-                                        }
-                                        // and now remove the selected node itself
-                                        myDiagram.model.removeNodeData(node.data);
-                                        myDiagram.model.setDataProperty(thisemp, "name", "ELIMINADO");
-                                        myDiagram.model.setDataProperty(thisemp, "id_personal", null);
-                                        myDiagram.model.setDataProperty(thisemp, "isassistant", !node.data.isassistant);
+                                    var chl = node.findTreeChildrenNodes();
+                                    // iterate through the children and set their parent key to our selected node's parent key
+                                    //console.log(chl)
+                                    if(!Object.is(node.data, gbl_root) || Object.is(node.data, gbl_root) && chl.count == 0){
+                                            while(chl.next()) {
+                                                var emp = chl.value;
+                                                myDiagram.model.setParentKeyForNodeData(emp.data, node.findTreeParentNode().data.key);
+                                            }
+                                            // and now remove the selected node itself
+                                            myDiagram.model.removeNodeData(node.data);
+                                            myDiagram.model.setDataProperty(thisemp, "name", "ELIMINADO");
+                                            myDiagram.model.setDataProperty(thisemp, "id_personal", null);
+                                            myDiagram.model.setDataProperty(thisemp, "isassistant", !node.data.isassistant);
 
-                                    myDiagram.commitTransaction("reparent remove");
+                                        myDiagram.commitTransaction("reparent remove");
+                                    }else{
+                                        swal(
+                                            'Error de datos',
+                                            'Por favor, ingresa a un nivel superior ya que no existe otro nodo independiente al cual asociar los nodos dependientes.',
+                                            'error'
+                                        ) 
+                                    }
                                 }
                             }
                         }
