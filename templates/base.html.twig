@@ -160,9 +160,10 @@
             <script>
                 $(document).ready(function() {
                     $('.slimScrollBar').addClass('slimScrollBar-own');
+
                     $.extend( true, $.fn.dataTable.defaults, {
                         "language": {
-                                "url": "/js/Spanish.json"
+                                "url": "{{ asset('resources/js/spanish.json') }}"
                             },
                         dom: '<"pull-left"f><"pull-right"l>tip',
                     } );

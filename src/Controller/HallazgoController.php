@@ -73,7 +73,7 @@ class HallazgoController extends Controller
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
 
-        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipo' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipohlg' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -132,10 +132,8 @@ class HallazgoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
-                return  new  Response(json_encode($array)) ;
+                return new Response(json_encode($array)) ;
             }
             $cx->persist($hallazgo);
             $cx->flush();

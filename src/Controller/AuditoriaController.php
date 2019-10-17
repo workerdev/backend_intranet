@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\GerenciaAreaSector;
 use App\Entity\TipoAuditoria;
+use App\Entity\TipoHallazgo;
 use App\Entity\Auditoria;
 use App\Entity\TipoAuditor;
 use App\Entity\Auditor;
@@ -75,6 +76,7 @@ class AuditoriaController extends AbstractController
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findAllBySector();
+        $tipohlg = $this->getDoctrine()->getRepository(TipoHallazgo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $tipoauditoria = $this->getDoctrine()->getRepository(TipoAuditoria::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['fecharegistro' => 'DESC']);
         $aud_combo = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
@@ -84,7 +86,7 @@ class AuditoriaController extends AbstractController
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'tipohlg' => $tipohlg, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

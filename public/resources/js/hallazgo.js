@@ -239,7 +239,8 @@ hallazgo_delete()
 
 function edit_hallazgo(ehlg) {
     obj = JSON.stringify({
-        'id': parseInt(JSON.parse($(ehlg).attr('data-json')))
+        'id': parseInt(JSON.parse($(ehlg).attr('data-json'))),
+        'origin': $(ehlg).attr('data-origin')
     });
     ajax_call_get("/hallazgo_editar",{
         object: obj
@@ -282,7 +283,8 @@ function edit_hallazgo(ehlg) {
 }
 
 function delete_hallazgo(ehlg){
-    id = parseInt(JSON.parse($(ehlg).attr('data-json')))
+    let id = parseInt(JSON.parse($(ehlg).attr('data-json')))
+    let origin = $(ehlg).attr('data-origin')
     hallazgo_prev(id)
     let quest = messagehlg + " ¿Está seguro en dar de baja el hallazgo?" 
     enabled = false
@@ -299,12 +301,15 @@ function delete_hallazgo(ehlg){
             id: id, enabled: enabled, _xsrf: getCookie("_xsrf")}, 
             null,  
             function () {
-                swal(
-                    'Datos eliminados',
-                    '',
-                    'success'
-                )
-                setTimeout(function(){ reload_tabhlfr(); }, 800);
+                if(origin == 'auditoria'){
+                    swal(
+                        'Datos eliminados',
+                        '',
+                        'success'
+                    )
+                    setTimeout(function(){ reload_tabhlfr(); }, 800);
+                }
+                else setTimeout(function(){ window.location = main_route; }, 1000);
             }
         )
     })

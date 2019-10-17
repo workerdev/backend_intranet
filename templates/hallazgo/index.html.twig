@@ -34,7 +34,17 @@
         .hover-own:focus{
             color: white;
         }
-        .tab-td-wrap{
+        #data_tabletr tbody tr td:nth-child(6), #data_tabletr tbody tr td:nth-child(7), #data_tabletr tbody tr td:nth-child(8){
+            white-space: pre-wrap;
+        }
+        #data_tabletr tbody tr td:nth-child(10){
+            text-align: center;
+            vertical-align: center;
+        }
+        #table-detail tr td:nth-child(1){
+            font-weight: bold;
+        }
+        #table-detail tr td:nth-child(2){
             white-space: pre-wrap;
         }
     </style>
@@ -229,8 +239,8 @@
             $("#dt-loader").show();
             $(this).attr('disabled', 'disabled');
 
-            var table = $('#data_tabletr').DataTable();
-            table.destroy();
+            var tabled = $('#data_tabletr').DataTable();
+            tabled.destroy();
 
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($('#auditoriaf').val()))
@@ -244,64 +254,124 @@
             }).done(function (response) {
                 let self = JSON.parse(response);
                 let datos = JSON.parse(self.response);
-                console.log(datos)
-                
-                var datahl = [];
-                for(var i = 0; i < Object.keys(datos).length; i++){
-                    let dtl_hl = '';
-                    let acn_hl = '';
 
-                    dtl_hl += '<i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="h' + datos[i].id + '"></i>'
-                    {% if 'hallazgo_editar' in permisos %}
-                        acn_hl += '<button id="edit-hlg" data-json="' + datos[i].id + '" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>';
-                    {% endif %}
-                    {% if 'hallazgo_eliminar' in permisos %}  
-                        acn_hl += '<button id="delete-hlg" data-json="' + datos[i].id + '" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>';
-                    {% endif %}
+                var table = $('#data_tabletr').DataTable({
+                    data: datos,
+                    columns: [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa fa-plus-square cl-teal" title="Mostrar más" aria-hidden="true"></i>';
+                            }
+                        },
+                        { data: "id", visible: false },
+                        { title: "Auditoría" , data: "fkauditoria.codigo" },
+                        { title: "Tipo de Hallazgo" , data: "fktipo.nombre" },
+                        { title: "Ordinal" , data: "ordinal" },
+                        { title: "Título" , data: "ordinal" },
+                        { data: "descripcion", visible: false },
+                        { title: "Evidencia" , data: "evidencia" },
+                        { title: "Documento" , data: "documento" },
+                        { title: "Punto ISO" , data: "puntoiso" },
+                        { title: "Fecha de Registro" , data: "fecharegistro" },
+                        { data: "fktipo.nombre", visible: false },
+                        { data: "fkprobabilidad.nombre", visible: false },
+                        { data: "analisiscausaraiz", visible: false },
+                        { data: "recomendaciones", visible: false },
+                        { data: "cargoauditado", visible: false },
+                        { data: "nombreauditado", visible: false },
+                        { data: "responsable", visible: false },
+                        { title: "Acciones", data: 'id',
+                            render : function (data, type, row){ 
+                                a = ''
+                                {% if 'hallazgo_editar' in permisos %}
+                                    a += '<button id="edit-hlg" data-json="' + row.id + '" onclick="edit_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>'
+                                {% endif %}
 
-                    datahl.push([
-                        dtl_hl, datos[i].id, datos[i].fkauditoria.codigo, datos[i].fktipo.nombre, datos[i].ordinal, 
-                        datos[i].titulo, datos[i].descripcion, datos[i].evidencia, datos[i].documento, datos[i].puntoiso, 
-                        datos[i].fecharegistro, datos[i].fkimpacto.nombre, datos[i].fkprobabilidad.nombre, datos[i].analisiscausaraiz, 
-                        datos[i].recomendaciones, datos[i].cargoauditado, datos[i].nombreauditado, datos[i].responsable, acn_hl
-                    ]);
-                }
-                $('#data_tabletr').DataTable({
-                    data: datahl,
+                                {% if 'hallazgo_eliminar' in permisos %}
+                                    a += '<button id="delete-hlg" data-json="' + row.id + '" onclick="delete_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>'
+                                {% endif %}
+
+                                return a
+                            }
+                        } 
+                    ],
                     "order": [[ 4, 'desc' ]],
-                    language: {
-                        "url": "/resources/js/spanish.json"
-                    },
                     "pageLength": 10,
-                    "createdRow": function(row, data, dataIndex) {
-                        $(row).children(':nth-child(1)').addClass('details-control');
-
-                        $(row).children(':nth-child(2)').addClass('d-none');
-                        $(row).children(':nth-child(7)').addClass('d-none');
-
-                        $(row).children(':nth-child(8)').addClass('tab-td-wrap');
-                        $(row).children(':nth-child(9)').addClass('tab-td-wrap');
-                        $(row).children(':nth-child(10)').addClass('tab-td-wrap');
-                        
-                        $(row).children(':nth-child(12)').addClass('d-none');
-                        $(row).children(':nth-child(13)').addClass('d-none');
-                        $(row).children(':nth-child(14)').addClass('d-none');
-                        $(row).children(':nth-child(15)').addClass('d-none');
-                        $(row).children(':nth-child(16)').addClass('d-none');
-                        $(row).children(':nth-child(17)').addClass('d-none');
-                        $(row).children(':nth-child(18)').addClass('d-none');
-
-                        $(row).children(':nth-child(19)').attr('align', 'center');
-                    },
                     initComplete: function () {
                         $("#dt-loader").fadeOut('800');
                         $('#auditoriaf').removeAttr('disabled');
-                    },
-                    dom: '<"pull-left"f><"pull-right"l>tip'
+                    }
+                });
+
+                $ ('#data_tabletr').find('tbody').off('click', 'tr td.details-control'); $('#data_tabletr').find('tbody').on('click', 'tr td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa");
+                    var row = table.row(tr);
+    
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-minus-square');
+                        tdi.first().addClass('fa-plus-square');
+                        tdi.first().removeClass('cl-red');
+                        tdi.first().addClass('cl-teal');
+                        tdi.first().attr('title', 'Mostrar más');
+                    } else {
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-plus-square');
+                        tdi.first().addClass('fa-minus-square');
+                        tdi.first().removeClass('cl-teal');
+                        tdi.first().addClass('cl-red');
+                        tdi.first().attr('title', 'Ver menos');
+                    }  
                 });
                 hallazgo_edit();
                 hallazgo_delete();
             })
         });
+
+        function format(data){
+            // `d` is the original data object for the row
+            return '<div class="card" style="width: 95%; background-color: rgba(0, 76, 153, .15)">'+
+                '<table id="table-detail" class="w-100" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="">Descripción:</td>'+
+                    '<td>'+data.descripcion+'</td>'+
+                '</tr>'+           
+                '<tr>'+
+                    '<td class="">Nivel de Impacto:</td>'+
+                    '<td>'+data.fkimpacto.nombre+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="">Probabilidad:</td>'+
+                    '<td>'+data.fkprobabilidad.nombre+'</td>'+
+                '</tr>'+                      
+                '<tr>'+
+                    '<td class="">Análisis Causa Raíz:</td>'+
+                    '<td>'+data.analisiscausaraiz+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="">Recomendaciones:</td>'+
+                    '<td>'+data.recomendaciones+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="">Cargo del Auditado:</td>'+
+                    '<td>'+data.cargoauditado+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="">Nombre del Auditado:</td>'+
+                    '<td>'+data.nombreauditado+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="">Responsable:</td>'+
+                    '<td>'+data.responsable+'</td>'+
+                '</tr>'+
+                '</table></div>';
+        }
     </script>
 {% endblock %}
