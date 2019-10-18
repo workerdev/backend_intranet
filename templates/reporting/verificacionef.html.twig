@@ -1,12 +1,15 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('resources/bootstrap4/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
         .borderless td, .borderless th, .borderless tr {
             border: none;
         }
         #tb-ef tr, #tb-ef td, .frm-efc{
             height: 14px !important;
+        }
+        .td-wrap{
+            white-space: pre-wrap;
         }
     </style>
 {% endblock %}
@@ -15,7 +18,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <img src="{{ asset('resources/images/image_rep.png') }}" width="47" height="50" alt="">
+                <img src="resources/images/image_rep.png" width="auto" height="60" alt="logo">
             </div>
         </div>
         <div class="row">
@@ -38,15 +41,15 @@
             <table class="table table-bordered table-sm">
                 <tr>
                     <th>No. Auditoría:</th>
-                    <td>{{objects[0].cb_auditoria_id}}</td>
+                    <td>{{objects[0].cb_auditoria_codigo}}</td>
                 </tr>
                 <tr>
                     <th>No. de Hallazgo:</th>
-                    <td>{{objects[0].cb_hallazgo_id}}</td>
+                    <td>{{objects[0].cb_hallazgo_titulo}}</td>
                 </tr>
                 <tr>
                     <th>Identificador de la Acción:</th>
-                    <td>{{objects[0].cb_accion_id}}</td>
+                    <td>{{objects[0].cb_accion_descripcion}}</td>
                 </tr>
             </table>
 
@@ -73,8 +76,7 @@
             <h7><b>Observaciones:</b></h7>
             <table class="table table-bordered table-sm">
                 <tr>
-                    <td></td>
-                    <td><textarea id="textarea" rows="2" style="height: 20px; border:none" value=""></textarea></td>
+                    <td class="td-wrap">{{ objects[0].cb_accion_eficacia_resultado }}</td>
                 </tr>
             </table>     
 
@@ -139,5 +141,5 @@
             else $('#opno').attr('checked', true);
         }
     </script>
-    <script src="{{ asset('resources/bootstrap4/js/bootstrap.min.js') }}"></script>
+    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
 {% endblock %}

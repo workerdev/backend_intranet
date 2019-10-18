@@ -41,6 +41,16 @@
         #data_tabletr tbody tr td:nth-child(4){
             white-space: pre-wrap;
         }
+        .inf-own{
+            font-size: 12px;
+            padding-bottom: 4%;
+        }
+        .loader-own{
+            text-align: center;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 {% endblock %}
 
@@ -68,10 +78,16 @@
                             </div>
                         </div>
 
-                        <div style="text-align:center; margin:auto; width:100%; height:60px;" id="spn-adrp">
-                            <div class="plan-icon-load progress" style='margin:auto; display:none; height:60px;'>
-                                <img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>
+                        <div id="spn-grep" class="loader-wrapper" style="display: none">
+                            <div class="loader loader-own">
+                                <div class="preloader preloader-own">
+                                    <div class="spinner-layer pl-blue">
+                                        <div class="circle-clipper left"><div class="circle"></div></div>
+                                        <div class="circle-clipper right"><div class="circle"></div></div>
+                                    </div>
+                                </div>
                             </div>
+                            <p class="text-center inf-own">Generando...</p>
                         </div>
 
                         {% if 'home_accion' in permisos and objects %}

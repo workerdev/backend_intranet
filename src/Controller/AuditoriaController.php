@@ -82,11 +82,13 @@ class AuditoriaController extends AbstractController
         $aud_combo = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
         $tipoauditor = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(['estado' => '1'], ['nombres' => 'ASC']);
+        $gestion = $this->getDoctrine()->getRepository(Auditoria::class)->findManagement(['gestion' => 'ASC']);
+
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'tipohlg' => $tipohlg, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'gestion' => $gestion, 'tipohlg' => $tipohlg, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

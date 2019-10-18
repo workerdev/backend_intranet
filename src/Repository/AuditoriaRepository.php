@@ -19,9 +19,24 @@ class AuditoriaRepository extends ServiceEntityRepository
         parent::__construct($registry, Auditoria::class);
     }
 
-//    /**
-//     * @return Auditoria[] Returns an array of Auditoria objects
-//     */
+    public function findManagement(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT DISTINCT(date_part('YEAR', cb_auditoria_fecharegistro)) AS gestion 
+                FROM cb_aud_auditoria
+                ORDER BY 1 ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
+//  /**
+//   * @return Auditoria[] Returns an array of Auditoria objects
+//   */
     /*
     public function findByExampleField($value)
     {

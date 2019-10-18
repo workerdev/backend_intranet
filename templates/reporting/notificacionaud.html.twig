@@ -1,5 +1,5 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('resources/bootstrap4/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
     <style>
         .borderless td, .borderless th, .borderless tr {
             border: none;
@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <img src="{{ asset('resources/images/image_rep.png') }}" width="47" height="50" alt="">
+                <img src="resources/images/image_rep.png" width="auto" height="60" alt="">
             </div>
         </div>
         <div class="row">
@@ -21,8 +21,8 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <h6 class="font-weight-bold text-center"><u>NOTIFICACION DE INICIO DE AUDITORIA</u></h6>
-                <h6 class="font-weight-bold text-center"><u>AUDITORIA DEL SISTEMA INTEGRADO DE GESTION</u></h6>
+                <h6 class="font-weight-bold text-center"><u>NOTIFICACIÓN DE INICIO DE AUDITORÍA</u></h6>
+                <h6 class="font-weight-bold text-center"><u>AUDITORIA DEL SISTEMA INTEGRADO DE GESTIÓN</u></h6>
             </div>
         </div>
     </div>
@@ -141,7 +141,7 @@
                     <th><u>DESCRIPCION</u></th>
                 </tr>
                 {% for m in docs %}
-                    {% if objects[0].cb_auditoria_equipo_fkauditoria == m.cb_auditoria_id and objects[0].cb_auditoria_fkarea == m.cb_auditoria_fkarea %}
+                    {% if objects[0].cb_auditoria_equipo_fkauditoria == m.cb_auditoria_id and objects[0].cb_auditoria_fkgas == m.cb_auditoria_fkgas %}
                     <tr>
                         <td>{{m.cb_documento_extra_codigo}}</td>
                         <td>{{m.cb_documento_extra_titulo}}</td>
@@ -191,5 +191,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('resources/bootstrap4/js/bootstrap.min.js') }}"></script>
+    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
 {% endblock %}

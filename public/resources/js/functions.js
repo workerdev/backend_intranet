@@ -291,14 +291,12 @@ function ajax_call_rep(url, data, callback) {
         data: data,
         async: false,
         beforeSend: function() {
-            $("<div id='spn-adrp' style='text-align: center; margin:auto;width:100%; height:60px;'>"+
-                "<div style='margin:auto;display:block; height:55px;'>"+
-                    "<img src='resources/images/rolling.gif' style='height:100%; width:auto;'/>"+
-                "</div>"+
-            "</div>").insertAfter("#rep_form_body");
+            $("#spn-adrp").fadeIn(800);
+            $('#aud_yrep').attr('disabled', 'disabled');
         },
         success:function (data, textStatus) {
             $("#spn-adrp").fadeOut(800);
+            $('#aud_yrep').removeAttr('disabled');
         }
     }).done(function (response) {
         dictionary = JSON.parse(response)

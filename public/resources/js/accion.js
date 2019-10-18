@@ -110,10 +110,11 @@ function verifacc_rep() {
             object: obj
         },function(response){
             var self = JSON.parse(response);
+
             let urlfile = self.url;
-            let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-            $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#new");
-            setTimeout(function(){ $("#lnkrp").remove() }, 10000);
+            let servidor = document.URL
+            let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+            window.open(urlserv + urlfile)
         })
     })
 }

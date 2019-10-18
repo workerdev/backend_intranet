@@ -147,19 +147,47 @@
                 <h3 id="cliente_tittle" class="modal-title">Reporte Anual Auditoría</h3>
                 <h4 id="cliente_enable" class=""></h4>
             </div>
+
             <div class="modal-body">
                 <div id="rep_form_body" class="box-body">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="gestion" name="lugar" type="text" class="form-control text">
-                            <label class="form-label">Gestión</label>
+                    <div class="row clearfix text-format">
+                        <div class="col-sm-12">
+                            <label>Gestión</label>
+                                <select id="gestion" name="gestion" class="form-control show-tick">
+                                    {% for g in gestion %}
+                                        <option value="{{g.gestion}}">{{g.gestion}}</option>
+                                    {% endfor %}
+                                </select>
+                                </br>
                         </div>
                     </div>
                 </div>
+
+                <div id="spn-adrp" class="loader-wrapper" style="display: none">
+                    <div class="loader loader-own">
+                        <div class="preloader preloader-own">
+                            <div class="spinner-layer pl-teal">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center inf-own">Generando...</p>
+                </div>
+
+                <div id="dwnld-fl" class="modal-body">
+                    <div class="box-body">
+                        <label class="link-own"><i class="material-icons">cloud_download</i> Descargar:</label>
+                        <a href="" id="link_excel"></a>
+                    </div>
+                </div>
+
                 <div class="modal-footer">
                     <button id="aud_yrep" type="button" class="btn bg-teal waves-effect proxrep hover-own" title="Excel">Generar <i class="material-icons">grid_on</i></button>
+                    <button id="close-frp" type="button" class="btn bg-blue waves-effect hover-own">Cerrar <i class="material-icons">reply</i></button>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
