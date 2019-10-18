@@ -6196,7 +6196,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.VLSZ_u4" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.arG1rph" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccidentesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6207,6 +6207,7 @@
         <argument key="App\Controller\AccionReprogramaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionReprogramaController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionSeguimientoController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\AccionSeguimientoController::insert_reprog" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionSeguimientoController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AreaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AreaController::insertar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6352,6 +6353,7 @@
         <argument key="App\Controller\AccionReprogramaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionReprogramaController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionSeguimientoController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\AccionSeguimientoController:insert_reprog" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AccionSeguimientoController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AreaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\AreaController:insertar" type="service" id=".service_locator.eUzYpM2"/>
@@ -7066,7 +7068,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.VLSZ_u4"/>
+      <argument type="service" id=".service_locator.arG1rph"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -7380,7 +7382,7 @@
     <service id="jms_serializer.accessor_strategy" alias="jms_serializer.accessor_strategy.default" public="false"/>
     <service id="JMS\Serializer\ContextFactory\SerializationContextFactoryInterface" alias="jms_serializer.configured_serialization_context_factory" public="false"/>
     <service id="JMS\Serializer\ContextFactory\DeserializationContextFactoryInterface" alias="jms_serializer.configured_deserialization_context_factory" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.VLSZ_u4"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.arG1rph"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>

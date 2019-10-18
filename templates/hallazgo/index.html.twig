@@ -5,7 +5,7 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <style>
-        #fkprobabilidadaccion{ 
+        .accion{ 
             cursor:pointer 
         }
         .swal2-title{
@@ -19,6 +19,9 @@
         }
         .modal-dialog-own{
             width: 65%;
+        }
+        .modal-dialog-acn{
+            width: 55%;
         }
         .loader-own{
             margin-top: 5px;
@@ -47,12 +50,29 @@
         #table-detail tr td:nth-child(2){
             white-space: pre-wrap;
         }
+        #table_acn tbody tr td:nth-child(2){
+            white-space: pre-wrap;
+        }
+        .btn-own{
+            margin-right: 2px;
+        }
+        .btn-add-own{
+            margin-bottom: 10px;
+        }
+        .m-tb-own{
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        .scroll-own{
+            overflow-y: scroll;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
     {{ parent() }}
     {{ include('hallazgo/form.html.twig') }}
+    {{ include('accion/form.html.twig') }}
     
     <section id="content" class="content">
         <div class="container-fluid">
@@ -62,15 +82,18 @@
                 <div class="header bg-indigo"><h2>HALLAZGO</h2></div>
                 <div class="body">
                     <div class="row clearfix">
-                        <div class="#fkprobabilidadxs-3 col-sm-2 col-md-2 col-lg-2">
-                        {% if 'hallazgo_insertar' in permisos %}
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            {% if 'hallazgo_insertar' in permisos %}
                             <button id="new-hlg" type="button" class="btn bg-indigo waves-effect hidden" title="Nuevo" data-origin="hallazgo" data-form="form-hlg" data-spn="spn-hlg">
                                 <i class="material-icons">add</i>
                             </button> 
+                            {% endif %}
                             <button id="aud-link" type="button" class="btn bg-teal waves-effect">
                                 <i class="material-icons">spellcheck</i> Auditoría
                             </button>
-                        {% endif %}
+                            <button id="acn-link" type="button" class="btn bg-blue waves-effect">
+                                <i class="material-icons">exit_to_app</i> Acción
+                            </button>
                         </div>
                     </div>
                     
@@ -147,6 +170,7 @@
     <script src="{{ asset('resources/js/transporte.js') }}"></script>
     <script src="{{ asset('resources/js/functions.js') }}"></script>
     <script src="{{ asset('resources/js/hallazgo.js') }}"></script>
+    <script src="{{ asset('resources/js/accion.js') }}"></script>
 
     <script>
         main_route = '/hallazgo'
@@ -222,6 +246,10 @@
                     $("#"+idet).attr('title', 'Ver menos');
                 }
             });
+
+            $('#table_acn').DataTable({
+                responsive: true
+            });
         });
 
         $('#auditoriaf').selectpicker({
@@ -233,6 +261,10 @@
 
         $('#aud-link').click(function(){
             window.location = '/auditoria';
+        });
+
+        $('#acn-link').click(function(){
+            window.location = '/accion';
         });
 
         $('#auditoriaf').change(function() {
@@ -271,7 +303,7 @@
                         { title: "Auditoría" , data: "fkauditoria.codigo" },
                         { title: "Tipo de Hallazgo" , data: "fktipo.nombre" },
                         { title: "Ordinal" , data: "ordinal" },
-                        { title: "Título" , data: "ordinal" },
+                        { title: "Título" , data: "titulo" },
                         { data: "descripcion", visible: false },
                         { title: "Evidencia" , data: "evidencia" },
                         { title: "Documento" , data: "documento" },
@@ -287,6 +319,10 @@
                         { title: "Acciones", data: 'id',
                             render : function (data, type, row){ 
                                 a = ''
+                                {% if 'accion_insertar' in permisos %}  
+                                    a += '<button id="list-acn" data-json="' + row.id + '" onclick="action_list(this)" type="button" class="btn bg-blue waves-effect waves-light list-acn" title="Acción"><i class="material-icons">exit_to_app</i></button>'
+                                {% endif %}
+
                                 {% if 'hallazgo_editar' in permisos %}
                                     a += '<button id="edit-hlg" data-json="' + row.id + '" onclick="edit_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>'
                                 {% endif %}
@@ -330,8 +366,6 @@
                         tdi.first().attr('title', 'Ver menos');
                     }  
                 });
-                hallazgo_edit();
-                hallazgo_delete();
             })
         });
 
@@ -372,6 +406,148 @@
                     '<td>'+data.responsable+'</td>'+
                 '</tr>'+
                 '</table></div>';
+        }
+    </script>
+
+    <script>
+        $('#close-acn').click(function () {
+            $('#form-list').modal('hide')
+        })
+        
+        function list_action(){
+            $('.list-acn').click(function () {
+                $('#form-list').addClass('scroll-own')
+                $('#id-hlg').parent().parent().parent().hide()
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+
+                ajax_call_get("/hallazgo_editar",{
+                    object: obj
+                },function(response){
+                    let self = JSON.parse(response)
+
+                    ajax_call_get("/accion_listall",{
+                        object: obj
+                    },function(responser){
+                        let datar = JSON.parse(responser)
+                        
+                        $('#id-hlg').val(self.id)
+                        $('#tipo-hlg').val(self.fktipo.nombre)
+                        $('#title-hlg').val(self.titulo)
+                        
+                        var tabledl = $('#table_acn').DataTable();
+                        tabledl.destroy();
+
+                        var datacn = [];
+                        for(var i = 0; i < datar.length; i++){
+                            datacn.push( [
+                                datar[i].ordinal, datar[i].descripcion, datar[i].fechaimplementacion, 
+                                datar[i].responsableimplementacion, datar[i].estadoaccion, 
+                                datar[i].responsableregistro, datar[i].fecharegistro
+                            ]);
+                        }
+                        
+                        $('#table_acn').DataTable({
+                            data: datacn,
+                            "order": [[ 6, 'desc' ]],
+                            "pageLength": 10
+                        });
+                        
+                        $('#form-list').modal('show')
+                    })
+                })
+            })
+        }
+        list_action()
+        
+        function action_list(eacn){
+            $('#form-list').addClass('scroll-own')
+            $('#id-hlg').parent().parent().parent().hide()
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(eacn).attr('data-json')))
+            });
+
+            ajax_call_get("/hallazgo_editar",{
+                object: obj
+            },function(response){
+                let self = JSON.parse(response)
+
+                ajax_call_get("/accion_listall",{
+                    object: obj
+                },function(responser){
+                    let datar = JSON.parse(responser)
+                    
+                    $('#id-hlg').val(self.id)
+                    $('#tipo-hlg').val(self.fktipo.nombre)
+                    $('#title-hlg').val(self.titulo)
+                    
+                    var tabledl = $('#table_acn').DataTable();
+                    tabledl.destroy();
+
+                    var datacn = [];
+                    for(var i = 0; i < datar.length; i++){
+                        datacn.push( [
+                            datar[i].ordinal, datar[i].descripcion, datar[i].fechaimplementacion, 
+                            datar[i].responsableimplementacion, datar[i].estadoaccion, 
+                            datar[i].responsableregistro, datar[i].fecharegistro
+                        ]);
+                    }
+                    
+                    $('#table_acn').DataTable({
+                        data: datacn,
+                        "order": [[ 6, 'desc' ]],
+                        "pageLength": 10
+                    });
+                    
+                    $('#form-list').modal('show')
+                })
+            })
+        }
+        
+        $('#new-acn').click(function () {
+            $('#fkhallazgo').val($('#id-hlg').val())
+            $('#fkhallazgo').selectpicker('render')
+        })
+
+        function reload_tabacn(){
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($('#id-hlg').val()))
+            });
+
+            ajax_call_get("/hallazgo_editar",{
+                object: obj
+            },function(response){
+                let self = JSON.parse(response)
+
+                ajax_call_get("/accion_listall",{
+                    object: obj
+                },function(responser){
+                    let datar = JSON.parse(responser)
+                    
+                    $('#id-hlg').val(self.id)
+                    $('#tipo-hlg').val(self.fktipo.nombre)
+                    $('#title-hlg').val(self.titulo)
+                    
+                    var tabledl = $('#table_acn').DataTable();
+                    tabledl.destroy();
+
+                    var datacn = [];
+                    for(var i = 0; i < datar.length; i++){
+                        datacn.push( [
+                            datar[i].ordinal, datar[i].descripcion, datar[i].fechaimplementacion, 
+                            datar[i].responsableimplementacion, datar[i].estadoaccion, 
+                            datar[i].responsableregistro, datar[i].fecharegistro
+                        ]);
+                    }
+                    
+                    $('#table_acn').DataTable({
+                        data: datacn,
+                        "order": [[ 6, 'desc' ]],
+                        "pageLength": 10
+                    });
+                })
+            })
         }
     </script>
 {% endblock %}

@@ -14,56 +14,78 @@
                             <label class="form-label">Eficacia de la Acción ID</label>
                         </div>
                     </div>
-                    
-                    <label>Acción</label>
-                        <select id="fkaccion" class="form-control">
-                        {% for t in accion %}
-                            <option value="{{t.id}}">{{t.descripcion}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br>
 
-                    <label>Eficaz</label>
-                        <select id="eficaz" class="form-control">
-                            <option value="Si">Si</option>
-                            <option value="No">No</option>
-                        </select>
-                        </br>
-                        </br>
-                    <div class="form-group form-float">
-                        <label class="form-label">Resultado</label>
-                        <textarea id="resultado" name="resultado" class="materialize-textarea"></textarea>
-                    </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha</label><br>
-                            <input id="fecha" name="fecha" type="date" class="form-control">
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <label>Acción</label>
+                                <select id="fkaccion" class="form-control show-tick">
+                                {% for t in accion %}
+                                    <option value="{{t.id}}">{{t.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="responsable" name="responsable" type="text" class="form-control text">
-                            <label class="form-label">Responsable</label>
+
+                    <div class="form-group">
+                        <label for="resultado">Resultado</label>
+                        <textarea class="form-control txta-own" rows="3" id="resultado" name="resultado"></textarea>
+                    </div>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <label>Eficaz</label>
+                                <select id="eficaz" class="form-control show-tick">
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                                </br>
+                                </br>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha</label><br>
+                                    <input id="fecha" name="fecha" type="date" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="nombreverificador" name="nombreverificador" type="text" class="form-control text">
-                            <label class="form-label">Nombre del verificador</label>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsable" name="responsable" type="text" class="form-control text">
+                                    <label class="form-label">Responsable</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="cargoverificador" name="cargoverificador" type="text" class="form-control text">
-                            <label class="form-label">Cargo del verificador</label>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="nombreverificador" name="nombreverificador" type="text" class="form-control text">
+                                    <label class="form-label">Nombre del verificador</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="cargoverificador" name="cargoverificador" type="text" class="form-control text">
+                                    <label class="form-label">Cargo del verificador</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect hover-own">Guardar <i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect hover-own">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
         </div>

@@ -1,77 +1,114 @@
-<div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div id="form-acn" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-acn" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="cliente_tittle" class="modal-title">Acción</h3>
-                <h4 id="cliente_enable" class=""></h4>
+                <h3 id="accion_tittle" class="modal-title">Acción</h3>
+                <h4 id="accion_enable" class=""></h4>
             </div>
             <div class="modal-body">
-                <div id="cliente_form_body" class="box-body">
-                    <div id="id_div" class="form-group">
+                <div id="accion_form_body" class="box-body">
+                    <div id="idacn_div" class="form-group">
                         <div class="form-line">
-                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <input id="idacn" type="text" class="form-control" disabled="disabled">
                             <label class="form-label">Acción ID</label>
                         </div>
                     </div>
 
-                    <label>Hallazgo</label>
-                        <select id="fkhallazgo" class="form-control">
-                        {% for t in hallazgo %}
-                            <option value="{{t.id}}">{{t.titulo}}</option>
-                        {% endfor %}
-                        </select>
-                        </br>
-                        </br> 
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <label>Hallazgo</label>
+                                <select id="fkhallazgo" class="form-control show-tick">
+                                {% for t in hallazgo %}
+                                    <option value="{{t.id}}">{{t.titulo}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                        </div>
+                    </div>
 
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="ordinal" name="ordinal" type="text" class="form-control text">
-                            <label class="form-label">Ordinal</label>
-                        </div>
-                    </div>
-                    <div class="form-group form-float">                        
-                             <label for="accion">Descripción</label>
-                            <textarea id="descripcion" name="descripcion" class="materialize-textarea" data-length="120"></textarea>
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="descripcionacn">Descripción</label>
+                                <textarea class="form-control txta-own item-acn" rows="3" id="descripcionacn" name="descripcionacn"></textarea>
                             </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha de implementación</label><br>
-                            <input id="fechaimplementacion" name="fechaimplementacion" type="date" class="form-control">
                         </div>
                     </div>
-                    
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="responsableimplementacion" name="responsableimplementacion" type="text" class="form-control text">
-                            <label class="form-label">Responsable de implementación</label>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="ordinalacn" name="ordinalacn" type="text" class="form-control text item-acn">
+                                    <label class="form-label">Ordinal</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Estado</label>
+                            <select id="estadoaccion" class="form-control show-tick">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Implementada">Implementada</option>
+                            </select>
+                            </br>
                         </div>
                     </div>
-                    
-                    <label>Estado</label>
-                        <select id="estadoaccion" class="form-control">
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Implementada">Implementada</option>
-                        </select>
-                        </br>
-                        </br>
-                    
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="responsableregistro" name="responsableregistro" type="text" class="form-control">
-                            <label class="form-label">Responsable de registro</label>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsableregistro" name="responsableregistro" type="text" class="form-control item-acn">
+                                    <label class="form-label">Responsable de registro</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha de registro</label><br>
+                                    <input id="fecharegistroacn" name="fecharegistroacn" type="date" class="form-control item-acn">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha de registro</label><br>
-                            <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsableimplementacion" name="responsableimplementacion" type="text" class="form-control text item-acn">
+                                    <label class="form-label">Responsable de implementación</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha de implementación</label><br>
+                                    <input id="fechaimplementacion" name="fechaimplementacion" type="date" class="form-control item-acn">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div id="spn-acn" class="loader-wrapper" style="display: none">
+                    <div class="loader loader-own">
+                        <div class="preloader preloader-own">
+                            <div class="spinner-layer pl-indigo">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center inf-own">Guardando...</p>
+                </div>
+
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
+                    <button id="insert-acn" type="button" class="btn bg-indigo waves-effect hover-own">Guardar <i class="material-icons">save</i></button>
+                    <button id="update-acn" type="button" class="btn bg-indigo waves-effect hover-own">Modificar <i class="material-icons">refresh</i></button>
                 </div>
             </div>
         </div>

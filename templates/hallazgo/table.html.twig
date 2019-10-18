@@ -21,6 +21,9 @@
         <td class="d-none">{{ tr.nombreauditado }}</td>
         <td class="d-none">{{ tr.responsable }}</td>
         <td align="center">
+        {% if 'accion_insertar' in permisos %}  
+            <button id="list-acn" data-json="{{tr.id}}" type="button" class="btn bg-blue waves-effect waves-light list-acn" title="Acción"><i class="material-icons">exit_to_app</i></button>
+        {% endif %}
         {% if 'hallazgo_editar' in permisos %}
             <button id="edit-hlg" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>
         {% endif %}

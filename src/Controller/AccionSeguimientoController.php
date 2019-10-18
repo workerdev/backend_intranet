@@ -7,14 +7,15 @@ use App\Entity\AccionSeguimiento;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
+use App\Entity\Hallazgo;
+use App\Entity\Rol;
+use App\Entity\DocProcRevision;
+use App\Entity\FichaCargo;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Entity\Rol;
-use App\Entity\DocProcRevision;
-use App\Entity\FichaCargo;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -60,9 +61,11 @@ class AccionSeguimientoController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
       
-        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
+        $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
+        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1'], ['descripcion' => 'ASC']);
         $accionseguimiento = $this->getDoctrine()->getRepository(AccionSeguimiento::class)->findBy(array('estado' => '1'));
-        return $this->render('accionseguimiento/index.html.twig', array('objects' => $accionseguimiento, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        
+        return $this->render('accionseguimiento/index.html.twig', array('objects' => $accionseguimiento, 'accion' => $accion, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -90,25 +93,106 @@ class AccionSeguimientoController extends Controller
             $accionseguimiento->setEstadoseguimiento($estadoseguimiento);
             $accionseguimiento->setEstado(1);
 
-            $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion): $accion=null;
+            $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion):$accion=null;
             $accionseguimiento->setFkaccion($accion);
+
+            if($estadoseguimiento == 'Implementada' && $accion != null){
+                $accion->setEstadoaccion($estadoseguimiento);
+                $cx->merge($accion);
+                $cx->flush();
+            }
+
             $errors = $validator->validate($accionseguimiento);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
-                return  new  Response(json_encode($array)) ;
+
+                return new Response(json_encode($array));
             }
             $cx->persist($accionseguimiento);
             $cx->flush();
 
-            $resultado = array('response'=>"El ID registrado es: ".$accionseguimiento->getId().".",'success' => true,
-                'message' => 'Seguimiento de la acción registrado correctamente.');
+            $resultado = array('response'=>"El ID registrado es: ".$accionseguimiento->getId().".",'success' => true, 'message' => 'Seguimiento de la acción registrado correctamente.');
             $resultado = json_encode($resultado);
+
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * @Route("/accionseguimiento_insertrpg", methods={"POST"}, name="accionseguimiento_insertrpg")
+     */
+    public function insert_reprog(ValidatorInterface $validator)
+    {
+        try {
+            $cx = $this->getDoctrine()->getManager();
+
+            $sx = json_decode($_POST['object'], true);
+            $ordinal = $sx['ordinal'];
+            $fecha = $sx['fecha'];
+            $responsable = $sx['responsable'];
+            $observaciones = $sx['observaciones'];
+            $estadoseguimiento = $sx['estadoseguimiento'];
+            
+            $accion = $sx['accion'];
+
+            $accionseguimiento = new AccionSeguimiento();
+            if($ordinal !='' && is_numeric($ordinal))  $accionseguimiento->setOrdinal($ordinal);
+            $accionseguimiento->setFecha(new \DateTime($fecha));
+            $accionseguimiento->setResponsable($responsable);
+            $accionseguimiento->setObservaciones($observaciones);
+            $accionseguimiento->setEstadoseguimiento($estadoseguimiento);
+            $accionseguimiento->setEstado(1);
+
+            $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion):$accion=null;
+            $accionseguimiento->setFkaccion($accion);
+
+            if($estadoseguimiento == 'Implementada' && $accion != null){
+                $accion->setEstadoaccion($estadoseguimiento);
+                $cx->merge($accion);
+                $cx->flush();
+            }
+            
+            $cx->persist($accionseguimiento);
+            $cx->flush();
+
+            $fechaanterior = $sx['fechaanterior'];
+            $fechaimplementacion = $sx['fechaimplementacion'];
+            $motivojustificacion = $sx['motivojustificacion'];
+            $autoriza = $sx['autoriza'];
+            $responsableregistro = $sx['responsableregistro'];
+            $fecharegistro = $sx['fecharegistro'];
+            
+            $accion = $sx['accionrpg'];
+
+            $accionreprograma = new AccionReprograma();
+            $accionreprograma->setFechaanterior(new \DateTime($fechaanterior));
+            $accionreprograma->setFechaimplementacion(new \DateTime($fechaimplementacion));
+            $accionreprograma->setMotivojustificacion($motivojustificacion);
+            $accionreprograma->setAutoriza($autoriza);
+            $accionreprograma->setResponsableregistro($responsableregistro);
+            $accionreprograma->setFecharegistro(new \DateTime($fecharegistro));
+            $accionreprograma->setEstado(1);
+
+            $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion) : $accion = null;
+            $accionreprograma->setFkaccion($accion);
+            $cx->persist($accionreprograma);
+            $cx->flush();
+
+            $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion);
+            $accion->setFechaimplementacion(new \DateTime($fechaimplementacion));
+
+            $cx->persist($accion);
+            $cx->flush();
+
+            $resultado = array('response'=>"El ID registrado es: ".$accionseguimiento->getId().".",'success' => true, 'message' => 'Seguimiento de la acción registrado correctamente.');
+            $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -135,6 +219,7 @@ class AccionSeguimientoController extends Controller
 
             $accionseguimiento = $this->getDoctrine()->getRepository(AccionSeguimiento::class)->find($id);
             $accionseguimiento->setId($id);
+
             if($ordinal !='' && is_numeric($ordinal))  $accionseguimiento->setOrdinal($ordinal);
             $accionseguimiento->setFecha(new \DateTime($fecha));
             $accionseguimiento->setResponsable($responsable);
@@ -144,23 +229,28 @@ class AccionSeguimientoController extends Controller
 
             $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion): $accion=null;
             $accionseguimiento->setFkaccion($accion);
+
+            if($estadoseguimiento == 'Implementada' && $accion != null){
+                $accion->setEstadoaccion($estadoseguimiento);
+                $cx->merge($accion);
+                $cx->flush();
+            }
+
             $errors = $validator->validate($accionseguimiento);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
+
                 return  new  Response(json_encode($array)) ;
             }
 
             $cx->merge($accionseguimiento);
             $cx->flush();
 
-            $resultado = array('success' => true,
-                    'message' => 'Seguimiento de la acción actualizado correctamente.');
+            $resultado = array('success' => true, 'message' => 'Seguimiento de la acción actualizado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -177,8 +267,9 @@ class AccionSeguimientoController extends Controller
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $accionseguimiento = $this->getDoctrine()->getRepository(AccionSeguimiento::class)->find($id);
+            $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findOneBy(['estado' => '1', 'id' => $accionseguimiento->getFkaccion()->getFkhallazgo()->getId()]);
             $fec = $accionseguimiento->getFecha();
-            $rsfc = $fec->format('Y-m-d');
+            if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
             
             $sendinf = [
                 "id" => $accionseguimiento->getId(),
@@ -187,7 +278,8 @@ class AccionSeguimientoController extends Controller
                 "fecha" => $rsfc,
                 "responsable" => $accionseguimiento->getResponsable(),
                 "observaciones" => $accionseguimiento->getObservaciones(),
-                "estadoseguimiento" => $accionseguimiento->getEstadoseguimiento()
+                "estadoseguimiento" => $accionseguimiento->getEstadoseguimiento(),
+                "hallazgo" => $hallazgo->getId()
             ];
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));

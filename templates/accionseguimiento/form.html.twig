@@ -1,5 +1,5 @@
 <div id="form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-sgac" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -14,9 +14,21 @@
                             <label class="form-label">Seguimiento de Acción ID</label>
                         </div>
                     </div>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <label>Hallazgo</label>
+                                <select id="hallazgo" class="form-control show-tick">
+                                {% for t in hallazgo %}
+                                    <option value="{{t.id}}">{{t.titulo}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                        </div>
+                    </div>
                     
                     <label>Acción</label>
-                        <select id="fkaccion" class="form-control">
+                        <select id="fkaccion" class="form-control show-tick">
                         {% for t in accion %}
                             <option value="{{t.id}}">{{t.descripcion}}</option>
                         {% endfor %}
@@ -24,41 +36,137 @@
                         </br>
                         </br>
 
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="ordinal" name="ordinal" type="text" class="form-control text">
-                            <label class="form-label">Ordinal</label>
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea class="form-control txta-own item-seg" rows="3" id="observaciones" name="observaciones"></textarea>
+                    </div>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="ordinal" name="ordinal" type="text" class="form-control text item-seg">
+                                    <label class="form-label">Ordinal</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsable" name="responsable" type="text" class="form-control text item-seg">
+                                    <label class="form-label">Responsable</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <label class="form-label">Fecha</label><br>
-                            <input id="fecha" name="fecha" type="date" class="form-control">
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha</label><br>
+                                    <input id="fecha" name="fecha" type="date" class="form-control item-seg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Estado</label>
+                                <select id="estadoseguimiento" class="form-control show-tick">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Implementada">Implementada</option>
+                                </select>
+                                </br>
+                                </br>
                         </div>
                     </div>
-                    <div class="form-group form-float">
+                </div>
+                <div class="modal-footer">
+                    <button id="insert" type="button" class="btn bg-indigo waves-effect hover-own">Guardar <i class="material-icons">save</i></button>
+                    <button id="update" type="button" class="btn bg-indigo waves-effect hover-own">Modificar <i class="material-icons">refresh</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="form-rpg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="cliente_tittle" class="modal-title">Reprograma de Acción</h3>
+                <h4 id="cliente_enable" class=""></h4>
+            </div>
+            <div class="modal-body">
+                <div id="cliente_form_body" class="box-body">
+                    <div id="id_div" class="form-group">
                         <div class="form-line">
-                            <input id="responsable" name="responsable" type="text" class="form-control text">
-                            <label class="form-label">Responsable</label>
+                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <label class="form-label">Reprograma de Acción ID</label>
                         </div>
                     </div>
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input id="observaciones" name="observaciones" type="text" class="form-control text">
-                            <label class="form-label">Observaciones</label>
-                        </div>
-                    </div>
-                    <label>Estado</label>
-                        <select id="estadoseguimiento" class="form-control">
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Implementada">Implementada</option>
+                    
+                    <label>Acción</label>
+                        <select id="fkaccionrpg" class="form-control show-tick" onchange="addDate()">
+                        {% for t in accion %}
+                            <option value="{{t.id}}">{{t.descripcion}}</option>
+                        {% endfor %}
                         </select>
                         </br>
                         </br>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha anterior</label><br>
+                                    <input id="fechaanterior" name="fechaanterior" type="date" class="form-control item-rpg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Fecha de implementación</label><br>
+                                    <input id="fechaimplementacion" name="fechaimplementacion" type="date" class="form-control item-rpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motivojustificacion">Motivo y justificación</label>
+                        <textarea class="form-control txta-own item-rpg" rows="3" id="motivojustificacion" name="motivojustificacion"></textarea>
+                    </div>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="autoriza" name="autoriza" type="text" class="form-control text item-rpg">
+                                    <label class="form-label">Autorizado por</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="responsableregistro" name="responsableregistro" type="text" class="form-control text item-rpg">
+                                    <label class="form-label">Responsable de registro</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <label class="form-label">Fecha de registro</label><br>
+                            <input id="fecharegistro" name="fecharegistro" type="date" class="form-control item-rpg">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="insert" type="button" class="btn bg-indigo waves-effect">Guardar <i class="material-icons">save</i></button>
-                    <button id="update" type="button" class="btn bg-indigo waves-effect">Modificar <i class="material-icons">refresh</i></button>
+                    <button id="insert-rpg" type="button" class="btn bg-indigo waves-effect hover-own">Guardar <i class="material-icons">save</i></button>
                 </div>
             </div>
         </div>

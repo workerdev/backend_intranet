@@ -166,3 +166,82 @@
         </div>
     </div>
 </div>
+
+
+<div id="form-list" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-own" role="document">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="action_tittle" class="modal-title">Hallazgo</h3>
+            </div>
+            <div class="modal-body">
+                <div class="pd-own">
+                    <div id="action_form_body" class="box-body">
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">ID Hallazgo</label>
+                                            <input id="id-hlg" name="id-hlg" type="text" class="form-control" readonly autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Tipo</label>
+                                            <input id="tipo-hlg" name="tipo-hlg" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Título</label>
+                                            <input id="title-hlg" name="title-hlg" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr  width="100%" style="height: 2px; background-color: #004c99" noshade>
+
+                <div class="pd-own">
+                    <h4 id="action_enable" class="">Acciones</h4>
+                    <button id="new-acn" type="button" class="btn bg-blue waves-effect hover-own btn-add-own" title="Nuevo" data-origin="hallazgo" data-form="form-acn" data-spn="spn-acn">
+                        <i class="material-icons">add</i>
+                    </button>
+
+                    <table id="table_acn" class="table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Ordinal</th>
+                                <th>Descripción</th>
+                                <th>Fecha de Implementación</th>
+                                <th>Responsable de Implementación</th>
+                                <th>Estado</th>
+                                <th>Respponsable de registro</th>
+                                <th>Fecha de registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="close-acn" type="button" class="btn bg-teal waves-effect hover-own">Cerrar <i class="material-icons">reply</i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

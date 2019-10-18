@@ -72,8 +72,9 @@ class HallazgoController extends Controller
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
+        $combo_hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
 
-        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipohlg' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipohlg' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'hallazgo' => $combo_hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -365,7 +366,7 @@ class HallazgoController extends Controller
     /**
      * @Route("/hallazgo_listall", methods={"POST"}, name="hallazgo_listall")
      */
-    public function listall()
+    public function list_all()
     {
         try {
             $sx = json_decode($_POST['object'], true);
@@ -401,13 +402,11 @@ class HallazgoController extends Controller
             }       
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-           
             $json = $serializer->serialize($datahlg, 'json');
-            $resultado = array(
-                'response'=>$json,'success' => true,
-                'message' => 'Hallazgos listados correctamente.'
-            );
+
+            $resultado = array('response'=>$json,'success' => true, 'message' => 'Hallazgos listados correctamente.');
             $resultados = json_encode($resultado);
+
             return new Response($resultados);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";

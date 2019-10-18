@@ -5,12 +5,28 @@
     {{ parent() }}
     <style>
         .accion{ cursor:pointer }
-	    .modal-dialog{
-             width: 100% !important;
-        }    
-        .open {
-             width: 100% !important;
-        } 
+	    .modal-dialog-sgac{
+            width: 60% !important;
+        }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
+        .m-tb-own{
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        #data_tabletr tbody tr td:nth-child(6){
+            white-space: pre-wrap;
+        }
     </style>
 {% endblock %}
 
@@ -26,12 +42,15 @@
                     <div class="header bg-indigo"><h2>SEGUIMIENTO DE ACCIÓN</h2></div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             {% if 'accionseguimiento_insertar' in permisos %}
                                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                                     <i class="material-icons">add</i>
                                 </button>
                             {% endif %}
+                            <button id="rpg-link" type="button" class="btn bg-teal waves-effect">
+                                <i class="material-icons">event</i> Reprograma de Acción
+                            </button>
                             </div>
                         </div>
                         {% if 'home_accionseguimiento' in permisos and objects %}
@@ -40,6 +59,7 @@
                                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                         <tr>
+                                            <th class="order_by_th" data-name="phone">Hallazgo </th>
                                             <th class="order_by_th" data-name="phone">Acción </th>
                                             <th class="order_by_th" data-name="phone">Ordinal </th>
                                             <th class="order_by_th" data-name="phone">Fecha </th>
@@ -85,7 +105,23 @@
     </script>
 
     <script>
+        $(document).ready(function() {
+            table = $('#data_tabletr').DataTable();
+            table.order([ 3, 'desc'] ).draw();
+        });
+
+        $('#rpg-link').click(function(){
+            window.location = '/accionreprograma';
+        });
+
         attach_validators()
+
+        $('#hallazgo').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar hallazgo.',
+            title: 'Seleccione un hallazgo.'
+        })
 
         $('#fkaccion').selectpicker({
             size: 4,
@@ -101,11 +137,54 @@
             title: 'Seleccione un estado.'
         })
 
+        $('#hallazgo').change(function(){
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).val()))
+            })
+            ajax_call_get("/accion_obtener",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                console.log(self)
+
+                $('#fkaccion').html('');
+                var select = document.getElementById("fkaccion")
+
+                for (var i = 0; i < Object.keys(self).length; i++) {
+                    var option = document.createElement("OPTION");
+                    option.innerHTML = self[i]['descripcion'];
+                    option.value = self[i]['id'];
+                    select.appendChild(option);
+                }
+                $('#fkaccion').selectpicker('refresh');
+            })
+        })
+
+        $('#fkaccion').change(function(){
+            if($('#hallazgo').val() == ''){
+                $('#fkaccion').val('')
+                $('#fkaccion').selectpicker('render')
+
+                swal(
+                    'Error de datos',
+                    'Primero debe seleccionar un hallazgo.',
+                    'warning'
+                ) 
+            }
+        })
+
         $('#new').click(function () {
             $('#ordinal').val('')
             $('#fecha').val('')
             $('#responsable').val('')
             $('#observaciones').val('')
+
+            $('#hallazgo').val('')
+            $('#hallazgo').selectpicker('render')
+            $('#fkaccion').val('')
+            $('#fkaccion').selectpicker('render')
+            $('#estadoseguimiento').val('')
+            $('#estadoseguimiento').selectpicker('render')
 
             clean_form()
             verif_inputs()
@@ -116,16 +195,42 @@
         })
 
         $('#insert').click(function () {
-            objeto = JSON.stringify({
-                'ordinal': $('#ordinal').val(),
-                'fecha': $('#fecha').val(),
-                'responsable': $('#responsable').val(),
-                'observaciones': $('#observaciones').val(),
+            if($('#estadoseguimiento').val() == 'Pendiente'){
+                $('#fkaccionrpg').val($('#fkaccion').val())
+                $('#fkaccionrpg').selectpicker('render')
 
-                'accion': $('#fkaccion').val(),
-                'estadoseguimiento': $('#estadoseguimiento').val()
-            })
-            ajax_call_validation("/accionseguimiento_insertar", {object: objeto}, null, main_route)
+                $('#form').modal('hide')
+                $('#form-rpg').modal('show')
+
+                objeto = JSON.stringify({
+                    'ordinal': $('#ordinal').val(),
+                    'fecha': $('#fecha').val(),
+                    'responsable': $('#responsable').val(),
+                    'observaciones': $('#observaciones').val(),
+                    'accion': $('#fkaccion').val(),
+                    'estadoseguimiento': $('#estadoseguimiento').val()
+
+                    'fechaanterior': $('#fechaanterior').val(),
+                    'fechaimplementacion': $('#fechaimplementacion').val(),
+                    'motivojustificacion': $('#motivojustificacion').val(),
+                    'autoriza': $('#autoriza').val(),
+                    'responsableregistro': $('#responsableregistro').val(),
+                    'fecharegistro': $('#fecharegistro').val(),
+                    'accionrpg': $('#fkaccionrpg').val()
+                })
+                ajax_call_validation("/accionseguimiento_insertrpg", {object: objeto}, null, main_route)
+            }else{
+                objeto = JSON.stringify({
+                    'ordinal': $('#ordinal').val(),
+                    'fecha': $('#fecha').val(),
+                    'responsable': $('#responsable').val(),
+                    'observaciones': $('#observaciones').val(),
+
+                    'accion': $('#fkaccion').val(),
+                    'estadoseguimiento': $('#estadoseguimiento').val()
+                })
+                ajax_call_validation("/accionseguimiento_insertar", {object: objeto}, null, main_route)
+            }
         })
 
         function attach_edit() {
@@ -137,6 +242,12 @@
                     object: obj
                 },function(response){
                     var self = JSON.parse(response);
+                    console.log(self)
+
+                    $('#hallazgo').val(self.hallazgo)
+                    $('#hallazgo').selectpicker('render')
+                    $('#hallazgo').change()
+
                     $('#id').val(self.id)
                     $('#ordinal').val(self.ordinal)
                     $('#fecha').val(self.fecha)
@@ -146,14 +257,14 @@
                     $('#estadoseguimiento').val(self.estadoseguimiento)
                     $('#estadoseguimiento').selectpicker('render')
 
-                    $('#fkaccion').val(self.fkaccion.id)
-                    $('#fkaccion').selectpicker('render')
-
                     clean_form()
                     verif_inputs()
                     $('#id_div').show()
                     $('#insert').hide()
                     $('#update').show()
+
+                    $('#fkaccion').val(self.fkaccion.id)
+                    $('#fkaccion').selectpicker('render')
                     $('#form').modal('show')
                 })
             })
@@ -193,5 +304,51 @@
                 ajax_call("/accionseguimiento_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 1000);})
             })
         })
+
+        function addDate(){
+            id = $('#fkaccion').val()
+
+            obj = JSON.stringify({
+                'id': id
+            });
+            ajax_call_get("/dateformat",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                $('#fechaanterior').val(self.fechaimplementacion)
+            })
+        }
+
+        function validate_formseg(){
+            var res = true;
+
+            $('.item-seg').each(function(){
+                let valif = $(this).val();
+
+                if(valif != 0 && valif != '' && valif != null){}
+                else res = false;
+            });
+            return res;
+        }
+
+        function validate_comboseg(){
+            return ($('#hallazgo').val() == '' || $('#fkaccion').val() == '' || $('#estadoseguimiento').val() == '');
+        }
+
+        function validate_formrpg(){
+            var resrp = true;
+
+            $('.item-rpg').each(function(){
+                let valirp = $(this).val();
+
+                if(valirp != 0 && valirp != '' && valirp != null){}
+                else resrp = false;
+            });
+            return resrp;
+        }
+
+        function validate_comborpg(){
+            return ($('#fkaccionrpg').val() == '');
+        }
     </script>
 {% endblock %}

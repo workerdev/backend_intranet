@@ -60,7 +60,7 @@ class AccionController extends Controller
             $permisos[] = $item;
         }
         
-        $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(array('estado' => '1'));
+        $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
         $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
@@ -228,7 +228,6 @@ class AccionController extends Controller
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-    
 
     /**
      * @Route("/accion_prev", methods={"POST"}, name="accion_prev")
@@ -311,6 +310,96 @@ class AccionController extends Controller
             $resultado = array('response'=>"El ID modificado es: ".$accion->getId().".",'success' => true,
                 'message' => 'Acción dado de baja correctamente.');
             $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * @Route("/accion_listall", methods={"POST"}, name="accion_listall")
+     */
+    public function list_all()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'fkhallazgo' => $id], ['fecharegistro' => 'DESC']);
+
+            $datacn = array();
+            foreach ($acciones as $acn) {
+                $accion = (object) $acn;
+                $fecimp = $accion->getFechaimplementacion();
+                $fecreg = $accion->getFecharegistro();
+
+                if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+            
+                $info = [
+                    "id" => $accion->getId(),
+                    "fkhallazgo" => $accion->getFkhallazgo(),
+                    "ordinal" => $accion->getOrdinal(),
+                    "descripcion" => $accion->getDescripcion(),
+                    "fechaimplementacion" => $rsfci,
+                    "responsableimplementacion" => $accion->getResponsableimplementacion(),
+                    "estadoaccion" => $accion->getEstadoaccion(),
+                    "responsableregistro" => $accion->getResponsableregistro(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datacn[] = $info;
+            }
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($datacn, 'json');
+
+            $resultado = array('response'=>$json,'success' => true, 'message' => 'Acciones listadas correctamente.');
+            $resultado = json_encode($resultado);
+
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * @Route("/accion_obtener", methods={"POST"}, name="accion_obtener")
+     */
+    public function obtener()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'fkhallazgo' => $id], ['descripcion' => 'ASC']);
+
+            $datacn = array();
+            foreach ($acciones as $acn) {
+                $accion = (object) $acn;
+                $fecimp = $accion->getFechaimplementacion();
+                $fecreg = $accion->getFecharegistro();
+
+                if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+            
+                $info = [
+                    "id" => $accion->getId(),
+                    "fkhallazgo" => $accion->getFkhallazgo(),
+                    "ordinal" => $accion->getOrdinal(),
+                    "descripcion" => $accion->getDescripcion(),
+                    "fechaimplementacion" => $rsfci,
+                    "responsableimplementacion" => $accion->getResponsableimplementacion(),
+                    "estadoaccion" => $accion->getEstadoaccion(),
+                    "responsableregistro" => $accion->getResponsableregistro(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datacn[] = $info;
+            }
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($datacn, 'json');
+
+            $resultado = array('response'=>$json,'success' => true, 'message' => 'Acciones listadas correctamente.');
+            $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

@@ -547,3 +547,105 @@ function ajax_call_validation_aud(url, data, render, callback) {
         console.log('Error Ajax')
     })
 }
+
+function ajax_call_validation_hlg(url, data, render, callback) {
+    var datos = JSON.parse(data['object']);
+    console.log(datos)
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: true,
+        beforeSend: function () {
+            $('#'+datos.spnr).fadeIn(800);
+            $('#'+datos.btn_id).hide();
+         },
+         success: function (data, textStatus) {
+            $('#'+datos.spnr).fadeOut(800);
+            $('#'+datos.btn_id).show();
+         }
+    }).done(function (response) {
+        dictionary = JSON.parse(response)
+        console.log(dictionary);
+        if ('error' in dictionary) {
+            arreglo = document.getElementsByClassName('label-form123')
+            console.log(arreglo.length);
+            if (arreglo.length > 0) {
+                arrayErrorFocus = document.getElementsByClassName('error focused')
+                console.log(arrayErrorFocus);
+                for (i = 0; i < arrayErrorFocus.length; i++) {
+                    console.log('Error' + i)
+                    arrayErrorFocus[i].classList.remove('error');
+                }
+                for (i = 0; i < arreglo.length; i++)
+                    arreglo[i].remove();
+            }
+            arreglo = document.getElementsByClassName('label-form123')
+            if (arreglo.length > 0) {
+                for (i = 0; i < arreglo.length; i++)
+                    arreglo[i].remove()
+            }
+            c = 0;
+            
+            Object.entries(dictionary).forEach(function (key) {
+                if (key[0] != 'error'){
+                    console.log(dictionary[0]);
+                    console.log(document.getElementById(key[0])+'Errores Ciclo ' + key[0])
+                    field = document.getElementById(key[0])
+                    field.parentElement.classList.add('error');
+                    labelError = document.createElement("label");
+                    labelError.setAttribute('id', 'label-form123');
+                    labelError.setAttribute('class', 'label-form123');
+                    labelErrorText = document.createTextNode(key[1])
+                    ;
+
+                    labelError.appendChild(labelErrorText);
+
+                    labelError.classList.add("error");
+                    labelError.classList.add("text-danger");
+
+                    field.parentElement.insertAdjacentElement("afterend", labelError)
+                    c++
+                }
+            })
+        }
+
+        if (render != null) {
+            $(render).html(response)
+        } else {
+            dictionary = JSON.parse(response)
+            console.log(dictionary);
+
+            if ("message" in dictionary && dictionary.message != '') {
+                if (dictionary.success) {
+                    if(datos.origin == 'hallazgo'){
+                        swal(
+                            'Datos registrados',
+                            '',
+                            'success'
+                        )
+                        $('#'+datos.form).modal('hide');
+                        reload_tabacn()
+                    }else{
+                        showMessage(dictionary.message, "success", "ok");
+                        $('#'+datos.form).modal('hide');
+                        setTimeout(function () {
+                            window.location = callback
+                        }, 1000)
+                    }
+                } else {
+                    if(datos.origin == 'hallazgo'){
+                        swal(
+                            'Error',
+                            dictionary.message,
+                            'warning'
+                        )
+                    }
+                    else showMessage(dictionary.message, "danger", "remove")
+                }
+            }
+        }
+    }).fail(function () {
+        console.log('Error Ajax')
+    })
+}

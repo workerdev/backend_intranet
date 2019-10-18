@@ -227,7 +227,7 @@ class FortalezaController extends AbstractController
     /**
      * @Route("/fortaleza_listall", methods={"POST"}, name="fortaleza_listall")
      */
-    public function listall()
+    public function list_all()
     {
         try {
             $sx = json_decode($_POST['object'], true);

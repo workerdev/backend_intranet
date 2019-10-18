@@ -11,6 +11,36 @@
         .swal2-title{
             font-size: 16px !important;
         }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
+        .modal-dialog-acn{
+            width: 55%;
+        }
+        .loader-own{
+            margin-top: 5px;
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
+        .m-tb-own{
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        #data_tabletr tbody tr td:nth-child(4){
+            white-space: pre-wrap;
+        }
     </style>
 {% endblock %}
 
@@ -27,18 +57,23 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-                            {% if 'accion_insertar' in permisos %}
-                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                {% if 'accion_insertar' in permisos %}
+                                <button id="new-acn" type="button" class="btn bg-indigo waves-effect hidden" title="Nuevo" data-origin="accion" data-form="form-acn" data-spn="spn-acn">
                                     <i class="material-icons">add</i>
                                 </button>
-                            {% endif %}
+                                {% endif %}
+                                <button id="hlg-link" type="button" class="btn bg-primary hover-own waves-effect">
+                                    <i class="material-icons">zoom_in</i> Hallazgo
+                                </button>
                             </div>
                         </div>
+
                         <div style="text-align:center; margin:auto; width:100%; height:60px;" id="spn-adrp">
                             <div class="plan-icon-load progress" style='margin:auto; display:none; height:60px;'>
                                 <img src='resources/images/loaders.gif' style='height:100%; width:auto;'/>
                             </div>
                         </div>
+
                         {% if 'home_accion' in permisos and objects %}
                             <div class="row">
                                 <div class="body table-responsive">
@@ -48,13 +83,13 @@
                                             <th></th>
                                             <th class="d-none">ID </th>
                                             <th class="order_by_th" data-name="phone">Hallazgo </th>
-                                            <th class="order_by_th" data-name="phone">Ordinal </th>
-                                            <th class="order_by_th" data-name="phone">Estado </th>
                                             <th class="order_by_th" data-name="names">Descripción </th>
-                                            <th class="order_by_th" data-name="phone">Fecha de Implementación </th>
-                                            <th class="d-none" data-name="phone">Responsable de Implementación </th>
+                                            <th class="order_by_th" data-name="phone">Estado </th>
+                                            <th class="order_by_th" data-name="phone">Ordinal </th>
+                                            <th class="order_by_th" data-name="phone">Fecha de Registro </th>
                                             <th class="d-none" data-name="phone">Responsable de Registro </th>
-                                            <th class="d-none" data-name="phone">Fecha de Registro </th>
+                                            <th class="d-none" data-name="phone">Fecha de Implementación </th>
+                                            <th class="d-none" data-name="phone">Responsable de Implementación </th>
                                             <th class="actions_header">Acciones </th>
                                         </tr>
                                         </thead>
@@ -79,6 +114,7 @@
     {{ parent() }}
     <script src="{{ asset('resources/js/transporte.js') }}"></script>
     <script src="{{ asset('resources/js/functions.js') }}"></script>
+    <script src="{{ asset('resources/js/accion.js') }}"></script>
 
     <script>
         main_route = '/accion'
@@ -94,182 +130,19 @@
     </script>
 
     <script>
-        attach_validators()
-
-        $('#fkhallazgo').selectpicker({
-            size: 4,
-            liveSearch: true,
-            liveSearchPlaceholder: 'Buscar auditoría.',
-            title: 'Seleccione una auditoría.'
-        })
-
-        $('#estadoaccion ').selectpicker({
-            size: 4,
-            liveSearch: true,
-            liveSearchPlaceholder: 'Buscar estado.',
-            title: 'Seleccione un estado.'
-        })
-
-        $('#new').click(function () {
-            $('#ordinal').val('')
-            $('#descripcion').val('')
-            $('#fechaimplementacion').val('')
-            $('#responsableimplementacion').val('')
-            $('#responsableregistro').val('')
-            $('#fecharegistro').val('')
-
-            clean_form()
-            verif_inputs()
-            $('#id_div').hide()
-            $('#insert').show()
-            $('#update').hide()
-            $('#form').modal('show')
-        })
-
-        $('#insert').click(function () {
-            objeto = JSON.stringify({
-                'ordinal': $('#ordinal').val(),
-                'descripcion': $('#descripcion').val(),
-                'fechaimplementacion': $('#fechaimplementacion').val(),
-                'responsableimplementacion': $('#responsableimplementacion').val(),
-                'responsableregistro': $('#responsableregistro').val(),
-                'fecharegistro': $('#fecharegistro').val(),
-
-                'hallazgo': $('#fkhallazgo').val(),
-                'estadoaccion': $('#estadoaccion ').val()
-            })
-            ajax_call_validation("/accion_insertar", {object: objeto}, null, main_route)
-        })
-
-        function attach_edit() {
-            $('.edit').click(function () {
-                obj = JSON.stringify({
-                    'id': parseInt(JSON.parse($(this).attr('data-json')))
-                });
-                ajax_call_get("/accion_editar",{
-                    object: obj
-                },function(response){
-                    var self = JSON.parse(response);
-                    $('#id').val(self.id)
-                    $('#ordinal').val(self.ordinal)
-                    $('#descripcion').val(self.descripcion)
-                    $('#fechaimplementacion').val(self.fechaimplementacion)
-                    $('#responsableimplementacion').val(self.responsableimplementacion)
-                    $('#responsableregistro').val(self.responsableregistro)
-                    $('#fecharegistro').val(self.fecharegistro)
-
-                    $('#estadoaccion ').val(self.estadoaccion)
-                    $('#estadoaccion ').selectpicker('render')
-
-                    $('#fkhallazgo').val(self.fkhallazgo.id)
-                    $('#fkhallazgo').selectpicker('render')
-
-                    clean_form()
-                    verif_inputs()
-                    $('#id_div').show()
-                    $('#insert').hide()
-                    $('#update').show()
-                    $('#form').modal('show')
-                })
-            })
-        }
-
-        function verifacc_rep() {
-            $('.eficrep').click(function () {
-                obj = JSON.stringify({
-                'id': parseInt(JSON.parse($(this).attr('data-json')))
-                });
-                ajax_call_reptb("/accion_verif",{
-                    object: obj
-                },function(response){
-                    var self = JSON.parse(response);
-                    let urlfile = self.url;
-                    let vfile = urlfile.substring(urlfile.lastIndexOf("/")+1, urlfile.length);
-                    $("<a id='lnkrp' class='btn bg-teal waves-effect' href='"+urlfile+"'>"+vfile+"</a>").insertAfter("#new");
-                    setTimeout(function(){ $("#lnkrp").remove() }, 10000);
-                })
-            })
-        }
-
-        $('#update').click(function () {
-            objeto = JSON.stringify({
-                'id': parseInt(JSON.parse($('#id').val())),
-                'ordinal': $('#ordinal').val(),
-                'descripcion': $('#descripcion').val(),
-                'fechaimplementacion': $('#fechaimplementacion').val(),
-                'responsableimplementacion': $('#responsableimplementacion').val(),
-                'responsableregistro': $('#responsableregistro').val(),
-                'fecharegistro': $('#fecharegistro').val(),
-
-                'hallazgo': $('#fkhallazgo').val(),
-                'estadoaccion': $('#estadoaccion ').val()
-            })
-        ajax_call_validation("/accion_actualizar", {object: objeto}, null, main_route)
-        })
-        reload_form()
-    </script>
-
-    <script>
-        attach_edit()
-        verifacc_rep()
-
-        let message= ''
-        function accion_previous(id) {
-            obj = JSON.stringify({
-                'id': parseInt(JSON.parse(id))
-            });
-            ajax_call_get("/accion_prev",{
-                object: obj
-            },function(response){
-                message = response;
-            });
-        }
-
-        $('.delete').click(function () {
-            id = parseInt(JSON.parse($(this).attr('data-json')))
-            accion_previous(id)
-            setTimeout(function(){
-                let quest = message + " ¿Desea dar de baja los datos de la acción?" 
-                enabled = false
-                swal({
-                    title: quest,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#004c99",
-                    cancelButtonColor: "#F44336",
-                    confirmButtonText: "Aceptar",
-                    cancelButtonText: "Cancelar"
-                }).then(function () {
-                    ajax_call("/accion_eliminar", { 
-                        id, enabled,_xsrf: getCookie("_xsrf")}, 
-                        null, 
-                        function () {
-                            setTimeout(function(){ window.location=main_route }, 2000);
-                    })
-                })
-                }, 1500
-            )
-        })
-    </script>
-
-    <script>
         function format (d) {
             return '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
             '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
-                    '<td class="bold">Responsable de Implementación:</td>'+
-                    '<td>'+d[6]+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td class="bold">Estado:</td>'+
+                    '<td class="bold">Responsable de Registro:</td>'+
                     '<td>'+d[7]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Responsable de Registro:</td>'+
+                    '<td class="bold">Fecha de Implementación:</td>'+
                     '<td>'+d[8]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha de Registro:</td>'+
+                    '<td class="bold">Responsable de Implementación:</td>'+
                     '<td>'+d[9]+'</td>'+
                 '</tr>'+
             '</table></div>';
@@ -277,6 +150,8 @@
     
         $(document).ready(function() {
             table = $('#data_tabletr').DataTable();
+            table.order([6, 'desc'] ).draw();
+
             $('#data_tabletr tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);

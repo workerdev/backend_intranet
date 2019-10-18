@@ -1,5 +1,6 @@
 {% for tr in objects %}
     <tr>
+        <td>{{ tr.fkaccion.fkhallazgo.titulo }}</td>
         <td>{{ tr.fkaccion.descripcion }}</td>
         <td>{{ tr.ordinal }}</td>
         <td>{{ tr.fecha | date ('Y-m-d') }}</td>

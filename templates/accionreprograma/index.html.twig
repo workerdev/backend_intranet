@@ -6,12 +6,27 @@
     <style>
         .accion{ cursor:pointer }
 	    .modal-dialog{
-             width: 100% !important;
-        }    
-        .open {
-             width: 100% !important;
+             width: 60% !important;
+        }
+        .txta-own{
+            background-color: rgba(40, 40, 40, .05);
+            min-width: 100% !important;
+            max-width: 100% !important;
+            padding: 4px !important;
+        }
+        .m-tb-own{
+            margin-top: 4px;
+            margin-bottom: 12px;
         } 
-
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
+        #data_tabletr tbody tr td:nth-child(1), #data_tabletr tbody tr td:nth-child(4){
+            white-space: pre-wrap;
+        }
     </style>
 {% endblock %}
 
@@ -24,7 +39,7 @@
             <div class="block-header">
                 <div class="card" id="render_content">
 
-                    <div class="header bg-indigo"><h2>REPROGRAMA DE LA ACCIÓN</h2></div>
+                    <div class="header bg-indigo"><h2>REPROGRAMA DE ACCIÓN</h2></div>
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
@@ -87,6 +102,10 @@
     </script>
 
     <script>
+        $(document).ready(function() {
+            table = $('#data_tabletr').DataTable();
+            table.order([6, 'desc'] ).draw();
+        });
         attach_validators()
 
         $('#fkaccion').selectpicker({

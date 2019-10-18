@@ -86,7 +86,7 @@ class Accion
     private $responsableregistro;
 
     /**
-     * @var datetime
+     * @var date
      *
      * @ORM\Column(name="cb_accion_fecharegistro", type="date", nullable=true)
      * @Assert\NotBlank
