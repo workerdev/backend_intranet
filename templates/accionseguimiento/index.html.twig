@@ -27,6 +27,17 @@
         #data_tabletr tbody tr td:nth-child(6){
             white-space: pre-wrap;
         }
+        .scroll-own{
+            overflow-y: scroll;
+        }
+        .loader-own{
+            margin-top: 5px;
+            text-align: center;
+        }
+        .preloader-own{
+            width: 40px;
+            height: 40px;
+        }
     </style>
 {% endblock %}
 
@@ -145,7 +156,6 @@
                 object: obj
             },function(response){
                 var self = JSON.parse(response);
-                console.log(self)
 
                 $('#fkaccion').html('');
                 var select = document.getElementById("fkaccion")
@@ -195,30 +205,22 @@
         })
 
         $('#insert').click(function () {
+            $('#form').addClass('scroll-own')
             if($('#estadoseguimiento').val() == 'Pendiente'){
-                $('#fkaccionrpg').val($('#fkaccion').val())
-                $('#fkaccionrpg').selectpicker('render')
+                if(!validate_formseg() || validate_comboseg()){
+                    swal(
+                        'Error de datos',
+                        'Por favor ingrese todos los datos requeridos.',
+                        'warning'
+                    )
+                }else{ 
+                    $('#fkaccionrpg').val($('#fkaccion').val())
+                    $('#fkaccionrpg').selectpicker('render')
+                    $('#fkaccionrpg').change()
 
-                $('#form').modal('hide')
-                $('#form-rpg').modal('show')
-
-                objeto = JSON.stringify({
-                    'ordinal': $('#ordinal').val(),
-                    'fecha': $('#fecha').val(),
-                    'responsable': $('#responsable').val(),
-                    'observaciones': $('#observaciones').val(),
-                    'accion': $('#fkaccion').val(),
-                    'estadoseguimiento': $('#estadoseguimiento').val()
-
-                    'fechaanterior': $('#fechaanterior').val(),
-                    'fechaimplementacion': $('#fechaimplementacion').val(),
-                    'motivojustificacion': $('#motivojustificacion').val(),
-                    'autoriza': $('#autoriza').val(),
-                    'responsableregistro': $('#responsableregistro').val(),
-                    'fecharegistro': $('#fecharegistro').val(),
-                    'accionrpg': $('#fkaccionrpg').val()
-                })
-                ajax_call_validation("/accionseguimiento_insertrpg", {object: objeto}, null, main_route)
+                    $('#form').modal('hide')
+                    $('#form-rpg').modal('show')
+                }
             }else{
                 objeto = JSON.stringify({
                     'ordinal': $('#ordinal').val(),
@@ -229,7 +231,45 @@
                     'accion': $('#fkaccion').val(),
                     'estadoseguimiento': $('#estadoseguimiento').val()
                 })
-                ajax_call_validation("/accionseguimiento_insertar", {object: objeto}, null, main_route)
+
+                if(!validate_formseg() || validate_comboseg()){
+                    swal(
+                        'Error de datos',
+                        'Por favor ingrese todos los datos requeridos.',
+                        'warning'
+                    )
+                }else{ 
+                    ajax_call_validation("/accionseguimiento_insertar", {object: objeto}, null, main_route)
+                }
+            }
+        })
+
+        $('#insert-rpg').click(function () {
+            $('#form-rpg').addClass('scroll-own')
+            if(!validate_formrpg() || validate_comborpg()){
+                swal(
+                    'Error de datos',
+                    'Por favor ingrese todos los datos requeridos.',
+                    'warning'
+                )
+            }else{ 
+                objeto = JSON.stringify({
+                    'ordinal': $('#ordinal').val(),
+                    'fecha': $('#fecha').val(),
+                    'responsable': $('#responsable').val(),
+                    'observaciones': $('#observaciones').val(),
+                    'accion': $('#fkaccion').val(),
+                    'estadoseguimiento': $('#estadoseguimiento').val(),
+
+                    'fechaanterior': $('#fechaanterior').val(),
+                    'fechaimplementacion': $('#fechaimplementacion').val(),
+                    'motivojustificacion': $('#motivojustificacion').val(),
+                    'autoriza': $('#autoriza').val(),
+                    'responsableregistro': $('#responsableregistro').val(),
+                    'fecharegistro': $('#fecharegistro').val(),
+                    'accionrpg': $('#fkaccionrpg').val()
+                })
+                ajax_call_validation_rpg("/accionseguimiento_insertrpg", {object: objeto}, null, main_route)
             }
         })
 
@@ -242,7 +282,6 @@
                     object: obj
                 },function(response){
                     var self = JSON.parse(response);
-                    console.log(self)
 
                     $('#hallazgo').val(self.hallazgo)
                     $('#hallazgo').selectpicker('render')
@@ -350,5 +389,20 @@
         function validate_comborpg(){
             return ($('#fkaccionrpg').val() == '');
         }
+
+        $('#fkaccionrpg').change(function (){
+            id = $(this).val()
+
+            obj = JSON.stringify({
+                'id': id
+            });
+            ajax_call_get("/dateformat",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                $('#fechaanterior').val(self.fechaimplementacion)
+            })
+        })
+        
     </script>
 {% endblock %}

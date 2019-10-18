@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Accion;
 use App\Entity\AccionSeguimiento;
+use App\Entity\AccionReprograma;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
@@ -168,7 +169,7 @@ class AccionSeguimientoController extends Controller
             $responsableregistro = $sx['responsableregistro'];
             $fecharegistro = $sx['fecharegistro'];
             
-            $accion = $sx['accionrpg'];
+            $accionrpg = $sx['accionrpg'];
 
             $accionreprograma = new AccionReprograma();
             $accionreprograma->setFechaanterior(new \DateTime($fechaanterior));
@@ -179,15 +180,15 @@ class AccionSeguimientoController extends Controller
             $accionreprograma->setFecharegistro(new \DateTime($fecharegistro));
             $accionreprograma->setEstado(1);
 
-            $accion != '' ? $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion) : $accion = null;
-            $accionreprograma->setFkaccion($accion);
+            $accionrpg != '' ? $accionrpg = $this->getDoctrine()->getRepository(Accion::class)->find($accionrpg) : $accionrpg = null;
+            $accionreprograma->setFkaccion($accionrpg);
             $cx->persist($accionreprograma);
             $cx->flush();
 
-            $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion);
-            $accion->setFechaimplementacion(new \DateTime($fechaimplementacion));
+            $accionrpg = $this->getDoctrine()->getRepository(Accion::class)->find($accionrpg);
+            $accionrpg->setFechaimplementacion(new \DateTime($fechaimplementacion));
 
-            $cx->persist($accion);
+            $cx->merge($accionrpg);
             $cx->flush();
 
             $resultado = array('response'=>"El ID registrado es: ".$accionseguimiento->getId().".",'success' => true, 'message' => 'Seguimiento de la acción registrado correctamente.');

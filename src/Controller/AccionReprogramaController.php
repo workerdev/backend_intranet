@@ -102,8 +102,6 @@ class AccionReprogramaController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -113,7 +111,7 @@ class AccionReprogramaController extends Controller
             $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion);
             $accion->setFechaimplementacion(new \DateTime($fechaimplementacion));
 
-            $cx->persist($accion);
+            $cx->merge($accion);
             $cx->flush();
 
             $resultado = array('response'=>"El ID registrado es: ".$accionreprograma->getId().".",'success' => true,
@@ -162,8 +160,6 @@ class AccionReprogramaController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -174,7 +170,7 @@ class AccionReprogramaController extends Controller
             $accion = $this->getDoctrine()->getRepository(Accion::class)->find($accion);
             $accion->setFechaimplementacion(new \DateTime($fechaimplementacion));
 
-            $cx->persist($accion);
+            $cx->merge($accion);
             $cx->flush();
 
             $resultado = array('success' => true,
