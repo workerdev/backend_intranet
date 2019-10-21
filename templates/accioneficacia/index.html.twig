@@ -123,12 +123,16 @@
         })
 
         $('#new').click(function () {
-            $('#eficaz').val('')
             $('#resultado').val('')
             $('#fecha').val('')
             $('#responsable').val('')
             $('#nombreverificador').val('')
             $('#cargoverificador').val('')
+            
+            $('#eficaz').val('')
+            $('#eficaz').selectpicker('render')
+            $('#fkaccion').val('')
+            $('#fkaccion').selectpicker('render')
 
             clean_form()
             verif_inputs()
@@ -162,13 +166,14 @@
                 },function(response){
                     var self = JSON.parse(response);
                     $('#id').val(self.id)
-                    $('#eficaz').val(self.eficaz)
                     $('#resultado').val(self.resultado)
                     $('#fecha').val(self.fecha)
                     $('#responsable').val(self.responsable)
                     $('#nombreverificador').val(self.nombreverificador)
                     $('#cargoverificador').val(self.cargoverificador)
 
+                    $('#eficaz').val(self.eficaz)
+                    $('#eficaz').selectpicker('render')
                     $('#fkaccion').val(self.fkaccion.id)
                     $('#fkaccion').selectpicker('render')
 

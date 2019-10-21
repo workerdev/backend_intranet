@@ -5,6 +5,12 @@
     {{ parent() }}
     <style>
         .accion{ cursor:pointer }
+        .hover-own:hover{
+            color: white;
+        }
+        .hover-own:focus{
+            color: white;
+        }
     </style>
 {% endblock %}
 
@@ -21,11 +27,14 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-                            {% if 'auditoriaequipo_insertar' in permisos %} 
-                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                {% if 'auditoriaequipo_insertar' in permisos %} 
+                                <button id="new" type="button" class="btn bg-indigo waves-effect hidden" title="Nuevo">
                                     <i class="material-icons">add</i>
                                 </button>
-                            {% endif %}  
+                                {% endif %}  
+                                <button id="aud-link" type="button" class="btn bg-teal waves-effect">
+                                    <i class="material-icons">spellcheck</i> Auditoría
+                                </button>
                             </div>
                         </div>
                         {% if 'home_auditoriaequipo' in permisos and objects %}
@@ -97,6 +106,10 @@
             liveSearchPlaceholder: 'Buscar tipo.',
             title: 'Seleccione un tipo.'
         })
+
+        $('#aud-link').click(function(){
+            window.location = '/auditoria';
+        });
 
         $('#new').click(function () {
             $('#codigo').val('')

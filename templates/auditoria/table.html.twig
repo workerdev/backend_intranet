@@ -18,8 +18,8 @@
     <td class="d-none">{{ t.responsable }}</td>
     <td class="d-none">{{ t.fechaprogramada | date('Y-m-d') }}</td>
     <td align="center">
-        <button id="team" data-json="{{t.id}}" type="button" class="btn bg-cyan waves-effect waves-light team" title="Equipo de auditores"><i class="material-icons">group</i></button>
-        <button id="hlgfort" data-json="{{t.id}}" type="button" class="btn bg-teal waves-effect waves-light hlgfort" title="Fortalezas y hallazgos"><i class="material-icons">equalizer</i></button>
+        <button id="team" data-json="{{t.id}}" type="button" class="btn bg-cyan waves-effect waves-light team" title="Equipo de Auditores"><i class="material-icons">group</i></button>
+        <button id="hlgfort" data-json="{{t.id}}" type="button" class="btn bg-teal waves-effect waves-light hlgfort" title="Fortalezas y Hallazgos"><i class="material-icons">equalizer</i></button>
     {% if 'auditoria_editar' in permisos %}
         <button id="edit" data-json="{{t.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
     {% endif %}
@@ -27,7 +27,7 @@
         <button id="delete" data-json="{{t.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
     {% endif %} 
         <button id="notifrep" data-json="{{t.id}}" type="button" class="btn btn-primary waves-effect waves-light notifrep" title="Notificación Inicio de Auditoría"><i class="material-icons">picture_as_pdf</i></button>
-        <button id="audrep" data-json="{{t.id}}" type="button" class="btn btn-warning waves-effect waves-light audrep" title="Auditoría"><i class="material-icons">picture_as_pdf</i></button>
+        <button id="audrep" data-json="{{t.id}}" type="button" class="btn btn-warning waves-effect waves-light audrep" title="Informe Auditoría Interna"><i class="material-icons">picture_as_pdf</i></button>
     </td>
 </tr>
 {% endfor %}
