@@ -20,6 +20,7 @@ use App\Entity\Rol;
 use App\Entity\DocProcRevision;
 use App\Entity\DocumentoProceso;
 
+
 class ReportingController extends AbstractController
 {
     /**
@@ -648,6 +649,7 @@ class ReportingController extends AbstractController
             
             // Instantiate Dompdf with our options
             $dompdf = new Dompdf($pdfOptions);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
             // Load HTML to Dompdf
             $dompdf->loadHtml($html);
             
@@ -691,51 +693,49 @@ class ReportingController extends AbstractController
             
             $cx = $this->getDoctrine()->getManager()->getConnection();
             $sqlp = "SELECT DISTINCT(cb_ficha_procesos_nombre), cb_gerencia_nombre, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-            FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_configuracion_gerencia, cb_aud_tipo_auditoria
-            WHERE cb_auditoria_fkgas=cb_gas_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND
-                cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_gas_fkarea=cb_gerencia_id AND cb_auditoria_id=:id";
+                    FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_configuracion_gerencia, cb_aud_tipo_auditoria
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND
+                        cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_gas_fkarea=cb_gerencia_id AND cb_auditoria_id=:id";
 
             $stmt = $cx->prepare($sqlp);
             $stmt->execute(['id' => $id]);
             $dtproc = $stmt->fetchAll();
 
             $sqleq = "SELECT cb_aud_auditoria_equipo.*, cb_tipo_auditor_nombre, cb_auditor_apellidosnombres, cb_aud_auditoria.*
-                FROM cb_aud_auditoria, cb_aud_auditoria_equipo, cb_aud_tipo_auditor, cb_aud_auditor
-                WHERE cb_auditoria_id=cb_auditoria_equipo_fkauditoria AND cb_tipo_auditor_id=cb_auditoria_equipo_fktipo AND
-                    cb_auditor_id=cb_auditoria_equipo_fkauditor AND cb_auditoria_id=:id";
+                    FROM cb_aud_auditoria, cb_aud_auditoria_equipo, cb_aud_tipo_auditor, cb_aud_auditor
+                    WHERE cb_auditoria_id=cb_auditoria_equipo_fkauditoria AND cb_tipo_auditor_id=cb_auditoria_equipo_fktipo AND
+                        cb_auditor_id=cb_auditoria_equipo_fkauditor AND cb_auditoria_id=:id";
 
             $stmteq = $cx->prepare($sqleq);
             $stmteq->execute(['id' => $id]);
             $dtequ = $stmteq->fetchAll();
 
             $sqldoc = "SELECT DISTINCT(cb_documento_extra_codigo), cb_documento_extra_titulo, cb_doc_tipoextra_tipo, cb_aud_auditoria.*
-                FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_gest_documento_extra, cb_gestion_doctipoextra
-                WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_id=cb_ficha_procesos_fkareagerenciasector AND
-                    cb_ficha_procesos_id=cb_documento_extra_fkproceso AND cb_documento_extra_fktipo=cb_doc_tipoextra_id AND cb_auditoria_id=:id";
+                    FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_gest_documento_extra, cb_gestion_doctipoextra
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_id=cb_ficha_procesos_fkareagerenciasector AND
+                        cb_ficha_procesos_id=cb_documento_extra_fkproceso AND cb_documento_extra_fktipo=cb_doc_tipoextra_id AND cb_auditoria_id=:id";
 
             $stmtdoc = $cx->prepare($sqldoc);
             $stmtdoc->execute(['id' => $id]);
             $dtdoc = $stmtdoc->fetchAll();
 
             $sqlfrt= "SELECT cb_aud_fortaleza.*, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-                FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_fortaleza
-                WHERE cb_auditoria_id=cb_fortaleza_fkauditoria AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id";
+                    FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_fortaleza
+                    WHERE cb_auditoria_id=cb_fortaleza_fkauditoria AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id";
 
             $stmtfrt = $cx->prepare($sqlfrt);
             $stmtfrt->execute(['id' => $id]);
             $dtfrt = $stmtfrt->fetchAll();
 
             $sqlhlg = "SELECT DISTINCT(cb_hallazgo_id), cb_auditoria_id, cb_hallazgo_descripcion, cb_tipo_hallazgo_nombre, cb_accion_descripcion, cb_accion_eficacia_resultado, cb_accion_eficacia_fecha, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-                FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_hallazgo, cb_aud_tipo_hallazgo, cb_aud_accion, cb_aud_accion_eficacia
-                WHERE cb_auditoria_id=cb_hallazgo_fkauditoria AND cb_hallazgo_id=cb_accion_fkhallazgo AND cb_accion_id=cb_accion_eficacia_fkaccion
-                    AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id
-                ORDER BY 2, 1";
+                    FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_hallazgo, cb_aud_tipo_hallazgo, cb_aud_accion, cb_aud_accion_eficacia
+                    WHERE cb_auditoria_id=cb_hallazgo_fkauditoria AND cb_hallazgo_id=cb_accion_fkhallazgo AND cb_accion_id=cb_accion_eficacia_fkaccion
+                        AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id
+                    ORDER BY 2, 1";
 
             $stmthlg= $cx->prepare($sqlhlg);
             $stmthlg->execute(['id' => $id]);
             $dthlg = $stmthlg->fetchAll();
-
-            //dd($dtaud);
 
             $html = $this->renderView('reporting/auditoriaint.html.twig', array('objects' => $dtproc, 'team' => $dtequ, 'docs' => $dtdoc, 'fort' => $dtfrt, 'hlzg' => $dthlg));
          
@@ -745,6 +745,7 @@ class ReportingController extends AbstractController
             
             // Instantiate Dompdf with our options
             $dompdf = new Dompdf($pdfOptions);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
 
             // Load HTML to Dompdf
             $dompdf->loadHtml($html);
@@ -772,6 +773,7 @@ class ReportingController extends AbstractController
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Auditoria_interna_'.$fecha.'.pdf');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -805,6 +807,7 @@ class ReportingController extends AbstractController
             
             // Instantiate Dompdf with our options
             $dompdf = new Dompdf($pdfOptions);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
 
             // Load HTML to Dompdf
             $dompdf->loadHtml($html);
@@ -883,7 +886,9 @@ class ReportingController extends AbstractController
             $pdfOptions->set('defaultFont', 'Arial');
            
             $dompdf = new Dompdf($pdfOptions);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
             $dompdf->loadHtml($html);
+
             $dompdf->setPaper('Letter', 'portrait');
             $dompdf->render();
             $output = $dompdf->output();

@@ -803,6 +803,7 @@
                             data: datafr,
                             "order": [[ 4, 'desc' ]],
                             "pageLength": 10,
+                            "scrollY": "300px",
                             "createdRow": function(row, data, dataIndex) {
                                 $(row).children(':nth-child(3)').addClass('table_fort-td');
                                 $(row).children(':nth-child(6)').attr('align', 'center');
@@ -833,6 +834,7 @@
                             data: datahl,
                             "order": [[ 6, 'desc' ]],
                             "pageLength": 10,
+                            "scrollY": "300px",
                             "createdRow": function(row, data, dataIndex) {
                                 $(row).children(':nth-child(4)').addClass('table_hlg-td');
                                 $(row).children(':nth-child(5)').addClass('table_hlg-td');
@@ -897,6 +899,7 @@
                             "url": "/resources/js/spanish.json"
                         },
                         "pageLength": 10,
+                        "scrollY": "300px",
                         "createdRow": function(row, data, dataIndex) {
                             $(row).children(':nth-child(3)').addClass('table_fort-td');
                             $(row).children(':nth-child(6)').attr('align', 'center');
@@ -930,6 +933,7 @@
                             "url": "/resources/js/spanish.json"
                         },
                         "pageLength": 10,
+                        "scrollY": "300px",
                         "createdRow": function(row, data, dataIndex) {
                             $(row).children(':nth-child(4)').addClass('table_hlg-td');
                             $(row).children(':nth-child(5)').addClass('table_hlg-td');
