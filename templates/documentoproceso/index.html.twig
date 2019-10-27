@@ -1177,8 +1177,8 @@
 
         function derivar_doc() {
             $('.drdoc').click(function () {
-                $('#vld-proc').val('derivar')
                 var id = $(this).attr('data-json');
+                $('#vld-proc').val('sin_modificacion')
                 obj = JSON.stringify({
                     'id': parseInt(JSON.parse(id))
                 })
@@ -1196,6 +1196,84 @@
                             object: objeto
                         },function(respdoc){
                             var user= JSON.parse(respuser)
+                            var self = JSON.parse(response)
+                            var dtdocrev = JSON.parse(respdoc)
+                            global_doc = self;
+
+                            var tabler = $('#table_inforev').DataTable();
+                            tabler.clear().draw();
+
+                            for(var i = 0; i < dtdocrev.length; i++){
+                                tabler.row.add([
+                                    self.id,
+                                    dtdocrev[i].fecha,
+                                    dtdocrev[i].fkresponsable.nombre + ' ' + dtdocrev[i].fkresponsable.apellido,
+                                    dtdocrev[i].estadodoc,
+                                    dtdocrev[i].firma
+                                ]).draw(false);
+                            }
+
+                            if(Object.keys(user).length > 0 && $('#vld-proc').val() != 'sin_modificacion'){
+                                $('#infrev').parent().parent().parent().show()
+                                $('#dresponsable').val(user.id)
+                                $('#infrev').val(user.nombre+' '+user.apellido)
+                                global_doc.revisor = user.id
+                            }else{
+                                $('#infrev').parent().parent().parent().hide()
+                                global_doc.revisor = 0
+                            }
+                            $('#infnewupd').val(self.nuevoactualizacion)
+                            if(self.codigonuevo != null && self.codigonuevo != "") $('#infcod').val(self.codigonuevo);
+                            else{
+                                if(self.fkdocumento != null) $('#infcod').val(self.fkdocumento.codigo);
+                                else $('#infcod').val(self.fkformulario.codigo);
+                            }
+                            $('#infcpro').val(self.fkproceso.codproceso)
+                            $('#inftitulo').val(self.titulo)
+                            $('#inftipo').val(self.fktipo.nombre)
+
+                            $('#vdg').remove();
+                            let urlfile = self.vinculoarchivo;
+                            let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
+                            $('#infvinculo').hide();
+                            if(urlfile == '' || urlfile == null) $('#infvinculo').show();
+                            else $('<a id="vdg" class="form-control" href="' + urlfile +'">' + vfile + '</a>').insertAfter("#infvinculo");
+
+                            sin_modificacion = true;
+                            con_modificacion = false;
+                            aprobar = false;
+                            
+                            $('#form-rev').modal('hide');
+                            $('#clave').val('');
+                            $('#form-valid').addClass('scroll-own');
+                            $('#form-valid').modal('show');
+                        })
+                    })
+                })
+            });
+        }
+
+        function rechazar_doc() {
+            $('.rcdoc').click(function () {
+                $('#vld-proc').val('con_modificacion')
+                var id = $(this).attr('data-json');
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse(id))
+                })
+                var idpro = $(this).attr('doc-id');
+                objeto = JSON.stringify({
+                    'id': parseInt(JSON.parse(idpro))
+                })
+                ajax_call_get("/documentoproceso_userderiv", {
+                    object: obj
+                }, function(respuser){
+                    ajax_call_get("/documentoproceso_getdoc",{
+                        object: obj
+                    },function(response){
+                        ajax_call_get("/docprocrevision_editar",{
+                            object: objeto
+                        },function(respdoc){
+                            var user = JSON.parse(respuser)
                             var self = JSON.parse(response)
                             var dtdocrev = JSON.parse(respdoc)
                             global_doc = self;
@@ -1239,9 +1317,9 @@
                             if(urlfile == '' || urlfile == null) $('#infvinculo').show();
                             else $('<a id="vdg" class="form-control" href="' + urlfile +'">' + vfile + '</a>').insertAfter("#infvinculo");
 
-                            derivar = true;
+                            con_modificacion = true;
+                            sin_modificacion = false;
                             aprobar = false;
-                            rechazar = false;
                             
                             $('#form-rev').modal('hide');
                             $('#clave').val('');
@@ -1317,87 +1395,9 @@
                             if(urlfile == '' || urlfile == null) $('#infvinculo').show();
                             else $('<a id="vdg" class="form-control" href="' + urlfile +'">' + vfile + '</a>').insertAfter("#infvinculo");
 
-                            derivar = false;
+                            sin_modificacion = false;
+                            con_modificacion = false;
                             aprobar = true;
-                            rechazar = false;
-                            
-                            $('#form-rev').modal('hide');
-                            $('#clave').val('');
-                            $('#form-valid').addClass('scroll-own');
-                            $('#form-valid').modal('show');
-                        })
-                    })
-                })
-            });
-        }
-
-        function rechazar_doc() {
-            $('.rcdoc').click(function () {
-                var id = $(this).attr('data-json');
-                $('#vld-proc').val('rechazar')
-                obj = JSON.stringify({
-                    'id': parseInt(JSON.parse(id))
-                })
-                var idpro = $(this).attr('doc-id');
-                objeto = JSON.stringify({
-                    'id': parseInt(JSON.parse(idpro))
-                })
-                ajax_call_get("/documentoproceso_userderiv", {
-                    object: obj
-                }, function(respuser){
-                    ajax_call_get("/documentoproceso_getdoc",{
-                        object: obj
-                    },function(response){
-                        ajax_call_get("/docprocrevision_editar",{
-                            object: objeto
-                        },function(respdoc){
-                            var user= JSON.parse(respuser)
-                            var self = JSON.parse(response)
-                            var dtdocrev = JSON.parse(respdoc)
-                            global_doc = self;
-
-                            var tabler = $('#table_inforev').DataTable();
-                            tabler.clear().draw();
-
-                            for(var i = 0; i < dtdocrev.length; i++){
-                                tabler.row.add([
-                                    self.id,
-                                    dtdocrev[i].fecha,
-                                    dtdocrev[i].fkresponsable.nombre + ' ' + dtdocrev[i].fkresponsable.apellido,
-                                    dtdocrev[i].estadodoc,
-                                    dtdocrev[i].firma
-                                ]).draw(false);
-                            }
-
-                            if(Object.keys(user).length > 0 && $('#vld-proc').val() != 'rechazar'){
-                                $('#infrev').parent().parent().parent().show()
-                                $('#dresponsable').val(user.id)
-                                $('#infrev').val(user.nombre+' '+user.apellido)
-                                global_doc.revisor = user.id
-                            }else{
-                                $('#infrev').parent().parent().parent().hide()
-                                global_doc.revisor = 0
-                            }
-                            $('#infnewupd').val(self.nuevoactualizacion)
-                            if(self.codigonuevo != null && self.codigonuevo != "") $('#infcod').val(self.codigonuevo);
-                            else{
-                                if(self.fkdocumento != null) $('#infcod').val(self.fkdocumento.codigo);
-                                else $('#infcod').val(self.fkformulario.codigo);
-                            }
-                            $('#infcpro').val(self.fkproceso.codproceso)
-                            $('#inftitulo').val(self.titulo)
-                            $('#inftipo').val(self.fktipo.nombre)
-
-                            $('#vdg').remove();
-                            let urlfile = self.vinculoarchivo;
-                            let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
-                            $('#infvinculo').hide();
-                            if(urlfile == '' || urlfile == null) $('#infvinculo').show();
-                            else $('<a id="vdg" class="form-control" href="' + urlfile +'">' + vfile + '</a>').insertAfter("#infvinculo");
-
-                            derivar = false;
-                            aprobar = false;
-                            rechazar = true;
                             
                             $('#form-rev').modal('hide');
                             $('#clave').val('');
@@ -1409,8 +1409,8 @@
             });
         }
         derivar_doc()
-        aprobar_doc()
         rechazar_doc()
+        aprobar_doc()
 
         $('#confirm').click(function () {
             objeto = JSON.stringify({
@@ -1449,17 +1449,17 @@
                     }, 3000);
                 }
                 if(response == "exitoso"){
-                    if(derivar){ 
+                    if(sin_modificacion){ 
                         $('#revfl').val(global_doc.revisor)
-                        $('#infproc').val('derivar')   
+                        $('#infproc').val('sin_modificacion')   
                     }
                     if(aprobar){ 
                         $('#revfl').val(0)
                         $('#infproc').val('aprobar')    
                     }
-                    if(rechazar){ 
+                    if(con_modificacion){ 
                         $('#revfl').val(global_doc.revisor)
-                        $('#infproc').val('rechazar')
+                        $('#infproc').val('con_modificacion')
                     }
                     $('#idrv').val(global_doc.id)
                     $('#infdocp').html(global_doc.titulo)           
@@ -1468,9 +1468,9 @@
                     $('#form-valid').modal('hide')
                     $('.fileinput-remove').click()
                     $('#form-file').modal('show')
-                    if(global_doc.nuevoactualizacion == 'BAJA'){
+                    if(global_doc.nuevoactualizacion == 'BAJA' || sin_modificacion){
                         $('#insertfl').click();
-                        $('#form-rgdoc').modal('hide')
+                        $('#form-rgdoc').modal('hide');
                     }
                 }
             });
@@ -1519,6 +1519,12 @@
                 }
             })  
         });
+
+        $('#clave').keydown(function (e){
+            if(e.keyCode == 13){
+                $('#confirm').click();
+            }
+        })
     </script>
 
     <script>

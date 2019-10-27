@@ -250,6 +250,19 @@
     </script>
 
     <script>
+        function fileExists(url) {
+            if(url){
+                let servidor = document.URL;
+                let url_fl = servidor + url;
+                var req = new XMLHttpRequest();
+                req.open('GET', url, false);
+                req.send();
+                return req.status==200;
+            } else {
+                return false;
+            }
+        }
+
         function format (d) {
             let urlfile = d[5];
             let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
@@ -262,7 +275,7 @@
                     '<td class="bold">Versión vigente:</td>'+
                     '<td>'+d[4]+'</td>'+
                 '</tr>';
-            if(urlfile != 'N/A'){
+            if(fileExists(urlfile)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo archivo digital:</td>'+
                     '<td><a href="' + urlfile +'">' + vfile + '</a></td>'+
@@ -274,7 +287,7 @@
                 '</tr>';
             } 
 
-            if(urldown != 'N/A'){
+            if(fileExists(urldown)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo diagrama flujo:</td>'+
                     '<td><a href="' + urldown +'">' + vdown + '</a></td>'+

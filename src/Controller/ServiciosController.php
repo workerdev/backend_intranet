@@ -359,14 +359,33 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getManager();
-            $DatoEmpresarial1 = $cx->getRepository(Personal::class)->findBy(array('estado' => '1'));
-            $serializer = new Serializer(array(new ObjectNormalizer()));
-            $data = $serializer->normalize($DatoEmpresarial1, null, array('attributes' => array('nombre', 'apellido', 'correo', 'telefono', 'fksector', 'fkarea')));
+            $dato_empresarial = $cx->getRepository(Personal::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+
+            $data_directory = array();
+            foreach ($dato_empresarial as $dt_emp) {
+                $dato = (object) $dt_emp;
+                $cargo = $dato->getFkPersonalCargo();
+                if ($cargo == null) $cargo = 'Sin Asignar';
+                else $cargo = $dato->getFkPersonalCargo()->getNombre();
+
+                $info = [
+                    "nombre" => $dato->getNombre(),
+                    "apellido" => $dato->getApellido(),
+                    "correo" => $dato->getCorreo(),
+                    "telefono" => $dato->getTelefono(),
+                    "fksector" => $dato->getFksector(),
+                    "fkarea" => $dato->getFkarea(),
+                    "genero" => $dato->getGenero(),
+                    "foto" => $dato->getFoto(),
+                    "cargo" => $cargo
+                ];
+                $data_directory[] = $info;
+            }       
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($data, 'json');
+            $json = $serializer->serialize($data_directory, 'json');
 
-            return new jsonResponse(json_decode($data2));
+            return new jsonResponse(json_decode($json));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -1412,6 +1431,41 @@ class ServiciosController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/docs_by_gerencia", methods={"POST"}, name="docs_by_gerencia")
+     */
+    public function docs_by_gerencia(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $gerencia = $sx['gerencia'];
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+
+            $sql = "SELECT cb_gerencia_nombre AS GERENCIA, cb_area_nombre AS AREA, cb_tipo_documento_nombre AS TIPO_DOCUMENTO,
+                    cb_documento_codigo AS CODIGO, cb_documento_titulo AS TITULO_DOC,
+                        cb_documento_vinculoarchivodig AS VINCULO_DOC, cb_documento_versionvigente AS VERSION,
+                        cb_documento_fechapublicacion AS F_PUBLICACION,
+                        (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR,
+                        cb_documento_carpetaoperativa AS CARPETA_OPERATIVA, cb_documento_vinculodiagflujo AS VINCULO_DIAGRAMA_FLUJO,
+                        cb_ficha_procesos_codproceso AS COD_PROCESO, cb_documento_id AS ID
+                    FROM cb_gestion_documento, cb_gestion_tipo_documento, cb_procesos_ficha_procesos, cb_proc_gas,
+                        cb_configuracion_gerencia, cb_procesos_area, cb_usuario_usuario
+                    WHERE cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_fkficha=cb_ficha_procesos_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id
+                        AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_documento_fkaprobador=cb_usuario_id AND cb_documento_estado=1 AND cb_gerencia_nombre=:gerencia";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute(['gerencia' => ($gerencia)]);
+            $documentos = $stmt->fetchAll();
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($documentos, 'json');
+
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
     /* DOCUMENTOS DETALLE ****************/
     /* DESARROLLADOR: ARIEL VARGAS TICONA*/
 
@@ -1511,6 +1565,38 @@ class ServiciosController extends AbstractController
                 $empty = array('mensaje' => 'No se encotraron datos.');
                 $data2 = $serializer->serialize($empty, 'json');
             }
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/docform_by_gerencia", methods={"POST"}, name="docform_by_gerencia")
+     */
+    public function docform_by_gerencia(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $gerencia = $sx['gerencia'];
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+
+            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, cb_documento_formulario_titulo AS titulo_formulario,
+                        cb_documento_formulario_vinculofiledig AS vinculo_archivo, cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
+                        cb_documento_formulario_fechapublicacion AS f_publicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS aprobado_por, cb_tipo_documento_nombre AS tipo_doc_relacionado,
+                        cb_documento_codigo AS doc_relacionado
+                    FROM cb_gestion_documento, cb_procesos_ficha_procesos, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_gest_doc_formulario, cb_gestion_tipo_documento, cb_usuario_usuario
+                    WHERE cb_documento_fkficha=cb_ficha_procesos_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
+                        cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id AND cb_gerencia_nombre=:gerencia
+                    ORDER BY 1, 2, 3";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute(['gerencia' => ($gerencia)]);
+            $documentos = $stmt->fetchAll();
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($documentos, 'json');
+
             return new jsonResponse(json_decode($data2));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";

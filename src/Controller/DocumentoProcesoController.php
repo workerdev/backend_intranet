@@ -31,6 +31,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
 class DocumentoProcesoController extends Controller
 {
     /**
@@ -350,7 +351,7 @@ class DocumentoProcesoController extends Controller
             if($docrevision != null){
                 $docrevision->setFecha(new \DateTime($fecha));
 
-                if($proc == 'rechazar') $docrevision->setEstadodoc('');
+                if($proc == 'con_modificacion') $docrevision->setEstadodoc('');
                 $docrevision->setFirma('Por firmar');
 
                 $message = (new \Swift_Message('ELFEC - Documento a revisar'))
@@ -359,7 +360,7 @@ class DocumentoProcesoController extends Controller
                     ->setBody($this->renderView('mail/notificacion.html.twig',
                         array(
                             'docproceso' => $documentoproceso,
-                            'adicional' => array('fecha' => $fecha, 'website' => $website, 'dominio' => $_SERVER['HTTP_HOST'], 'logo' => '/resources/images/h_color_lg.png'),
+                            'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                         )
                     ), 'text/html');
 
@@ -368,7 +369,7 @@ class DocumentoProcesoController extends Controller
                 $cx->merge($docrevision);
                 $cx->flush();
             }else{
-                if($proc == 'rechazar'){
+                if($proc == 'con_modificacion'){
                     $documentos = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(['fkdoc'=>$id, 'estado'=>'1'], ['id' => 'ASC']);
                     $idbp = 0;
                     foreach ($documentos as $docprocrev) {
@@ -383,7 +384,7 @@ class DocumentoProcesoController extends Controller
                                     ->setBody($this->renderView('mail/notificacion.html.twig',
                                         array(
                                             'docproceso' => $documentoproceso,
-                                            'adicional' => array('fecha' => $fecha, 'website' => $website, 'dominio' => $_SERVER['HTTP_HOST'], 'logo' => '/resources/images/h_color_lg.png'),
+                                            'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                                         )
                                     ), 'text/html');
         
@@ -410,7 +411,7 @@ class DocumentoProcesoController extends Controller
                         ->setBody($this->renderView('mail/notificacion.html.twig',
                             array(
                                 'docproceso' => $documentoproceso,
-                                'adicional' => array('fecha' => $fecha, 'website' => $website, 'dominio' => $_SERVER['HTTP_HOST'], 'logo' => '/resources/images/h_color_lg.png'),
+                                'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                             )
                         ), 'text/html');
                     $mailer->send($message);
@@ -462,7 +463,7 @@ class DocumentoProcesoController extends Controller
             $cx->persist($documentoproceso);
             $cx->flush();
 
-            $this->sending_mail($mailer, $mail_rev, $documentoproceso->getId(), 'derivar', $website);
+            $this->sending_mail($mailer, $mail_rev, $documentoproceso->getId(), 'sin_modificacion', $website);
             $resultado = array('response' => "El ID registrado es: " . $documentoproceso->getId() . ".",
                 'success' => true,
                 'message' => 'Datos registrados correctamente.'
@@ -527,7 +528,7 @@ class DocumentoProcesoController extends Controller
             $cx->persist($documentoproceso);
             $cx->flush();
 
-            $this->sending_mail($mailer, $mail_rev, $documentoproceso->getId(), 'derivar', $website);
+            $this->sending_mail($mailer, $mail_rev, $documentoproceso->getId(), 'sin_modificacion', $website);
             $resultado = array('response' => "El ID registrado es: " . $documentoproceso->getId() . ".",
                 'success' => true,
                 'message' => 'Datos actualizados correctamente.'
@@ -701,7 +702,7 @@ class DocumentoProcesoController extends Controller
                 $cx->persist($docproceso);
                 $cx->flush();
 
-                if($proc == 'rechazar'){
+                if($proc == 'con_modificacion'){
                     $rev_prev = $this->previous_user($doc_idrv);
 
                     if($rev_prev > 0){
@@ -709,13 +710,13 @@ class DocumentoProcesoController extends Controller
                         $docrevision->setFirma('');
                     }
                 }
-                else $docrevision->setEstadodoc('DERIVADO CON MODIFICACIONES');
+                //else $docrevision->setEstadodoc('DERIVADO CON MODIFICACIONES');
                 
                 if(move_uploaded_file($sourcePath, $targetPath)){
                     $uploadedFile = $namefile;
                 }
 
-                if($docproceso->getFkaprobador()->getId() == $idu && $proc != 'rechazar') $docrevision->setEstadodoc('PARA PUBLICAR');
+                if($docproceso->getFkaprobador()->getId() == $idu && $proc != 'con_modificacion') $docrevision->setEstadodoc('PARA PUBLICAR');
                 $cx->persist($docrevision);
                 $cx->flush();
 
@@ -740,7 +741,7 @@ class DocumentoProcesoController extends Controller
                     $resultado = json_encode($resultado);
                     return new Response($resultado);
                 }else{
-                    if($proc == 'rechazar'){
+                    if($proc == 'con_modificacion'){
                         $rev_prev = $this->previous_user($doc_idrv);
 
                         if($rev_prev > 0){
@@ -750,9 +751,9 @@ class DocumentoProcesoController extends Controller
                     }
                     else $docrevision->setEstadodoc('DERIVADO SIN MODIFICACIONES');
 
-                    if($docproceso->getFkaprobador()->getId() == $idu && $proc != 'rechazar') $docrevision->setEstadodoc('PARA PUBLICAR');
+                    if($docproceso->getFkaprobador()->getId() == $idu && $proc != 'con_modificacion') $docrevision->setEstadodoc('PARA PUBLICAR');
 
-                    if($proc != 'rechazar'){
+                    if($proc != 'con_modificacion'){
                         $cx->persist($docrevision);
                         $cx->flush();
                     }
@@ -844,7 +845,7 @@ class DocumentoProcesoController extends Controller
                     return new Response($resultado);
                 }
             }else{
-                if($accion != 'rechazar'){
+                if($accion != 'con_modificacion'){
                     $resultado = array(
                         'response' => "NoFile",   
                         'success' => false,

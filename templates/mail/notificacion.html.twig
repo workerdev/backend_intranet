@@ -39,7 +39,7 @@
                         <td align="center">{{ docproceso.fktipo.nombre }}</td>
                         <td align="center">{{ docproceso.titulo }}</td>
                         <td align="center">{{ docproceso.versionvigente }}</td>
-                        <td align="center"><a href="{{ 'http://' ~ adicional.dominio ~ docproceso.vinculoarchivo }}">{{ docproceso.vinculoarchivo|slice(30) }}</a></td>
+                        <td align="center"><a href="{{ adicional.website ~ docproceso.vinculoarchivo }}">{{ docproceso.vinculoarchivo|slice(30) }}</a></td>
                         <td align="center">{{ adicional.fecha }}</td>
                     </tr>
                 </tbody>

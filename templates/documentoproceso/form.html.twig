@@ -393,9 +393,9 @@
                                     {% if v.fkdoc.fkaprobador.id == profile.id %}
                                         <button id="apdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-cyan waves-effect waves-light apdoc"><i class="material-icons">done</i> Aprobar</button> 
                                     {% else %}
-                                        <button id="drdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-light-green waves-effect waves-light drdoc"><i class="material-icons">send</i> Derivar</button>
+                                        <button id="drdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-light-green waves-effect waves-light drdoc"><i class="material-icons">send</i> Derivar sin modificaciones</button>
                                     {% endif %}
-                                        <button id="rcdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-blue waves-effect waves-light rcdoc"><i class="material-icons">clear</i> Rechazar</button>
+                                        <button id="rcdoc" data-json="{{v.id}}" doc-id="{{v.fkdoc.id}}" type="button" class="btn btn-small bg-blue waves-effect waves-light rcdoc"><i class="material-icons">clear</i> Derivar con modificaciones</button>
                                     </td>
                                 </tr>
                             {% endfor %}
