@@ -19,6 +19,21 @@ class DocumentoProcesoRepository extends ServiceEntityRepository
         parent::__construct($registry, DocumentoProceso::class);
     }
 
+    public function findAllRev(): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT d
+            FROM App\Entity\DocumentoProceso d
+            WHERE d.estado = 1 AND d.aprobadorechazado != \'\' AND d.aprobadorechazado IS NOT NULL
+            ORDER BY d.fechaaprobacion DESC'
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return DocumentoProceso[] Returns an array of DocumentoProceso objects
 //     */

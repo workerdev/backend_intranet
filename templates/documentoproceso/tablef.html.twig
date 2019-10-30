@@ -1,0 +1,52 @@
+{% for tr in objects %}
+    {% if tr.aprobadorechazado in ['APROBADO', 'RECHAZADO'] %}
+        <tr>
+            <td class="details-control">
+                <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'dp' ~ tr.id}}"></i>
+            </td>
+            <td class="d-none">{{ tr.id }}</td>
+
+            {% if tr.codigonuevo != '' %}
+                <td>{{ tr.codigonuevo }}</td>
+            {% else %}
+                {% if tr.fkdocumento != null %}
+                    <td>{{ tr.fkdocumento.codigo }}</td>
+                {% else %}
+                    {% if tr.fkformulario != null %}
+                        <td>{{ tr.fkformulario.codigo }}</td>
+                    {% else %}
+                        <td>S/A</td>
+                    {% endif %}     
+                {% endif %}     
+            {% endif %}   
+
+            <td>{{ tr.nuevoactualizacion }}</td>
+            <td style="white-sapce: pre-wrap">{{ tr.fkproceso.codproceso }}</td>
+            <td>{{ tr.fktipo.nombre }}</td>
+            <td>{{ tr.titulo }}</td>
+            <td>{{ tr.versionvigente }}</td>
+
+            <td class="d-none">{{ tr.vinculoarchivo }}</td>
+            <td class="d-none">{{ tr.carpetaoperativa }}</td>
+            <td class="d-none">{{ tr.aprobadorechazado }}</td>
+
+            {% if tr.fkaprobador != null %}
+                <td class="d-none">{{ tr.fkaprobador.nombre ~ ' ' ~ tr.fkaprobador.apellido }}</td>
+            {% else %}
+                <td class="d-none"></td>
+            {% endif %}
+
+            {% if tr.fechaaprobacion != null %}  
+                <td class="d-none">{{ tr.fechaaprobacion | date('Y-m-d H:i:s') }}</td>
+            {% else %}
+                <td class="d-none"></td>
+            {% endif %}
+            
+            <td align="center">
+            {% if 'documentoproceso_exportar' in permisos and tr.id not in en_revision %}
+                <button id="printdf" data-json="{{tr.id}}" type="button" class="btn bg-blue-own waves-effect waves-light printdf" title="Generar reporte"><i class="material-icons icons-own">print</i></button>
+            {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}

@@ -74,6 +74,7 @@ class DocumentoProcesoController extends Controller
             $item = $dpdet->getId();
             $fkdocs[] = $item;
         }
+        
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
@@ -84,7 +85,9 @@ class DocumentoProcesoController extends Controller
         $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'), array('codproceso' => 'ASC'));
         $docrevision = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('estado' => '1'));
         $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('estado' => '1'));
-        return $this->render('documentoproceso/index.html.twig', array('objects' => $documentoproceso, 'current_user' => $idu, 'docrevision' => $docrevision, 'en_revision' => $fkdocs, 'aprobador' => $aprobador, 'tipo' => $tipo, 'proceso' => $proceso, 'profile' => $user, 'documento' => $documento, 'formulario' => $formulario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        $docs_rev = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findAllRev();
+        
+        return $this->render('documentoproceso/index.html.twig', array('objects' => $documentoproceso, 'docsrev' => $docs_rev, 'current_user' => $idu, 'docrevision' => $docrevision, 'en_revision' => $fkdocs, 'aprobador' => $aprobador, 'tipo' => $tipo, 'proceso' => $proceso, 'profile' => $user, 'documento' => $documento, 'formulario' => $formulario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 

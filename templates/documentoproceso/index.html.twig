@@ -82,80 +82,140 @@
             <div class="block-header">
                 <div class="card" id="render_content">
 
-                    <div class="header bg-indigo"><h2>DOCUMENTO EN PROCESO</h2></div>
-                    <div class="body">
-                        <div class="row clearfix">
-                            <div class="col-xs-3 col-sm-8 col-md-8 col-lg-8">
-                                {% if 'documentoproceso_insertar' in permisos %}
-                                <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
-                                    <i class="material-icons">add</i>
-                                </button>
-                                {% endif %}
-                                <button id="reload" type="button" class="btn bg-green waves-effect" title="Recargar">
-                                    <i class="material-icons">cached</i>
-                                </button>
-                                {% if docderiv %}
-                                <button id="to-approve" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
-                                    <i class="material-icons">folder</i> Docs. derivados
-                                </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-sm-4">
-                                <input type="checkbox" id="6" class="filled-in chk-col-teal" checked disabled/>
-                                <label for="6">Documentos para publicar</label>
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-sm-4">
-                                <input type="checkbox" id="6" class="filled-in chk-col-defult" checked disabled/>
-                                <label for="6">Documentos en proceso</label>
-                            </div>
-                        </div>
+                    <div class="container">
+                        <ul class="nav nav-tabs">
+                            <li><a data-toggle="tab" href="#menu1"><i class="material-icons">check_box_outline_blank</i> En Proceso</a></li>
+                            <li><a data-toggle="tab" href="#menu2"><i class="material-icons">check_box</i> Finalizado</a></li>
+                        </ul>
 
-                        <div id="spn-grep" class="loader-wrapper" style="display: none">
-                            <div class="loader loader-own">
-                                <div class="preloader preloader-own">
-                                    <div class="spinner-layer pl-indigo">
-                                        <div class="circle-clipper left"><div class="circle"></div></div>
-                                        <div class="circle-clipper right"><div class="circle"></div></div>
+                        <div class="tab-content">
+                            <div id="menu1" class="tab-pane fade">
+                                <div class="header bg-indigo"><h2>DOCUMENTO EN PROCESO</h2></div>
+
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-xs-3 col-sm-8 col-md-8 col-lg-8">
+                                            {% if 'documentoproceso_insertar' in permisos %}
+                                            <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
+                                                <i class="material-icons">add</i>
+                                            </button>
+                                            {% endif %}
+                                            <button id="reload" type="button" class="btn bg-green waves-effect" title="Recargar">
+                                                <i class="material-icons">cached</i>
+                                            </button>
+                                            {% if docderiv %}
+                                            <button id="to-approve" type="button" class="btn bg-teal waves-effect" title="Documentos derivados">
+                                                <i class="material-icons">folder</i> Docs. derivados
+                                            </button>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <p class="text-center inf-own">Generando...</p>
-                        </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-4">
+                                            <input type="checkbox" id="6" class="filled-in chk-col-teal" checked disabled/>
+                                            <label for="6">Documentos para publicar</label>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-4">
+                                            <input type="checkbox" id="6" class="filled-in chk-col-defult" checked disabled/>
+                                            <label for="6">Documentos en proceso</label>
+                                        </div>
+                                    </div>
 
-                        <div id="content-spn"></div>
-                        {% if 'home_documentoproceso' in permisos %}
-                            <div class="row" id="div-table">
-                                <div class="body table-responsive">
-                                    <table id="data_table_docp" class="table table-bordered table-striped table-hover" style="width:100%">
-                                        <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th class="d-none" data-name="phone">ID </th>
-                                            <th class="order_by_th" data-name="phone">Código del Documento </th>
-                                            <th class="order_by_th" data-name="names">Nuevo/Actualización </th>
-                                            <th class="order_by_th" data-name="phone">Proceso </th>
-                                            <th class="order_by_th" data-name="phone">Tipo </th>
-                                            <th class="order_by_th" data-name="phone">Título </th>
-                                            <th class="order_by_th" data-name="phone">Versión </th>
-                                            <th class="d-none" data-name="phone">Vínculo archivo </th>
-                                            <th class="d-none" data-name="phone">Carpeta operativa </th>
-                                            <th class="d-none" data-name="phone">Aprobado/Rechazado </th>
-                                            <th class="d-none" data-name="phone">Aprobado por </th>
-                                            <th class="d-none" data-name="phone">Fecha de aprobación </th>
-                                            <th class="actions_header">Acciones </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="table_content">
-                                        {{ include('documentoproceso/table.html.twig') }}
-                                        </tbody>
-                                    </table>
+                                    <div id="spn-grep" class="loader-wrapper" style="display: none">
+                                        <div class="loader loader-own">
+                                            <div class="preloader preloader-own">
+                                                <div class="spinner-layer pl-indigo">
+                                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center inf-own">Generando...</p>
+                                    </div>
+
+                                    {% if 'home_documentoproceso' in permisos %}
+                                        <div class="row" id="div-table">
+                                            <div class="body table-responsive">
+                                                <table id="data_table_docp" class="table table-bordered table-striped table-hover" style="width:100%">
+                                                    <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="d-none" data-name="phone">ID </th>
+                                                        <th class="order_by_th" data-name="phone">Código del Documento </th>
+                                                        <th class="order_by_th" data-name="names">Nuevo/Actualización </th>
+                                                        <th class="order_by_th" data-name="phone">Proceso </th>
+                                                        <th class="order_by_th" data-name="phone">Tipo </th>
+                                                        <th class="order_by_th" data-name="phone">Título </th>
+                                                        <th class="order_by_th" data-name="phone">Versión </th>
+                                                        <th class="d-none" data-name="phone">Vínculo archivo </th>
+                                                        <th class="d-none" data-name="phone">Carpeta operativa </th>
+                                                        <th class="d-none" data-name="phone">Aprobado/Rechazado </th>
+                                                        <th class="d-none" data-name="phone">Aprobado por </th>
+                                                        <th class="d-none" data-name="phone">Fecha de aprobación </th>
+                                                        <th class="actions_header">Acciones </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="table_content">
+                                                    {{ include('documentoproceso/table.html.twig') }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
-                        {% endif %}
+
+                            <div id="menu2" class="tab-pane fade">
+                                <div class="header bg-indigo"><h5>DOCUMENTOS REVISADOS</h5></div>
+
+                                <div class="body">
+
+                                    <div id="spn-grepf" class="loader-wrapper" style="display: none">
+                                        <div class="loader loader-own">
+                                            <div class="preloader preloader-own">
+                                                <div class="spinner-layer pl-indigo">
+                                                    <div class="circle-clipper left"><div class="circle"></div></div>
+                                                    <div class="circle-clipper right"><div class="circle"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center inf-own">Generando...</p>
+                                    </div>
+
+                                    {% if 'home_documentoproceso' in permisos %}
+                                        <div class="row" id="div-tablef">
+                                            <div class="body table-responsive">
+                                                <table id="data_table_docf" class="table table-bordered table-striped table-hover" style="width:100%">
+                                                    <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="d-none" data-name="phone">ID </th>
+                                                        <th class="order_by_th" data-name="phone">Código del Documento </th>
+                                                        <th class="order_by_th" data-name="names">Nuevo/Actualización </th>
+                                                        <th class="order_by_th" data-name="phone">Proceso </th>
+                                                        <th class="order_by_th" data-name="phone">Tipo </th>
+                                                        <th class="order_by_th" data-name="phone">Título </th>
+                                                        <th class="order_by_th" data-name="phone">Versión </th>
+                                                        <th class="d-none" data-name="phone">Vínculo archivo </th>
+                                                        <th class="d-none" data-name="phone">Carpeta operativa </th>
+                                                        <th class="d-none" data-name="phone">Aprobado/Rechazado </th>
+                                                        <th class="d-none" data-name="phone">Aprobado por </th>
+                                                        <th class="d-none" data-name="phone">Fecha de aprobación </th>
+                                                        <th class="actions_header">Acciones </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="tablef_content">
+                                                    {{ include('documentoproceso/tablef.html.twig') }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -190,6 +250,7 @@
         var global_type = '';
         var del_rev = [];
         var global_fkaprob = 0;
+
         $(document).ready(function() {
             table = $('#data_table_docp').DataTable({
                 order: [[1, "desc"]],
@@ -217,6 +278,34 @@
                     $("#"+idet).attr('title', 'Ver menos');
                 }
             });
+
+            tablef = $('#data_table_docf').DataTable({
+                order: [[1, "desc"]],
+                language: {
+                    "url": "/resources/js/spanish.json"
+                }
+            });
+
+            $('#data_table_docf tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = tablef.row(tr);
+                
+                idprc = clean_label(row.data()[1], 'idpr')
+                let idet = 'dp'+idprc;
+                if ( row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-plus-square cl-teal');
+                    $("#"+idet).attr('title', 'Mostrar más');
+                }else {
+                    row.child(format_df(row.data())).show();
+                    tr.addClass('shown');
+                    $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
+                    $("#"+idet).attr('title', 'Ver menos');
+                }
+            });
+            
+            $('.nav-tabs li > a:first').tab('show')
         });
     </script>
         
@@ -227,6 +316,52 @@
         }
 
         function format(d) { 
+            let urlfile = clean_label(d[8], 'lfile');
+            let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
+            let approve = clean_label(d[10], 'approve');
+
+            html = '<div class="card" style="width: 100%; background-color: ' 
+            if(approve === 'null'){
+                approve = ''
+                html += 'rgba(0, 150, 136, .30)">'
+            }else{
+                html += 'rgba(0, 76, 153, .15)">'
+            }
+            html += '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+
+            if(urlfile != 'N/A'){
+                html += '<tr>'+
+                    '<td class="bold">Vínculo archivo:</td>'+
+                    '<td><a href="#" onclick="window.open(\'' + urlfile +'\')">' + vfile + '</a></td>'+
+                '</tr>';
+            }else{
+                html += '<tr>'+
+                    '<td class="bold">Vínculo archivo:</td>'+
+                    '<td>' + urlfile + '</td>'+
+                '</tr>';
+            } 
+            
+            html += '<tr>'+
+                    '<td class="bold">Carpeta operativa:</td>'+
+                    '<td>'+d[9]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Aprobado/Rechazado:</td>'+
+                    '<td>'+approve+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Aprobado por:</td>'+
+                    '<td>'+d[11]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha de aprobación:</td>'+
+                    '<td>'+d[12]+'</td>'+
+                '</tr>'+
+            '</table></div>';
+            return html;
+        }
+
+        function format_df(d) { 
             let urlfile = clean_label(d[8], 'lfile');
             let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
             let approve = clean_label(d[10], 'approve');
@@ -659,6 +794,25 @@
             })
         }
         print_derivatives()
+
+        function printdf_derivatives(){
+            $('.printdf').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                
+                ajax_call_reptbf("/docproceso_reporte",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+                    let urlfile = self.url;
+                    let servidor = document.URL
+                    let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+                    window.open(urlserv + urlfile)
+                })
+            })
+        }
+        printdf_derivatives()
     </script>
 
     <script>

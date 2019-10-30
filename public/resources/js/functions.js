@@ -341,6 +341,34 @@ function ajax_call_reptb(url, data, callback) {
     })
 }
 
+function ajax_call_reptbf(url, data, callback) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        async: true,
+        beforeSend: function() {
+            $('html, body').animate({scrollTop: 0}, 'slow');
+            $("#spn-grepf").fadeIn(800);
+        },
+        success:function (data, textStatus) {
+            $("#spn-grepf").fadeOut(800);
+        }
+    }).done(function (response) {
+        dictionary = JSON.parse(response)
+        if ("message" in dictionary && dictionary.message != ''){
+            if (dictionary.success) {
+                showMessage(dictionary.message, "success", "ok")
+            } else {
+                showMessage(dictionary.message, "danger", "remove")
+            }
+        }
+        if(callback != null){
+            callback(response)
+        }
+    })
+}
+
 function ajax_call_get_nwr(url, data, callback) {
     receive_dt = JSON.parse(data['object'])
     
