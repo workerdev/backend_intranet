@@ -149,9 +149,24 @@ class DocumentoFormularioController extends AbstractController
         try {
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
+
             $DocumentoFormulario = $this->getDoctrine()->getRepository(DocumentoFormulario::class)->find($id);
             $fpb = $DocumentoFormulario->getFechaPublicacion();
+
             if($fpb != null) $result = $fpb->format('Y-m-d').'T'.$fpb->format('H:i'); else $result = $fpb;
+            
+            if(!in_array($DocumentoFormulario->getVinculoFileDig(), ['N/A', null, ''])){
+                $urlfd = $this->getParameter('Directorio_proyecto').$DocumentoFormulario->getVinculoFileDig();
+                if(file_exists($urlfd)) $filedig = $DocumentoFormulario->getVinculoFileDig();
+                else $filedig = 'N/A';
+            }
+            
+            if(!in_array($DocumentoFormulario->getVinculoFileDesc(), ['N/A', null, ''])){
+                $urldwn = $this->getParameter('Directorio_proyecto').$DocumentoFormulario->getVinculoFileDesc();
+                if(file_exists($urldwn)) $filedwn = $DocumentoFormulario->getVinculoFileDesc();
+                else $filedwn = 'N/A';
+            }
+
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),
                 "codigo" => $DocumentoFormulario->getCodigo(),
@@ -159,15 +174,17 @@ class DocumentoFormularioController extends AbstractController
                 "versionVigente" => $DocumentoFormulario->getversionVigente(),
                 "fechaPublicacion" => $result,
                 "fkaprobador" => $DocumentoFormulario->getFkaprobador(),
-                "vinculoFileDig" => $DocumentoFormulario->getVinculoFileDig(),
-                "vinculoFileDesc" => $DocumentoFormulario->getVinculoFileDesc(),
+                "vinculoFileDig" => $filedig,
+                "vinculoFileDesc" => $filedwn,
                 "fkdocumento" => $DocumentoFormulario->getFkdocumento()
             ];
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Documento formulario listado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

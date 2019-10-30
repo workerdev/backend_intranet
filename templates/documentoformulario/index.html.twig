@@ -225,11 +225,26 @@
     </script>
 
     <script>
+        function fileExists(url) {
+            if(url){
+                let servidor = document.URL;
+                let url_fl = servidor + url;
+                var req = new XMLHttpRequest();
+                req.open('GET', url, false);
+                req.send();
+                return req.status==200;
+            } else {
+                return false;
+            }
+        }
         function format (d) {
             let urlfile = d[8];
             let vfile = urlfile.substring(urlfile.lastIndexOf("/") + 1, urlfile.length);
             let urldown = d[9];
             let vdown = urldown.substring(urldown.lastIndexOf("/") + 1, urldown.length); 
+
+            let servidor = document.URL
+            let urlserv = servidor.substring(0, servidor.lastIndexOf("/")); 
             
             html = '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
             '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -237,7 +252,8 @@
                     '<td class="bold">Versión vigente:</td>'+
                     '<td>'+d[6]+'</td>'+
                 '</tr>';
-            if(urlfile != 'N/A'){
+
+            if(fileExists(urlserv+urlfile)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo archivo digital:</td>'+
                     '<td><a href="' + urlfile +'">' + vfile + '</a></td>'+
@@ -247,9 +263,9 @@
                     '<td class="bold">Vínculo archivo digital:</td>'+
                     '<td>' + urlfile + '</td>'+
                 '</tr>';
-            } 
+            }
 
-            if(urldown != 'N/A'){
+            if(fileExists(urlserv+urldown)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo archivo de descarga:</td>'+
                     '<td><a href="' + urldown +'">' + vdown + '</a></td>'+
@@ -259,7 +275,7 @@
                     '<td class="bold">Vínculo archivo de descarga:</td>'+
                     '<td>' + urldown + '</td>'+
                 '</tr>';
-            }     
+            }    
             html += '</table></div>';
             return html;
         }

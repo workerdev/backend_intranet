@@ -173,7 +173,8 @@
                     $('#documento_versionvigente').val(self.versionVigente)
 
                     $('#documento_carpetaOperativa').val(self.carpetaOperativa)
-                    $('#documento_fechaPublicacion').val(self.fechaPublicacion)
+
+                    if(self.fechaPublicacion != null) $('#documento_fechaPublicacion').val(self.fechaPublicacion)
 
                     document.getElementById('documento_fkficha').value = self.fkficha.id
                     $('#documento_fkficha').selectpicker('render')
@@ -274,13 +275,16 @@
             let urldown = d[6];
             let vdown = urldown.substring(urldown.lastIndexOf("/") + 1, urldown.length); 
 
+            let servidor = document.URL
+            let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+
             html = '<div class="card" style="width: 100%; background-color: rgba(0, 76, 153, .15)">'+
             '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
                     '<td class="bold">Versión vigente:</td>'+
                     '<td>'+d[4]+'</td>'+
                 '</tr>';
-            if(fileExists(urlfile)){
+            if(fileExists(urlserv+urlfile)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo archivo digital:</td>'+
                     '<td><a href="' + urlfile +'">' + vfile + '</a></td>'+
@@ -292,7 +296,7 @@
                 '</tr>';
             } 
 
-            if(fileExists(urldown)){
+            if(fileExists(urlserv+urldown)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo diagrama flujo:</td>'+
                     '<td><a href="' + urldown +'">' + vdown + '</a></td>'+

@@ -262,25 +262,6 @@ class DocumentoController extends Controller
     }
 
 
-    /*function url_exists($url){
-        // Use get_headers() function 
-        $headers = @get_headers($url); 
-            
-        // Use condition to check the existence of URL 
-        if($headers && strpos( $headers[0], '200')) { 
-            return true; 
-        } 
-        else { 
-            return false; 
-        } 
-    }*/
-
-
-    function url_exists($url) {
-        return file_exists($url);
-    }
-
-
     /**
      * @Route("/documento_editar", methods={"POST"}, name="documento_editar")
      */
@@ -298,13 +279,13 @@ class DocumentoController extends Controller
             
             if(!in_array($Documento->getVinculoarchivodig(), ['N/A', null, ''])){
                 $urlfd = $this->getParameter('Directorio_proyecto').$Documento->getVinculoarchivodig();
-                if($this->url_exists($urlfd)) $filedig = $Documento->getVinculoarchivodig();
+                if(file_exists($urlfd)) $filedig = $Documento->getVinculoarchivodig();
                 else $filedig = 'N/A';
             }
             
             if(!in_array($Documento->getVinculodiagflujo(), ['N/A', null, ''])){
                 $urlfdgf = $this->getParameter('Directorio_proyecto').$Documento->getVinculodiagflujo();
-                if($this->url_exists($urlfdgf)) $filediagf = $Documento->getVinculodiagflujo();
+                if(file_exists($urlfdgf)) $filediagf = $Documento->getVinculodiagflujo();
                 else $filediagf = 'N/A';
             }
             

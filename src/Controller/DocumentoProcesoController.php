@@ -85,9 +85,8 @@ class DocumentoProcesoController extends Controller
         $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(array('estado' => '1'), array('codproceso' => 'ASC'));
         $docrevision = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('estado' => '1'));
         $documentoproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findBy(array('estado' => '1'));
-        $docs_rev = $this->getDoctrine()->getRepository(DocumentoProceso::class)->findAllRev();
         
-        return $this->render('documentoproceso/index.html.twig', array('objects' => $documentoproceso, 'docsrev' => $docs_rev, 'current_user' => $idu, 'docrevision' => $docrevision, 'en_revision' => $fkdocs, 'aprobador' => $aprobador, 'tipo' => $tipo, 'proceso' => $proceso, 'profile' => $user, 'documento' => $documento, 'formulario' => $formulario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('documentoproceso/index.html.twig', array('objects' => $documentoproceso, 'current_user' => $idu, 'docrevision' => $docrevision, 'en_revision' => $fkdocs, 'aprobador' => $aprobador, 'tipo' => $tipo, 'proceso' => $proceso, 'profile' => $user, 'documento' => $documento, 'formulario' => $formulario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
