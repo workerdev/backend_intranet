@@ -186,8 +186,10 @@
         var i_rev = 0;
         var global_docproc = ''; 
         var global_doc = '';  
+        var global_nrev = 0;  
         var global_type = '';
         var del_rev = [];
+        var global_fkaprob = 0;
         $(document).ready(function() {
             table = $('#data_table_docp').DataTable({
                 order: [[1, "desc"]],
@@ -810,8 +812,14 @@
                 $('#new-rev').hide();
                 $('#insert-rev').hide();
                 $('#update-rev').hide();
-                var table = $('#table_revision').DataTable();
-                table.clear().draw();
+
+                if ($.fn.DataTable.isDataTable('#table_revision')) {
+                    var table = $('#table_revision').DataTable();
+                    table.clear().draw();
+                }else{
+                    var table = $('#table_revision').DataTable();
+                }
+
                 obj = JSON.stringify({
                     'id': parseInt(JSON.parse($(this).attr('data-json')))
                 })
@@ -858,9 +866,6 @@
                         }
                         $('#aprobadordoc').prop('disabled', true);
 
-                        var table = $('#table_revision').DataTable();
-                        table.destroy();
-
                         let cont_rev = 0;
                         let priority = 0;
                         for(var i = 0; i < datarev.length; i++){
@@ -882,8 +887,10 @@
                         if(datarev.length == 0) $('#aprobar-rev').hide();
                         
                         if(cont_rev == datarev.length && self.aprobadorechazado == null && priority == '{{current_user}}'){
-                            if(self.nuevoactualizacion == 'BAJA') $('#bajadoc-rev').show()
-                            else $('#aprobar-rev').show()
+                            if(self.nuevoactualizacion == 'BAJA') $('#bajadoc-rev').show();
+                            else $('#aprobar-rev').show();
+                            $('#aprobadordoc').removeAttr('disabled');
+                            global_fkaprob = 0;
                         }
 
                         if(self.fkdocumento != null){
@@ -1195,10 +1202,11 @@
                         ajax_call_get("/docprocrevision_editar",{
                             object: objeto
                         },function(respdoc){
-                            var user= JSON.parse(respuser)
+                            var user = JSON.parse(respuser)
                             var self = JSON.parse(response)
                             var dtdocrev = JSON.parse(respdoc)
                             global_doc = self;
+                            global_nrev = user.id;
 
                             var tabler = $('#table_inforev').DataTable();
                             tabler.clear().draw();
@@ -1450,7 +1458,8 @@
                 }
                 if(response == "exitoso"){
                     if(sin_modificacion){ 
-                        $('#revfl').val(global_doc.revisor)
+                        console.log(global_doc)
+                        $('#revfl').val(global_nrev)
                         $('#infproc').val('sin_modificacion')   
                     }
                     if(aprobar){ 
@@ -1600,8 +1609,13 @@
             $('#finalrev_title').html('Documento para publicar')
             $('#idfr').val(global_docproc.id)
 
+            global_fkaprob = $('#aprobadordoc').val()
+            console.log('doc approver')
+            console.log(global_fkaprob)
+
             setTimeout(function(){ 
                 $('#accion').val('aprobar')
+                $('#fkapprover').val(global_fkaprob)
                 $('.fileinput-remove').click()
                 $('#form-rgdoc').modal('show')
             }, 1000);
@@ -1679,8 +1693,13 @@
             $('#finalrev_title').html('Documento para dar de baja')
             $('#idfr').val(global_docproc.id)
 
+            global_fkaprob = $('#aprobadordoc').val()
+            console.log('doc approver')
+            console.log(global_fkaprob)
+
             setTimeout(function(){ 
                 $('#accion').val('baja')
+                $('#fkapprover').val(global_fkaprob)
                 $('.fileinput-remove').click()
                 $('#form-rgdoc').modal('show')
             }, 1000);

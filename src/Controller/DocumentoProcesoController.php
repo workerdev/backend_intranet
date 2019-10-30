@@ -789,11 +789,12 @@ class DocumentoProcesoController extends Controller
 
             $id = $datos['idfr'];
             $accion = $datos['accion'];
+            $approver = $datos['fkapprover'];
             $url = 'N/A';
             $urladd = 'N/A';
 
-            $s_user = $this->get('session')->get('s_user');
-            $idu = $s_user['id'];
+            /*$s_user = $this->get('session')->get('s_user');
+            $idu = $s_user['id'];*/
             $docproceso = $this->getDoctrine()->getRepository(DocumentoProceso::class)->find($id);
 
             date_default_timezone_set('America/La_Paz');
@@ -802,7 +803,7 @@ class DocumentoProcesoController extends Controller
             if($accion == 'aprobar') $docproceso->setAprobadorechazado('APROBADO');
             else $docproceso->setAprobadorechazado('RECHAZADO');
 
-            $aprobador = $this->getDoctrine()->getRepository(Usuario::class)->find($idu);
+            $aprobador = $this->getDoctrine()->getRepository(Usuario::class)->find($approver);
             $docproceso->setFkaprobador($aprobador);
 
             if(!empty($file['archivoadd']['name'])) {

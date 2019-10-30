@@ -154,13 +154,18 @@
         function attach_edit() {
             $('.edit').click(function () {
                 $("#documento_id").attr("readonly", "readonly")
+                let servidor = document.URL
+                let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+
                 obj = JSON.stringify({
-                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                    'id': parseInt(JSON.parse($(this).attr('data-json'))),
+                    'website': urlserv
                 })
                 ajax_call_get("/documento_editar",{
                     object: obj
                 },function(response){
                     var self = JSON.parse(response)
+                    console.log(self)
                                 
                     $('#documento_id').val(self.id)
                     $('#documento_codigo').val(self.codigo)
