@@ -314,7 +314,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
 
         $docprocprt = new Modulo();
         $docprocprt->setNombre('documentoproceso');
-        $docprocprt->setTitulo('Documento en proceso');
+        $docprocprt->setTitulo('DOCUMENTO EN PROCESO');
         $docprocprt->setRuta('/documentoproceso');
         $docprocprt->setIcono('business');
         $docprocprt->setMenu(1);
@@ -332,7 +332,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
 
         $pubdocprt = new Modulo();
         $pubdocprt->setNombre('publicaciondoc');
-        $pubdocprt->setTitulo('Publicación de documento');
+        $pubdocprt->setTitulo('PUBLICACIÓN DE DOCUMENTO');
         $pubdocprt->setRuta('/publicaciondoc');
         $pubdocprt->setIcono('business');
         $pubdocprt->setMenu(1);

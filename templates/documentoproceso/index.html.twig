@@ -966,6 +966,7 @@
                 $('#new-rev').hide();
                 $('#insert-rev').hide();
                 $('#update-rev').hide();
+                global_fkaprob = 0;
 
                 if ($.fn.DataTable.isDataTable('#table_revision')) {
                     var table = $('#table_revision').DataTable();
@@ -1776,6 +1777,13 @@
         })
 
         $("#bajadoc-rev").click(function() {
+            global_fkaprob = $('#aprobadordoc').val()
+            console.log('doc approver')
+            console.log(global_fkaprob)
+
+            $('#accion').val('baja')
+            $('#fkapprover').val(global_fkaprob)
+
             $('#form-revision').modal('hide')
             $('#documento').parent().parent().parent().hide()
             
@@ -1847,13 +1855,7 @@
             $('#finalrev_title').html('Documento para dar de baja')
             $('#idfr').val(global_docproc.id)
 
-            global_fkaprob = $('#aprobadordoc').val()
-            console.log('doc approver')
-            console.log(global_fkaprob)
-
             setTimeout(function(){ 
-                $('#accion').val('baja')
-                $('#fkapprover').val(global_fkaprob)
                 $('.fileinput-remove').click()
                 $('#form-rgdoc').modal('show')
             }, 1000);

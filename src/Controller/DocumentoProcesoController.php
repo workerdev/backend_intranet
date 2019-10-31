@@ -848,7 +848,7 @@ class DocumentoProcesoController extends Controller
                     return new Response($resultado);
                 }
             }else{
-                if($accion != 'con_modificacion'){
+                if($accion != 'rechazar'){
                     $resultado = array(
                         'response' => "NoFile",   
                         'success' => false,

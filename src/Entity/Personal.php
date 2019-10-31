@@ -123,6 +123,20 @@ class Personal
     private $fkarea;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="legajo", type="integer", nullable=true, options={"default":null})
+     */
+    private $legajo;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="idempleado", type="integer", nullable=true, options={"default":null})
+     */
+    private $idempleado;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="cb_personal_genero", type="string", length=20, nullable=true)
@@ -326,6 +340,30 @@ class Personal
     public function setFoto(string $foto): self
     {
         $this->foto = $foto;
+
+        return $this;
+    }
+
+    public function getLegajo(): ?int
+    {
+        return $this->legajo;
+    }
+
+    public function setLegajo(int $legajo): self
+    {
+        $this->legajo = $legajo;
+
+        return $this;
+    }
+
+    public function getIdempleado(): ?int
+    {
+        return $this->idempleado;
+    }
+
+    public function setIdempleado(int $idempleado): self
+    {
+        $this->idempleado = $idempleado;
 
         return $this;
     }

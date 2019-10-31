@@ -127,12 +127,11 @@ class Correlativo
 
     /**
      * @var int
-     * @Assert\NotBlank
      * @Assert\Type(
      *     type="numeric",
      *     message="Tiene que ingresar un valor númerico válido"
      * )
-     * @ORM\Column(name="cb_correlativo_item", type="integer", nullable=false)
+     * @ORM\Column(name="cb_correlativo_item", type="integer", nullable=true)
      */
     private $item;
 

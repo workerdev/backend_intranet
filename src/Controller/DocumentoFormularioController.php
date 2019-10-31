@@ -160,12 +160,14 @@ class DocumentoFormularioController extends AbstractController
                 if(file_exists($urlfd)) $filedig = $DocumentoFormulario->getVinculoFileDig();
                 else $filedig = 'N/A';
             }
+            else $filedig = 'N/A';
             
             if(!in_array($DocumentoFormulario->getVinculoFileDesc(), ['N/A', null, ''])){
                 $urldwn = $this->getParameter('Directorio_proyecto').$DocumentoFormulario->getVinculoFileDesc();
                 if(file_exists($urldwn)) $filedwn = $DocumentoFormulario->getVinculoFileDesc();
                 else $filedwn = 'N/A';
             }
+            else $filedwn = 'N/A';
 
             $sendinf = [
                 "id" => $DocumentoFormulario->getId(),

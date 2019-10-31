@@ -282,12 +282,14 @@ class DocumentoController extends Controller
                 if(file_exists($urlfd)) $filedig = $Documento->getVinculoarchivodig();
                 else $filedig = 'N/A';
             }
+            else $filedig = 'N/A';
             
             if(!in_array($Documento->getVinculodiagflujo(), ['N/A', null, ''])){
                 $urlfdgf = $this->getParameter('Directorio_proyecto').$Documento->getVinculodiagflujo();
                 if(file_exists($urlfdgf)) $filediagf = $Documento->getVinculodiagflujo();
                 else $filediagf = 'N/A';
             }
+            else $filediagf = 'N/A';
             
             $sendinf = [
                 "id" => $Documento->getId(),

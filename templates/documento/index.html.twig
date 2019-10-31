@@ -284,7 +284,7 @@
                     '<td class="bold">Versión vigente:</td>'+
                     '<td>'+d[4]+'</td>'+
                 '</tr>';
-            if(fileExists(urlserv+urlfile)){
+            if(urlfile != 'N/A' && urlfile != '' && urlfile != null && fileExists(urlserv+urlfile)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo archivo digital:</td>'+
                     '<td><a href="' + urlfile +'">' + vfile + '</a></td>'+
@@ -296,7 +296,7 @@
                 '</tr>';
             } 
 
-            if(fileExists(urlserv+urldown)){
+            if(urldown != 'N/A' && urldown != '' && urldown != null && fileExists(urlserv+urldown)){
                 html += '<tr>'+
                     '<td class="bold">Vínculo diagrama flujo:</td>'+
                     '<td><a href="' + urldown +'">' + vdown + '</a></td>'+

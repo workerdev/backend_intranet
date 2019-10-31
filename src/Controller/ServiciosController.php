@@ -1416,10 +1416,46 @@ class ServiciosController extends AbstractController
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
-            $query = $stmt->fetchAll();
+            $documentos = $stmt->fetchAll();
+
+            $docs = array();
+            foreach ($documentos as $doc) {
+
+                if(!in_array($doc['vinculo_doc'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_doc'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_doc'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc['vinculo_diagrama_flujo'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc['vinculo_diagrama_flujo'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filediagf = $doc['vinculo_diagrama_flujo'];
+                    else $filediagf = 'N/A';
+                }
+                else $filediagf = 'N/A';
+
+                $info = [
+                    "gerencia" => $doc['gerencia'],
+                    "area" => $doc['area'],
+                    "tipo_documento" => $doc['tipo_documento'],
+                    "codigo" => $doc['codigo'],
+                    "titulo_doc" => $doc['titulo_doc'],
+                    "vinculo_doc" => $filedig,
+                    "version" => $doc['version'],
+                    "f_publicacion" => $doc['f_publicacion'],
+                    "aprobado_por" => $doc['aprobado_por'],
+                    "carpeta_operativa" => $doc['carpeta_operativa'],
+                    "vinculo_diagrama_flujo" => $filediagf,
+                    "cod_proceso" => $doc['cod_proceso'],
+                    "id" => $doc['id']
+                ];
+                $docs[] = $info;
+            }       
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            if (sizeof($query) > 0) {
-                $data2 = $serializer->serialize($query, 'json');
+            if (sizeof($docs) > 0) {
+                $data2 = $serializer->serialize($docs, 'json');
             } else {
                 $empty = array('mensaje' => 'No se encotraron datos.');
                 $data2 = $serializer->serialize($empty, 'json');
@@ -1456,8 +1492,43 @@ class ServiciosController extends AbstractController
             $stmt->execute(['gerencia' => ($gerencia)]);
             $documentos = $stmt->fetchAll();
 
+            $docs = array();
+            foreach ($documentos as $doc) {
+
+                if(!in_array($doc['vinculo_doc'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_doc'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_doc'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc['vinculo_diagrama_flujo'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc['vinculo_diagrama_flujo'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filediagf = $doc['vinculo_diagrama_flujo'];
+                    else $filediagf = 'N/A';
+                }
+                else $filediagf = 'N/A';
+
+                $info = [
+                    "gerencia" => $doc['gerencia'],
+                    "area" => $doc['area'],
+                    "tipo_documento" => $doc['tipo_documento'],
+                    "codigo" => $doc['codigo'],
+                    "titulo_doc" => $doc['titulo_doc'],
+                    "vinculo_doc" => $filedig,
+                    "version" => $doc['version'],
+                    "f_publicacion" => $doc['f_publicacion'],
+                    "aprobado_por" => $doc['aprobado_por'],
+                    "carpeta_operativa" => $doc['carpeta_operativa'],
+                    "vinculo_diagrama_flujo" => $filediagf,
+                    "cod_proceso" => $doc['cod_proceso'],
+                    "id" => $doc['id']
+                ];
+                $docs[] = $info;
+            }  
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($documentos, 'json');
+            $data2 = $serializer->serialize($docs, 'json');
 
             return new jsonResponse(json_decode($data2));
         } catch (Exception $e) {
@@ -1487,7 +1558,38 @@ class ServiciosController extends AbstractController
                         AND cb_documento_fkaprobador=cb_usuario_id AND cb_documento_estado=1 AND cb_documento_id=:id";
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id)]);
-            $documento = $stmt->fetchAll();
+            $doc = $stmt->fetchAll();
+
+            $data_doc = [];
+            if(sizeof($doc) > 0){
+               if(!in_array($doc[0]['vinculo_archivo'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc[0]['vinculo_archivo'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc[0]['vinculo_archivo'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc[0]['vinculo_diagrama'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc[0]['vinculo_diagrama'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filediagf = $doc[0]['vinculo_diagrama'];
+                    else $filediagf = 'N/A';
+                }
+                else $filediagf = 'N/A';
+
+                $data_doc = [
+                    "codigo_documento" => $doc[0]['codigo_documento'],
+                    "cod_proceso" => $doc[0]['cod_proceso'],
+                    "tipo_documento" => $doc[0]['tipo_documento'],
+                    "titulo_doc" => $doc[0]['titulo_doc'],
+                    "version" => $doc[0]['version'],
+                    "f_publicacion" => $doc[0]['f_publicacion'],
+                    "aprobado_por" => $doc[0]['aprobado_por'],
+                    "carpeta_operativa" => $doc[0]['carpeta_operativa'],
+                    "titulo_doc" => $doc[0]['titulo_doc'],
+                    "vinculo_archivo" => $filedig,
+                    "vinculo_diagrama" => $filediagf
+                ]; 
+            }
 
             $sql2 = "SELECT cb_ficha_procesos_id AS id, cb_gas_codigo AS id_area, cb_ficha_procesos_codproceso AS cod_proceso, cb_ficha_procesos_nombre AS nombre,
                         cb_ficha_procesos_objetivo AS objetivo_proceso, cb_ficha_procesos_entradasrequeridas AS entradas_requeridas, cb_ficha_procesos_recursosnecesarios AS recursos_necesarios,
@@ -1518,7 +1620,7 @@ class ServiciosController extends AbstractController
             $stmt->execute(['id' => ($id)]);
             $fcargo = $stmt->fetchAll();
 
-            $elementos = array('documento' => $documento, 'fichaproceso' => $fproceso, 'gerenciareasector' => $gcarstr, 'fichacargo' => $fcargo);
+            $elementos = array('documento' => $data_doc, 'fichaproceso' => $fproceso, 'gerenciareasector' => $gcarstr, 'fichacargo' => $fcargo);
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($elementos, 'json');
@@ -1546,21 +1648,57 @@ class ServiciosController extends AbstractController
     {
         try {
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, cb_documento_formulario_titulo AS titulo_formulario,
-                        cb_documento_formulario_vinculofiledig AS vinculo_archivo, cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
-                        cb_documento_formulario_fechapublicacion AS f_publicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS aprobado_por, cb_tipo_documento_nombre AS tipo_doc_relacionado,
-                        cb_documento_codigo AS doc_relacionado
-                    FROM cb_gestion_documento, cb_procesos_ficha_procesos, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_gest_doc_formulario, cb_gestion_tipo_documento, cb_usuario_usuario
+            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, 
+                        cb_documento_formulario_titulo AS titulo_formulario, cb_documento_formulario_vinculofiledig AS vinculo_archivo, 
+                        cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
+                        cb_documento_formulario_fechapublicacion AS f_publicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS aprobado_por, 
+                        cb_tipo_documento_nombre AS tipo_doc_relacionado, cb_documento_codigo AS doc_relacionado
+                    FROM cb_gestion_documento, cb_procesos_ficha_procesos, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_gest_doc_formulario, 
+                        cb_gestion_tipo_documento, cb_usuario_usuario
                     WHERE cb_documento_fkficha=cb_ficha_procesos_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
                         cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id
                     ORDER BY 1, 2, 3";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
-            $query = $stmt->fetchAll();
+            $documentos = $stmt->fetchAll();
+
+            $docs = array();
+            foreach ($documentos as $doc) {
+
+                if(!in_array($doc['vinculo_archivo'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_archivo'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_archivo'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc['descarga_formulario'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc['descarga_formulario'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filedwn = $doc['descarga_formulario'];
+                    else $filedwn = 'N/A';
+                }
+                else $filedwn = 'N/A';
+
+                $info = [
+                    "gerencia" => $doc['gerencia'],
+                    "area" => $doc['area'],
+                    "cod_formulario" => $doc['cod_formulario'],
+                    "titulo_formulario" => $doc['titulo_formulario'],
+                    "vinculo_archivo" => $filedig,
+                    "descarga_formulario" => $filedwn,
+                    "version" => $doc['version'],
+                    "f_publicacion" => $doc['f_publicacion'],
+                    "aprobado_por" => $doc['aprobado_por'],
+                    "tipo_doc_relacionado" => $doc['tipo_doc_relacionado'],
+                    "doc_relacionado" => $doc['doc_relacionado']
+                ];
+                $docs[] = $info;
+            }  
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            if (sizeof($query) > 0) {
-                $data2 = $serializer->serialize($query, 'json');
+            if (sizeof($docs) > 0) {
+                $data2 = $serializer->serialize($docs, 'json');
             } else {
                 $empty = array('mensaje' => 'No se encotraron datos.');
                 $data2 = $serializer->serialize($empty, 'json');
@@ -1594,8 +1732,41 @@ class ServiciosController extends AbstractController
             $stmt->execute(['gerencia' => ($gerencia)]);
             $documentos = $stmt->fetchAll();
 
+            $docs = array();
+            foreach ($documentos as $doc) {
+
+                if(!in_array($doc['vinculo_archivo'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_archivo'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_archivo'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc['descarga_formulario'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc['descarga_formulario'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filedwn = $doc['descarga_formulario'];
+                    else $filedwn = 'N/A';
+                }
+                else $filedwn = 'N/A';
+
+                $info = [
+                    "gerencia" => $doc['gerencia'],
+                    "area" => $doc['area'],
+                    "cod_formulario" => $doc['cod_formulario'],
+                    "titulo_formulario" => $doc['titulo_formulario'],
+                    "vinculo_archivo" => $filedig,
+                    "descarga_formulario" => $filedwn,
+                    "version" => $doc['version'],
+                    "f_publicacion" => $doc['f_publicacion'],
+                    "aprobado_por" => $doc['aprobado_por'],
+                    "tipo_doc_relacionado" => $doc['tipo_doc_relacionado'],
+                    "doc_relacionado" => $doc['doc_relacionado']
+                ];
+                $docs[] = $info;
+            }  
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($documentos, 'json');
+            $data2 = $serializer->serialize($docs, 'json');
 
             return new jsonResponse(json_decode($data2));
         } catch (Exception $e) {
@@ -1615,28 +1786,93 @@ class ServiciosController extends AbstractController
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
             $documento = $sx['documento'];
+            
             $cx = $this->getDoctrine()->getEntityManager()->getConnection();
             $sql = "SELECT cb_documento_formulario_id AS ID_FORMULARIO, cb_documento_codigo AS COD_DOCUMENTO, cb_documento_formulario_codigo AS COD_FORMULARIO,
-            cb_documento_formulario_titulo AS TITULO_FORMULARIO, cb_documento_formulario_versionVigente AS VERSION_VIGENTE_FORMULARIO,
-            cb_documento_formulario_fechaPublicacion AS FECHA_PUBLICACION_FORMULARIO, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR,
-            cb_documento_formulario_vinculoFileDig AS VINCULO_ARCHIVO_DIGITAL, cb_documento_formulario_vinculoFileDesc AS VINCULO_ARCHIVO_DESCARGA
-        FROM cb_gest_doc_formulario, cb_gestion_documento, cb_gestion_tipo_documento, cb_usuario_usuario
-        WHERE cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_codigo=:id AND
-        cb_documento_codigo=:documento AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id";
+                        cb_documento_formulario_titulo AS TITULO_FORMULARIO, cb_documento_formulario_versionVigente AS VERSION_VIGENTE_FORMULARIO,
+                        cb_documento_formulario_fechaPublicacion AS FECHA_PUBLICACION_FORMULARIO, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR,
+                        cb_documento_formulario_vinculoFileDig AS VINCULO_ARCHIVO_DIGITAL, cb_documento_formulario_vinculoFileDesc AS VINCULO_ARCHIVO_DESCARGA
+                    FROM cb_gest_doc_formulario, cb_gestion_documento, cb_gestion_tipo_documento, cb_usuario_usuario
+                    WHERE cb_documento_formulario_fkdocumento=cb_documento_id AND cb_documento_fktipo=cb_tipo_documento_id AND cb_documento_formulario_codigo=:id AND
+                    cb_documento_codigo=:documento AND cb_documento_formulario_estado=1 AND cb_documento_formulario_fkaprobador=cb_usuario_id";
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id), 'documento' => ($documento)]);
-            $FORMULARIO = $stmt->fetchAll();
+            $dform = $stmt->fetchAll();
+
+            $data_docfrm = [];
+            if(sizeof($dform) > 0){
+                if(!in_array($dform[0]['vinculo_archivo_digital'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$dform[0]['vinculo_archivo_digital'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $dform[0]['vinculo_archivo_digital'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($dform[0]['vinculo_archivo_descarga'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$dform[0]['vinculo_archivo_descarga'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filedwn = $dform[0]['vinculo_archivo_descarga'];
+                    else $filedwn = 'N/A';
+                }
+                else $filedwn = 'N/A';
+    
+                $data_docfrm = [
+                    "id_formulario" => $dform[0]['id_formulario'],
+                    "cod_documento" => $dform[0]['cod_documento'],
+                    "cod_formulario" => $dform[0]['cod_formulario'],
+                    "titulo_formulario" => $dform[0]['titulo_formulario'],
+                    "version_vigente_formulario" => $dform[0]['version_vigente_formulario'],
+                    "fecha_publicacion_formulario" => $dform[0]['fecha_publicacion_formulario'],
+                    "aprobado_por" => $dform[0]['aprobado_por'],
+                    "vinculo_archivo_digital" => $filedig,
+                    "vinculo_archivo_descarga" => $filedwn
+                ];
+            }
+
             $sql2 = "SELECT cb_documento_codigo AS COD_DOCUMENTO, cb_ficha_procesos_nombre AS COD_PROCESO, cb_tipo_documento_nombre AS TIPO_DOCUMENTO,
-                cb_documento_titulo AS TITULO_DOC, cb_documento_versionvigente AS VERSION_VIGENTE, cb_documento_fechaPublicacion AS FECHA_PUBLICACION,
-                (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR, cb_documento_carpetaoperativa AS CARPETA_OPERATIVA,
-                cb_documento_vinculoarchivodig AS VINCULO_ARCHIVO_DIGITAL, cb_documento_vinculodiagflujo AS VINCULO_DIAGRAMA_DE_FLUJO
-            FROM cb_gestion_documento,cb_procesos_ficha_procesos,cb_gestion_tipo_documento,cb_usuario_usuario
-            WHERE cb_documento_fkaprobador=cb_usuario_id AND cb_documento_fkficha=cb_ficha_procesos_id AND cb_documento_fktipo=cb_tipo_documento_id AND
-                cb_documento_estado=1 AND cb_documento_codigo=:documento";
+                        cb_documento_titulo AS TITULO_DOC, cb_documento_versionvigente AS VERSION_VIGENTE, cb_documento_fechaPublicacion AS FECHA_PUBLICACION,
+                        (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR, cb_documento_carpetaoperativa AS CARPETA_OPERATIVA,
+                        cb_documento_vinculoarchivodig AS VINCULO_ARCHIVO_DIGITAL, cb_documento_vinculodiagflujo AS VINCULO_DIAGRAMA_DE_FLUJO
+                    FROM cb_gestion_documento,cb_procesos_ficha_procesos,cb_gestion_tipo_documento,cb_usuario_usuario
+                    WHERE cb_documento_fkaprobador=cb_usuario_id AND cb_documento_fkficha=cb_ficha_procesos_id AND cb_documento_fktipo=cb_tipo_documento_id AND
+                        cb_documento_estado=1 AND cb_documento_codigo=:documento";
             $stmt = $cx->prepare($sql2);
             $stmt->execute(['documento' => ($documento)]);
-            $DOCUMENTOS = $stmt->fetchAll();
-            $elementos = array('FORMULARIO' => $FORMULARIO, 'DOCUMENTOS' => $DOCUMENTOS);
+            $documents = $stmt->fetchAll();
+
+            $docs = array();
+            foreach ($documents as $doc) {
+
+                if(!in_array($doc['vinculo_archivo_digital'], ['N/A', null, ''])){
+                    $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_archivo_digital'];
+                    if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_archivo_digital'];
+                    else $filedig = 'N/A';
+                }
+                else $filedig = 'N/A';
+                
+                if(!in_array($doc['vinculo_diagrama_de_flujo'], ['N/A', null, ''])){
+                    $urlfdgf = $this->getParameter('Directorio_proyecto').$doc['vinculo_diagrama_de_flujo'];
+                    if(file_exists($urlfdgf) && (strpos($urlfdgf, '.') !== false)) $filediagf = $doc['vinculo_diagrama_de_flujo'];
+                    else $filediagf = 'N/A';
+                }
+                else $filediagf = 'N/A';
+
+                $data_doc = [
+                    "cod_documento" => $doc['cod_documento'],
+                    "cod_proceso" => $doc['cod_proceso'],
+                    "tipo_documento" => $doc['tipo_documento'],
+                    "titulo_doc" => $doc['titulo_doc'],
+                    "version_vigente" => $doc['version_vigente'],
+                    "fecha_publicacion" => $doc['fecha_publicacion'],
+                    "aprobado_por" => $doc['aprobado_por'],
+                    "carpeta_operativa" => $doc['carpeta_operativa'],
+                    "titulo_doc" => $doc['titulo_doc'],
+                    "vinculo_archivo_digital" => $filedig,
+                    "vinculo_diagrama_de_flujo" => $filediagf
+                ]; 
+                $docs[] = $data_doc;
+            }    
+
+            $elementos = array('FORMULARIO' => $data_docfrm, 'DOCUMENTOS' => $docs);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $data2 = $serializer->serialize($elementos, 'json');
             return new jsonResponse(json_decode($data2));
@@ -2359,8 +2595,8 @@ class ServiciosController extends AbstractController
                 return new JsonResponse($mensaje);
             } else {
                 $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                if (empty($personal)) $item_personal = 0;
-                else $item_personal = $personal->getId();
+                if (empty($personal)) $item_personal = null;
+                else $item_personal = $personal->getLegajo();
 
                 $elementos = array('Nombre' => $usuariob[0]->getNombre(), 'Apellido' => $usuariob[0]->getApellido(), 'Cargo' => 'Gerente', 'login' => $user, 'item_personal' => $item_personal);
 
@@ -2533,8 +2769,8 @@ class ServiciosController extends AbstractController
                         }
 
                         $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                        if (empty($personal)) $item_personal = 0;
-                        else $item_personal = $personal->getId();
+                        if (empty($personal)) $item_personal = null;
+                        else $item_personal = $personal->getLegajo();
 
                         $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
 
@@ -2546,8 +2782,8 @@ class ServiciosController extends AbstractController
             }
             if($process == 'success'){
                 $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                if (empty($personal)) $item_personal = 0;
-                else $item_personal = $personal->getId();
+                if (empty($personal)) $item_personal = null;
+                else $item_personal = $personal->getLegajo();
 
                 $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
 
@@ -3016,10 +3252,16 @@ class ServiciosController extends AbstractController
                     $rsfce = $fecent;
                 }
 
+                if ($dtcrtv->getItem() != null && $dtcrtv->getItem() != "" && $dtcrtv->getItem() != 0) {
+                    $itemvl = $dtcrtv->getItem();
+                } else {
+                    $itemvl = "";
+                }
+
                 $sendinf = [
                     "id" => $dtcrtv->getId(),
                     "antecedente" => $dtcrtv->getAntecedente(),
-                    "item" => $dtcrtv->getItem(),
+                    "item" => $itemvl,
                     "numcorrelativo" => $dtcrtv->getNumcorrelativo(),
                     "fechareg" => $rsfcr,
                     "redactor" => $dtcrtv->getRedactor(),
@@ -3127,7 +3369,11 @@ class ServiciosController extends AbstractController
             $Correlativo->setUrl($url);
             $Correlativo->setAntecedente($antecedente);
             $Correlativo->setEstadoCorrelativo($estadocorrelativo);
-            $Correlativo->setItem($item);
+
+            if ($item != null && $item != "" && $item != 0) {
+                $Correlativo->setItem($item);
+            }
+            
             $Correlativo->setUrleditable($urleditable);
             $Correlativo->setEntrega(new \DateTime($entrega));
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $fkunidad));
@@ -3194,8 +3440,8 @@ class ServiciosController extends AbstractController
             $Correlativo->setFktiponota($tiponota[0]);
             $Correlativo->setUrl($url);
             $Correlativo->setAntecedente($antecedente);
-            $Correlativo->setEstadoCorrelativo($estadocorrelativo);
-            $Correlativo->setItem($item);
+            /*$Correlativo->setEstadoCorrelativo($estadocorrelativo);
+            $Correlativo->setItem($item);*/
             $Correlativo->setUrleditable($urleditable);
             $Correlativo->setEntrega(new \DateTime($entrega));
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $fkunidad));

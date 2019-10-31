@@ -172,6 +172,10 @@ class PersonalController extends Controller
                     }else{
                         $cx->persist($personal);
                         $cx->flush();
+
+                        $personal->setLegajo($personal->getId());
+                        $cx->merge($personal);
+                        $cx->flush();
                     }
 
                     $resultado = array(
