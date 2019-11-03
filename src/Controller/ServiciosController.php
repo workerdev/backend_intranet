@@ -2164,7 +2164,7 @@ class ServiciosController extends AbstractController
                         cb_auditoria_fechaprogramada AS f_programada, cb_auditoria_fechahorainicio AS f_inicio, cb_auditoria_fechahorafin AS f_fin,
                         cb_auditoria_alcance AS alcance, cb_auditoria_conclusiones AS conclusiones, cb_tipo_auditoria_nombre AS tipo_auditoria, cb_auditoria_id AS idaud
                     FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
                         cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_estado=1 ORDER BY 1, 2, 3";
 
             $stmt = $cx->prepare($sql);
@@ -2197,7 +2197,7 @@ class ServiciosController extends AbstractController
                         cb_auditoria_objetivos AS objetivos, cb_auditoria_fechahorainicio AS fecha_hora_inicio, cb_auditoria_fechahorafin AS fecha_hora_fin,
                         cb_auditoria_responsable AS responsable_registro, cb_auditoria_fecharegistro AS fecha_registro, cb_auditoria_conclusiones AS conclusiones
                     FROM cb_aud_auditoria, cb_proc_gas, cb_aud_tipo_auditoria
-                    WHERE cb_auditoria_fkarea=cb_gas_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_estado=1 AND cb_auditoria_codigo=:id";
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_estado=1 AND cb_auditoria_codigo=:id";
             $stmt = $cx->prepare($sql);
             $stmt->execute(['id' => ($id)]);
             $auditoria = $stmt->fetchAll();
@@ -2205,7 +2205,7 @@ class ServiciosController extends AbstractController
             $sql2 = "SELECT cb_gas_codigo AS id_area, cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_sector_nombre AS sector,
                         (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable, cb_gas_vigente AS vigente
                     FROM cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_configuracion_sector, cb_usuario_usuario
-                    WHERE cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_gas_fksector=cb_sector_id AND
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_gas_fksector=cb_sector_id AND
                         cb_gas_fkresponsable=cb_usuario_id AND cb_gas_estado=1 AND cb_auditoria_codigo=:id";
 
             $stmt = $cx->prepare($sql2);
@@ -2305,7 +2305,7 @@ class ServiciosController extends AbstractController
                         cb_auditoria_fechaprogramada AS f_programada, cb_hallazgo_id AS id_hallazgo, cb_hallazgo_ordinal AS ordinal,
                         cb_tipo_hallazgo_nombre AS tipo_hallazgo, cb_hallazgo_titulo AS titulo, cb_hallazgo_descripcion AS descripcion
                     FROM cb_aud_hallazgo, cb_aud_auditoria, cb_aud_tipo_hallazgo, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
+                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
                         cb_hallazgo_fkauditoria=cb_auditoria_id AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_hallazgo_estado=1 ORDER BY 1, 2, 3, 7";
 
             $stmt = $cx->prepare($sql);
@@ -2336,7 +2336,7 @@ class ServiciosController extends AbstractController
                         cb_accion_ordinal AS ordinal_accion, cb_accion_descripcion AS accion, cb_accion_fechaimplementacion AS f_implementacion,
                         cb_accion_responsableregistro AS responsable, cb_accion_estadoaccion AS estado
                     FROM cb_aud_hallazgo, cb_aud_auditoria, cb_aud_accion, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND
+                    WHERE cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND
                         cb_gas_fkarea=cb_area_id AND cb_accion_estado=1 ORDER BY 1, 2, 3, 4, 7, 8";
 
             $stmt = $cx->prepare($sql);
@@ -2528,7 +2528,7 @@ class ServiciosController extends AbstractController
                         cb_accion_eficacia_cargoverificador AS cargo_verificado
                     FROM cb_aud_hallazgo, cb_aud_accion, cb_aud_accion_eficacia, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
                     WHERE cb_accion_eficacia_fkaccion=cb_accion_id AND cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND
-                        cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_accion_eficacia_estado=1";
+                        cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_accion_eficacia_estado=1";
 
             $stmt = $cx->prepare($sql);
             $stmt->execute();
@@ -2556,7 +2556,7 @@ class ServiciosController extends AbstractController
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_auditoria_codigo AS id_auditoria, date_part('year', cb_auditoria_fechaprogramada) AS anio,
                         cb_auditoria_fechaprogramada AS f_programada, cb_fortaleza_id AS id_fortaleza, cb_fortaleza_ordinal AS ordinal_f, cb_fortaleza_descripcion AS descripcion
                     FROM cb_aud_fortaleza, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_fortaleza_fkauditoria=cb_auditoria_id AND cb_auditoria_fkarea=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
+                    WHERE cb_fortaleza_fkauditoria=cb_auditoria_id AND cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
                         cb_fortaleza_estado=1";
 
             $stmt = $cx->prepare($sql);

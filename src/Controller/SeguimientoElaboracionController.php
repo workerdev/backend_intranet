@@ -62,9 +62,9 @@ class SeguimientoElaboracionController extends Controller
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
         $SeguimientoElaboracion = $this->getDoctrine()->getRepository(SeguimientoElaboracion::class)->findBy(array('estado' => '1'));
-        $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(array('estado' => '1'));
-        $EstadoSeguimiento = $this->getDoctrine()->getRepository(EstadoSeguimiento::class)->findBy(array('estado' => '1'));
-        $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('estado' => '1'));
+        $Documento = $this->getDoctrine()->getRepository(Documento::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
+        $EstadoSeguimiento = $this->getDoctrine()->getRepository(EstadoSeguimiento::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+        $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         return $this->render('seguimientoelaboracion/index.html.twig', array('objects' => $SeguimientoElaboracion, 'tipo' => $Documento, 'tipo2' => $EstadoSeguimiento, 'tipo3' => $Usuario, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
