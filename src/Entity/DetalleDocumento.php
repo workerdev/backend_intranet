@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +29,7 @@ class DetalleDocumento
      * })
      */
     private $fkauditoria;
+
     /**
      * @var \documento
      *
@@ -40,7 +39,6 @@ class DetalleDocumento
      * })
      */
     private $fkdocumento;
-
    
     /**
      * @var int
@@ -49,10 +47,12 @@ class DetalleDocumento
      */
     private $estado;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function setId(string $id): self
     {
         $this->id = $id;
@@ -71,6 +71,7 @@ class DetalleDocumento
 
         return $this;
     }
+
     public function getFkdocumento(): ?DocumentoExtra
     {
         return $this->fkdocumento;
@@ -94,6 +95,4 @@ class DetalleDocumento
 
         return $this;
     }
-
-   
 }

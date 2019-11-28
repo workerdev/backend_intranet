@@ -101,9 +101,9 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         
 
         $perfedt = new Modulo();
-        $perfedt->setNombre('menu_editar');
+        $perfedt->setNombre('perfil_editar');
         $perfedt->setTitulo('Actualizar');
-        $perfedt->setRuta('/menu_editar');
+        $perfedt->setRuta('/perfil_editar');
         $perfedt->setIcono('home');
         $perfedt->setMenu(0);
         $perfedt->setFkmodulo($this->getReference(ModuloChildrenFixtures::PERFIL_CHILD));
@@ -288,7 +288,7 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
 
 
         $mailhm = new Modulo();
-        $mailhm->setNombre('home_cordelautoridad');
+        $mailhm->setNombre('home_delautoridad');
         $mailhm->setTitulo('Consultar');
         $mailhm->setRuta('');
         $mailhm->setIcono('home');

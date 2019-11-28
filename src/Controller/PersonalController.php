@@ -29,6 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Rol;
+use Orbitale\Component\ImageMagick\Command;
 
 
 class PersonalController extends Controller
@@ -64,6 +65,7 @@ class PersonalController extends Controller
             $permisos[] = $item;
         }
         $Personal = $this->getDoctrine()->getRepository(Personal::class)->findBy(array('estado' => '1'));
+
         $sector = $this->getDoctrine()->getRepository(Sector::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $area = $this->getDoctrine()->getRepository(Area::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $ProcesosCargo = $this->getDoctrine()->getRepository(PersonalCargo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
@@ -71,6 +73,7 @@ class PersonalController extends Controller
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
+        
         return $this->render('personal/index.html.twig', array('objects' => $Personal, 'tipo' => $ProcesosCargo, 'tipo2' => $EstadoPersonal, 'sector' => $sector, 'area' => $area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 

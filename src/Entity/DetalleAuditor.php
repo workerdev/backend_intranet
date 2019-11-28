@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,7 +20,7 @@ class DetalleAuditor
      */
     private $id;
 
-         /**
+    /**
      * @var \auditoria
      *
      * @ORM\ManyToOne(targetEntity="Auditoria")
@@ -32,7 +30,7 @@ class DetalleAuditor
      */
     private $fkauditoria;
 
-         /**
+    /**
      * @var \auditor
      *
      * @ORM\ManyToOne(targetEntity="Auditor")
@@ -42,8 +40,6 @@ class DetalleAuditor
      */
     private $fkauditor;
 
-  
-
     /**
      * @var int
      *
@@ -52,14 +48,11 @@ class DetalleAuditor
     private $estado;
 
 
-
-   
-
-
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function setId(string $id): self
     {
         $this->id = $id;
@@ -77,7 +70,9 @@ class DetalleAuditor
         $this->fkauditoria = $fkauditoria;
 
         return $this;
-    }    public function getFkauditor(): ?Auditor
+    }    
+    
+    public function getFkauditor(): ?Auditor
     {
         return $this->fkauditor;
     }
@@ -88,6 +83,7 @@ class DetalleAuditor
 
         return $this;
     }
+
     public function getEstado(): ?int
     {
         return $this->estado;
@@ -99,6 +95,4 @@ class DetalleAuditor
 
         return $this;
     }
-
-
 }

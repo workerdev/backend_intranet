@@ -150,6 +150,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PackageVersions\\' => 16,
         ),
+        'O' => 
+        array (
+            'Orbitale\\Component\\ImageMagick\\' => 31,
+        ),
         'M' => 
         array (
             'Metadata\\' => 9,
@@ -454,6 +458,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'PackageVersions\\' => 
         array (
             0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
+        ),
+        'Orbitale\\Component\\ImageMagick\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/orbitale/imagemagick-php',
         ),
         'Metadata\\' => 
         array (

@@ -3273,6 +3273,57 @@
         ]
     },
     {
+        "name": "orbitale/imagemagick-php",
+        "version": "v3.0.9",
+        "version_normalized": "3.0.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Orbitale/ImageMagickPHP.git",
+            "reference": "defabc806ddc70a5606dd471b8f3c9f6010f1b0f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Orbitale/ImageMagickPHP/zipball/defabc806ddc70a5606dd471b8f3c9f6010f1b0f",
+            "reference": "defabc806ddc70a5606dd471b8f3c9f6010f1b0f",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.2",
+            "symfony/process": "^4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^7.5"
+        },
+        "time": "2019-08-26T07:31:24+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Orbitale\\Component\\ImageMagick\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alex Rock Ancelet",
+                "email": "alex@orbitale.io",
+                "homepage": "http://www.orbitale.io/"
+            }
+        ],
+        "description": "A system that allows creating commands to send to the exec() function to use ImageMagick's powerful features.",
+        "homepage": "https://github.com/Orbitale/ImageMagickPHP",
+        "keywords": [
+            "ImageMagick",
+            "converter",
+            "gd",
+            "image",
+            "imagick"
+        ]
+    },
+    {
         "name": "phenx/php-font-lib",
         "version": "0.5.1",
         "version_normalized": "0.5.1.0",

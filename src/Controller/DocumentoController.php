@@ -270,7 +270,6 @@ class DocumentoController extends Controller
         try {
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
-            $website = $sx['website'];
 
             $Documento = $this->getDoctrine()->getRepository(Documento::class)->find($id);
             $fpb = $Documento->getFechaPublicacion();

@@ -1002,12 +1002,13 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::TIPORIESGOPT_CHILD, $tpcroprt);
         $this->addReference(self::SEGUIMIENTORSOP_CHILD, $crosegprt);
         $this->addReference(self::GCIARSECTOR_CHILD, $gciarstprt);
+        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt); 
         $this->addReference(self::RECURSONEC_CHILD, $recnecprt);
-        $this->addReference(self::CONTROLCRTLVO_CHILD, $ctlctvoprt);
         $this->addReference(self::GRUPORIESGO_CHILD, $grprsgprt);
         $this->addReference(self::ESTADORIESGO_CHILD, $estrsgprt);
-        $this->addReference(self::TIPONOTA_CHILD, $tpnotaprt);
-        $this->addReference(self::TIPORECURSO_CHILD, $tprecprt);   
+        
+        $this->addReference(self::TIPONOTA_CHILD, $tpnotaprt);  
+        $this->addReference(self::CONTROLCRTLVO_CHILD, $ctlctvoprt);
         $this->addReference(self::CORRELATIVO_CHILD, $ctvoprt);
         $this->addReference(self::UNIDAD_CHILD, $undprt);
         $this->addReference(self::PERMISO_CHILD, $permsprt);
@@ -1043,6 +1044,8 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::TIPODATOEMP_CHILD, $tpdtemprt);
         $this->addReference(self::DATOEMPRESARIAL_CHILD, $dtoemprt);
         $this->addReference(self::TIPONOVEDAD_CHILD, $tpnvdprt);
+        
+        $this->addReference(self::CATEGORIA_CHILD, $catnotprt);
         $this->addReference(self::NOTICIA_CHILD, $notcprt);
         $this->addReference(self::NOTICIACAT_CHILD, $notcatprt);
         $this->addReference(self::GALERIA_CHILD, $galprt);

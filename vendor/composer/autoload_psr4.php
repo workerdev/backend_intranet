@@ -64,6 +64,7 @@ return array(
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
+    'Orbitale\\Component\\ImageMagick\\' => array($vendorDir . '/orbitale/imagemagick-php'),
     'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
     'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'JMS\\Serializer\\' => array($vendorDir . '/jms/serializer/src'),
