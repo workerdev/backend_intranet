@@ -1,6 +1,6 @@
 {% for tr in objects %}
     
-    <tr {% if tr.estadocorrelativo == 'Anulado' %} style="background-color: #ffcdd2" {% endif %}>
+    <tr {% if tr.estadocorrelativo == 'Anulado' %} class="bg-cancel" {% endif %}>
         <td class="details-control">
             <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'cr' ~ tr.id}}"></i>
         </td>
@@ -16,8 +16,19 @@
         <td>{{ tr.redactor }}</td>
         <td class="d-none">{{ tr.destinatario }}</td>
         <td>{{ tr.referencia }}</td>
-        <td class="d-none">{{ tr.fkcorrelativo.nombre }}</td>
-        <td class="d-none">{{ tr.fktiponota.nombre }}</td>
+
+        {% if tr.fkcorrelativo != null %}
+            <td class="d-none">{{ tr.fkcorrelativo.nombre }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
+
+        {% if tr.fktiponota != null %}
+            <td class="d-none">{{ tr.fktiponota.nombre }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
+
         <td class="d-none">{{ tr.ip }}</td>
 
         {% if tr.url != null and tr.url != 'N/A' %}
@@ -49,4 +60,3 @@
         {% endif %}
     </tr>
 {% endfor %}
-

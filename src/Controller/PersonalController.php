@@ -76,8 +76,8 @@ class PersonalController extends Controller
         
         return $this->render('personal/index.html.twig', array('objects' => $Personal, 'tipo' => $ProcesosCargo, 'tipo2' => $EstadoPersonal, 'sector' => $sector, 'area' => $area, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
-
-
+    
+    
     public function validate_data($data, $process)
     {
         if($process == ''){

@@ -3217,66 +3217,162 @@ class ServiciosController extends AbstractController
     }
 
     /**
+     * @Route("/combo_gestion", methods={"POST"}, name="combo_gestion")
+     */
+    public function combo_gestion()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+
+            $sql = "SELECT DISTINCT(date_part('Year', cb_correlativo_fechareg)) AS anio
+                    FROM cb_correlativo_correlativo
+                    WHERE cb_correlativo_estado=1";
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $combo = $stmt->fetchAll();
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($combo, 'json');
+
+            return new jsonResponse(json_decode($data));
+        } catch (Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+
+    /**
+     * @Route("/correlativo_filter", methods={"POST"}, name="correlativo_filter")
+     */
+    public function correlativo_filter(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+            $year = $sx['anio'];
+            $cx = $this->getDoctrine()->getManager();
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $year);
+
+            $correlativos = array();
+            foreach ($correlativo as $crtv) {
+                $dtcrtv = $crtv;
+
+                $fecreg = $dtcrtv['fechareg'];
+                $fecent = $dtcrtv['entrega'];
+
+                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                    $itemvl = $dtcrtv['item'];
+                } else {
+                    $itemvl = "";
+                }
+
+                $fksolicitante = $dtcrtv['fksolicitante'];
+                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                $fktiponota = $dtcrtv['fktiponota'];
+                $fkunidad = $dtcrtv['fkunidad'];
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+
+                $sendinf = [
+                    "id" => $dtcrtv['id'],
+                    "antecedente" => $dtcrtv['antecedente'],
+                    "item" => $itemvl,
+                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                    "fechareg" => $fecreg,
+                    "redactor" => $dtcrtv['redactor'],
+                    "destinatario" => $dtcrtv['destinatario'],
+                    "referencia" => $dtcrtv['referencia'],
+                    "fksolicitante" => $fksolicitante,
+                    "fkcorrelativo" => $fkcorrelativo,
+                    "fktiponota" => $fktiponota,
+                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                    "ip" => $dtcrtv['ip'],
+                    "url" => $dtcrtv['url'],
+                    "urleditable" => $dtcrtv['urleditable'],
+                    "entrega" => $fecent,
+                    "fkunidad" => $fkunidad,
+                    "urlorigen" => $dtcrtv['urlorigen']
+                ];
+                $correlativos[] = $sendinf;
+            }
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            if (sizeof($correlativo) > 0) {
+                $data2 = $serializer->serialize($correlativos, 'json');
+            } else {
+                $empty = array('mensaje' => 'No se encotraron datos.');
+                $data2 = $serializer->serialize($empty, 'json');
+            }
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /**
      * @Route("/listar_correlativo", methods={"POST"}, name="listar_correlativo")
      */
     public function listar_correlativo(Request $request)
     {
         try {
-
             date_default_timezone_set('America/La_Paz');
             $dia = date("d");
             $mes = date("m");
-            $anho = date("y");
+            $anio = date("Y");
 
             $sx = json_decode($request->getContent(), true);
             $user = $sx['username'];
             //  $user = $sx['gestion'];
             $cx = $this->getDoctrine()->getManager();
-            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user);
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $anio);
 
             $correlativos = array();
             foreach ($correlativo as $crtv) {
-                $dtcrtv = (object) $crtv;
+                $dtcrtv = $crtv;
 
-                $fecreg = $dtcrtv->getFechareg();
-                $fecent = $dtcrtv->getEntrega();
-                if ($fecreg != null) {
-                    $rsfcr = $fecreg->format('Y-m-d');
-                } else {
-                    $rsfcr = $fecreg;
-                }
+                $fecreg = $dtcrtv['fechareg'];
+                $fecent = $dtcrtv['entrega'];
 
-                if ($fecent != null) {
-                    $rsfce = $fecent->format('Y-m-d');
-                } else {
-                    $rsfce = $fecent;
-                }
-
-                if ($dtcrtv->getItem() != null && $dtcrtv->getItem() != "" && $dtcrtv->getItem() != 0) {
-                    $itemvl = $dtcrtv->getItem();
+                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                    $itemvl = $dtcrtv['item'];
                 } else {
                     $itemvl = "";
                 }
 
+                $fksolicitante = $dtcrtv['fksolicitante'];
+                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                $fktiponota = $dtcrtv['fktiponota'];
+                $fkunidad = $dtcrtv['fkunidad'];
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+
                 $sendinf = [
-                    "id" => $dtcrtv->getId(),
-                    "antecedente" => $dtcrtv->getAntecedente(),
+                    "id" => $dtcrtv['id'],
+                    "antecedente" => $dtcrtv['antecedente'],
                     "item" => $itemvl,
-                    "numcorrelativo" => $dtcrtv->getNumcorrelativo(),
-                    "fechareg" => $rsfcr,
-                    "redactor" => $dtcrtv->getRedactor(),
-                    "destinatario" => $dtcrtv->getDestinatario(),
-                    "referencia" => $dtcrtv->getReferencia(),
-                    "fksolicitante" => $dtcrtv->getFksolicitante(),
-                    "fkcorrelativo" => $dtcrtv->getFkcorrelativo(),
-                    "fktiponota" => $dtcrtv->getFktiponota(),
-                    "estadocorrelativo" => $dtcrtv->getEstadoCorrelativo(),
-                    "ip" => $dtcrtv->getIp(),
-                    "url" => $dtcrtv->getUrl(),
-                    "urleditable" => $dtcrtv->getUrleditable(),
-                    "entrega" => $rsfce,
-                    "fkunidad" => $dtcrtv->getFkunidad(),
-                    "urlorigen" => $dtcrtv->getUrlorigen(),
+                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                    "fechareg" => $fecreg,
+                    "redactor" => $dtcrtv['redactor'],
+                    "destinatario" => $dtcrtv['destinatario'],
+                    "referencia" => $dtcrtv['referencia'],
+                    "fksolicitante" => $fksolicitante,
+                    "fkcorrelativo" => $fkcorrelativo,
+                    "fktiponota" => $fktiponota,
+                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                    "ip" => $dtcrtv['ip'],
+                    "url" => $dtcrtv['url'],
+                    "urleditable" => $dtcrtv['urleditable'],
+                    "entrega" => $fecent,
+                    "fkunidad" => $fkunidad,
+                    "urlorigen" => $dtcrtv['urlorigen']
                 ];
                 $correlativos[] = $sendinf;
             }
@@ -3468,34 +3564,24 @@ class ServiciosController extends AbstractController
     {
         try {
             date_default_timezone_set('America/La_Paz');
-            $dia = date("d");
-            $mes = date("m");
+            $anio = date("Y");
 
             $cx = $this->getDoctrine()->getManager()->getConnection();
-            $sql = "SELECT cb_correlativo_numcorrelativo AS numcorrelativo
-                    FROM cb_correlativo_correlativo
-                    WHERE date_part('Day', cb_correlativo_fechareg) = 1 AND date_part('Month', cb_correlativo_fechareg) = 1 AND
-                        cb_correlativo_estado = 1";
-
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
-
-            $sql2 = "SELECT cb_correlativo_numcorrelativo + 1 AS numcorrelativo
+            $sql = "SELECT cb_correlativo_numcorrelativo + 1 AS numcorrelativo
                     FROM cb_correlativo_correlativo
                     WHERE cb_correlativo_estado = 1 AND cb_correlativo_id IN
-                    (SELECT MAX(c.cb_correlativo_id)
-                    FROM cb_correlativo_correlativo c
-                    WHERE c.cb_correlativo_estado = 1)";
+                        (SELECT MAX(c.cb_correlativo_id)
+                        FROM cb_correlativo_correlativo c
+                        WHERE c.cb_correlativo_estado = 1 AND date_part('year', c.cb_correlativo_fechareg)=:anio)";
 
-            $stmt2 = $cx->prepare($sql2);
-            $stmt2->execute();
-            $query2 = $stmt2->fetchAll();
+            $stmt = $cx->prepare($sql);
+            $stmt->execute(['anio' => ($anio)]);
+            $query = $stmt->fetchAll();
 
-            if ($dia == '01' && $mes == '01' && empty($query) || empty($query) && empty($query2)) {
+            if (empty($query)) {
                 $num = 1;
             } else {
-                $num = $query2[0]['numcorrelativo'];
+                $num = $query[0]['numcorrelativo'];
             }
 
             return $num;
@@ -3516,12 +3602,12 @@ class ServiciosController extends AbstractController
             $id = $sx['id'];
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
 
-            $correlativo->setEstado(0);
+            $correlativo->setEstadoCorrelativo('Anulado');
             $cx->persist($correlativo);
             $cx->flush();
 
-            $resultado = array('response' => "El numero de correlativo Eliminado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
-                'message' => 'Correlativo dado de baja correctamente.');
+            $resultado = array('response' => "El numero de correlativo Anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
+                'message' => 'Correlativo anulado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

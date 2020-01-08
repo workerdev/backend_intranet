@@ -11,6 +11,12 @@
         .swal2-title {
             font-size: 16px !important;
         }
+        .bg-cancel{
+            background-color: #ffcdd2 !important;
+        }
+        .bg-cancel:hover, .bg-cancel:focus{
+            background-color: rgba(255, 205, 210, .6) !important;
+        }
     </style>
 {% endblock %}
 
@@ -26,37 +32,64 @@
                     <div class="header bg-indigo"><h2>CORRELATIVO</h2></div>
                     <div class="body">
                         <div class="row clearfix"></div>
+
+                        <div class="row clearfix text-format">
+                            <div class="col-sm-3">
+                                <label for="gestionf">Filtrar</label>
+                                <select id="gestionf" class="form-control show-tick">
+                                    {% for g in gestion %}
+                                        <option value="{{g.anio}}">{{g.anio}}</option>
+                                    {% endfor %}
+                                </select>
+                                </br>
+                            </div>
+                        </div>
+
+                        <div id="dt-loader" class="loader-wrapper" style="display: none">
+                            <div class="loader loader-own">
+                                <div class="preloader preloader-own">
+                                    <div class="spinner-layer pl-blue">
+                                        <div class="circle-clipper left"><div class="circle"></div></div>
+                                        <div class="circle-clipper right"><div class="circle"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-center inf-own">Cargando datos...</p>
+                        </div>
+                        
                         {% if 'home_correlativo' in permisos and objects %}
                             <div class="row">
                                 <div class="body table-responsive">
                                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th class="d-none" data-name="phone">ID </th>
-                                            <th class="order_by_th" data-name="phone">Número correlativo </th>
-                                            <th class="order_by_th" data-name="names">Fecha de registro </th>
-                                            <th class="order_by_th" data-name="phone">Solicitante </th>
-                                            <th class="order_by_th" data-name="phone">Redactor </th>
-                                            <th class="d-none" data-name="phone">Destinatario </th>
-                                            <th class="order_by_th" data-name="phone">Referencia </th>
-                                            <th class="d-none" data-name="phone">Centro de control correlativo </th>
-                                            <th class="d-none" data-name="phone">Tipo de nota </th>
-                                            <th class="d-none" data-name="phone">IP </th>
-                                            <th class="order_by_th" data-name="phone">URL </th>
-                                            <th class="d-none" data-name="phone">Antecedente </th>
-                                            <th class="d-none" data-name="phone">Estado correlativo </th>
-                                            <th class="d-none" data-name="phone">Item </th>
-                                            <th class="order_by_th" data-name="phone">URL editable </th>
-                                            <th class="d-none" data-name="phone">Fecha de entrega </th>
-                                            <th class="d-none" data-name="phone">Unidad </th>
-                                            <th class="order_by_th" data-name="phone">URL origen </th>
-                                        </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th class="d-none" data-name="phone">ID </th>
+                                                <th class="order_by_th" data-name="phone">Número correlativo </th>
+                                                <th class="order_by_th" data-name="names">Fecha de registro </th>
+                                                <th class="order_by_th" data-name="phone">Solicitante </th>
+                                                <th class="order_by_th" data-name="phone">Redactor </th>
+                                                <th class="d-none" data-name="phone">Destinatario </th>
+                                                <th class="order_by_th" data-name="phone">Referencia </th>
+                                                <th class="d-none" data-name="phone">Centro de control correlativo </th>
+                                                <th class="d-none" data-name="phone">Tipo de nota </th>
+                                                <th class="d-none" data-name="phone">IP </th>
+                                                <th class="order_by_th" data-name="phone">URL </th>
+                                                <th class="d-none" data-name="phone">Antecedente </th>
+                                                <th class="d-none" data-name="phone">Estado correlativo </th>
+                                                <th class="d-none" data-name="phone">Item </th>
+                                                <th class="order_by_th" data-name="phone">URL editable </th>
+                                                <th class="d-none" data-name="phone">Fecha de entrega </th>
+                                                <th class="d-none" data-name="phone">Unidad </th>
+                                                <th class="order_by_th" data-name="phone">URL origen </th>
+                                            </tr>
                                         </thead>
                                         <tbody id="table_content">
-                                        {{ include('correlativo/table.html.twig') }}
+                                            {{ include('correlativo/table.html.twig') }}
                                         </tbody>
                                     </table>
+
+                                    <table id="data_table" class="table table-bordered table-striped table-hover"></table>
                                 </div>
                             </div>
                         {% else %}
@@ -89,12 +122,30 @@
     </script>
 
     <script>
-        function format (d) {
+        $('#gestionf').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar gestión.',
+            title: 'Seleccione una gestión.'
+        })
+
+        function format_detail(d) {
             let frg = '<div class="card" style="width: 100%; ';
-            
             let estadocr = d[13];
-            if(estadocr.localeCompare("Anulado") == 0) frg = frg + 'background-color: rgba(204, 0, 0, .12)">';
+            let antecedente = d[12];
+
+            if(estadocr != null && estadocr.localeCompare("Anulado") == 0) frg = frg + 'background-color: rgba(204, 0, 0, .12)">';
             else frg = frg + 'background-color: rgba(0, 76, 153, .15)">';
+
+            if(d[8] != null) correlativo = d[8];
+            else correlativo = '';
+
+            if(d[9] != null) tiponota = d[9];
+            else tiponota = '';
+
+            if(estadocr == null) estadocr = '';
+            if(antecedente == null) antecedente = '';
+
             frg = frg + '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
                     '<td class="bold">Destinatario:</td>'+
@@ -102,11 +153,11 @@
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Centro de control correlativo:</td>'+
-                    '<td>'+d[8]+'</td>'+
+                    '<td>'+correlativo+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Tipo de nota:</td>'+
-                    '<td>'+d[9]+'</td>'+
+                    '<td>'+tiponota+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">IP:</td>'+
@@ -114,11 +165,11 @@
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Antecedente:</td>'+
-                    '<td>'+d[12]+'</td>'+
+                    '<td>'+antecedente+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Estado correlativo:</td>'+
-                    '<td>'+d[13]+'</td>'+
+                    '<td>'+estadocr+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td class="bold">Item:</td>'+
@@ -150,12 +201,14 @@
                     $("#"+idet).attr('title', 'Mostrar más');
                 }
                 else {
-                    row.child(format(row.data())).show();
+                    row.child(format_detail(row.data())).show();
                     tr.addClass('shown');
                     $("#"+idet).attr('class', 'fa fa-minus-square cl-red');
                     $("#"+idet).attr('title', 'Ver menos');
                 }
             });
+            $('#gestionf').val({{anio}})
+            $('#gestionf').selectpicker('render')
         });
         
         $(document).on('click','.urlcrtv', function() {
@@ -178,5 +231,201 @@
             var archivoBlob = b64toBlob(archivo,tipoArchivo)
             saveAs(archivoBlob , "archivo")
         })
+
+        $('#gestionf').change(function() {
+            $("#dt-loader").show();
+            $(this).attr('disabled', 'disabled');
+            
+            if (!$.fn.DataTable.isDataTable('#data_table')) {
+                var tabledel = $('#data_tabletr').DataTable()
+                tabledel.clear().draw()
+                tabledel.destroy()
+                $('#data_tabletr').remove()
+            }else{
+                var tabledl = $('#data_table').DataTable()
+                tabledl.clear().draw()
+                tabledl.destroy()
+
+                $('#data_table').empty()
+            }
+
+            obj = JSON.stringify({
+                'anio': parseInt(JSON.parse($('#gestionf').val()))
+            })
+            
+            $.ajax({
+                method: 'POST',
+                url: '/correlativo_filtro',
+                data: {object: obj},
+                async: true
+            }).done(function (response) {
+                let self = JSON.parse(response);
+                let datos = JSON.parse(self.response);
+
+                var table = $('#data_table').DataTable({
+                    data: datos,
+                    columns: [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa fa-plus-square cl-teal" title="Mostrar más" aria-hidden="true"></i>';
+                            }
+                        },
+                        { data: "id", visible: false },
+                        { title: "Número correlativo" , data: "numcorrelativo" },
+                        { title: "Fecha de registro" , data: "fechareg" },
+                        { title: "Solicitante", data : 'fksolicitante' ,
+                            render : function (data, type, row){    
+                                if(data != null) a = row.fksolicitante.nombre + ' ' + row.fksolicitante.apellido                        
+                                else a = ''   
+                                return a
+                            }
+                        }, 
+                        { title: "Redactor" , data: "redactor" },
+                        { data: "destinatario", visible: false },
+                        { title: "Referencia" , data: "referencia" },
+                        { data : function(data){
+                                if(data.fkcorrelativo != null) return data.fkcorrelativo.descripcion
+                                else return ''
+                            },
+                            visible: false 
+                        },
+                        { data : function(data){
+                                if(data.fktiponota != null) return data.fktiponota.descripcion
+                                else return ''
+                            },
+                            visible: false 
+                        },
+                        { data: "ip", visible: false },
+                        { title: "URL", data: "url",                       
+                            render : function (data){  
+                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else a = '<a href="#" data-file="'+data+'" class="urlcrtv"><i class="material-icons">folder</i> Archivo</a>'                           
+                                return a
+                            }
+                        },
+                        { data: "antecedente", visible: false },
+                        { data: "estadocorrelativo", visible: false },
+                        { data: "item", visible: false },
+                        { title: "URL editable", data: "urleditable",
+                            render : function (data){                            
+                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else a = '<a href="#" data-file="'+data+'" class="urledt"><i class="material-icons">folder_open</i> Archivo</a>'                           
+                                return a
+                            }
+                        },
+                        { data: "entrega", visible: false },
+                        { data: "fkunidad.nombre", visible: false },
+                        { title: "URL origen", data: "urlorigen",
+                            render : function (data){                            
+                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else a = '<a href="#" data-file="'+data+'" class="urlorg"><i class="material-icons">folder_special</i> Archivo</a>'
+                                return a
+                            }
+                        },
+                    ],
+                    "createdRow": function( row, data, dataIndex ) {
+                        if(data.estadocorrelativo === "Anulado"){
+                            $(row).addClass('bg-cancel');
+                        }else{
+                            $(row).removeClass('bg-cancel');
+                        }
+                    },
+                    "order": [[ 1, 'desc' ]],
+                    "pageLength": 10,
+                    initComplete: function () {
+                        $("#dt-loader").fadeOut('800');
+                        $('#gestionf').removeAttr('disabled');
+                    }
+                });
+
+                $ ('#data_table').find('tbody').off('click', 'tr td.details-control'); $('#data_table').find('tbody').on('click', 'tr td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa");
+                    var row = table.row(tr);
+    
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-minus-square');
+                        tdi.first().addClass('fa-plus-square');
+                        tdi.first().removeClass('cl-red');
+                        tdi.first().addClass('cl-teal');
+                        tdi.first().attr('title', 'Mostrar más');
+                    } else {
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-plus-square');
+                        tdi.first().addClass('fa-minus-square');
+                        tdi.first().removeClass('cl-teal');
+                        tdi.first().addClass('cl-red');
+                        tdi.first().attr('title', 'Ver menos');
+                    }  
+                });
+            })
+        });
+
+        function format(data){
+            // `d` is the original data object for the row
+            let cont_det = '<div class="card" style="width: 100%; ';
+            let estadocr = data.estadocorrelativo;
+            let antecedente = data.antecedente;
+
+            if(estadocr != null && estadocr.localeCompare("Anulado") == 0) cont_det = cont_det + 'background-color: rgba(204, 0, 0, .12)">';
+            else cont_det = cont_det + 'background-color: rgba(0, 76, 153, .15)">';
+
+            if(data.fkcorrelativo != null) correlativo = data.fkcorrelativo.nombre;
+            else correlativo = '';
+
+            if(data.fktiponota != null) tiponota = data.fktiponota.nombre;
+            else tiponota = '';
+
+            if(estadocr == null) estadocr = '';
+            if(antecedente == null) antecedente = '';
+
+            cont_det = cont_det + '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td class="bold">Destinatario:</td>'+
+                    '<td>'+data.destinatario+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Centro de control correlativo:</td>'+
+                    '<td>'+correlativo+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Tipo de nota:</td>'+
+                    '<td>'+tiponota+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">IP:</td>'+
+                    '<td>'+data.ip+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Antecedente:</td>'+
+                    '<td>'+antecedente+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Estado correlativo:</td>'+
+                    '<td>'+estadocr+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Item:</td>'+
+                    '<td>'+data.item+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha de entrega:</td>'+
+                    '<td>'+data.entrega+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Unidad:</td>'+
+                    '<td>'+data.fkunidad.nombre+'</td>'+
+                '</tr>'+
+            '</table></div>';
+
+            return cont_det;
+        }
     </script>
 {% endblock %}

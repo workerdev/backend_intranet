@@ -126,7 +126,7 @@ class FileController extends Controller
         $Files = $this->getDoctrine()->getRepository(Files::class)->findBy(array('estado' => '1'));
         $Galeria = $this->getDoctrine()->getRepository(Galeria::class)->findBy(array('estado' => '1'));
 
-        return $this->render('files/index.html.twig', array('objects' => $Files,'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos , 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr, 'form' => $form->createView()));
+        return $this->render('files/index.html.twig', array('objects' => $Files, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos , 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr, 'form' => $form->createView()));
     }
 
     

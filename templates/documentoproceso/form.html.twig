@@ -174,118 +174,118 @@
             </div>
             <div class="modal-body">
                 <div class="pd-own">
-                <div id="cliente_form_body" class="box-body">
-                    <div class="container">
-                        <div class="row justify-content-md-center">
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">ID Revisión</label>
-                                        <input id="idrev" name="idrev" type="text" class="form-control" readonly autofocus>
+                    <div id="cliente_form_body" class="box-body">
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">ID Revisión</label>
+                                            <input id="idrev" name="idrev" type="text" class="form-control" readonly autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Nuevo, baja o actualización</label>
+                                            <input id="nuevooactualizacion" name="nuevooactualizacion" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código del documento</label>
+                                            <input id="codigodocumento" name="codigodocumento" type="text" class="form-control" autofocus readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-lg-5">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Nuevo, baja o actualización</label>
-                                        <input id="nuevooactualizacion" name="nuevooactualizacion" type="text" class="form-control" autofocus readonly>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Código de proceso</label>
+                                            <input id="codigoproceso" name="codigoproceso" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Título</label>
+                                            <input id="titulodoc" name="titulodoc" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Tipo de documento</label>
+                                            <input id="tipodocumento" name="tipodocumento" type="text" class="form-control" autofocus readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Código del documento</label>
-                                        <input id="codigodocumento" name="codigodocumento" type="text" class="form-control" autofocus readonly>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Versión</label>
+                                            <input id="versiondoc" name="versiondoc" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Vínculo archivo digital</label>
+                                            <input id="vinculoarchivodig" name="vinculoarchivodig" type="text" class="form-control" autofocus readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Carpeta operativa</label>
+                                            <input id="carpetaop" name="carpetaop" type="text" class="form-control" autofocus readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row justify-content-md-center">
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Código de proceso</label>
-                                        <input id="codigoproceso" name="codigoproceso" type="text" class="form-control" autofocus readonly>
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Aprobado o rechazado</label>
+                                            <input id="aproborec" name="aproborec" type="text" class="form-control" autofocus readonly>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col col-lg-5">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Título</label>
-                                        <input id="titulodoc" name="titulodoc" type="text" class="form-control" autofocus readonly>
+                                <div class="col col-lg-5">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Aprobado por</label>
+                                            <select id="aprobadordoc" name="aprobadordoc" class="form-control show-tick" autofocus required>
+                                            {% for tr in aprobador %}
+                                                <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Tipo de documento</label>
-                                        <input id="tipodocumento" name="tipodocumento" type="text" class="form-control" autofocus readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-md-center">
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Versión</label>
-                                        <input id="versiondoc" name="versiondoc" type="text" class="form-control" autofocus readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-lg-5">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Vínculo archivo digital</label>
-                                        <input id="vinculoarchivodig" name="vinculoarchivodig" type="text" class="form-control" autofocus readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Carpeta operativa</label>
-                                        <input id="carpetaop" name="carpetaop" type="text" class="form-control" autofocus readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-md-center">
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Aprobado o rechazado</label>
-                                        <input id="aproborec" name="aproborec" type="text" class="form-control" autofocus readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-lg-5">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Aprobado por</label>
-                                        <select id="aprobadordoc" name="aprobadordoc" class="form-control show-tick" autofocus required>
-                                        {% for tr in aprobador %}
-                                            <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
-                                        {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-lg-3">
-                                <div class="form-group form-float">
-                                    <div class="">
-                                        <label class="form-label">Fecha aprobación</label>
-                                        <input id="faprobacion" name="faprobacion" type="text" class="form-control" autofocus readonly>
+                                <div class="col col-lg-3">
+                                    <div class="form-group form-float">
+                                        <div class="">
+                                            <label class="form-label">Fecha aprobación</label>
+                                            <input id="faprobacion" name="faprobacion" type="text" class="form-control" autofocus readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
 
                 <hr  width="100%" style="height: 3px; background-color: lightseagreen" noshade>

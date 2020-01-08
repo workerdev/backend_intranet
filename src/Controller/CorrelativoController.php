@@ -14,6 +14,7 @@ use App\Entity\Acceso;
 use App\Entity\Rol;
 use App\Entity\DocProcRevision;
 use App\Entity\FichaCargo;
+
 use App\Form\CorrelativoType;
 use PhpParser\Node\VarLikeIdentifier;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,13 +68,67 @@ class CorrelativoController extends Controller
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
-        $idu = $s_user['id'];
-        $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findByPermission($idu);
+        date_default_timezone_set('America/La_Paz');
+        $anio = date("Y");
+        $c_user = $s_user['username'];
+        $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findPermissionByUser($c_user, $anio);
+
+        $correlativos = array();
+        foreach ($correlativo as $crtv) {
+            $dtcrtv = $crtv;
+
+            $fecreg = $dtcrtv['fechareg'];
+            $fecent = $dtcrtv['entrega'];
+
+            if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                $itemvl = $dtcrtv['item'];
+            } else {
+                $itemvl = "";
+            }
+
+            $fksolicitante = $dtcrtv['fksolicitante'];
+            $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+            $fktiponota = $dtcrtv['fktiponota'];
+            $fkunidad = $dtcrtv['fkunidad'];
+            $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+            $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+            $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+            $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+
+            $sendinf = [
+                "id" => $dtcrtv['id'],
+                "antecedente" => $dtcrtv['antecedente'],
+                "item" => $itemvl,
+                "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                "fechareg" => $fecreg,
+                "redactor" => $dtcrtv['redactor'],
+                "destinatario" => $dtcrtv['destinatario'],
+                "referencia" => $dtcrtv['referencia'],
+                "fksolicitante" => $fksolicitante,
+                "fkcorrelativo" => $fkcorrelativo,
+                "fktiponota" => $fktiponota,
+                "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                "ip" => $dtcrtv['ip'],
+                "url" => $dtcrtv['url'],
+                "urleditable" => $dtcrtv['urleditable'],
+                "entrega" => $fecent,
+                "fkunidad" => $fkunidad,
+                "urlorigen" => $dtcrtv['urlorigen']
+            ];
+            $correlativos[] = $sendinf;
+        }
+        $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+        $sql = "SELECT DISTINCT(date_part('Year', cb_correlativo_fechareg)) AS anio
+                    FROM cb_correlativo_correlativo
+                    WHERE cb_correlativo_estado=1";
+        $stmt = $cx->prepare($sql);
+        $stmt->execute();
+        $combo = $stmt->fetchAll();
 
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('correlativo/index.html.twig', array('objects' => $correlativo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('correlativo/index.html.twig', array('objects' => $correlativos, 'gestion' => $combo, 'anio' => $anio, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -119,6 +174,78 @@ class CorrelativoController extends Controller
                 'message' => 'Correlativo listado correctamente.');
             $resultados = json_encode($resultado);
             return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+    
+
+    /**
+     * @Route("/correlativo_filtro", methods={"POST"}, name="correlativo_filtro")
+     */
+    public function filter()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $s_user = $this->get('session')->get('s_user');
+            $c_user = $s_user['username'];
+            $year = $sx['anio'];
+            
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findPermissionByUser($c_user, $year);
+
+            $correlativos = array();
+            foreach ($correlativo as $crtv) {
+                $dtcrtv = $crtv;
+
+                $fecreg = $dtcrtv['fechareg'];
+                $fecent = $dtcrtv['entrega'];
+
+                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                    $itemvl = $dtcrtv['item'];
+                } else {
+                    $itemvl = "";
+                }
+
+                $fksolicitante = $dtcrtv['fksolicitante'];
+                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                $fktiponota = $dtcrtv['fktiponota'];
+                $fkunidad = $dtcrtv['fkunidad'];
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+
+                $sendinf = [
+                    "id" => $dtcrtv['id'],
+                    "antecedente" => $dtcrtv['antecedente'],
+                    "item" => $itemvl,
+                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                    "fechareg" => $fecreg,
+                    "redactor" => $dtcrtv['redactor'],
+                    "destinatario" => $dtcrtv['destinatario'],
+                    "referencia" => $dtcrtv['referencia'],
+                    "fksolicitante" => $fksolicitante,
+                    "fkcorrelativo" => $fkcorrelativo,
+                    "fktiponota" => $fktiponota,
+                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                    "ip" => $dtcrtv['ip'],
+                    "url" => $dtcrtv['url'],
+                    "urleditable" => $dtcrtv['urleditable'],
+                    "entrega" => $fecent,
+                    "fkunidad" => $fkunidad,
+                    "urlorigen" => $dtcrtv['urlorigen']
+                ];
+                $correlativos[] = $sendinf;
+            }       
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));  
+            $json = $serializer->serialize($correlativos, 'json');
+
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Correlativos listados correctamente.');
+            $resultado = json_encode($resultado);
+
+            return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }

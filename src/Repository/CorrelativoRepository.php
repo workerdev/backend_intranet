@@ -25,33 +25,40 @@ class CorrelativoRepository extends ServiceEntityRepository
 
         $query = $entityManager->createQuery(
             'SELECT c FROM App\Entity\Correlativo c
-            WHERE c.fkunidad IN
+            WHERE c.estado =1 AND c.fkunidad IN
             (SELECT DISTINCT(p.fkunidad)
             FROM App\Entity\Permiso p, App\Entity\Usuario u, App\Entity\Unidad n
             WHERE p.fkunidad=n.id AND p.fkusuario=u.id
-            AND u.id=:idu AND p.tipo IN (\'Visualizar\', \'Completo\'))
+            AND u.id=:idu AND p.estado=1 AND n.estado=1 AND p.tipo IN (\'Visualizar\', \'Completo\'))
             ORDER BY c.id DESC'
         )->setParameter('idu', $idu);
         
         return $query->execute(); // returns an array of Correltivo objects
     }
     
-    public function findPermissionByUser($user): array
+    public function findPermissionByUser($user, $anio): array
     {
-        $entityManager = $this->getEntityManager();
+        $conn = $this->getEntityManager()->getConnection();
 
-        $query = $entityManager->createQuery(
-            'SELECT c FROM App\Entity\Correlativo c
-            WHERE c.fkunidad IN
-            (SELECT DISTINCT(p.fkunidad)
-            FROM App\Entity\Permiso p, App\Entity\Usuario u, App\Entity\Unidad n
-            WHERE p.fkunidad=n.id AND p.fkusuario=u.id
-            AND u.username=:username AND p.estado=1 and p.tipo IN (\'Visualizar\', \'Completo\'))
-            and c.estado=1
-            ORDER BY c.id DESC'
-        )->setParameter('username', $user);
-        
-        return $query->execute(); // returns an array of Correltivo objects
+        $sql = 'SELECT c.cb_correlativo_id AS id, c.cb_correlativo_fksolicitante AS fksolicitante, c.cb_correlativo_fkcorrelativo AS fkcorrelativo, c.cb_correlativo_fktiponota AS fktiponota, c.cb_correlativo_fkunidad AS fkunidad,
+                    c.cb_correlativo_numcorrelativo AS numcorrelativo, c.cb_correlativo_fechareg AS fechareg, c.cb_correlativo_redactor AS redactor, c.cb_correlativo_destinatario AS destinatario, c.cb_correlativo_referencia AS referencia,
+                    c.cb_correlativo_ip AS ip, c.cb_correlativo_url AS url, c.cb_correlativo_antecedente AS antecedente,
+                    c.cb_correlativo_estadocorrelativo AS estadocorrelativo, c.cb_correlativo_item AS item,
+                    c.cb_correlativo_urleditable AS urleditable, c.cb_correlativo_entrega AS entrega, c.cb_correlativo_urlorigen AS urlorigen, c.cb_correlativo_estado AS estado
+                FROM cb_correlativo_correlativo c
+                WHERE date_part(\'Year\', c.cb_correlativo_fechareg)=:anio AND c.cb_correlativo_fkunidad IN
+                    (SELECT DISTINCT(p.cb_permiso_fkunidad)
+                    FROM cb_correlativo_permiso p, cb_usuario_usuario u, cb_correlativo_unidad n
+                    WHERE p.cb_permiso_fkunidad=n.cb_unidad_id AND p.cb_permiso_fkusuario=u.cb_usuario_id
+                    AND u.cb_usuario_username=:username AND p.cb_permiso_estado=1 and p.cb_permiso_tipo IN (\'Visualizar\', \'Completo\'))
+                    AND c.cb_correlativo_estado=1
+                    ORDER BY c.cb_correlativo_id DESC';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['username' => $user, 'anio' => $anio]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
     }
 
     public function findPermissionByUserjccg($idu): array
