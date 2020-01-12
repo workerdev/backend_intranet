@@ -153,7 +153,6 @@ class FichaCargoController extends Controller
                 "experiencia" => $fichacargo->getExperiencia(),
                 "conocimientos" => $fichacargo->getConocimientos(),
                 "fechaaprobacion" => $result,
-                "conocimientos" => $fichacargo->getConocimientos(),
                 "formacion" => $fichacargo->getFormacion(),
                 "caracteristicas" => $fichacargo->getCaracteristicas(),
                 "fkjefeaprobador" => $fichacargo->getFkjefeaprobador(),

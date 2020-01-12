@@ -110,7 +110,7 @@
                         <div class="col-sm-6">
                             <label>Tipo de Estado Personal</label>
                                 <select id="fkestadopersonal" name="fkestadopersonal" class="form-control show-tick">
-                                {% for t2 in tipo2 %}
+                                {% for t2 in tipo2 %}*
                                     <option value="{{t2.id}}">{{t2.nombre}}</option>
                                 {% endfor %}
                                 </select>
@@ -121,14 +121,14 @@
 
                     <div class="row clearfix">
                         <div class="col-sm-6">
-                            <label>Sector</label>
-                                <select id="fksector" name="fksector" class="form-control show-tick">
-                                {% for t in sector %}
-                                    <option value="{{t.id}}">{{t.nombre}}</option>
-                                {% endfor %}
-                                </select>
-                                <br>
-                                <br>
+                            <label for="fksector">Sector</label>
+                            <select id="fksector" name="fksector" class="form-control show-tick">
+                            {% for t in sector %}
+                                <option value="{{t.id}}">{{t.nombre}}</option>
+                            {% endfor %}
+                            </select>
+                            <br>
+                            <br>
                         </div>
                         <div class="col-sm-6">
                             <label>Área</label>
@@ -143,7 +143,7 @@
                     </div>
                     
                     <div class="form-group col-sm-6">
-                    <label class="form-label">Foto</label>
+                        <label class="form-label">Foto</label>
                         <input id="foto" name="foto" type="file" class="file form-control validate" width="100" />
                         <br>
                         <br>

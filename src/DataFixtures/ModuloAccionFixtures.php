@@ -332,6 +332,16 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $delautelm->setMenu(0);
         $delautelm->setFkmodulo($this->getReference(ModuloChildrenFixtures::DELAUTORIDAD_CHILD));
         $manager->persist($delautelm);
+
+
+        $correohm = new Modulo();
+        $correohm->setNombre('home_correo');
+        $correohm->setTitulo('Consultar');
+        $correohm->setRuta('');
+        $correohm->setIcono('home');
+        $correohm->setMenu(0);
+        $correohm->setFkmodulo($this->getReference(ModuloChildrenFixtures::CORREO_CHILD));
+        $manager->persist($correohm);
         
 
 

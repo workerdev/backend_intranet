@@ -77,7 +77,7 @@ class DocumentoBajaController extends Controller
             }else{
                 $file = $form['vinculoarchivo']->getData();
                 $fileName = $file->getClientOriginalName();      
-                $directorio = $this->getParameter('Directorio_DocExtra');           
+                $directorio = $this->getParameter('Directorio_DocBaja');           
                 $file->move($directorio, $fileName);
                 $ruta = substr($directorio, strpos($directorio, "public") + 6, strlen($directorio));
                 $url = str_replace("\\", "/", $ruta).'/'.$fileName;  
