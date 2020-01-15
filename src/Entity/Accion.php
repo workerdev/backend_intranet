@@ -33,7 +33,18 @@ class Accion
      * })
      * @Assert\NotBlank
      */
-    private $fkhallazgo;    
+    private $fkhallazgo;
+
+    /**
+     * @var \tipo
+     *
+     * @ORM\ManyToOne(targetEntity="TipoAccion")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_accion_fktipo", referencedColumnName="cb_tipo_accion_id")
+     * })
+     * @Assert\NotBlank
+     */
+    private $fktipo;    
 
     /**
      * @var int
@@ -121,6 +132,18 @@ class Accion
     public function setFkhallazgo(?Hallazgo $fkhallazgo): self
     {
         $this->fkhallazgo = $fkhallazgo;
+
+        return $this;
+    }
+    
+    public function getFktipo(): ?TipoAccion
+    {
+        return $this->fktipo;
+    }
+
+    public function setFktipo(?Hallazgo $fktipo): self
+    {
+        $this->fktipo = $fktipo;
 
         return $this;
     }

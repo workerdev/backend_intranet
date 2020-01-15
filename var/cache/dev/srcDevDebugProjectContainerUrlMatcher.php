@@ -118,6 +118,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/auditoria_editar' => [['_route' => 'auditoria_editar', '_controller' => 'App\\Controller\\AuditoriaController::editar'], null, ['POST' => 0], null, false],
                     '/auditoria_prev' => [['_route' => 'auditoria_prev', '_controller' => 'App\\Controller\\AuditoriaController::auditoria_prev'], null, ['POST' => 0], null, false],
                     '/auditoria_eliminar' => [['_route' => 'auditoria_eliminar', '_controller' => 'App\\Controller\\AuditoriaController::eliminar'], null, ['POST' => 0], null, false],
+                    '/auditoria_documentos' => [['_route' => 'auditoria_documentos', '_controller' => 'App\\Controller\\AuditoriaController::documentos'], null, ['POST' => 0], null, false],
                     '/auditoriaequipo' => [['_route' => 'auditoriaequipo', '_controller' => 'App\\Controller\\AuditoriaEquipoController::index'], null, null, null, false],
                     '/auditoriaequipo_insertar' => [['_route' => 'auditoriaequipo_insertar', '_controller' => 'App\\Controller\\AuditoriaEquipoController::insertar'], null, ['POST' => 0], null, false],
                     '/auditoriaequipo_actualizar' => [['_route' => 'auditoriaequipo_actualizar', '_controller' => 'App\\Controller\\AuditoriaEquipoController::actualizar'], null, ['POST' => 0], null, false],

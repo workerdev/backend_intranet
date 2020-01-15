@@ -5,18 +5,62 @@
     </td>
     <td class="d-none">{{ t.id }}</td>
     <td>{{ t.codigo }}</td>
-    <td>{{ t.fkgas.fkarea.nombre }}</td>
-    <td>{{ t.fktipo.nombre }}</td>
-    <td>{{ t.fecharegistro | date('Y-m-d') }}</td>
+
+    {% if t.fkproceso != null %}
+        <td>{{ t.fkproceso.codproceso }}</td>
+    {% else %}
+        <td></td>
+    {% endif %}
+
+    {% if t.fktipo != null %}
+        <td>{{ t.fktipo.nombre }}</td>
+    {% else %}
+        <td></td>
+    {% endif %}
+
+    {% if t.fecharegistro != null %}
+        <td>{{ t.fecharegistro | date('Y-m-d') }}</td>
+    {% else %}
+        <td></td>
+    {% endif %}
+
     <td>{{ t.duracionestimada }}</td>
     <td>{{ t.lugar }}</td>
     <td class="d-none">{{ t.alcance }}</td>
     <td class="d-none">{{ t.objetivos }}</td>
-    <td class="d-none">{{ t.fechahorainicio | date('Y-m-d H:i') }}</td>
-    <td class="d-none">{{ t.fechahorafin | date('Y-m-d H:i') }}</td>
+
+    {% if t.fechahorainicio != null %}
+        <td class="d-none">{{ t.fechahorainicio | date('Y-m-d H:i') }}</td>
+    {% else %}
+        <td class="d-none"></td>
+    {% endif %}
+
+    {% if t.fechahorafin != null %}
+        <td class="d-none">{{ t.fechahorafin | date('Y-m-d H:i') }}</td>
+    {% else %}
+        <td class="d-none"></td>
+    {% endif %}
+
     <td class="d-none">{{ t.conclusiones }}</td>
-    <td class="d-none">{{ t.responsable }}</td>
-    <td class="d-none">{{ t.fechaprogramada | date('Y-m-d') }}</td>
+
+    {% if t.fkgerente != null %}
+        <td class="d-none">{{ t.fkgerente.nombre ~ ' ' ~ t.fkgerente.apellido }}</td>
+    {% else %}
+        <td class="d-none"></td>
+    {% endif %}
+    
+    {% if t.fkjefe != null %}
+        <td class="d-none">{{ t.fkjefe.nombre ~ ' ' ~ t.fkjefe.apellido }}</td>
+    {% else %}
+        <td class="d-none"></td>
+    {% endif %}
+
+    {% if t.fechaprogramada != null %}
+        <td class="d-none">{{ t.fechaprogramada | date('Y-m-d') }}</td>
+    {% else %}
+        <td class="d-none"></td>
+    {% endif %}
+
     <td align="center">
         <button id="team" data-json="{{t.id}}" type="button" class="btn bg-cyan waves-effect waves-light team" title="Equipo de Auditores"><i class="material-icons">group</i></button>
         <button id="hlgfort" data-json="{{t.id}}" type="button" class="btn bg-teal waves-effect waves-light hlgfort" title="Fortalezas y Hallazgos"><i class="material-icons">equalizer</i></button>

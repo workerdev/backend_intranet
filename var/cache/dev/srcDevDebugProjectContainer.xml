@@ -1013,6 +1013,10 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\DocumentoAuditRepository" class="App\Repository\DocumentoAuditRepository" public="false" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\DocumentoBajaRepository" class="App\Repository\DocumentoBajaRepository" public="false" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -1194,6 +1198,10 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\SIGRepository" class="App\Repository\SIGRepository" public="false" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\SectorAuditRepository" class="App\Repository\SectorAuditRepository" public="false" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -2639,14 +2647,6 @@
         <argument>2048</argument>
       </call>
       <call method="addListener">
-        <argument>console.command</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument type="service" id="router_listener"/>
@@ -3796,7 +3796,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.Ao9jx3t"/>
+      <argument type="service" id=".service_locator.UzNDXUk"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -5837,6 +5837,8 @@
     <service id=".abstract.instanceof.App\Repository\DocTipoExtraRepository" class="App\Repository\DocTipoExtraRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DocumentoAdicionalRepository" class="App\Repository\DocumentoAdicionalRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\DocumentoAdicionalRepository" class="App\Repository\DocumentoAdicionalRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DocumentoAuditRepository" class="App\Repository\DocumentoAuditRepository" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\DocumentoAuditRepository" class="App\Repository\DocumentoAuditRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DocumentoBajaRepository" class="App\Repository\DocumentoBajaRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\DocumentoBajaRepository" class="App\Repository\DocumentoBajaRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DocumentoExtraRepository" class="App\Repository\DocumentoExtraRepository" public="false" autowire="true" abstract="true"/>
@@ -5929,6 +5931,8 @@
     <service id=".abstract.instanceof.App\Repository\RolRepository" class="App\Repository\RolRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SIGRepository" class="App\Repository\SIGRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SIGRepository" class="App\Repository\SIGRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SectorAuditRepository" class="App\Repository\SectorAuditRepository" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\SectorAuditRepository" class="App\Repository\SectorAuditRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SectorRepository" class="App\Repository\SectorRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SectorRepository" class="App\Repository\SectorRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SeguimientoCroRepository" class="App\Repository\SeguimientoCroRepository" public="false" autowire="true" abstract="true"/>
@@ -6581,7 +6585,7 @@
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service" id="form.type.form"/>
       </argument>
     </service>
-    <service id=".service_locator.Ao9jx3t" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.UzNDXUk" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AccesoRepository" type="service" id="App\Repository\AccesoRepository"/>
@@ -6609,6 +6613,7 @@
         <argument key="App\Repository\DocProcRevisionRepository" type="service" id="App\Repository\DocProcRevisionRepository"/>
         <argument key="App\Repository\DocTipoExtraRepository" type="service" id="App\Repository\DocTipoExtraRepository"/>
         <argument key="App\Repository\DocumentoAdicionalRepository" type="service" id="App\Repository\DocumentoAdicionalRepository"/>
+        <argument key="App\Repository\DocumentoAuditRepository" type="service" id="App\Repository\DocumentoAuditRepository"/>
         <argument key="App\Repository\DocumentoBajaRepository" type="service" id="App\Repository\DocumentoBajaRepository"/>
         <argument key="App\Repository\DocumentoExtraRepository" type="service" id="App\Repository\DocumentoExtraRepository"/>
         <argument key="App\Repository\DocumentoFormularioRepository" type="service" id="App\Repository\DocumentoFormularioRepository"/>
@@ -6655,6 +6660,7 @@
         <argument key="App\Repository\RiesgosOportunidadesRepository" type="service" id="App\Repository\RiesgosOportunidadesRepository"/>
         <argument key="App\Repository\RolRepository" type="service" id="App\Repository\RolRepository"/>
         <argument key="App\Repository\SIGRepository" type="service" id="App\Repository\SIGRepository"/>
+        <argument key="App\Repository\SectorAuditRepository" type="service" id="App\Repository\SectorAuditRepository"/>
         <argument key="App\Repository\SectorRepository" type="service" id="App\Repository\SectorRepository"/>
         <argument key="App\Repository\SeguimientoCroRepository" type="service" id="App\Repository\SeguimientoCroRepository"/>
         <argument key="App\Repository\SeguimientoElaboracionRepository" type="service" id="App\Repository\SeguimientoElaboracionRepository"/>

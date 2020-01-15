@@ -32,15 +32,15 @@ class Auditoria
     private $codigo;
     
     /**
-     * @var \gas
+     * @var \proceso
      *
-     * @ORM\ManyToOne(targetEntity="GerenciaAreaSector")
+     * @ORM\ManyToOne(targetEntity="FichaProcesos")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cb_auditoria_fkgas", referencedColumnName="cb_gas_id")
+     *   @ORM\JoinColumn(name="cb_auditoria_fkproceso", referencedColumnName="cb_ficha_procesos_id")
      * })
      * @Assert\NotBlank
      */
-    private $fkgas;
+    private $fkproceso;
     
     /**
      * @var \tipo
@@ -118,14 +118,6 @@ class Auditoria
      * @ORM\Column(name="cb_auditoria_conclusiones", type="text", nullable=true)
      */
     private $conclusiones;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="cb_auditoria_responsable", type="text", nullable=true)
-     * @Assert\NotBlank
-     */
-    private $responsable;
 
     /**
      * @var date
@@ -134,6 +126,30 @@ class Auditoria
      * @Assert\NotBlank
      */
     private $fecharegistro;
+    
+    /**
+     * @var \gerente
+     *
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_auditoria_fkgerente", referencedColumnName="cb_usuario_id")
+     * })
+     *
+     * @Assert\NotBlank
+     */
+    private $fkgerente;
+    
+    /**
+     * @var \jefe
+     *
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cb_auditoria_fkjefe", referencedColumnName="cb_usuario_id")
+     * })
+     *
+     * @Assert\NotBlank
+     */
+    private $fkjefe;
 
     /**
      * @var int
@@ -167,17 +183,17 @@ class Auditoria
         return $this;
     }  
 
-    public function getFkgas(): ?GerenciaAreaSector
+    public function getFkproceso(): ?FichaProcesos
     {
-        return $this->fkgas;
+        return $this->fkproceso;
     }
 
-    public function setFkgas(?GerenciaAreaSector $fkgas): self
+    public function setFkproceso(?FichaProcesos $fkproceso): self
     {
-        $this->fkgas = $fkgas;
+        $this->fkproceso = $fkproceso;
 
         return $this;
-    }  
+    }   
 
     public function getFktipo(): ?TipoAuditoria
     {
@@ -287,18 +303,6 @@ class Auditoria
         return $this;
     }
 
-    public function getResponsable(): ?string
-    {
-        return $this->responsable;
-    }
-
-    public function setResponsable(string $responsable): self
-    {
-        $this->responsable = $responsable;
-
-        return $this;
-    }
-
     public function getFecharegistro(): ?\DateTimeInterface
     {
         return $this->fecharegistro;
@@ -307,6 +311,30 @@ class Auditoria
     public function setFecharegistro(\DateTimeInterface $fecharegistro): self
     {
         $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    } 
+
+    public function getFkgerente(): ?Usuario
+    {
+        return $this->fkgerente;
+    }
+
+    public function setFkgerente(?Usuario $fkgerente): self
+    {
+        $this->fkgerente = $fkgerente;
+
+        return $this;
+    } 
+
+    public function getFkjefe(): ?Usuario
+    {
+        return $this->fkjefe;
+    }
+
+    public function setFkjefe(?Usuario $fkjefe): self
+    {
+        $this->fkjefe = $fkjefe;
 
         return $this;
     }

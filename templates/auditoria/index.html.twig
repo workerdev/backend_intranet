@@ -4,15 +4,10 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('resources/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}">
     <style>
         .swal2-title{
             font-size: 16px !important;
-        }
-        .txta-own{
-            background-color: rgba(40, 40, 40, .05);
-            min-width: 100% !important;
-            max-width: 100% !important;
-            padding: 4px !important;
         }
         .modal-dialog-own{
             width: 70%;
@@ -124,7 +119,7 @@
                                         <th></th>
                                         <th class="d-none" data-name="phone">ID </th>
                                         <th class="order_by_th" data-name="names">Código </th>
-                                        <th class="order_by_th" data-name="phone">Sector </th>
+                                        <th class="order_by_th" data-name="phone">Proceso </th>
                                         <th class="order_by_th" data-name="phone">Tipo </th>
                                         <th class="order_by_th" data-name="phone">Fecha de registro </th>
                                         <th class="order_by_th" data-name="phone">Duración estimada </th>
@@ -134,7 +129,8 @@
                                         <th class="d-none" data-name="phone">Fecha/hora de inicio </th>
                                         <th class="d-none" data-name="phone">Fecha/hora de fin </th>
                                         <th class="d-none" data-name="phone">Conclusiones </th>
-                                        <th class="d-none" data-name="phone">Responsable </th>
+                                        <th class="d-none" data-name="phone">Gerente </th>
+                                        <th class="d-none" data-name="phone">Jefe / Coordinador / Supervisor de área </th>
                                         <th class="d-none" data-name="phone">Fecha programada </th>
                                         <th class="actions_header">Acciones </th>
                                     </tr>
@@ -163,6 +159,8 @@
     <script src="{{ asset('resources/js/functions.js') }}"></script>
     <script src="{{ asset('resources/js/hallazgo.js') }}"></script>
     <script src="{{ asset('resources/js/fortaleza.js') }}"></script>
+    <script src="{{ asset('resources/plugins/bootstrap-material-datetimepicker/js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('resources/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
 
     <script>
         main_route = '/auditoria'
@@ -193,11 +191,11 @@
                     '<td style="white-space: pre-wrap">'+d[9]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha/hora de inicio:</td>'+
+                    '<td class="bold">Fecha y hora inicio:</td>'+
                     '<td>'+d[10]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha/hora de fin:</td>'+
+                    '<td class="bold">Fecha y hora fin:</td>'+
                     '<td>'+d[11]+'</td>'+
                 '</tr>'+
                 '<tr>'+
@@ -205,12 +203,16 @@
                     '<td style="white-space: pre-wrap">'+d[12]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Responsable:</td>'+
+                    '<td class="bold">Gerente:</td>'+
                     '<td>'+d[13]+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td class="bold">Fecha programada:</td>'+
+                    '<td class="bold">Jefe / Coordinador / Supervisor de área:</td>'+
                     '<td>'+d[14]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Fecha programada:</td>'+
+                    '<td>'+d[15]+'</td>'+
                 '</tr>'+
             '</table></div>';
         }
@@ -252,6 +254,43 @@
     </script>
 
     <script>
+        $('#fechaprogramada').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD',
+            clearButton: false,
+            weekStart: 1, 
+            lang : 'es',
+            time: false
+        });
+
+        $('#fechahorainicio').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD HH:mm',
+            cancelText: 'Descartar',
+            clearText: 'Limpiar',
+            lang: 'es'
+        })
+
+        $('#fechahorafin').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD HH:mm',
+            cancelText: 'Descartar',
+            clearText: 'Limpiar',
+            lang: 'es'
+        })
+
+        $('#fecharegistro').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD',
+            clearButton: false,
+            weekStart: 1, 
+            lang : 'es',
+            time: false
+        });
+
+        $('#fkproceso').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar proceso.',
+            title: 'Seleccione un proceso.'
+        })
+
         $('#fkgas').selectpicker({
             size: 4,
             liveSearch: true,
@@ -259,11 +298,67 @@
             title: 'Seleccione un sector.'
         })
 
+        $('#fkdocumento').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar documento.',
+            title: 'Seleccione un documento.'
+        })
+
         $('#fktipo').selectpicker({
             size: 4,
             liveSearch: true,
             liveSearchPlaceholder: 'Buscar tipo.',
             title: 'Seleccione un tipo.'
+        })
+
+        $('#fkproceso').change(function () {
+            $('#documentos').val('');
+            $('#fkdocumento').html('');
+            obj = JSON.stringify({
+                'id': parseInt(JSON.parse($(this).val()))
+            });
+            ajax_call_get("/auditoria_documentos",{
+                object: obj
+            },function(response){
+                var self = JSON.parse(response);
+                var docs = self.documentos;
+                var fltdocs = self.filter_docs;
+                var cont_docs = '';
+                console.log(self)
+
+                for(var i = 0; i < docs.length; i++){
+                    if((docs[i].codigo).length >= 8) tab = '\t';
+                    else tab = '\t\t';
+
+                    cont_docs += docs[i].codigo + tab + docs[i].titulo + '\n';
+                }
+                $('#documentos').val(cont_docs);
+
+                var select = document.getElementById('fkdocumento');
+                for (var j = 0; j < fltdocs.length; j++) {
+                    var option = document.createElement("OPTION");
+                    option.innerHTML = fltdocs[j]['codigo'];
+                    option.value = fltdocs[j]['id'];
+
+                    select.appendChild(option);
+                }
+                $('#fkdocumento').selectpicker('refresh');
+            })
+        })
+
+        $('#fkgerente').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar persona.',
+            title: 'Seleccione una persona.'
+        })
+
+        $('#fkjefe').selectpicker({
+            size: 4,
+            liveSearch: true,
+            liveSearchPlaceholder: 'Buscar persona.',
+            title: 'Seleccione una persona.'
         })
 
         $('#rep').click(function () {
@@ -287,23 +382,13 @@
             $('#form_aud').modal('hide')
         })
 
-        $('#new').click(function () {
-            $('#codigo').val('')
-            $('#fechaprogramada').val('')
-            $('#duracionestimada').val('')
-            $('#lugar').val('')
-            $('#alcance').val('')
-            $('#objetivos').val('')
-            $('#fechahorainicio').val('')
-            $('#fechahorafin').val('')
-            $('#conclusiones').val('')
-            $('#responsable').val('')
-            $('#fecharegistro').val('')
+        function clean_data(){
+            $('.auditoria').val('')
+            $('.auditoria').selectpicker('render')
+        } 
 
-            $('#fkgas').val('')
-            $('#fkgas').selectpicker('render')
-            $('#fktipo').val('')
-            $('#fktipo').selectpicker('render')
+        $('#new').click(function () {
+            clean_data()
 
             clean_form()
             verif_inputs()
@@ -313,6 +398,42 @@
             $('#update').hide()
             $('#form').modal('show')
         })
+
+        function item_is_empty(items) {
+            for (ic = 0; ic < items.length; ic++) {
+                if(items[ic] == ''){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function valid_dataform() {
+            var object_inputs = $('.auditoria')
+            console.log(object_inputs)
+
+            h1 = object_inputs[1].value;
+            h2 = object_inputs[2].value;
+            h3 = object_inputs[4].value;
+            h4 = object_inputs[6].value;
+            h5 = object_inputs[8].value;
+            h6 = object_inputs[11].value;
+            h7 = object_inputs[12].value;
+            h8 = object_inputs[13].value;
+            h9 = object_inputs[14].value;
+            h10 = object_inputs[15].value;
+            h11 = object_inputs[16].value;
+            h12 = object_inputs[17].value;
+            h13 = object_inputs[18].value;
+            h14 = object_inputs[19].value;
+            h15 = object_inputs[21].value;
+            h16 = object_inputs[23].value;
+
+            items = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h12, h14, h15, h16];
+            resp = !item_is_empty(items);
+
+            return resp;
+        }
         
         $('#insert').click(function () {
             objeto = JSON.stringify({
@@ -325,17 +446,31 @@
                 'fechahorainicio': $('#fechahorainicio').val(),
                 'fechahorafin': $('#fechahorafin').val(),
                 'conclusiones': $('#conclusiones').val(),
-                'responsable': $('#responsable').val(),
                 'fecharegistro': $('#fecharegistro').val(),
                 
+                'proceso': $('#fkproceso').val(),
+                'tipo': $('#fktipo').val(),
                 'sector': $('#fkgas').val(),
-                'tipo': $('#fktipo').val()
+                'documento': $('#fkdocumento').val(),
+                'gerente': $('#fkgerente').val(),
+                'jefe': $('#fkjefe').val()
             })
-            ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
+            console.log(JSON.parse(objeto))
+
+            if(valid_dataform()){
+                ajax_call_validation( "/auditoria_insertar" , {object: objeto}, null, main_route)
+            }else{
+                swal(
+                    'Error',
+                    'Por favor, debe ingresar todos los campos requeridos.',
+                    'error'
+                ) 
+            }
         })
 
         function attach_edit() {
             $('.edit').click(function () {
+                clean_data()
                 $('#conclusiones').parent().show()
                 obj = JSON.stringify({
                     'id': parseInt(JSON.parse($(this).attr('data-json')))
@@ -343,34 +478,63 @@
                 ajax_call_get("/auditoria_editar",{
                     object: obj
                 },function(response){
-                    var self = JSON.parse(response);
+                    var datos = JSON.parse(response);
+                    var self = datos.auditoria;
+                    var sector = datos.sector;
+                    var docs = datos.documento;
+
+                    console.log(datos);
                     $('#id').val(self.id)
                     $('#codigo').val(self.codigo)
-                    
-                    $('#fkgas').val(self.fkgas.id)
-                    $('#fkgas').selectpicker('render')
-                    $('#fktipo').val(self.fktipo.id)
-                    $('#fktipo').selectpicker('render')
 
-                    var fechaprog = moment(self.fechaprogramada)
-                    $('#fechaprogramada').val(fechaprog.format("YYYY-MM-DD"))
                     $('#duracionestimada').val(self.duracionestimada)
                     $('#lugar').val(self.lugar)
                     $('#alcance').val(self.alcance)
                     $('#objetivos').val(self.objetivos)
-                    var d = self.fechahorainicio
-                    var fi = d.replace(" ","T")
-                    $('#fechahorainicio').val(d)
-                    var d2= self.fechahorafin
-                    if(d2 != null){
-                        var ff = d2.replace(" ","T")
-                        $('#fechahorafin').val(d2)
-                    }else $('#fechahorafin').val(ff)
                     $('#conclusiones').val(self.conclusiones)
-                    $('#responsable').val(self.responsable)
-                    var fecharegistro = moment(self.fecharegistro)
 
-                    $('#fecharegistro').val(fecharegistro.format("YYYY-MM-DD"))
+                    if(self.fechaprogramada != null) $('#fechaprogramada').val(self.fechaprogramada)
+
+                    if(self.fechahorainicio != null) $('#fechahorainicio').val(self.fechahorainicio)
+
+                    if(self.fechahorafin != null) $('#fechahorafin').val(self.fechahorafin)
+
+                    if(self.fecharegistro != null) $('#fecharegistro').val(self.fecharegistro)
+                    
+                    if(self.fktipo != null) {
+                        $('#fktipo').val(self.fktipo.id)
+                        $('#fktipo').selectpicker('render')
+                    }
+
+                    if(self.fkproceso != null) {
+                        $('#fkproceso').val(self.fkproceso.id)
+                        $('#fkproceso').selectpicker('render')
+                        $('#fkproceso').change()
+                    }
+
+                    if(self.fkgerente != null) {
+                        $('#fkgerente').val(self.fkgerente.id)
+                        $('#fkgerente').selectpicker('render')
+                    }
+
+                    if(self.fkjefe != null) {
+                        $('#fkjefe').val(self.fkjefe.id)
+                        $('#fkjefe').selectpicker('render')
+                    }
+
+                    dtsector = [];
+                    for(var i = 0; i < sector.length; i++){
+                        if(sector[i].fkgas != null) dtsector.push(sector[i].fkgas.id);
+                    }
+
+                    dtdocs = [];
+                    for(var j = 0; j < docs.length; j++){
+                        if(docs[j].fkdocumento != null) dtdocs.push(docs[j].fkdocumento.id);
+                    }
+                    $('#fkgas').selectpicker('val', dtsector)
+                    $('#fkgas').selectpicker('render')
+                    $('#fkdocumento').selectpicker('val', dtdocs)
+                    $('#fkdocumento').selectpicker('render')
 
                     clean_form()
                     verif_inputs()
@@ -476,13 +640,25 @@
                 'fechahorainicio': $('#fechahorainicio').val(),
                 'fechahorafin': $('#fechahorafin').val(),
                 'conclusiones': $('#conclusiones').val(),
-                'responsable': $('#responsable').val(),
                 'fecharegistro': $('#fecharegistro').val(),
                 
+                'proceso': $('#fkproceso').val(),
+                'tipo': $('#fktipo').val(),
                 'sector': $('#fkgas').val(),
-                'tipo': $('#fktipo').val()
+                'documento': $('#fkdocumento').val(),
+                'gerente': $('#fkgerente').val(),
+                'jefe': $('#fkjefe').val()
             })
-            ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
+
+            if(valid_dataform()){
+                ajax_call_validation("/auditoria_actualizar" , {object: objeto}, null, main_route)
+            }else{
+                swal(
+                    'Error',
+                    'Por favor, debe ingresar todos los campos requeridos.',
+                    'error'
+                ) 
+            }
         })
         reload_form()
     </script>

@@ -19,6 +19,42 @@ class DocumentoRepository extends ServiceEntityRepository
         parent::__construct($registry, Documento::class);
     }
 
+    public function findDocByProc($idproc): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT cb_documento_codigo AS codigo, cb_documento_titulo AS titulo, cb_documento_fktipo
+                FROM cb_gestion_documento, cb_gestion_tipo_documento
+                WHERE cb_documento_fkficha=:idf AND cb_documento_estado=1 AND cb_documento_fktipo=cb_tipo_documento_id AND cb_tipo_documento_nombre='Procedimiento'
+                ORDER BY 1 ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['idf'=> $idproc]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
+    public function filterDocByProc($idproc): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT d.cb_documento_id AS id, d.cb_documento_codigo AS codigo, d.cb_documento_titulo AS titulo, d.cb_documento_fktipo
+                FROM cb_gestion_documento d, cb_gestion_tipo_documento t
+                WHERE d.cb_documento_estado=1 AND d.cb_documento_fktipo=t.cb_tipo_documento_id AND t.cb_tipo_documento_nombre='Procedimiento' AND
+                    d.cb_documento_id NOT IN 
+                        (SELECT cb_documento_id
+                        FROM cb_gestion_documento, cb_gestion_tipo_documento
+                        WHERE cb_documento_fkficha=:idf AND cb_documento_estado=1 AND cb_documento_fktipo=cb_tipo_documento_id AND cb_tipo_documento_nombre='Procedimiento')
+                ORDER BY 1 ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['idf'=> $idproc]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
 //    /**
 //     * @return Documento[] Returns an array of Documento objects
 //     */

@@ -10,7 +10,7 @@
                 <div id="cliente_form_body" class="box-body">
                     <div id="id_div" class="form-group">
                         <div class="form-line">
-                            <input id="id" type="text" class="form-control" disabled="disabled">
+                            <input id="id" name="id" type="text" class="form-control auditoria" disabled="disabled">
                             <label class="form-label">Auditoría ID</label>
                         </div>
                     </div>
@@ -19,27 +19,25 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="codigo" name="codigo" type="text" class="form-control name">
-                                    <label class="form-label">Código</label>
+                                    <input id="codigo" name="codigo" type="text" class="form-control auditoria">
+                                    <label for="codigo" class="form-label">Código</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <label>Sector</label>
-                                <select id="fkgas" class="form-control show-tick">
-                                {% for tr in area %}
-                                    <option value="{{tr.id}}">{{tr.nombre}}</option>
-                                {% endfor %}
-                                </select>
-                                </br>
-                                </br> 
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input id="fechaprogramada" name="fechaprogramada" type="text" class="form-control date auditoria">
+                                    <label for="fechaprogramada" class="form-label">Fecha programada</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="row clearfix">
                         <div class="col-sm-6">
-                            <label>Tipo de auditoría</label>
-                                <select id="fktipo" class="form-control show-tick">
+                            <label for="fktipo">Tipo de auditoría</label>
+                                <select id="fktipo" name="fktipo" class="form-control show-tick auditoria">
                                 {% for tr in tipo %}
                                     <option value="{{tr.id}}">{{tr.nombre}}</option>
                                 {% endfor %}
@@ -48,11 +46,46 @@
                                 </br> 
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <label class="form-label">Fecha programada</label><br>
-                                    <input id="fechaprogramada" name="fechaprogramada" type="date" class="form-control">
-                                </div>
+                            <label for="fkproceso">Proceso</label>
+                                <select id="fkproceso" name="fkproceso" class="form-control show-tick auditoria">
+                                {% for tr in proceso %}
+                                    <option value="{{tr.id}}">{{tr.codproceso}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fkgas">Sector</label>
+                                <select id="fkgas" name="fkgas" class="form-control show-tick auditoria" data-language=="es" multiple data-actions-box="true">
+                                    {% for tr in area %}
+                                        <option value="{{tr.id}}">{{tr.nombre}}</option>
+                                    {% endfor %}
+                                </select>
+                                </br>
+                                </br>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documentos">Documentos</label>
+                        <textarea class="form-control txti-own auditoria" rows="3" id="documentos" name="documentos" disabled></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fkdocumento">Documento adicional</label>
+                                <select id="fkdocumento" name="fkdocumento" class="form-control show-tick auditoria" data-language=="es" multiple data-actions-box="true">
+                                    
+                                </select>
+                                </br>
+                                </br>
                             </div>
                         </div>
                     </div>
@@ -61,16 +94,16 @@
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="duracionestimada" name="duracionestimada" type="text" class="form-control text">
-                                    <label class="form-label">Duración estimada</label>
+                                    <input id="duracionestimada" name="duracionestimada" type="text" class="form-control text auditoria">
+                                    <label for="duracionestimada" class="form-label">Duración estimada</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="lugar" name="lugar" type="text" class="form-control text">
-                                    <label class="form-label">Lugar</label>
+                                    <input id="fecharegistro" name="fecharegistro" type="text" class="form-control date auditoria">
+                                    <label for="fecharegistro" class="form-label">Fecha de registro</label>
                                 </div>
                             </div>
                         </div>
@@ -78,28 +111,28 @@
                     
                     <div class="form-group">
                         <label for="alcance">Alcance</label>
-                        <textarea class="form-control txta-own" rows="3" id="alcance" name="alcance"></textarea>
+                        <textarea class="form-control txta-own auditoria" rows="3" id="alcance" name="alcance"></textarea>
                     </div>
                 
                     <div class="form-group">
                         <label for="objetivos">Objetivos</label>
-                        <textarea class="form-control txta-own" rows="3" id="objetivos" name="objetivos"></textarea>
+                        <textarea class="form-control txta-own auditoria" rows="3" id="objetivos" name="objetivos"></textarea>
                     </div>
 
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <label class="form-label">Fecha/hora de inicio</label><br>
-                                    <input id="fechahorainicio" name="fechahorainicio" type="datetime-local" class="form-control">
+                                    <input id="fechahorainicio" name="fechahorainicio" type="text" class="form-control date auditoria">
+                                    <label for="fechahorainicio" class="form-label">Fecha y hora inicio</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <label class="form-label">Fecha/hora de fin</label><br>
-                                    <input id="fechahorafin" name="fechahorafin" type="datetime-local" class="form-control">
+                                    <input id="fechahorafin" name="fechahorafin" type="text" class="form-control date auditoria">
+                                    <label for="fechahorafin" class="form-label">Fecha y hora fin</label>
                                 </div>
                             </div>
                         </div>
@@ -107,25 +140,40 @@
 
                     <div class="form-group">
                         <label for="conclusiones">Conclusiones</label>
-                        <textarea class="form-control txta-own" rows="3" id="conclusiones" name="conclusiones"></textarea>
+                        <textarea class="form-control txta-own auditoria" rows="3" id="conclusiones" name="conclusiones"></textarea>
                     </div>
 
                     <div class="row clearfix">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input id="responsable" name="responsable" type="text" class="form-control text">
-                                    <label class="form-label">Responsable</label>
+                                    <input id="lugar" name="lugar" type="text" class="form-control text auditoria">
+                                    <label for="lugar" class="form-label">Lugar</label>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="row clearfix">
                         <div class="col-sm-6">
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <label class="form-label">Fecha de registro</label><br>
-                                    <input id="fecharegistro" name="fecharegistro" type="date" class="form-control">
-                                </div>
-                            </div>
+                            <label for="fkgerente">Gerente</label>
+                                <select id="fkgerente" name="fkgerente" class="form-control show-tick auditoria">
+                                {% for tr in usuario %}
+                                    <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fkjefe">Jefe / Coordinador / Supervisor de área</label>
+                                <select id="fkjefe" name="fkjefe" class="form-control show-tick auditoria">
+                                {% for tr in usuario %}
+                                    <option value="{{tr.id}}">{{tr.nombre ~ ' ' ~ tr.apellido}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                                </br> 
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use App\Entity\GerenciaAreaSector;
 use App\Entity\TipoAuditoria;
 use App\Entity\TipoHallazgo;
@@ -28,6 +29,12 @@ use App\Entity\DocProcRevision;
 use App\Entity\FichaCargo;
 use App\Entity\Impacto;
 use App\Entity\Probabilidad;
+use App\Entity\FichaProcesos;
+use App\Entity\Documento;
+use App\Entity\TipoDocumento;
+use App\Entity\SectorAudit;
+use App\Entity\DocumentoAudit;
+
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -73,12 +80,17 @@ class AuditoriaController extends AbstractController
             $item = $mdldt->getNombre();
             $permisos[] = $item;
         }
+        $proc_doc = $this->getDoctrine()->getRepository(TipoDocumento::class)->findOneBy(['nombre' => 'Procedimiento', 'estado' => '1']);
+
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $area = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->findAllBySector();
         $tipohlg = $this->getDoctrine()->getRepository(TipoHallazgo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+
         $tipoauditoria = $this->getDoctrine()->getRepository(TipoAuditoria::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['fecharegistro' => 'DESC']);
+        $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->findBy(['estado' => '1'], ['codproceso' => 'ASC']);
+        $users = $this->getDoctrine()->getRepository(Usuario::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $aud_combo = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
         $tipoauditor = $this->getDoctrine()->getRepository(TipoAuditor::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditor = $this->getDoctrine()->getRepository(Auditor::class)->findBy(['estado' => '1'], ['nombres' => 'ASC']);
@@ -88,7 +100,7 @@ class AuditoriaController extends AbstractController
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'gestion' => $gestion, 'tipohlg' => $tipohlg, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('auditoria/index.html.twig', array('objects' => $auditoria, 'auditoria' => $aud_combo, 'proceso' => $proceso, 'usuario' => $users, 'gestion' => $gestion, 'tipohlg' => $tipohlg, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'area' => $area, 'tipo' => $tipoauditoria, 'tipo' => $tipoauditoria, 'auditor' => $auditor, 'tpauditor' => $tipoauditor, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
 
@@ -102,8 +114,6 @@ class AuditoriaController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             
             $codigo = $sx['codigo'];
-            $sector = $sx['sector'];
-            $tipo = $sx['tipo'];
             $fechaprogramada = $sx['fechaprogramada'];
             $duracionestimada = $sx['duracionestimada'];
             $lugar = $sx['lugar'];
@@ -112,8 +122,13 @@ class AuditoriaController extends AbstractController
             $fechahorainicio = $sx['fechahorainicio'];
             $fechahorafin = $sx['fechahorafin'];
             $conclusiones = $sx['conclusiones'];
-            $responsable = $sx['responsable'];
-            $fecharegistro = $sx['fecharegistro'];                
+            $fecharegistro = $sx['fecharegistro'];  
+            $proceso = $sx['proceso'];  
+            $tipo = $sx['tipo'];
+            $gerente = $sx['gerente'];  
+            $jefe = $sx['jefe']; 
+            $sectores = $sx['sector'];
+            $documentos = $sx['documento'];                 
             
             $auditoria = new Auditoria();
             $auditoria->setCodigo($codigo);
@@ -125,30 +140,61 @@ class AuditoriaController extends AbstractController
             $auditoria->setFechahorainicio(new \DateTime($fechahorainicio));
             $auditoria->setFechahorafin(new \DateTime($fechahorafin));
             $auditoria->setConclusiones($conclusiones);
-            $auditoria->setResponsable($responsable);
             $auditoria->setFecharegistro(new \DateTime($fecharegistro));
             $auditoria->setEstado(1);
-            $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
-            $auditoria->setFkgas($sector);
+
+            $proceso != '' ? $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($proceso) :$proceso=null;
+            $auditoria->setFkproceso($proceso);
             $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoAuditoria::class)->find($tipo): $tipo=null;
             $auditoria->setFktipo($tipo);
+            $gerente != ''? $gerente = $this->getDoctrine()->getRepository(Usuario::class)->find($gerente): $gerente=null;
+            $auditoria->setFkgerente($gerente);
+            $jefe != ''? $jefe = $this->getDoctrine()->getRepository(Usuario::class)->find($jefe): $jefe=null;
+            $auditoria->setFkjefe($jefe);
+            
             $errors = $validator->validate($auditoria);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
             $cx->persist($auditoria);
             $cx->flush();
+
+            if($sectores != null) {
+                foreach ($sectores as $sector) {
+                    $sectoraud = new SectorAudit();
+                    $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
+                    $sectoraud->setFkauditoria($auditoria);
+                    $sectoraud->setFkgas($sector);
+                    $sectoraud->setEstado(1);
+
+                    $cx->persist($sectoraud);
+                    $cx->flush();
+                }
+            }
+
+            if($documentos != null) {
+                foreach ($documentos as $documento) {
+                    $documentoaud = new DocumentoAudit();
+                    $documento != '' ? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento) :$documento=null;
+                    $documentoaud->setFkauditoria($auditoria);
+                    $documentoaud->setFkdocumento($documento);
+                    $documentoaud->setEstado(1);
+
+                    $cx->persist($documentoaud);
+                    $cx->flush();
+                }
+            }
+
             $resultado = array('response'=>"El ID registrado es: ".$auditoria->getId().".",   
             'success' => true,
             'message' => 'Auditoría registrado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -167,8 +213,6 @@ class AuditoriaController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $codigo = $sx['codigo'];
-            $sector = $sx['sector'];
-            $tipo = $sx['tipo'];
             $fechaprogramada = $sx['fechaprogramada'];
             $duracionestimada = $sx['duracionestimada'];
             $lugar = $sx['lugar'];
@@ -177,46 +221,111 @@ class AuditoriaController extends AbstractController
             $fechahorainicio = $sx['fechahorainicio'];
             $fechahorafin = $sx['fechahorafin'];
             $conclusiones = $sx['conclusiones'];
-            $responsable = $sx['responsable'];
-            $fecharegistro = $sx['fecharegistro'];
+            $fecharegistro = $sx['fecharegistro'];  
+            $proceso = $sx['proceso'];  
+            $tipo = $sx['tipo'];
+            $gerente = $sx['gerente'];  
+            $jefe = $sx['jefe']; 
+            $sectores = $sx['sector'];
+            $documentos = $sx['documento'];  
 
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+
             $auditoria->setId($id);
             $auditoria->setCodigo($codigo);
-            $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
-            $auditoria->setFkgas($sector);
-            $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoAuditoria::class)->find($tipo): $tipo=null;
-            $auditoria->setFktipo($tipo);
-
-
             $auditoria->setFechaprogramada(new \DateTime($fechaprogramada));
-            $auditoria->setDuracionestimada($duracionestimada);
+            if ($duracionestimada != '' && is_numeric($duracionestimada) ) $auditoria->setDuracionestimada($duracionestimada);
             $auditoria->setLugar($lugar);
             $auditoria->setAlcance($alcance);
             $auditoria->setObjetivos($objetivos);
             $auditoria->setFechahorainicio(new \DateTime($fechahorainicio));
             $auditoria->setFechahorafin(new \DateTime($fechahorafin));
             $auditoria->setConclusiones($conclusiones);
-            $auditoria->setResponsable($responsable);
             $auditoria->setFecharegistro(new \DateTime($fecharegistro));
-            $auditoria->setEstado(1);
+
+            $proceso != '' ? $proceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->find($proceso) :$proceso=null;
+            $auditoria->setFkproceso($proceso);
+            $tipo != ''? $tipo = $this->getDoctrine()->getRepository(TipoAuditoria::class)->find($tipo): $tipo=null;
+            $auditoria->setFktipo($tipo);
+            $gerente != ''? $gerente = $this->getDoctrine()->getRepository(Usuario::class)->find($gerente): $gerente=null;
+            $auditoria->setFkgerente($gerente);
+            $jefe != ''? $jefe = $this->getDoctrine()->getRepository(Usuario::class)->find($jefe): $jefe=null;
+            $auditoria->setFkjefe($jefe);
+
             $errors = $validator->validate($auditoria);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
             $cx->merge($auditoria);
             $cx->flush();
 
+            if($sectores != null) {
+                foreach ($sectores as $sector) {
+                    $sectoraud = $this->getDoctrine()->getRepository(SectorAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkgas' => $sector]);
+                    if($sectoraud == null) $sectoraud = new SectorAudit();
+                    
+                    $sector != '' ? $sector = $this->getDoctrine()->getRepository(GerenciaAreaSector::class)->find($sector) :$sector=null;
+                    $sectoraud->setFkauditoria($auditoria);
+                    $sectoraud->setFkgas($sector);
+                    $sectoraud->setEstado(1);
+
+                    if($sectoraud->getId() == null) $cx->persist($sectoraud);
+                    else $cx->merge($sectoraud);
+                    $cx->flush();
+                }
+
+                $sectordel = $this->getDoctrine()->getRepository(SectorAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id]);
+                if($sectordel != null) {
+                    foreach ($sectordel as $sctdel) {
+                        if(!in_array($sctdel->getId(), $sectores)){
+                            $sectoraud = $this->getDoctrine()->getRepository(SectorAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkgas' => $sctdel]);
+                            $sectoraud->setEstado(0);
+        
+                            $cx->merge($sectoraud);
+                            $cx->flush();
+                        }
+                    }
+                }
+            }
+
+            if($documentos != null) {
+                foreach ($documentos as $documento) {
+                    $documentoaud = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkdocumento' => $documento]);
+                    if($documentoaud == null) $documentoaud = new DocumentoAudit();
+                    
+                    $documento != '' ? $documento = $this->getDoctrine()->getRepository(Documento::class)->find($documento) :$documento=null;
+                    $documentoaud->setFkauditoria($auditoria);
+                    $documentoaud->setFkdocumento($documento);
+                    $documentoaud->setEstado(1);
+
+                    if($documentoaud->getId() == null) $cx->persist($documentoaud);
+                    else $cx->merge($documentoaud);
+                    $cx->flush();
+                }
+
+                $docsdel = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id]);
+                if($docsdel != null) {
+                    foreach ($docsdel as $dcdel) {
+                        if(!in_array($dcdel->getId(), $documentos)){
+                            $documentoaud = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkgas' => $dcdel]);
+                            $documentoaud->setEstado(0);
+                            
+                            $cx->merge($documentoaud);
+                            $cx->flush();
+                        }
+                    }
+                }
+            }
+
             $resultado = array('success' => true,
                     'message' => 'Auditoría actualizado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -231,22 +340,25 @@ class AuditoriaController extends AbstractController
     {
         try {
             $sx = json_decode($_POST['object'], true);
-            $id = $sx['id']; //dd($sx);
+            $id = $sx['id'];
+
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
             $fecpro = $auditoria->getFechaprogramada();
             $fecini = $auditoria->getFechahorainicio();
             $fecfin = $auditoria->getFechahorafin();
             $fecreg = $auditoria->getFecharegistro();
             if($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
-            if($fecini != null) $rsfci = $fecini->format('Y-m-d').'T'.$fecini->format('H:i'); else $rsfci = $fecini;
-            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d').'T'.$fecfin->format('H:i'); else $rsfcf = $fecfin;
+            if($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
             if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
             
             $sendinf = [
                 "id" => $auditoria->getId(),
                 "codigo" => $auditoria->getCodigo(),
-                "fkgas" => $auditoria->getFkgas(),
+                "fkproceso" => $auditoria->getFkproceso(),
                 "fktipo" => $auditoria->getFktipo(),
+                "fkgerente" => $auditoria->getFkgerente(),
+                "fkjefe" => $auditoria->getFkjefe(),
                 "fechaprogramada" => $rsfcp,
                 "duracionestimada" => $auditoria->getDuracionestimada(),
                 "lugar" => $auditoria->getLugar(),
@@ -255,14 +367,20 @@ class AuditoriaController extends AbstractController
                 "fechahorainicio" => $rsfci,
                 "fechahorafin" => $rsfcf,
                 "conclusiones" => $auditoria->getConclusiones(),
-                "responsable" => $auditoria->getResponsable(),
                 "fecharegistro" => $rsfcr
             ];
+            
+            $sector = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $documento = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($sendinf, 'json');
+            $response = array('auditoria' => $sendinf, 'sector' => $sector, 'documento' => $documento);
+
+            $json = $serializer->serialize($response, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Auditoría listado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -394,6 +512,31 @@ class AuditoriaController extends AbstractController
             'message' => 'Auditoría dado de baja correctamente.');
             
             $resultado = json_encode($resultado);
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+    
+
+    /**
+     * @Route("/auditoria_documentos", methods={"POST"}, name="auditoria_documentos")
+     */
+    public function documentos()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $documentos = $this->getDoctrine()->getRepository(Documento::class)->findDocByProc($id);
+            $filter_docs = $this->getDoctrine()->getRepository(Documento::class)->filterDocByProc($id);
+            
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $response = array('documentos' => $documentos, 'filter_docs' => $filter_docs);
+            $json = $serializer->serialize($response, 'json');
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Documentos listados correctamente.');
+            $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
