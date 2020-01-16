@@ -2661,148 +2661,113 @@ class ServiciosController extends AbstractController
             $query = $ldap->query('DC=elfec,DC=com', 'sAMAccountName=' . $user, ['filter' => $attributes]);
 
             $results = $query->execute();
+            
+            $cx = $this->getDoctrine()->getManager();
+            if($results != null){
+                foreach ($results as $entry) {
+                    $entry; // Do something with the results
+                    $encoders = [new XmlEncoder(), new JsonEncoder()];
+                    $normalizers = [new ObjectNormalizer()];
+    
+                    $serializer = new Serializer($normalizers, $encoders);
+                    $data = $serializer->normalize($entry, null);
+    
+                    if (array_key_exists("sAMAccountName", $data['attributes'])) {
+                        if ($user == $data['attributes']['sAMAccountName'][0]) {
+                            $dn = $data['dn'];
+                            $data_user = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                            if(!empty($data_user)) $process = 'username';
+    
+                            $ldap->bind($dn, $pass);
+                            $process = 'success';
+    
+                            if (array_key_exists("givenName", $data['attributes'])) $nombre = $data['attributes']['givenName'][0];
+                            else $nombre = 'Sin\Nombre';
 
-            foreach ($results as $entry) {
-                $entry; // Do something with the results
-                $encoders = [new XmlEncoder(), new JsonEncoder()];
-                $normalizers = [new ObjectNormalizer()];
+                            if (array_key_exists("sn", $data['attributes'])) $apellido = $data['attributes']['sn'][0];
+                            else $apellido = 'Sin\Apellido';
+    
+                            if (array_key_exists("title", $data['attributes'])) $cargo = $data['attributes']['title'][0];
+                            else $cargo = 'Sin\Cargo';
+                            
+                            if (array_key_exists("sAMAccountName", $data['attributes'])) $login = $data['attributes']['sAMAccountName'][0];
+                            else $login = 'Sin\login';
 
-                $serializer = new Serializer($normalizers, $encoders);
-                $data = $serializer->normalize($entry, null);
-
-                if ($ayudanombre = array_key_exists("sAMAccountName", $data['attributes'])) {
-                    if ($user == $data['attributes']['sAMAccountName'][0]) {
-                        $dn = $data['dn'];
-                        $dt_aux = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                        if(!empty($dt_aux)) $process = 'username';
-
-                        $ldap->bind($dn, $pass);
-                        $process = 'success';
-
-                        if ($ayudanombre = array_key_exists("givenName", $data['attributes'])) {
-                            $Nombre = $data['attributes']['givenName'][0];
-                        } else {
-                            $Nombre = 'Sin\Nombre';
-                        }
-                        if ($ayudaApe = array_key_exists("sn", $data['attributes'])) {
-                            $Apellido = $data['attributes']['sn'][0];
-
-                        } else {
-                            $Apellido = 'Sin\Apellido';
-                        }
-
-                        if ($ayudaCargo = array_key_exists("title", $data['attributes'])) {
-                            $Cargo = $data['attributes']['title'][0];
-                        } else {
-                            $Cargo = 'Sin\Cargo';
-                        }
-                        if ($ayudalogin = array_key_exists("sAMAccountName", $data['attributes'])) {
-                            $login = $data['attributes']['sAMAccountName'][0];
-                        } else {
-                            $login = 'Sin\login';
-                        }
-                        if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
-                            $unidad = $data['attributes']['physicalDeliveryOfficeName'][0];
-                            $unidadEntidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $unidad, 'estado' => '1'));
-                            $usuarioEntidad = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $user, 'estado' => '1'));
-                            $cx = $this->getDoctrine()->getManager();
-                            if (empty($usuarioEntidad)) {
+                            if (empty($data_user)) {
                                 $usuarionuevo = new Usuario();
-                                if (isset($data['attributes']['givenName'][0])) {
-                                    $usuarionuevo->setNombre($data['attributes']['givenName'][0]);
-                                } else {
-                                    $usuarionuevo->setNombre('S/N');
-                                }
-                                if (isset($data['attributes']['sn'][0])) {
-                                    $usuarionuevo->setApellido($data['attributes']['sn'][0]);
-                                } else {
-                                    $usuarionuevo->setApellido('S/A');
-                                }
-                                if (isset($data['attributes']['mail'][0])) {
-                                    $usuarionuevo->setCorreo($data['attributes']['mail'][0]);
-                                } else {
-                                    $usuarionuevo->setCorreo('S/Correo');
-                                }
-                                if (isset($data['attributes']['title'][0])) {
-                                    $usuarionuevo->setCargo($data['attributes']['title'][0]);
-                                } else {
-                                    $usuarionuevo->setCargo('S/Cargo');
-                                }
-                                if (isset($data['attributes']['sAMAccountName'][0])) {
-                                    $usuarionuevo->setUsername($data['attributes']['sAMAccountName'][0]);
-                                } else {
-                                    $usuarionuevo->setUsername('S/Login');
-                                }
-                                if ($ayudanombre = array_key_exists("cn", $data['attributes'])) {
+                                
+                                $usuarionuevo->setNombre($Nombre);
+                                $usuarionuevo->setApellido($apellido);
+                                $usuarionuevo->setCorreo($correo);
+                                $usuarionuevo->setCargo($cargo);
+                                $usuarionuevo->setUsername($login);
+
+                                if (array_key_exists("cn", $data['attributes'])) {
                                     if ($data['attributes']['cn'][0] == 'Administrador') {
-                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre' => 'Administrador'));
+                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findOneBy(array('estado' => '1', 'nombre' => 'Administrador'));
                                     } else {
-                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre' => 'Usuario'));
+                                        $rol = $this->getDoctrine()->getRepository(Rol::class)->findOneBy(array('estado' => '1', 'nombre' => 'Usuario'));
                                     }
                                 } else {
-                                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findBy(array('estado' => '1', 'nombre' => 'Usuario'));
+                                    $rol = $this->getDoctrine()->getRepository(Rol::class)->findOneBy(array('estado' => '1', 'nombre' => 'Usuario'));
                                 }
                                 $usuarionuevo->setEstado(1);
 
-                                $usuarionuevo->setFkrol($rol[0]);
+                                $usuarionuevo->setFkrol($rol);
                                 $cx->persist($usuarionuevo);
                                 $cx->flush();
                             }
-
-                            $usuarioEntidad = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $user, 'estado' => '1'));
-
-                            $usuario = $usuarioEntidad[0]->getId();
-                            $tipo = 'Completo';
-
-                            $permiso = $this->getDoctrine()->getRepository(Permiso::class)->findBy(array('fkusuario' => $usuario, 'estado' => '1'));
-                            if (empty($permiso)) {
-                                $cx = $this->getDoctrine()->getManager();
-                                $newpermiso = new Permiso();
-                                $newpermiso->setFkusuario($usuarioEntidad[0]);
-                                $newpermiso->setFkunidad($unidadEntidad[0]);
-                                $newpermiso->setTipo($tipo);
-                                $newpermiso->setEstado(1);
-                                $cx->persist($newpermiso);
-                                $cx->flush();
+                            
+                            if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
+                                $unidad = $data['attributes']['physicalDeliveryOfficeName'][0];
+                                $unidadEntidad = $this->getDoctrine()->getRepository(Unidad::class)->findOneBy(array('nombre' => $unidad, 'estado' => '1'));
+                                $user_act = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('username' => $user, 'estado' => '1'));
+    
+                                if($unidadEntidad != null){
+                                    $permiso = $this->getDoctrine()->getRepository(Permiso::class)->findOneBy(['fkusuario' => $user_act->getId(), 'fkunidad' => $unidadEntidad->getId(), 'estado' => '1']);
+                                    
+                                    if (empty($permiso)) {
+                                        $newpermiso = new Permiso();
+                                        $newpermiso->setFkusuario($user_act);
+                                        $newpermiso->setFkunidad($unidadEntidad);
+                                        $newpermiso->setTipo('Completo');
+                                        $newpermiso->setEstado(1);
+                                        $cx->persist($newpermiso);
+                                        $cx->flush();
+                                    }
+                                }
                             }
-
+    
+                            $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
+                            if (empty($personal)) $item_personal = null;
+                            else{
+                                $item_personal = $personal->getLegajo();
+                                if($personal->getFkPersonalCargo() != null) $cargo = $personal->getFkPersonalCargo()->getNombre();
+                            }
+    
+                            $elementos = array('Nombre' => $nombre, 'Apellido' => $apellido, 'Cargo' => $cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
+    
+                            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                            $data2 = $serializer->serialize($elementos, 'json');
+                            return new Response($data2);
                         }
-
-                        $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                        if (empty($personal)) $item_personal = null;
-                        else $item_personal = $personal->getLegajo();
-
-                        $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
-
-                        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                        $data2 = $serializer->serialize($elementos, 'json');
-                        return new Response($data2);
                     }
                 }
-            }
-            if($process == 'success'){
-                $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
-                if (empty($personal)) $item_personal = null;
-                else $item_personal = $personal->getLegajo();
-
-                $elementos = array('Nombre' => $Nombre, 'Apellido' => $Apellido, 'Cargo' => $Cargo, 'login' => $login, 'item_personal' => $item_personal, 'process' => $process);
+                $respuesta = array('message' => 'Datos de usuario incorrectos.', 'process' => $process);
 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $data2 = $serializer->serialize($elementos, 'json');
+                $data2 = $serializer->serialize($respuesta, 'json');
                 return new Response($data2);
             }else{
-                $info = 'Datos de usuario incorrectos';
-                $process = 'empty';
-
-                //return new JsonResponse($info);
-
-                $elementos = array('message' => $info, 'process' => $process);
+                $respuesta = array('message' => 'No existen datos en el AD para la consulta realizada.', 'process' => $process);
 
                 $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-                $data2 = $serializer->serialize($elementos, 'json');
+                $data2 = $serializer->serialize($respuesta, 'json');
                 return new Response($data2);
             }
-        } catch (ConnectionException $ce) {
+            throw new Exception();
+        } 
+        catch (ConnectionException $ce) {
             if ($process == 'username') $ldap_msg = "Contraseña incorrecta";
             else {
                 if ($process == 'validate') $ldap_msg = "Error al consultar los datos del AD";
@@ -2813,12 +2778,21 @@ class ServiciosController extends AbstractController
             }
 
             //return new JsonResponse($translator->trans($ldap_msg));
-            $elementos = array('message' => $translator->trans($ldap_msg), 'process' => $process);
+            $respuesta = array('message' => $translator->trans($ldap_msg), 'process' => $process);
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($elementos, 'json');
+            $data2 = $serializer->serialize($respuesta, 'json');
             return new Response($data2);
-        } finally {
+        } 
+        catch (Exception $e) {
+            $ldap_msg = $e->getMessage();
+            $respuesta = array('message' => $translator->trans($ldap_msg), 'process' => '');
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($respuesta, 'json');
+            return new Response($data2);
+        }
+        /*finally {
             switch ($process) {
                 case "connect":
                     $ldap_msg = "The LDAP PHP extension is not enabled.";
@@ -2831,7 +2805,7 @@ class ServiciosController extends AbstractController
                     return new Response($data2);
                     break;
             }
-        }
+        }*/
     }
 
     /**
