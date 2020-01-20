@@ -63,6 +63,34 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         }
 
         switch ($trimmedPathinfo) {
+            case '/sesion':
+                // sesion
+                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
+                    goto not_sesion;
+                }
+
+                $ret = ['_route' => 'sesion', '_controller' => 'App\\Controller\\SecurityController::login'];
+                if (!isset(($a = ['POST' => 0])[$requestMethod])) {
+                    $allow += $a;
+                    goto not_sesion;
+                }
+
+                return $ret;
+                not_sesion:
+                // sesion7
+                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
+                    goto not_sesion7;
+                }
+
+                $ret = ['_route' => 'sesion7', '_controller' => 'App\\Controller\\SecurityController::login7'];
+                if (!isset(($a = ['POST' => 0])[$requestMethod])) {
+                    $allow += $a;
+                    goto not_sesion7;
+                }
+
+                return $ret;
+                not_sesion7:
+                break;
             default:
                 $routes = [
                     '/acceso' => [['_route' => 'acceso_listar', '_controller' => 'App\\Controller\\AccesoController::index'], null, null, null, false],
@@ -464,10 +492,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/sector_prev' => [['_route' => 'sector_prev', '_controller' => 'App\\Controller\\SectorController::sector_prev'], null, ['POST' => 0], null, false],
                     '/sector_eliminar' => [['_route' => 'sector_eliminar', '_controller' => 'App\\Controller\\SectorController::eliminar'], null, ['POST' => 0], null, false],
                     '/login' => [['_route' => 'app_security_index', '_controller' => 'App\\Controller\\SecurityController::index'], null, ['GET' => 0], null, false],
-                    '/sesion4' => [['_route' => 'sesion4', '_controller' => 'App\\Controller\\SecurityController::login4'], null, ['POST' => 0], null, false],
                     '/logout' => [['_route' => 'logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false],
                     '/valid_action4' => [['_route' => 'valid_action4', '_controller' => 'App\\Controller\\SecurityController::action4'], null, ['POST' => 0], null, false],
-                    '/sesion' => [['_route' => 'sesion', '_controller' => 'App\\Controller\\SecurityController::login'], null, ['POST' => 0], null, false],
                     '/valid_action' => [['_route' => 'valid_action', '_controller' => 'App\\Controller\\SecurityController::action'], null, ['POST' => 0], null, false],
                     '/seguimientocro' => [['_route' => 'seguimientocro', '_controller' => 'App\\Controller\\SeguimientoCroController::index'], null, null, null, false],
                     '/seguimientocro_insertar' => [['_route' => 'seguimientocro_insertar', '_controller' => 'App\\Controller\\SeguimientoCroController::insertar'], null, ['POST' => 0], null, false],
@@ -552,8 +578,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/detaud_crocm' => [['_route' => 'detaud_crocm', '_controller' => 'App\\Controller\\ServiciosController::detaud_crocm'], null, ['POST' => 0], null, false],
                     '/listar_verificaref' => [['_route' => 'listar_verificaref', '_controller' => 'App\\Controller\\ServiciosController::listar_verificaref'], null, null, null, false],
                     '/listar_fortaleza' => [['_route' => 'listar_fortaleza', '_controller' => 'App\\Controller\\ServiciosController::listar_fortaleza'], null, null, null, false],
-                    '/loginbackend' => [['_route' => 'loginbackend', '_controller' => 'App\\Controller\\ServiciosController::info'], null, ['POST' => 0], null, false],
                     '/loginbackend4' => [['_route' => 'loginbackend4', '_controller' => 'App\\Controller\\ServiciosController::info4'], null, ['POST' => 0], null, false],
+                    '/loginbackend' => [['_route' => 'loginbackend', '_controller' => 'App\\Controller\\ServiciosController::info'], null, ['POST' => 0], null, false],
                     '/combo_proceso' => [['_route' => 'combo_proceso', '_controller' => 'App\\Controller\\ServiciosController::combo_proceso'], null, null, null, false],
                     '/combo_tipocrocm' => [['_route' => 'combo_tipocrocm', '_controller' => 'App\\Controller\\ServiciosController::combo_tipocrocm'], null, null, null, false],
                     '/combo_probabilidad' => [['_route' => 'combo_probabilidad', '_controller' => 'App\\Controller\\ServiciosController::combo_probabilidad'], null, null, null, false],
@@ -563,17 +589,12 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/combo_org_cargo' => [['_route' => 'combo_org_cargo', '_controller' => 'App\\Controller\\ServiciosController::combo_org_cargo'], null, null, null, false],
                     '/combo_organigrama' => [['_route' => 'combo_organigrama', '_controller' => 'App\\Controller\\ServiciosController::combo_organigrama'], null, null, null, false],
                     '/listar_cobertura' => [['_route' => 'listar_cobertura', '_controller' => 'App\\Controller\\ServiciosController::listar_cobertura'], null, null, null, false],
-                    '/correlativo_gestiones' => [['_route' => 'correlativo_gestiones', '_controller' => 'App\\Controller\\ServiciosController::correlativo_gestiones'], null, ['POST' => 0], null, false],
-                    '/listar_correlativogestion' => [['_route' => 'listar_correlativogestion', '_controller' => 'App\\Controller\\ServiciosController::listar_correlativogestion'], null, ['POST' => 0], null, false],
-                    '/combo_gestion' => [['_route' => 'combo_gestion', '_controller' => 'App\\Controller\\ServiciosController::combo_gestion'], null, ['POST' => 0], null, false],
-                    '/correlativo_filter' => [['_route' => 'correlativo_filter', '_controller' => 'App\\Controller\\ServiciosController::correlativo_filter'], null, ['POST' => 0], null, false],
-                    '/listar_correlativo' => [['_route' => 'listar_correlativo', '_controller' => 'App\\Controller\\ServiciosController::listar_correlativo'], null, ['POST' => 0], null, false],
-                    '/correlativoform' => [['_route' => 'correlativoform', '_controller' => 'App\\Controller\\ServiciosController::correlativoform'], null, ['POST' => 0], null, false],
-                    '/correlativoinsert' => [['_route' => 'correlativoinsert', '_controller' => 'App\\Controller\\ServiciosController::correlativoinsert'], null, ['POST' => 0], null, false],
-                    '/correlativomodificar' => [['_route' => 'correlativomodificar', '_controller' => 'App\\Controller\\ServiciosController::correlativomodificar'], null, ['POST' => 0], null, false],
-                    '/correlativoeliminar' => [['_route' => 'correlativoeliminar', '_controller' => 'App\\Controller\\ServiciosController::correlativoeliminar'], null, ['POST' => 0], null, false],
-                    '/correlativopermiso' => [['_route' => 'correlativopermiso', '_controller' => 'App\\Controller\\ServiciosController::correlativopermiso'], null, ['POST' => 0], null, false],
-                    '/correlativoeditar' => [['_route' => 'correlativoeditar', '_controller' => 'App\\Controller\\ServiciosController::correlativoeditar'], null, ['POST' => 0], null, false],
+                    '/data_correlative' => [['_route' => 'data_correlative', '_controller' => 'App\\Controller\\ServiciosController::data_correlative'], null, ['POST' => 0], null, false],
+                    '/formdt_correlative' => [['_route' => 'formdt_correlative', '_controller' => 'App\\Controller\\ServiciosController::formdt_correlative'], null, ['POST' => 0], null, false],
+                    '/correlative_insert' => [['_route' => 'correlative_insert', '_controller' => 'App\\Controller\\ServiciosController::correlative_insert'], null, ['POST' => 0], null, false],
+                    '/correlative_edit' => [['_route' => 'correlative_edit', '_controller' => 'App\\Controller\\ServiciosController::correlative_edit'], null, ['POST' => 0], null, false],
+                    '/correlative_update' => [['_route' => 'correlative_update', '_controller' => 'App\\Controller\\ServiciosController::correlative_update'], null, ['POST' => 0], null, false],
+                    '/correlative_delete' => [['_route' => 'correlative_delete', '_controller' => 'App\\Controller\\ServiciosController::correlative_delete'], null, ['POST' => 0], null, false],
                     '/datasig' => [['_route' => 'datasig', '_controller' => 'App\\Controller\\ServiciosController::datasig'], null, ['GET' => 0], null, false],
                     '/data_delautoridad' => [['_route' => 'data_delautoridad', '_controller' => 'App\\Controller\\ServiciosController::data_delautoridad'], null, ['GET' => 0], null, false],
                     '/tipoauditor' => [['_route' => 'tipoauditor', '_controller' => 'App\\Controller\\TipoAuditorController::index'], null, null, null, false],

@@ -60,27 +60,19 @@ class CorrelativoRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();
     }
-
-    public function findPermissionByUserjccg($idu): array
+    
+    public function findEditors(): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = '
-        SELECT c.*
-        FROM cb_correlativo_correlativo c
-        WHERE c.cb_correlativo_fkunidad IN
-        ( SELECT cb_correlativo_unidad.cb_unidad_id
-        FROM cb_correlativo_permiso, cb_usuario_usuario, cb_correlativo_unidad
-        WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id
-        AND cb_unidad_estado=1 
-        AND cb_usuario_username=:username 
-        AND cb_permiso_estado=1 AND cb_permiso_tipo IN (\'Crear\', \'Completo\'))
-            and c.cb_correlativo_estado=1
-            ORDER BY c.cb_correlativo_id DESC
+        $sql = 'SELECT cb_correlativo_redactor AS redactor, COUNT(cb_correlativo_numcorrelativo) AS cant
+                FROM cb_correlativo_correlativo
+                WHERE cb_correlativo_estado=1 AND cb_correlativo_fechareg>=make_date(date_part('year', NOW())::INTEGER, 1, 1)
+                GROUP BY cb_correlativo_redactor
+                ORDER BY 1';
 
-        ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['username' => $idu]);
+        $stmt->execute();
 
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();

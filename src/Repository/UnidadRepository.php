@@ -19,17 +19,18 @@ class UnidadRepository extends ServiceEntityRepository
         parent::__construct($registry, Unidad::class);
     }
 
-    public function unidadByPermission($idu): array
+    public function unidadPermissionByUser($username): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'SELECT DISTINCT(cb_correlativo_unidad.*)
+        $sql = 'SELECT DISTINCT(cb_unidad_id) AS id, cb_unidad_nombre AS nombre
                 FROM cb_correlativo_permiso, cb_usuario_usuario, cb_correlativo_unidad
                 WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id
-                AND cb_unidad_estado=1 AND cb_usuario_username=:id AND cb_permiso_estado=1 AND cb_permiso_tipo IN (\'Crear\', \'Completo\')
-                ORDER BY cb_unidad_nombre';
+                AND cb_unidad_estado=1 AND cb_usuario_username=:username AND cb_permiso_estado=1 AND cb_permiso_tipo IN (\'Crear\', \'Completo\')
+                ORDER BY 2';
+        
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['id' => $idu]);
+        $stmt->execute(['username' => $username]);
 
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();
