@@ -724,10 +724,12 @@
                     object: obj
                 },function(responses){
                     let data = JSON.parse(responses)
+                    console.log(self)
+                    console.log(data)
 
-                    $('#idaud').val(self.id)
-                    $('#codigoaud').val(self.codigo)
-                    $('#sectoraud').val(self.fkgas.fksector.nombre)
+                    $('#idaud').val(self.auditoria.id)
+                    $('#codigoaud').val(self.auditoria.codigo)
+                    if (self.auditoria.fkproceso != null) $('#sectoraud').val(self.auditoria.fkprocesonombre)
                     
                     var table = $('#table_team').DataTable({
                         language: {
@@ -951,10 +953,13 @@
                         object: obj
                     },function(responseh){
                         let datah = JSON.parse(responseh)
-
-                        $('#id-aud').val(self.id)
-                        $('#codigo-aud').val(self.codigo)
-                        $('#sector-aud').val(self.fkgas.fksector.nombre)
+                        console.log(self)
+                        console.log(dataf)
+                        console.log(datah)
+                        
+                        $('#id-aud').val(self.auditoria.id)
+                        $('#codigo-aud').val(self.auditoria.codigo)
+                        if(self.fkproceso != null) $('#sector-aud').val(self.auditoria.fkproceso.nombre)
                         
                         var tablefr = $('#table_fort').DataTable();
                         tablefr.destroy();

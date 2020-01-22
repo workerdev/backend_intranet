@@ -1,199 +1,172 @@
-{% block stylesheets %}
-    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
-    <style>
-        .borderless td, .borderless th, .borderless tr {
-            border: none;
-        }
-        html {
-            margin-left: 15px;
-            margin-right: 15px;
-        }
-    </style>
-{% endblock %}
-
-{% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <img src="resources/images/image_rep.png" width="auto" height="70" alt="logo">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <h6 class="font-weight-bold float-right">GCDO-0802-02</h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h6 class="font-weight-bold text-center"><u>NOTIFICACIÓN DE INICIO DE AUDITORÍA</u></h6>
-                <h6 class="font-weight-bold text-center"><u>AUDITORIA DEL SISTEMA INTEGRADO DE GESTIÓN</u></h6>
-            </div>
-        </div>
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+<div class='container' style='font-size: 12px'>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr>
+                <th colspan="1" rowspan="4"><img src="resources/images/image_rep.png" width="auto" height="70" alt="logo"></th>
+                <th colspan="11" align="right" style="font-size: 11px">UNP-0802-02</th>
+            </tr>
+            <tr>
+                <td colspan="11" align="right" style="font-size: 11px; padding-bottom: 13px;">UNIDAD DE GESTIÓN DE CALIDAD Y DESARROLLO ORGANIZACIONAL</td>
+            </tr>
+            <tr>
+                <td colspan="11" style="font-size: 14px; padding-left: 80px; font-weight: 400;">NOTIFICACIÓN DE INICIO DE AUDITORÍA</td>
+            </tr>
+            <tr>
+                <td colspan="11" style="font-size: 14px; font-weight: 400;">AUDITORÍA DEL SISTEMA INTEGRADO DE GESTIÓN DE CALIDAD</td>
+            </tr>
+        </table>
     </div>
 
-    {% if objects %}
-    <div class="container mt-3">
-        <div class="">
-            </br>          
-            <table class="table borderless table-sm">
-                <tr>
-                    <th>Fecha de Notificación:</th>
-                    <td>{{ "now"|date('d-m-Y') }} </td>
-                    <td></td>
-                    <td></td>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Fecha de Notificación: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> {{ auditoria.fecharegistro }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Gerencia o Unidad a ser auditada:</th>
+                <td colspan='3' class='text-normal' align='left'></td>
+            </tr>
+            {% for s in sector %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'>  </td>
+                    <td colspan='3' class='text-normal' align='left'> {{ s.fkgas.fksector.nombre  }} </td>
                 </tr>
-                {% if objects %}
-                <tr>
-                    <th>Gerencia o Unidad a ser auditada:</th>
-                    <td>{{ objects[0].cb_gerencia_nombre }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Gerente Coordinador</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Jefe o supervisor de Area:</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Proceso a ser auditado:</th>
-                    <td>{{ objects[0].cb_ficha_procesos_nombre }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Número de Auditoría:</th>
-                    <td>{{ objects[0].cb_auditoria_equipo_fkauditoria }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Equipo Auditor:</th>
-                    <td>{{ objects[0].cb_auditoria_equipo_id }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <th>AUDITOR SIG</th>
-                    <td>
-                    {% if objects[0].cb_tipo_auditor_nombre == 'AUDITOR' %}
-                         {{ objects[0].cb_auditor_apellidosnombres }}
-                    {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <th>AUDITOR LIDER</th>
-                    <td>
-                    {% if objects[0].cb_tipo_auditor_nombre == 'AUDITOR LIDER' %}
-                         {{ objects[0].cb_auditor_apellidosnombres }} 
-                    {% endif %}
-                    </td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Fecha y hora estimada de inicio:</th>
-                    <td>{{ objects[0].cb_auditoria_fechahorainicio }}</td>
-                    <th>Duración:</th>
-                    <th>{{ objects[0].cb_auditoria_duracionestimada }} Hrs.</th>
-                </tr>
-                <tr>
-                    <th>Fecha y hora estimada de término:</th>
-                    <td>{{ objects[0].cb_auditoria_fechahorafin }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                {% endif %}
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Objetivos:</th>
-                    <td>{{objects[0].cb_auditoria_objetivos}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Documentos base para realizar la auditoría:</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                {% if docs %} 
-                <tr>
-                    <th><u>CODIGO</u></th>
-                    <th><u>DESCRIPCION</u></th>
-                </tr>
-                {% for m in docs %}
-                    {% if objects[0].cb_auditoria_equipo_fkauditoria == m.cb_auditoria_id and objects[0].cb_auditoria_fkgas == m.cb_auditoria_fkgas %}
-                    <tr>
-                        <td>{{m.cb_documento_extra_codigo}}</td>
-                        <td>{{m.cb_documento_extra_titulo}}</td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-                {% endif %}
-                    
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th>Alcance:</th>
-                    <td>{{objects[0].cb_auditoria_alcance}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Personal Requerido:</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <td>Auditor Líder</td>
-                    <td></td>
-                    <td></td>
-                    <td>Coordinador UGCDO</td>
-                </tr>
-            </table>
-        </div>
+            {% endfor %}
+        </table>
 
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Gerente Coordinador </th>
+                {% if auditoria.fkgerente != null %}
+                    <td colspan='3' class='text-normal' align='left'> {{ auditoria.fkgerente.nombre ~ ' ' ~ auditoria.fkgerente.apellido }} </td>
+                {% else %}
+                    <td colspan='3' class='text-normal' align='left'></td>
+                {% endif %}
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Jefe / Coordinador / Supervisor de área </th>
+                {% if auditoria.fkjefe != null %}
+                    <td colspan='3' class='text-normal' align='left'> {{ auditoria.fkjefe.nombre ~ ' ' ~ auditoria.fkjefe.apellido }} </td>
+                {% else %}
+                    <td colspan='3' class='text-normal' align='left'></td>
+                {% endif %}
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Proceso a ser auditado: </th>
+                {% if auditoria.fkproceso != null %}
+                    <td colspan='3' class='text-normal' align='left'> {{ auditoria.fkproceso.nombre }} </td>
+                {% else %}
+                    <td colspan='3' class='text-normal' align='left'></td>
+                {% endif %}
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Número de Auditoría: </th>
+                <td colspan='3' class='text-normal' align='left'> {{ auditoria.codigo }} </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Equipo Auditor: </th>
+                <td colspan='3' class='text-normal' align='left'></td>
+            </tr>
+            {% for eq in team %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'></td>
+                    <td colspan='2' class='text-normal' align='left'> {{ eq.fkauditor.nombres ~ ' ' ~ eq.fkauditor.paterno ~ ' ' ~ eq.fkauditor.materno }} </td>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'> {{ eq.fktipo.nombre }} </th>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha y hora estimada de inicio: </th>
+                <td colspan='1' class='text-normal' align='left'>{{ auditoria.fechahorainicio }}</td>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Duración:</th>
+                <td colspan='1' class='text-normal' align='left'>{{ auditoria.duracionestimada }} Hrs.</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha y hora estimada de término: </th>
+                <td colspan='3' class='text-normal' align='left'>{{ auditoria.fechahorafin }}</td>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Objetivos: </th>
+                <td colspan='11' class='text-normal' align='left'></td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='11' class='text-normal' align='left'>{{ auditoria.objetivos }}</td>
+            </tr>
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='12' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Documentos base para realizar la auditoría:</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'></th>
+                <th colspan='4' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>CÓDIGO</th>
+                <th colspan='7' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>DESCRIPCIÓN</th>
+            </tr>
+            {% for d in docs %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'></td>
+                    <td colspan='4' class='text-normal' align='left'> {{ d.codigo }} </td>
+                    <td colspan='7' class='text-normal' align='left'> {{ d.titulo  }} </td>
+                </tr>
+            {% endfor %}
+            {% for ad in docsadd %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'></td>
+                    <td colspan='4' class='text-normal' align='left'> {{ ad.fkdocumento.codigo }} </td>
+                    <td colspan='7' class='text-normal' align='left'> {{ ad.fkdocumento.titulo  }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Alcance: </th>
+                <td colspan='11' class='text-normal' align='left'>{{ auditoria.alcance }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Personal Requerido: </th>
+                <td colspan='11' class='text-normal' align='left'></td>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 15px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <td colspan='4' class='text-normal' align='left'>
+                    Si usted tiene un problema con la fecha y la hora arriba citada, le solicitamos se comunique con la Unidad de Gestión de Calidad y 
+                    Desarrollo Organizacional e indique los motivos y causas del problema y la alternativa propuesta.
+                </td>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 30px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>________________________</th>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <th colspan='1' class='italic' scope='colgroup' align='left'>________________________</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 30px'>Auditor Líder</td>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='1' class='text-normal' align='left'>Coordinador UGCDO</td>
+            </tr>
+        </table>
     </div>
-    {% else %}
-        <div class="container mt-3">
-            <p>No se encontraron registros.</p>
-        </div>
-    {% endif %}
     
-{% endblock %}
-
-{% block javascripts %}
-    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
-{% endblock %}
+</div>

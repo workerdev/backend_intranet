@@ -1233,6 +1233,10 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\TipoAccionRepository" class="App\Repository\TipoAccionRepository" public="false" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\TipoAuditorRepository" class="App\Repository\TipoAuditorRepository" public="false" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -3796,7 +3800,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.UzNDXUk"/>
+      <argument type="service" id=".service_locator.nqmYLNH"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -5947,6 +5951,8 @@
     <service id=".abstract.instanceof.App\Repository\SeguimientoPlanRepository" class="App\Repository\SeguimientoPlanRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SeguimientoRepository" class="App\Repository\SeguimientoRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SeguimientoRepository" class="App\Repository\SeguimientoRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\TipoAccionRepository" class="App\Repository\TipoAccionRepository" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\TipoAccionRepository" class="App\Repository\TipoAccionRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\TipoAuditorRepository" class="App\Repository\TipoAuditorRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\TipoAuditorRepository" class="App\Repository\TipoAuditorRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\TipoAuditoriaRepository" class="App\Repository\TipoAuditoriaRepository" public="false" autowire="true" abstract="true"/>
@@ -6585,7 +6591,7 @@
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service" id="form.type.form"/>
       </argument>
     </service>
-    <service id=".service_locator.UzNDXUk" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.nqmYLNH" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AccesoRepository" type="service" id="App\Repository\AccesoRepository"/>
@@ -6668,6 +6674,7 @@
         <argument key="App\Repository\SeguimientoMejoraRepository" type="service" id="App\Repository\SeguimientoMejoraRepository"/>
         <argument key="App\Repository\SeguimientoPlanRepository" type="service" id="App\Repository\SeguimientoPlanRepository"/>
         <argument key="App\Repository\SeguimientoRepository" type="service" id="App\Repository\SeguimientoRepository"/>
+        <argument key="App\Repository\TipoAccionRepository" type="service" id="App\Repository\TipoAccionRepository"/>
         <argument key="App\Repository\TipoAuditorRepository" type="service" id="App\Repository\TipoAuditorRepository"/>
         <argument key="App\Repository\TipoAuditoriaRepository" type="service" id="App\Repository\TipoAuditoriaRepository"/>
         <argument key="App\Repository\TipoCRORepository" type="service" id="App\Repository\TipoCRORepository"/>

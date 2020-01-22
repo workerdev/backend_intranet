@@ -2721,7 +2721,7 @@ class ServiciosController extends AbstractController
                                 $cx->flush();
                             }
                             
-                            if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
+                            /*if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
                                 $unidad = $data['attributes']['physicalDeliveryOfficeName'][0];
                                 $unidadEntidad = $this->getDoctrine()->getRepository(Unidad::class)->findOneBy(array('nombre' => $unidad, 'estado' => '1'));
                                 $user_act = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(array('username' => $user, 'estado' => '1'));
@@ -2739,7 +2739,7 @@ class ServiciosController extends AbstractController
                                         $cx->flush();
                                     }
                                 }
-                            }
+                            }*/
     
                             $personal = $this->getDoctrine()->getRepository(Personal::class)->findOneBy(array('estado' => '1', 'username' => $user));
                             if (empty($personal)) $item_personal = null;
@@ -3218,7 +3218,7 @@ class ServiciosController extends AbstractController
             if($dataunidad != null) $access = true;
             else $access = false;
 
-            $correlativos = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $year);
+            $correlativos = $cx->getRepository(Correlativo::class)->findEditors();
             $redactor = array_column($correlativos, 'redactor');
 
             $controldt = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findOneBy(['nombre' => 'ELFEC']);
@@ -3271,7 +3271,6 @@ class ServiciosController extends AbstractController
     {
         try {
             $sx = json_decode($request->getContent(), true);
-            $cx = $this->getDoctrine()->getManager();
 
             $fksolicitante = $sx['fksolicitante'];
             $redactor = $sx['redactor'];
@@ -3294,6 +3293,9 @@ class ServiciosController extends AbstractController
             $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find(['id' => $fkcorrelativo]): $fkcorrelativo = null;
             $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find(['id' => $fktiponota]): $fktiponota = null;
             $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find(['id' => $fkunidad]): $fkunidad = null;
+
+            
+            $cx = $this->getDoctrine()->getManager();
 
             $correlative = new Correlativo();
             $correlative->setNumcorrelativo($numcorrelativo);
@@ -3323,7 +3325,10 @@ class ServiciosController extends AbstractController
             $resultado = array('response' => "El número de correlativo es: " . $correlative->getNumcorrelativo() . ".",
                 'success' => true,
                 'message' => 'Correlativo registrado correctamente.');
-            $resultado = json_encode($resultado);
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($resultado, 'json');
+
+            $resultado = $json;
 
             return new Response($resultado);
         } catch (Exception $e) {
@@ -3407,11 +3412,11 @@ class ServiciosController extends AbstractController
             }
             else $access = false;
 
-            $correlativos = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $year);
+            $correlativos = $cx->getRepository(Correlativo::class)->findEditors();
             $redactor = array_column($correlativos, 'redactor');
 
             $response = array('permission_unit' => $access, 'correlativo' => $sendinf, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
-
+            
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($response, 'json');
 
@@ -3472,7 +3477,10 @@ class ServiciosController extends AbstractController
             $resultado = array('response' => "El número de correlativo modificado es: " . $correlative->getNumcorrelativo() . ".",
                 'success' => true,
                 'message' => 'Correlativo modificado correctamente.');
-            $resultado = json_encode($resultado);
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($resultado, 'json');
+
+            $resultado = $json;
 
             return new Response($resultado);
         } catch (Exception $e) {
@@ -3490,22 +3498,40 @@ class ServiciosController extends AbstractController
             $sx = json_decode($request->getContent(), true);
             $cx = $this->getDoctrine()->getManager();
             $id = $sx['id'];
+            $user = $sx['username'];
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
 
-            $correlativo->setEstadoCorrelativo('Anulado');
-            $cx->persist($correlativo);
-            $cx->flush();
+            if($correlativo->getFkunidad() != null){
+                $dtunit = array_column($unidad, 'id');
 
-            $resultado = array('response' => "El número de correlativo anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
-                'message' => 'Correlativo anulado correctamente.');
-            $resultado = json_encode($resultado);
+                if (in_array($correlativo->getFkunidad()->getId(), $dtunit)) $access = true;
+                else $access = false;
+            }
+            else $access = false;
+
+            if($access){
+                $correlativo->setEstadoCorrelativo('Anulado');
+                $cx->persist($correlativo);
+                $cx->flush();
+
+                $resultado = array('response' => "El número de correlativo anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
+                    'message' => 'Correlativo anulado correctamente.');
+            }else{
+                $resultado = array('response' => "El número de correlativo ". $correlativo->getNumcorrelativo(). " no fue anulado.", 'success' => false,
+                    'message' => 'No tiene permiso para realizar esta acción en esta unidad.');
+            }
             
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize($resultado, 'json');
+
+            $resultado = $json;
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
         }
     }
-
 
     /**
      * @Route("/datasig", methods={"GET"}, name="datasig")

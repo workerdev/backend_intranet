@@ -35,9 +35,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/sesion", methods={"POST"}, name="sesion")
+     * @Route("/sesion4", methods={"POST"}, name="sesion4")
      */
-    public function login()
+    public function login4()
     {
         $sx = json_decode($_POST['object'], true);
         $process = 'init';
@@ -84,7 +84,7 @@ class SecurityController extends AbstractController
             $cx = $this->getDoctrine()->getManager();
 
             /* CARGANDO GERENCIAS **/
-            $department = ['department'];
+            /*$department = ['department'];
             $query_dep = $ldap->query('DC=elfec,DC=com', '(&(objectCategory=person)(objectClass=user)(department=*))', ['filter' => $department]);
             $results_dep = $query_dep->execute();
 
@@ -107,10 +107,10 @@ class SecurityController extends AbstractController
                         }
                     }
                 }
-            }
+            }*/
 
             /* CARGANDO UNIDADES **/
-            $office = ['physicalDeliveryOfficeName'];
+            /*$office = ['physicalDeliveryOfficeName'];
             $query_office = $ldap->query('DC=elfec,DC=com', '(&(objectCategory=person)(objectClass=user)(physicalDeliveryOfficeName=*))', ['filter' => $office]);
             $results_office = $query_office->execute();
 
@@ -134,7 +134,7 @@ class SecurityController extends AbstractController
                         }
                     }
                 }
-            }
+            }*/
 
             /* VALIDANDO USUARIO **/
             $process = 'consult';
@@ -192,19 +192,19 @@ class SecurityController extends AbstractController
                                 $usuariob->setFkrol($rol);
                                 $cx->persist($usuariob);
                                 $cx->flush();
-                            } else {
-                                /*$usuariob->setNombre($nombre);
+                            } /*else {
+                                $usuariob->setNombre($nombre);
                                 $usuariob->setApellido($apellido);
                                 $usuariob->setCargo($cargo);
                                 $usuariob->setCorreo($correo);
-                                $usuariob->setUsername($username);*/
+                                $usuariob->setUsername($username);
 
                                 $usuariob->setEstado(1);
                                 $cx->merge($usuariob);
                                 $cx->flush();
-                            }
+                            }*/
 
-                            if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
+                            /*if (isset($data['attributes']['physicalDeliveryOfficeName'][0])) {
                                 $unidad = $data['attributes']['physicalDeliveryOfficeName'][0];
                                 $unidadEntidad = $this->getDoctrine()->getRepository(Unidad::class)->findOneBy(array('nombre' => $unidad, 'estado' => '1'));
 
@@ -222,7 +222,7 @@ class SecurityController extends AbstractController
                                         $cx->flush();
                                     }
                                 }
-                            }
+                            }*/
                             
                             $duser = $serializer->normalize($usuariob, null);
                             $session = new Session();
@@ -371,9 +371,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/sesion", methods={"POST"}, name="sesion7")
+     * @Route("/sesion", methods={"POST"}, name="sesion")
      */
-    public function login7()
+    public function login()
     {
         $sx = json_decode($_POST['object'], true);
 

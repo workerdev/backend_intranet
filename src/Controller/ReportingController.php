@@ -19,6 +19,15 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Rol;
 use App\Entity\DocProcRevision;
 use App\Entity\DocumentoProceso;
+use App\Entity\Auditoria;
+use App\Entity\AuditoriaEquipo;
+use App\Entity\Documento;
+use App\Entity\SectorAudit;
+use App\Entity\DocumentoAudit;
+use App\Entity\Fortaleza;
+use App\Entity\Hallazgo;
+use App\Entity\Accion;
+use App\Entity\TipoAccion;
 
 
 class ReportingController extends AbstractController
@@ -604,44 +613,45 @@ class ReportingController extends AbstractController
         try {
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
+
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+            $fecpro = $auditoria->getFechaprogramada();
+            $fecini = $auditoria->getFechahorainicio();
+            $fecfin = $auditoria->getFechahorafin();
+            $fecreg = $auditoria->getFecharegistro();
+            if($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
+            if($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
             
-            $cx = $this->getDoctrine()->getManager()->getConnection();
-            $sql  = "SELECT adq.cb_auditoria_equipo_id, tad.cb_tipo_auditoria_nombre, adq.cb_auditoria_equipo_fkauditoria, ad.cb_auditoria_fkgas,
-                        ad.cb_auditoria_alcance, adt.cb_auditor_apellidosnombres, tadt.cb_tipo_auditor_nombre, ad.cb_auditoria_lugar,
-                        ad.cb_auditoria_responsable, ad.cb_auditoria_fechahorainicio, ad.cb_auditoria_fechahorafin, ad.cb_auditoria_duracionestimada,
-                        ac.cb_accion_descripcion, ef.cb_accion_eficacia_resultado, hl.cb_hallazgo_id, fp.cb_ficha_procesos_nombre, g.cb_gerencia_nombre,
-                        ad.cb_auditoria_objetivos
-                    FROM cb_aud_auditoria ad, cb_aud_auditor adt, cb_aud_tipo_auditoria tad, 
-                        cb_aud_tipo_auditor tadt, cb_aud_auditoria_equipo adq, cb_aud_hallazgo hl, cb_aud_accion ac, 
-                        cb_aud_accion_eficacia ef, cb_proc_gas pga, cb_procesos_ficha_procesos fp, cb_configuracion_gerencia g
-                    WHERE adq.cb_auditoria_equipo_fkauditoria=ad.cb_auditoria_id AND
-                        adq.cb_auditoria_equipo_fkauditor=adt.cb_auditor_id AND 
-                        adq.cb_auditoria_equipo_fktipo=tadt.cb_tipo_auditor_id  AND
-                        ad.cb_auditoria_fktipo=tad.cb_tipo_auditoria_id AND ad.cb_auditoria_id=hl.cb_hallazgo_fkauditoria AND
-                        ad.cb_auditoria_id=hl.cb_hallazgo_fkauditoria AND hl.cb_hallazgo_id=ac.cb_accion_fkhallazgo AND
-                        ac.cb_accion_id=ef.cb_accion_eficacia_fkaccion AND ad.cb_auditoria_fkgas=pga.cb_gas_id AND
-                        fp.cb_ficha_procesos_fkareagerenciasector=pga.cb_gas_id AND pga.cb_gas_fkgerencia=g.cb_gerencia_id AND
-                        ad.cb_auditoria_id=".$id;
+            $sendinf = [
+                "id" => $auditoria->getId(),
+                "codigo" => $auditoria->getCodigo(),
+                "fkproceso" => $auditoria->getFkproceso(),
+                "fktipo" => $auditoria->getFktipo(),
+                "fkgerente" => $auditoria->getFkgerente(),
+                "fkjefe" => $auditoria->getFkjefe(),
+                "fechaprogramada" => $rsfcp,
+                "duracionestimada" => $auditoria->getDuracionestimada(),
+                "lugar" => $auditoria->getLugar(),
+                "alcance" => $auditoria->getAlcance(),
+                "objetivos" => $auditoria->getObjetivos(),
+                "fechahorainicio" => $rsfci,
+                "fechahorafin" => $rsfcf,
+                "conclusiones" => $auditoria->getConclusiones(),
+                "fecharegistro" => $rsfcr
+            ];
+            
+            if($auditoria->getFkproceso() != null){
+                $documentos = $this->getDoctrine()->getRepository(Documento::class)->findDocByProc($auditoria->getFkproceso()->getId());
+            }
+            else $documentos = [];
 
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $dtaud = $stmt->fetchAll();
+            $sector = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $documentsadd = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $equipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $id, 'estado' => '1']);
 
-            $sql2  = "SELECT *
-                        FROM cb_aud_auditoria adta,
-                        (SELECT d.cb_documento_extra_id ,grc.cb_gas_id, (u.cb_usuario_nombre || ' ' || u.cb_usuario_apellido) AS cb_gas_responsable, d.cb_documento_extra_codigo, d.cb_documento_extra_titulo, dt.cb_doc_tipoextra_tipo, fp.cb_ficha_procesos_nombre, g.cb_gerencia_nombre
-                        FROM cb_procesos_ficha_procesos fp, cb_gest_documento_extra d, cb_gestion_doctipoextra dt, cb_proc_gas grc, cb_configuracion_gerencia g, cb_usuario_usuario u
-                        WHERE grc.cb_gas_id=fp.cb_ficha_procesos_fkareagerenciasector AND grc.cb_gas_fkgerencia=g.cb_gerencia_id AND u.cb_usuario_id=grc.cb_gas_fkresponsable AND
-                            fp.cb_ficha_procesos_id=d.cb_documento_extra_fkproceso AND d.cb_documento_extra_fktipo=dt.cb_doc_tipoextra_id)AS docs
-                        WHERE adta.cb_auditoria_fkgas=docs.cb_gas_id AND adta.cb_auditoria_id=".$id;
-
-            $stmt2 = $cx->prepare($sql2);
-            $stmt2->execute();
-            $dtdoc = $stmt2->fetchAll();
-
-            //dd($dtaud);
-
-            $html =$this->renderView('reporting/notificacionaud.html.twig', array('objects' => $dtaud, 'docs' => $dtdoc));
+            $html =$this->renderView('reporting/notificacionaud.html.twig', array('auditoria' => $sendinf, 'team' => $equipo, 'docs' => $documentos, 'sector' => $sector, 'docsadd' => $documentsadd));
 
             // Configure Dompdf according to your needs
             $pdfOptions = new Options();
@@ -691,53 +701,93 @@ class ReportingController extends AbstractController
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             
-            $cx = $this->getDoctrine()->getManager()->getConnection();
-            $sqlp = "SELECT DISTINCT(cb_ficha_procesos_nombre), cb_gerencia_nombre, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-                    FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_configuracion_gerencia, cb_aud_tipo_auditoria
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_ficha_procesos_fkareagerenciasector=cb_gas_id AND
-                        cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_gas_fkarea=cb_gerencia_id AND cb_auditoria_id=:id";
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+            $fecpro = $auditoria->getFechaprogramada();
+            $fecini = $auditoria->getFechahorainicio();
+            $fecfin = $auditoria->getFechahorafin();
+            $fecreg = $auditoria->getFecharegistro();
+            if($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
+            if($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
+            
+            $sendinf = [
+                "id" => $auditoria->getId(),
+                "codigo" => $auditoria->getCodigo(),
+                "fkproceso" => $auditoria->getFkproceso(),
+                "fktipo" => $auditoria->getFktipo(),
+                "fkgerente" => $auditoria->getFkgerente(),
+                "fkjefe" => $auditoria->getFkjefe(),
+                "fechaprogramada" => $rsfcp,
+                "duracionestimada" => $auditoria->getDuracionestimada(),
+                "lugar" => $auditoria->getLugar(),
+                "alcance" => $auditoria->getAlcance(),
+                "objetivos" => $auditoria->getObjetivos(),
+                "fechahorainicio" => $rsfci,
+                "fechahorafin" => $rsfcf,
+                "conclusiones" => $auditoria->getConclusiones(),
+                "fecharegistro" => $rsfcr
+            ];
+            
+            if($auditoria->getFkproceso() != null){
+                $documentos = $this->getDoctrine()->getRepository(Documento::class)->findDocByProc($auditoria->getFkproceso()->getId());
+            }
+            else $documentos = [];
 
-            $stmt = $cx->prepare($sqlp);
-            $stmt->execute(['id' => $id]);
-            $dtproc = $stmt->fetchAll();
+            $sector = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $documentsadd = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $equipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $id, 'estado' => '1']);
 
-            $sqleq = "SELECT cb_aud_auditoria_equipo.*, cb_tipo_auditor_nombre, cb_auditor_apellidosnombres, cb_aud_auditoria.*
-                    FROM cb_aud_auditoria, cb_aud_auditoria_equipo, cb_aud_tipo_auditor, cb_aud_auditor
-                    WHERE cb_auditoria_id=cb_auditoria_equipo_fkauditoria AND cb_tipo_auditor_id=cb_auditoria_equipo_fktipo AND
-                        cb_auditor_id=cb_auditoria_equipo_fkauditor AND cb_auditoria_id=:id";
+            $fortalezas = $this->getDoctrine()->getRepository(Fortaleza::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'DESC']);
 
-            $stmteq = $cx->prepare($sqleq);
-            $stmteq->execute(['id' => $id]);
-            $dtequ = $stmteq->fetchAll();
+            $datafrt = [];
+            foreach ($fortalezas as $fort) {
+                $fortaleza = (object) $fort;
+                $fecreg = $fortaleza->getFecharegistro();
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                
+                $info = [
+                    "id" => $fortaleza->getId(),
+                    "fkauditoria" => $fortaleza->getFkauditoria(),
+                    "ordinal" => $fortaleza->getOrdinal(),
+                    "descripcion" => $fortaleza->getDescripcion(),
+                    "responsable" => $fortaleza->getResponsable(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datafrt[] = $info;
+            } 
 
-            $sqldoc = "SELECT DISTINCT(cb_documento_extra_codigo), cb_documento_extra_titulo, cb_doc_tipoextra_tipo, cb_aud_auditoria.*
-                    FROM cb_aud_auditoria, cb_proc_gas, cb_procesos_ficha_procesos, cb_gest_documento_extra, cb_gestion_doctipoextra
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_id=cb_ficha_procesos_fkareagerenciasector AND
-                        cb_ficha_procesos_id=cb_documento_extra_fkproceso AND cb_documento_extra_fktipo=cb_doc_tipoextra_id AND cb_auditoria_id=:id";
+            $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'DESC']);
 
-            $stmtdoc = $cx->prepare($sqldoc);
-            $stmtdoc->execute(['id' => $id]);
-            $dtdoc = $stmtdoc->fetchAll();
+            $datahlg = [];
+            foreach ($hallazgos as $hlg) {
+                $hallazgo = (object) $hlg;
+                $fecreg = $hallazgo->getFecharegistro();
+                if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                
+                $info = [
+                    "id" => $hallazgo->getId(),
+                    "fkauditoria" => $hallazgo->getFkauditoria(),
+                    "fktipo" => $hallazgo->getFktipo(),
+                    "ordinal" => $hallazgo->getOrdinal(),
+                    "titulo" => $hallazgo->getTitulo(),
+                    "descripcion" => $hallazgo->getDescripcion(),
+                    "evidencia" => $hallazgo->getEvidencia(),
+                    "documento" => $hallazgo->getDocumento(),
+                    "puntoiso" => $hallazgo->getPuntoiso(),
+                    "fkimpacto" => $hallazgo->getFkimpacto(),
+                    "fkprobabilidad" => $hallazgo->getFkprobabilidad(),
+                    "analisiscausaraiz" => $hallazgo->getAnalisiscausaraiz(),
+                    "recomendaciones" => $hallazgo->getRecomendaciones(),
+                    "cargoauditado" => $hallazgo->getCargoauditado(),
+                    "nombreauditado" => $hallazgo->getNombreauditado(),
+                    "responsable" => $hallazgo->getResponsable(),
+                    "fecharegistro" => $rsfcr
+                ];
+                $datahlg[] = $info;
+            }     
 
-            $sqlfrt= "SELECT cb_aud_fortaleza.*, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-                    FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_fortaleza
-                    WHERE cb_auditoria_id=cb_fortaleza_fkauditoria AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id";
-
-            $stmtfrt = $cx->prepare($sqlfrt);
-            $stmtfrt->execute(['id' => $id]);
-            $dtfrt = $stmtfrt->fetchAll();
-
-            $sqlhlg = "SELECT DISTINCT(cb_hallazgo_id), cb_auditoria_id, cb_hallazgo_descripcion, cb_tipo_hallazgo_nombre, cb_accion_descripcion, cb_accion_eficacia_resultado, cb_accion_eficacia_fecha, cb_tipo_auditoria_nombre, cb_aud_auditoria.*
-                    FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_aud_hallazgo, cb_aud_tipo_hallazgo, cb_aud_accion, cb_aud_accion_eficacia
-                    WHERE cb_auditoria_id=cb_hallazgo_fkauditoria AND cb_hallazgo_id=cb_accion_fkhallazgo AND cb_accion_id=cb_accion_eficacia_fkaccion
-                        AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_id=:id
-                    ORDER BY 2, 1";
-
-            $stmthlg= $cx->prepare($sqlhlg);
-            $stmthlg->execute(['id' => $id]);
-            $dthlg = $stmthlg->fetchAll();
-
-            $html = $this->renderView('reporting/auditoriaint.html.twig', array('objects' => $dtproc, 'team' => $dtequ, 'docs' => $dtdoc, 'fort' => $dtfrt, 'hlzg' => $dthlg));
+            $html = $this->renderView('reporting/auditoriaint.html.twig', array('auditoria' => $sendinf, 'team' => $equipo, 'docs' => $documentos, 'sector' => $sector, 'docsadd' => $documentsadd, 'fort' => $datafrt, 'hlg' => $datahlg));
          
             // Configure Dompdf according to your needs
             $pdfOptions = new Options();
@@ -770,8 +820,136 @@ class ReportingController extends AbstractController
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
+
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Auditoria_interna_'.$fecha.'.pdf');
+            $resultado = json_encode($resultado);
+
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * @Route("/accion_correctiva", methods={"POST"}, name="accion_correctiva")
+     */
+    public function accion_correctiva()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $idh = $sx['id'];
+            
+            $dthallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->find($idh);
+            $id = $dthallazgo->getFkauditoria()->getId();
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+            $fecpro = $auditoria->getFechaprogramada();
+            $fecini = $auditoria->getFechahorainicio();
+            $fecfin = $auditoria->getFechahorafin();
+            $fecreg = $auditoria->getFecharegistro();
+            if($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
+            if($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+            if($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
+            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
+            
+            $auditoriadt = [
+                "id" => $auditoria->getId(),
+                "codigo" => $auditoria->getCodigo(),
+                "fkproceso" => $auditoria->getFkproceso(),
+                "fktipo" => $auditoria->getFktipo(),
+                "fkgerente" => $auditoria->getFkgerente(),
+                "fkjefe" => $auditoria->getFkjefe(),
+                "fechaprogramada" => $rsfcp,
+                "duracionestimada" => $auditoria->getDuracionestimada(),
+                "lugar" => $auditoria->getLugar(),
+                "alcance" => $auditoria->getAlcance(),
+                "objetivos" => $auditoria->getObjetivos(),
+                "fechahorainicio" => $rsfci,
+                "fechahorafin" => $rsfcf,
+                "conclusiones" => $auditoria->getConclusiones(),
+                "fecharegistro" => $rsfcr
+            ];
+
+            $sector = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['id' => 'ASC']);
+            $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1', 'fkauditoria' => $id], ['fecharegistro' => 'DESC']);
+            
+            $acn_inmediata = [];
+            $acn_correctiva = [];
+            if ($hallazgos != null){
+                foreach ($hallazgos as $hlg) {
+                    $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'fkhallazgo' => $hlg->getId()], ['fechaimplementacion' => 'ASC']);
+                    if ($acciones != null){
+                        foreach ($acciones as $acn) {
+                            $fecimp = $acn->getFechaimplementacion();
+                            $fecreg = $acn->getFecharegistro();
+
+                            if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
+                            if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                        
+                            $acndt = [
+                                "id" => $acn->getId(),
+                                "fkhallazgo" => $acn->getFkhallazgo(),
+                                "ordinal" => $acn->getOrdinal(),
+                                "descripcion" => $acn->getDescripcion(),
+                                "fechaimplementacion" => $rsfci,
+                                "responsableimplementacion" => $acn->getResponsableimplementacion(),
+                                "estadoaccion" => $acn->getEstadoaccion(),
+                                "responsableregistro" => $acn->getResponsableregistro(),
+                                "fecharegistro" => $rsfcr,
+                                "fktipo" => $acn->getFktipo()
+                            ];
+
+                            if ($acn->getFktipo() != null){
+                                $tipo = $this->getDoctrine()->getRepository(TipoAccion::class)->findOneBy(['estado' => '1', 'nombre' => 'Correción']);
+
+                                if ($tipo != null){
+                                    if ($acn->getFktipo()->getId() == $tipo->getId()) $acn_inmediata[] = $acndt;
+                                    else $acn_correctiva[] = $acndt;
+                                } else {
+                                    $acn_correctiva[] = $acndt;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $html = $this->renderView('reporting/acncorrectiva.html.twig', array('auditoria' => $auditoriadt, 'sector' => $sector, 'acn_inmediata' => $acn_inmediata, 'acn_correctiva' => $acn_correctiva));
+         
+            // Configure Dompdf according to your needs
+            $pdfOptions = new Options();
+            $pdfOptions->set('defaultFont', 'Arial');
+            
+            // Instantiate Dompdf with our options
+            $dompdf = new Dompdf($pdfOptions);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
+
+            // Load HTML to Dompdf
+            $dompdf->loadHtml($html);
+            
+            // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Render the HTML as PDF
+            $dompdf->render();
+
+            // Store PDF Binary Data
+            $output = $dompdf->output();
+            
+            // In this case, we want to write the file in the public directory
+            $publicDirectory = $this->getParameter('Directorio_Reportes');
+            date_default_timezone_set('America/La_Paz');
+            $fecha = date("dmY_his");
+            $pdfFilepath =  $publicDirectory . '/Acciones_correctivas_'.$fecha.'.pdf';
+            
+            // Write file to the desired path
+            file_put_contents($pdfFilepath, $output);
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $json = $serializer->serialize('File guardado!', 'json');
+
+            $resultado = array('response'=>$json,'success' => true,
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Acciones_correctivas_'.$fecha.'.pdf');
             $resultado = json_encode($resultado);
 
             return new Response($resultado);

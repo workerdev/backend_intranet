@@ -1,0 +1,116 @@
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+
+{% set gerencias = [] %}
+{% set areas = [] %}
+<div class='container' style='font-size: 12px'>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr>
+                <th colspan="1" rowspan="2"><img src="resources/images/image_rep.png" width="auto" height="70" alt="logo"></th>
+                <th colspan="11" align="right" style="font-size: 11px">GCDO-803-01</th>
+            </tr>
+            <tr>
+                <td colspan="11" style="font-size: 14px; font-weight: 400;">FORMULARIO DE ACCIONES CORRECTIVAS</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <div class="header" style="font-weight: 400; margin-top: 10px; padding: 2px;">A. IDENTIFICACIÓN</div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>PROCESO</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>SECTOR</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>ÁREA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>NÚMERO DE AUDITORÍA</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% if auditoria.fkproceso != null %}
+                        {{ auditoria.fkproceso.nombre }}
+                    {% endif %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% for s in sector %}
+                        {% if s.fkgas.fksector != null %}
+                            <p> {{ s.fkgas.fksector.nombre }} </p>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% for s in sector %}
+                        {% if s.fkgas.fkarea != null %}
+                            {% if s.fkgas.fkarea.id not in areas %} 
+                                <p> {{ s.fkgas.fkarea.nombre }} </p>
+                                {% set areas = areas|merge([s.fkgas.fkarea.id]) %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>GERENCIA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>GERENTE</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>JEFE / COORDINADOR / SUPERVISOR DE ÁREA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>ORDINAL</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% for s in sector %}
+                        {% if s.fkgas.fkgerencia != null %}
+                            {% if s.fkgas.fkgerencia.id not in gerencias %} 
+                                <p> {{ s.fkgas.fkgerencia.nombre }} </p>
+                                {% set gerencias = gerencias|merge([s.fkgas.fkgerencia.id]) %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% if auditoria.fkgerente != null %}
+                        {{ auditoria.fkgerente.nombre ~ ' ' ~ auditoria.fkgerente.apellido }}
+                    {% endif %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'>
+                    {% if auditoria.fkjefe != null %}
+                        {{ auditoria.fkjefe.nombre ~ ' ' ~ auditoria.fkjefe.apellido }}
+                    {% endif %}
+                </td>
+                <td colspan='3' class='text-normal' align='center'></td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; padding: 2px;">B. DESCRIPCIÓN</div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='8' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>DESCRIPCIÓN NO CONFORMIDAD</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>PUNTO DE LA NORMA INCUMPLIDO</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='8' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
+                <td colspan='4' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 60px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>Sergio Góngora</th>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>Ramiro Iriarte</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>JEFE VALLE BAJO Y CENTRAL</th>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>GERENTE COMERCIAL INTERINO</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='LEFT'>Fecha</th>
+                <th colspan='6' class='italic' scope='colgroup' align='LEFT'>Fecha</th>
+            </tr>
+        </table>
+    </div>
+</div>

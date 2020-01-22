@@ -25,8 +25,8 @@ class UnidadRepository extends ServiceEntityRepository
 
         $sql = 'SELECT DISTINCT(cb_unidad_id) AS id, cb_unidad_nombre AS nombre
                 FROM cb_correlativo_permiso, cb_usuario_usuario, cb_correlativo_unidad
-                WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id
-                AND cb_unidad_estado=1 AND cb_usuario_username=:username AND cb_permiso_estado=1 AND cb_permiso_tipo IN (\'Crear\', \'Completo\')
+                WHERE cb_permiso_fkunidad=cb_unidad_id AND cb_permiso_fkusuario=cb_usuario_id AND 
+                    cb_unidad_estado=1 AND cb_usuario_username=:username AND cb_permiso_estado=1 AND cb_permiso_tipo IN (\'Crear\', \'Completo\')
                 ORDER BY 2';
         
         $stmt = $conn->prepare($sql);

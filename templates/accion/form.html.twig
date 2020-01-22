@@ -17,10 +17,22 @@
 
                     <div class="row clearfix m-tb-own">
                         <div class="col-sm-12">
-                            <label>Hallazgo</label>
+                            <label for="fkhallazgo">Hallazgo</label>
                                 <select id="fkhallazgo" class="form-control show-tick">
                                 {% for t in hallazgo %}
                                     <option value="{{t.id}}">{{t.titulo}}</option>
+                                {% endfor %}
+                                </select>
+                                </br>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix m-tb-own">
+                        <div class="col-sm-12">
+                            <label for="fktipoacn">Tipo</label>
+                                <select id="fktipoacn" class="form-control show-tick">
+                                {% for t in tipoacn %}
+                                    <option value="{{t.id}}">{{t.nombre}}</option>
                                 {% endfor %}
                                 </select>
                                 </br>

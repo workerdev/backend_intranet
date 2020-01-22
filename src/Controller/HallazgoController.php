@@ -11,6 +11,7 @@ use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
 use App\Entity\Accion;
+use App\Entity\TipoAccion;
 use App\Entity\AccionSeguimiento;
 use App\Entity\AccionReprograma;
 use App\Entity\AccionEficacia;
@@ -68,13 +69,14 @@ class HallazgoController extends Controller
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
         $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['fecharegistro' => 'DESC']);
+        $tipoacn = $this->getDoctrine()->getRepository(TipoAccion::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $tipo = $this->getDoctrine()->getRepository(TipoHallazgo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $impacto = $this->getDoctrine()->getRepository(Impacto::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $probabilidad = $this->getDoctrine()->getRepository(Probabilidad::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
         $combo_hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
 
-        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipohlg' => $tipo, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'hallazgo' => $combo_hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('hallazgo/index.html.twig', array('objects' => $hallazgo, 'tipohlg' => $tipo, 'tipoacn' => $tipoacn, 'auditoria' => $auditoria, 'impacto' => $impacto, 'probabilidad' => $probabilidad, 'hallazgo' => $combo_hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**

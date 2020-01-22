@@ -63,34 +63,6 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         }
 
         switch ($trimmedPathinfo) {
-            case '/sesion':
-                // sesion
-                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
-                    goto not_sesion;
-                }
-
-                $ret = ['_route' => 'sesion', '_controller' => 'App\\Controller\\SecurityController::login'];
-                if (!isset(($a = ['POST' => 0])[$requestMethod])) {
-                    $allow += $a;
-                    goto not_sesion;
-                }
-
-                return $ret;
-                not_sesion:
-                // sesion7
-                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
-                    goto not_sesion7;
-                }
-
-                $ret = ['_route' => 'sesion7', '_controller' => 'App\\Controller\\SecurityController::login7'];
-                if (!isset(($a = ['POST' => 0])[$requestMethod])) {
-                    $allow += $a;
-                    goto not_sesion7;
-                }
-
-                return $ret;
-                not_sesion7:
-                break;
             default:
                 $routes = [
                     '/acceso' => [['_route' => 'acceso_listar', '_controller' => 'App\\Controller\\AccesoController::index'], null, null, null, false],
@@ -463,6 +435,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/aud_anual' => [['_route' => 'aud_anual', '_controller' => 'App\\Controller\\ReportingController::aud_anual'], null, ['POST' => 0], null, false],
                     '/auditoria_notif' => [['_route' => 'auditoria_notif', '_controller' => 'App\\Controller\\ReportingController::auditoria_notif'], null, ['POST' => 0], null, false],
                     '/auditoria_rep' => [['_route' => 'auditoria_rep', '_controller' => 'App\\Controller\\ReportingController::auditoria_rep'], null, ['POST' => 0], null, false],
+                    '/accion_correctiva' => [['_route' => 'accion_correctiva', '_controller' => 'App\\Controller\\ReportingController::accion_correctiva'], null, ['POST' => 0], null, false],
                     '/accion_verif' => [['_route' => 'accion_verif', '_controller' => 'App\\Controller\\ReportingController::accion_verif'], null, ['POST' => 0], null, false],
                     '/docproceso_reporte' => [['_route' => 'docproceso_reporte', '_controller' => 'App\\Controller\\ReportingController::reporte'], null, ['POST' => 0], null, false],
                     '/responsabilidad' => [['_route' => 'responsabilidad', '_controller' => 'App\\Controller\\ResponsabilidadSocialController::index'], null, null, null, false],
@@ -492,8 +465,10 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/sector_prev' => [['_route' => 'sector_prev', '_controller' => 'App\\Controller\\SectorController::sector_prev'], null, ['POST' => 0], null, false],
                     '/sector_eliminar' => [['_route' => 'sector_eliminar', '_controller' => 'App\\Controller\\SectorController::eliminar'], null, ['POST' => 0], null, false],
                     '/login' => [['_route' => 'app_security_index', '_controller' => 'App\\Controller\\SecurityController::index'], null, ['GET' => 0], null, false],
+                    '/sesion4' => [['_route' => 'sesion4', '_controller' => 'App\\Controller\\SecurityController::login4'], null, ['POST' => 0], null, false],
                     '/logout' => [['_route' => 'logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false],
                     '/valid_action4' => [['_route' => 'valid_action4', '_controller' => 'App\\Controller\\SecurityController::action4'], null, ['POST' => 0], null, false],
+                    '/sesion' => [['_route' => 'sesion', '_controller' => 'App\\Controller\\SecurityController::login'], null, ['POST' => 0], null, false],
                     '/valid_action' => [['_route' => 'valid_action', '_controller' => 'App\\Controller\\SecurityController::action'], null, ['POST' => 0], null, false],
                     '/seguimientocro' => [['_route' => 'seguimientocro', '_controller' => 'App\\Controller\\SeguimientoCroController::index'], null, null, null, false],
                     '/seguimientocro_insertar' => [['_route' => 'seguimientocro_insertar', '_controller' => 'App\\Controller\\SeguimientoCroController::insertar'], null, ['POST' => 0], null, false],

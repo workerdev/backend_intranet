@@ -95,22 +95,23 @@
                                 <div class="body table-responsive">
                                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th class="d-none">ID </th>
-                                            <th class="order_by_th" data-name="phone">Hallazgo </th>
-                                            <th class="order_by_th" data-name="names">Descripción </th>
-                                            <th class="order_by_th" data-name="phone">Estado </th>
-                                            <th class="order_by_th" data-name="phone">Ordinal </th>
-                                            <th class="order_by_th" data-name="phone">Fecha de Registro </th>
-                                            <th class="d-none" data-name="phone">Responsable de Registro </th>
-                                            <th class="d-none" data-name="phone">Fecha de Implementación </th>
-                                            <th class="d-none" data-name="phone">Responsable de Implementación </th>
-                                            <th class="actions_header">Acciones </th>
-                                        </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th class="d-none">ID </th>
+                                                <th class="order_by_th" data-name="phone">Hallazgo </th>
+                                                <th class="order_by_th" data-name="names">Descripción </th>
+                                                <th class="order_by_th" data-name="phone">Estado </th>
+                                                <th class="order_by_th" data-name="phone">Ordinal </th>
+                                                <th class="order_by_th" data-name="phone">Fecha de Registro </th>
+                                                <th class="d-none" data-name="phone">Responsable de Registro </th>
+                                                <th class="d-none" data-name="phone">Fecha de Implementación </th>
+                                                <th class="d-none" data-name="phone">Responsable de Implementación </th>
+                                                <th class="d-none" data-name="phone">Tipo </th>
+                                                <th class="actions_header">Acciones </th>
+                                            </tr>
                                         </thead>
                                         <tbody id="table_content">
-                                        {{ include('accion/table.html.twig') }}
+                                            {{ include('accion/table.html.twig') }}
                                         </tbody>
                                     </table>
                                 </div>
@@ -160,6 +161,10 @@
                 '<tr>'+
                     '<td class="bold">Responsable de Implementación:</td>'+
                     '<td>'+d[9]+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td class="bold">Tipo de Acción:</td>'+
+                    '<td>'+d[10]+'</td>'+
                 '</tr>'+
             '</table></div>';
         }

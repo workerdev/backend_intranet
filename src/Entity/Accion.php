@@ -141,7 +141,7 @@ class Accion
         return $this->fktipo;
     }
 
-    public function setFktipo(?Hallazgo $fktipo): self
+    public function setFktipo(?TipoAccion $fktipo): self
     {
         $this->fktipo = $fktipo;
 

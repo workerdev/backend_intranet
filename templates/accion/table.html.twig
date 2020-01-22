@@ -4,7 +4,13 @@
             <i class="fa fa-plus-square cl-teal" aria-hidden="true" title="Mostrar más" id="{{'a' ~ tr.id}}"></i>
         </td>
         <td class="d-none">{{ tr.id }}</td>
-        <td>{{ tr.fkhallazgo.titulo }}</td>
+
+        {% if tr.fkhallazgo != null %}
+            <td>{{ tr.fkhallazgo.titulo }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+
         <td>{{ tr.descripcion }}</td>
         <td>{{ tr.estadoaccion }}</td>
         <td>{{ tr.ordinal }}</td> 
@@ -12,6 +18,13 @@
         <td class="d-none">{{ tr.responsableregistro }}</td>
         <td class="d-none">{{ tr.fechaimplementacion | date ('Y-m-d') }}</td>
         <td class="d-none">{{ tr.responsableimplementacion }}</td>
+
+        {% if tr.fktipo != null %}
+            <td class="d-none">{{ tr.fktipo.nombre }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
+
         <td align="center">
         {% if 'accion_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>

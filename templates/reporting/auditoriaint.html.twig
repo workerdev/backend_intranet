@@ -1,295 +1,165 @@
-
-{% block stylesheets %}
-    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
-    <style>
-        .borderless td, .borderless th, .borderless tr {
-            border: none;
-        }
-    </style>
-{% endblock %}
- 
-{% block body %}
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <img src="resources/images/image_rep.png" width="auto" height="60" alt="logo">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <h6 class="font-weight-bold float-right">GCDO-0802-04</h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h6 class="font-weight-bold text-center">INFORME DE AUDITORIA INTERNA SIG</h6>
-            </div>
-        </div>
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+<div class='container' style='font-size: 12px'>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr>
+                <th colspan="1" rowspan="2"><img src="resources/images/image_rep.png" width="auto" height="70" alt="logo"></th>
+                <th colspan="11" align="right" style="font-size: 11px">UNP-0802-042</th>
+            </tr>
+            <tr>
+                <td colspan="11" style="font-size: 14px; font-weight: 400;">INFORME DE AUDITORÍA INTERNA SIGC</td>
+            </tr>
+        </table>
     </div>
-    
-    {% if objects %}
-    <div class="m-2 p-3">
-    <table class="table borderless table-sm">
-        <colgroup span="2"></colgroup>
-        <colgroup span="2"></colgroup>
 
-            <tr>
-                <th colspan="1" scope="colgroup">Auditoría Unidad: </th>
-                <td class="text-normal">{{ objects[0].cb_gerencia_nombre }}</td>
-                <th colspan="1" scope="colgroup"></th>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Auditoría </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> </td>
             </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">Macro Proceso: </th>
-                <td class="text-normal"> </td>
-                <th colspan="1" scope="colgroup"></th>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Unidad:</th>
+                <td colspan='3' class='text-normal' align='left'></td>
             </tr>
-            <tr>
-                <th colspan="1" scope="colgroup">Proceso: </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                {% for t in objects %}
-                    <td class="text-normal">{{ t.cb_ficha_procesos_nombre }}</td>
-                {% endfor %}
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">Fecha de la Auditoría: </th>
-                <td class="text-normal"> {{ objects[0].cb_auditoria_fechahorainicio }} </td>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <th colspan="1" scope="colgroup">Fecha de entrega de Informe: </th>
-                <td class="text-normal"> {{ "now"|date('d-m-Y') }} </td>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <th colspan="1" scope="colgroup">Tipo de Auditoría: </th>
-                <td class="text-normal"> {{ objects[0].cb_tipo_auditoria_nombre }} </td>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">Número de Auditoría: </th>
-                <td class="text-normal"> {{ objects[0].cb_auditoria_id }} </td>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <th colspan="1" scope="colgroup">1. Equipo Auditor que realizó el trabajo </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">AUDITOR </th>
-                <th colspan="1" scope="colgroup">FIRMA </th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            {% for q in team %}
-            <tr>
-                <td class="text-normal"> {{ q.cb_auditor_apellidosnombres }}</td>
-                <td class="text-normal"> ______________ </td>
-                <td class="text-normal">  </td>
-            </tr>
+            {% for s in sector %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'>  </td>
+                    <td colspan='3' class='text-normal' align='left'> {{ s.fkgas.fksector.nombre  }} </td>
+                </tr>
             {% endfor %}
-
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">AUDITOR LIDER</th>
-                <td class="text-normal"> 
-                {% for adr in team %}
-                    {% if adr.cb_tipo_auditor_nombre == 'AUDITOR LIDER' %}
-                         {{ adr.cb_auditor_apellidosnombres }} 
-                    {% endif %}
-                {% endfor %}
-                </td>
-                <th colspan="1" scope="colgroup"></th>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Macro Proceso: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> </td>
             </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">2. Objetivos del trabajo realizado </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <td class="text-normal"> {{ objects[0].cb_auditoria_objetivos }} </td>
-                <td class="text-normal"></td>
-                <td class="text-normal"></td>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">3. Alcance del trabajo realizado </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <td class="text-normal"> {{ objects[0].cb_auditoria_alcance }} </td>
-                <td class="text-normal"></td>
-                <td class="text-normal"></td>
-            </tr>
-
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">4. Documentación base utilizada para el trabajo (Criterios de Auditoría) </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">Tipo documento </th>
-                <th colspan="1" scope="colgroup">Código doc. </th>
-                <th colspan="1" scope="colgroup">Descripción del documento</th>
-            </tr>
-            {% for d in docs %}
-            <tr>
-                <td class="text-normal"> {{d.cb_doc_tipoextra_tipo}} </td>
-                <td class="text-normal"> {{d.cb_documento_extra_codigo}} </td>
-                <td class="text-normal"> {{d.cb_documento_extra_titulo}} </td>
-            </tr>
-            {% endfor %}
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">5. Descripción general de la auditoría realizada </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <td class="text-normal"> {{objects[0].cb_auditoria_alcance}} </td>
-                <td class="text-normal"></td>
-                <td class="text-normal"></td>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">6. Fortalezas identificadas en el proceso auditado </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            {% for f in fort %}
-            <tr>
-                <td class="text-normal"> {{f.cb_fortaleza_descripcion}} </td>
-                <td class="text-normal"></td>
-                <td class="text-normal"></td>
-            </tr>
-            {% endfor %}
-
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">7. Situaciones identificadas / hallazgos / Resultados </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-
-            <tr>
-                <th colspan="1" scope="colgroup">Acción </th>
-                <th colspan="1" scope="colgroup">Hallazgo </th>
-                <th colspan="1" scope="colgroup">Resultados de Eficacia </th>
-            </tr>
-            {% for h in hlzg %}
-            <tr>
-                <td class="text-normal"> {{h.cb_accion_descripcion}} </td>
-                <td class="text-normal"> {{h.cb_hallazgo_descripcion}} </td>
-                <td class="text-normal"> {{h.cb_accion_eficacia_resultado}} </td>
-            </tr>
-            {% endfor %}
-
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">8. CONCLUSIONES </th>
-                <th colspan="1" scope="colgroup"></th>
-                <th colspan="1" scope="colgroup"></th>
-            </tr>
-            <tr>
-                <td class="text-normal"> {{objects[0].cb_auditoria_conclusiones}} </td>
-                <td class="text-normal"></td>
-                <td class="text-normal"></td>
-            </tr>
-
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr class="spacer"> <td> </td></tr>
-            <tr>
-                <th colspan="1" scope="colgroup">Fecha de Revisión de Informe:	</th>
-                {% if hlzg|length > 0 %}
-                    <td class="text-normal"> {{hlzg[0].cb_accion_eficacia_fecha}} </td>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Proceso: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> </td>
+                {% if auditoria.fkproceso != null %}
+                    <td colspan='3' class='text-normal' align='left'> {{ auditoria.fkproceso.nombre }} </td>
                 {% else %}
-                    <td class="text-normal"> </td>
+                    <td colspan='3' class='text-normal' align='left'></td>
                 {% endif %}
-                <th colspan="1" scope="colgroup"></th>
             </tr>
-    </table>
-    
-    <table class="table borderless table-sm">
+        </table>
 
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr> 
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr>
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">1. Equipo Auditor que realizó el trabajo</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            {% for eq in team %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px; padding-bottom: 18px;'>
+                    <td colspan='3' class='text-normal' align='left'> {{ eq.fkauditor.nombres ~ ' ' ~ eq.fkauditor.paterno ~ ' ' ~ eq.fkauditor.materno }} <br> </td>
+                    <td colspan='5' class='text-normal' align='left' style='margin-top: 25px'><br></td>
+                    <th colspan='4' class='italic' scope='colgroup' align='center' style='padding-left: 24px'>FIRMA<br></th>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px; padding-bottom: 18px;'>
+                    <th colspan='3' class='text-normal' align='center'> <br>{{ eq.fktipo.nombre}} </h>
+                    <td colspan='5' class='text-normal' align='left' style='margin-top: 25px'><br></td>
+                    <th colspan='4' class='italic' scope='colgroup' align='center' style='padding-left: 24px'><br>__________________________________</th>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px; padding-bottom: 18px;'>
+                    <th colspan='12' class='italic' align='center'><br></th>
+                </tr>
+            {% endfor %}
+        </table>
 
-        <tr>
-            <th>Jefe / Supervisor Unidad Auditada</th>
-            <th>Gerente / Coordinador Unidad Auditada</th>
-            <th>Coordinador Gestión de Calidad y Desarrollo Organizacional</th>
-        </tr>
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr>
-        <tr class="spacer"> <td> </td></tr>
-    </table>
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">2. Objetivos del trabajo realizado</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='11' class='text-normal' align='left'>{{ auditoria.objetivos }}</td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">3. Alcance del trabajo realizado</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Alcance: </th>
+                <td colspan='11' class='text-normal' align='left'>{{ auditoria.alcance }}</td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">4. Documentación base utilizada para el trabajo (Criterios de Auditoría)</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            {% for d in docs %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'></td>
+                    <td colspan='4' class='text-normal' align='left'> {{ d.codigo }} </td>
+                    <td colspan='7' class='text-normal' align='left'> {{ d.titulo  }} </td>
+                </tr>
+            {% endfor %}
+            {% for ad in docsadd %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'></td>
+                    <td colspan='4' class='text-normal' align='left'> {{ ad.fkdocumento.codigo }} </td>
+                    <td colspan='7' class='text-normal' align='left'> {{ ad.fkdocumento.titulo  }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">5. Descripción general de la auditoría realizada</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='1' class='text-normal' align='left'></td>
+                <td colspan='11' class='text-normal' align='left'></td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">6. Fortalezas identificadas en el proceso auditado</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            {% for f in fort %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='11' class='text-normal' align='left'> {{ f.descripcion }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">7. Situaciones identificadas / hallazgos / Resultados</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            {% for h in hlg %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='8' class='text-normal' align='left'> {{ h.titulo }} </td>
+                    <td colspan='3' class='text-normal' align='left'> {{ h.fktipo.nombre }} </td>
+                    <td colspan='1' class='text-normal' align='left'> {{ h.puntoiso }} </td>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='12' class='text-normal' align='left'>
+                        {{ h.descripcion }}
+                        <hr style="1px solid #455a64">
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">8. CONCLUSIONES</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Alcance: </th>
+                <td colspan='11' class='text-normal' align='left'>{{ auditoria.conclusiones }}</td>
+            </tr>
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha de Revisión de Informe: </th>
+                <td colspan='11' class='text-normal' align='left'></td>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 60px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='3' class='italic' scope='colgroup' align='center'>Jefe / Supervisor Unidad Auditada</th>
+                <td colspan='1' class='italic' scope='colgroup' align='center'></td>
+                <th colspan='3' class='italic' scope='colgroup' align='center'>Gerente / Coordinador Unidad Auditada</th>
+                <td colspan='1' class='italic' scope='colgroup' align='center'></td>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>Coordinador Gestión de Calidad y Desarrollo Organizacional</th>
+            </tr>
+        </table>
     </div>
-    {% else %}
-        <div class="m-2 p-3">
-            <p>No se encontraron registros de esta gestión.</p>
-        </div>
-    {% endif %}
-{% endblock %}
-
-{% block javascripts %}
-    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
-{% endblock %}  
+    
+</div>

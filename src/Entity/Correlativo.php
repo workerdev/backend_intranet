@@ -53,7 +53,6 @@ class Correlativo
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_redactor", type="text", nullable=false)
-     * @Assert\NotBlank
      */
     private $redactor;
 
@@ -69,7 +68,6 @@ class Correlativo
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_referencia", type="text", nullable=false)
-         * @Assert\NotBlank
      */
     private $referencia;
 
@@ -99,7 +97,6 @@ class Correlativo
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_ip", type="text", nullable=false)
-         * @Assert\NotBlank
      */
     private $ip;
 
@@ -121,7 +118,6 @@ class Correlativo
      * @var string
      *
      * @ORM\Column(name="cb_correlativo_estadocorrelativo", type="text", nullable=true)
-         * @Assert\NotBlank
      */
     private $estadocorrelativo;
 

@@ -67,7 +67,7 @@ class CorrelativoRepository extends ServiceEntityRepository
 
         $sql = 'SELECT cb_correlativo_redactor AS redactor, COUNT(cb_correlativo_numcorrelativo) AS cant
                 FROM cb_correlativo_correlativo
-                WHERE cb_correlativo_estado=1 AND cb_correlativo_fechareg>=make_date(date_part('year', NOW())::INTEGER, 1, 1)
+                WHERE cb_correlativo_estado=1 AND cb_correlativo_fechareg>=make_date(date_part(\'year\', NOW())::INTEGER, 1, 1)
                 GROUP BY cb_correlativo_redactor
                 ORDER BY 1';
 

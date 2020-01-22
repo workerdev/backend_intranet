@@ -280,9 +280,11 @@ class AuditoriaEquipoController extends AbstractController
             $auditoriaequipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $id, 'estado' => '1']);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($auditoriaequipo, 'json');
+            
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Equipo de auditoría listado correctamente.');
             $resultado = json_encode($resultado);
+            
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

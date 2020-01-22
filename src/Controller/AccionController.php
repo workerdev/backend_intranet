@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Hallazgo;
 use App\Entity\AccionSeguimiento;
 use App\Entity\Accion;
+use App\Entity\TipoAccion;
 use App\Entity\Usuario;
 use App\Entity\Modulo;
 use App\Entity\Acceso;
@@ -62,10 +63,11 @@ class AccionController extends Controller
         
         $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
         $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
+        $tipo = $this->getDoctrine()->getRepository(TipoAccion::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        return $this->render('accion/index.html.twig', array('objects' => $accion, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
+        return $this->render('accion/index.html.twig', array('objects' => $accion, 'tipoacn' => $tipo, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
 
     /**
@@ -86,6 +88,7 @@ class AccionController extends Controller
             $fecharegistro = $sx['fecharegistro'];
             
             $hallazgo = $sx['hallazgo'];
+            $tipo = $sx['tipo'];
 
             $accion = new Accion();
             if($ordinal != '' && is_numeric($ordinal))$accion->setOrdinal($ordinal);
@@ -98,15 +101,16 @@ class AccionController extends Controller
             $accion->setEstado(1);
 
             $hallazgo != '' ? $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->find($hallazgo): $hallazgo =null;
+            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoAccion::class)->find($tipo): $tipo =null;
             $accion->setFkhallazgo($hallazgo);
+            $accion->setFktipo($tipo);
+
             $errors = $validator->validate($accion);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -116,6 +120,7 @@ class AccionController extends Controller
             $resultado = array('response'=>"El ID registrado es: ".$accion->getId().".",'success' => true,
                 'message' => 'Acción registrado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -141,6 +146,7 @@ class AccionController extends Controller
             $fecharegistro = $sx['fecharegistro'];
             
             $hallazgo = $sx['hallazgo'];
+            $tipo = $sx['tipo'];
 
             $accion = $this->getDoctrine()->getRepository(Accion::class)->find($id);
             $accion->setId($id);
@@ -154,15 +160,16 @@ class AccionController extends Controller
             $accion->setEstado(1);
 
             $hallazgo != '' ? $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->find($hallazgo): $hallazgo =null;
+            $tipo != '' ? $tipo = $this->getDoctrine()->getRepository(TipoAccion::class)->find($tipo): $tipo =null;
             $accion->setFkhallazgo($hallazgo);
+            $accion->setFktipo($tipo);
+
             $errors = $validator->validate($accion);
             if (count($errors)>0){
                 $array = array();
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
@@ -186,6 +193,7 @@ class AccionController extends Controller
             $resultado = array('success' => true,
                     'message' => 'Acción actualizado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -215,14 +223,17 @@ class AccionController extends Controller
                 "responsableimplementacion" => $accion->getResponsableimplementacion(),
                 "estadoaccion" => $accion->getEstadoaccion(),
                 "responsableregistro" => $accion->getResponsableregistro(),
-                "fecharegistro" => $rsfcr
+                "fecharegistro" => $rsfcr,
+                "fktipo" => $accion->getFktipo()
             ];
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($sendinf, 'json');
+
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Acción listado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -254,6 +265,7 @@ class AccionController extends Controller
                 'message' => 'Se eliminarán todos los registros asociados a la acción.');
             }
             $resultado = json_encode($info);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -310,6 +322,7 @@ class AccionController extends Controller
             $resultado = array('response'=>"El ID modificado es: ".$accion->getId().".",'success' => true,
                 'message' => 'Acción dado de baja correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -344,7 +357,8 @@ class AccionController extends Controller
                     "responsableimplementacion" => $accion->getResponsableimplementacion(),
                     "estadoaccion" => $accion->getEstadoaccion(),
                     "responsableregistro" => $accion->getResponsableregistro(),
-                    "fecharegistro" => $rsfcr
+                    "fecharegistro" => $rsfcr,
+                    "fktipo" => $accion->getFktipo()
                 ];
                 $datacn[] = $info;
             }
@@ -389,7 +403,8 @@ class AccionController extends Controller
                     "responsableimplementacion" => $accion->getResponsableimplementacion(),
                     "estadoaccion" => $accion->getEstadoaccion(),
                     "responsableregistro" => $accion->getResponsableregistro(),
-                    "fecharegistro" => $rsfcr
+                    "fecharegistro" => $rsfcr,
+                    "fktipo" => $accion->getFktipo()
                 ];
                 $datacn[] = $info;
             }

@@ -66,6 +66,9 @@
         .scroll-own{
             overflow-y: scroll;
         }
+        .table_stl-td{
+            white-space: pre-wrap !important;
+        }
     </style>
 {% endblock %}
 
@@ -248,7 +251,10 @@
             });
 
             $('#table_acn').DataTable({
-                responsive: true
+                responsive: true,
+                "createdRow": function(row, data, dataIndex) {
+                    $(row).children(':nth-child(1)').addClass('table_stl-td');
+                }
             });
         });
 
@@ -549,5 +555,25 @@
                 })
             })
         }
+
+        function acncorrectiva_rep() {
+            $('.correctrep').click(function () {
+                obj = JSON.stringify({
+                    'id': parseInt(JSON.parse($(this).attr('data-json')))
+                });
+                ajax_call_reptb("/accion_correctiva",{
+                    object: obj
+                },function(response){
+                    var self = JSON.parse(response);
+
+                    let urlfile = self.url;
+                    let servidor = document.URL
+                    let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+                    window.open(urlserv + urlfile)
+                })
+            })
+        }
+        
+        acncorrectiva_rep()
     </script>
 {% endblock %}

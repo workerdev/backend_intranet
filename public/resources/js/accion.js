@@ -7,6 +7,13 @@ $('#fkhallazgo').selectpicker({
     title: 'Seleccione un hallazgo.'
 })
 
+$('#fktipoacn').selectpicker({
+    size: 4,
+    liveSearch: true,
+    liveSearchPlaceholder: 'Buscar tipo.',
+    title: 'Seleccione un tipo.'
+})
+
 $('#estadoaccion ').selectpicker({
     size: 4,
     liveSearch: true,
@@ -28,6 +35,10 @@ $('#new-acn').click(function () {
 
     $('#estadoaccion ').val('')
     $('#estadoaccion ').selectpicker('render')
+    $('#fkhallazgo').val('')
+    $('#fkhallazgo ').selectpicker('render')
+    $('#fktipoacn').val('')
+    $('#fktipoacn').selectpicker('render')
 
     clean_form()
     verif_inputs()
@@ -47,6 +58,7 @@ $('#insert-acn').click(function () {
         'fecharegistro': $('#fecharegistroacn').val(),
 
         'hallazgo': $('#fkhallazgo').val(),
+        'tipo': $('#fktipoacn').val(),
         'estadoaccion': $('#estadoaccion ').val(),
         'origin': $('#new-acn').attr('data-origin'),
         'form': $('#new-acn').attr('data-form'),
@@ -82,11 +94,20 @@ function attach_edit() {
             $('#responsableregistro').val(self.responsableregistro)
             $('#fecharegistroacn').val(self.fecharegistro)
 
-            $('#estadoaccion ').val(self.estadoaccion)
-            $('#estadoaccion ').selectpicker('render')
+            if(self.estadoaccion != null){
+                $('#estadoaccion ').val(self.estadoaccion)
+                $('#estadoaccion ').selectpicker('render')
+            }
 
-            $('#fkhallazgo').val(self.fkhallazgo.id)
-            $('#fkhallazgo').selectpicker('render')
+            if(self.fkhallazgo != null){
+                $('#fkhallazgo').val(self.fkhallazgo.id)
+                $('#fkhallazgo').selectpicker('render')
+            }
+
+            if(self.fktipo != null){
+                $('#fktipoacn').val(self.fktipo.id)
+                $('#fktipoacn').selectpicker('render')
+            }
 
             clean_form()
             verif_inputs()
@@ -104,7 +125,7 @@ function attach_edit() {
 function verifacc_rep() {
     $('.eficrep').click(function () {
         obj = JSON.stringify({
-        'id': parseInt(JSON.parse($(this).attr('data-json')))
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
         ajax_call_reptb("/accion_verif",{
             object: obj
@@ -130,6 +151,7 @@ $('#update-acn').click(function () {
         'fecharegistro': $('#fecharegistroacn').val(),
 
         'hallazgo': $('#fkhallazgo').val(),
+        'tipo': $('#fktipoacn').val(),
         'estadoaccion': $('#estadoaccion ').val(),
         'origin': $('#new-acn').attr('data-origin'),
         'form': $('#new-acn').attr('data-form'),
