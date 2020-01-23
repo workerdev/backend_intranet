@@ -287,6 +287,7 @@ class AccionSeguimientoController extends Controller
             $json = $serializer->serialize($sendinf, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Seguimiento de la acción listado correctamente.');
+            
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

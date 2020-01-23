@@ -1,0 +1,167 @@
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+<div class='container' style='font-size: 12px'>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr>
+                <th colspan="1" rowspan="2"><img src="resources/images/image_rep.png" width="auto" height="70" alt="logo"></th>
+                <th colspan="11" align="right" style="font-size: 11px">UNP-081-02</th>
+            </tr>
+            <tr>
+                <td colspan="11" style="font-size: 14px; font-weight: 400;">FORMULARIO SEGUIMIENTO A ACCIONES CORRECTIVAS O PREVENTIVAS</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Auditoría: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Unidad:</th>
+                <td colspan='3' class='text-normal' align='left'></td>
+            </tr>
+            {% for s in sector %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='1' class='text-normal' align='left'>  </td>
+                    <td colspan='3' class='text-normal' align='left'> {{ s.fkgas.fksector.nombre  }} </td>
+                </tr>
+            {% endfor %}
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Macro Proceso: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'> </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Proceso: </th>
+                {% if auditoria.fkproceso != null %}
+                    <td colspan='3' class='text-normal' align='left'> {{ auditoria.fkproceso.nombre }} </td>
+                {% else %}
+                    <td colspan='3' class='text-normal' align='left'></td>
+                {% endif %}
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Fecha de la Auditoría: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'>{{ auditoria.fechaprogramada }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Fecha de Informe: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'>{{ auditoria.fecharegistro }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Número de Auditoría: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'>{{ auditoria.codigo }}</td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">Descripción de Hallazgo:</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Clasificación: </th>
+                <td colspan='3' class='text-normal' align='left' style='margin-top: 4px'>
+                    {% if hallazgo.fktipo != null %}
+                        {{ hallazgo.fktipo.nombre }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='4' class='text-normal' align='left' style='margin-top: 4px'>{{ hallazgo.titulo }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='4' class='text-normal' align='left' style='margin-top: 4px'>{{ hallazgo.descripcion }}</td>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">Seguimiento a medidas correctivas y preventivas</div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px; margin-top: 4px'>Plan de Acción: </th>
+                <td colspan='3' class='text-normal' align='left'>
+                    {{ accion.descripcion }}
+                </td>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='12' class='text-normal' align='left'><hr style="1px solid #455a64"></td>
+                </tr>
+            </tr>
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            {% for s in seguimientos %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Responsable: </th>
+                    <td colspan='5' class='text-normal' align='left'>{{ s.responsable }}</td>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha Implement. Comprometida: </th>
+                    <td colspan='5' class='text-normal' align='left'>{{ accion.fechaimplementacion }}</td>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Tipo de Acción: </th>
+                    <td colspan='11' class='text-normal' align='left'>
+                        {% if accion.fktipo != null %}
+                            {{ accion.fktipo.nombre }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Verific. de la eficacia: </th>
+                    <td colspan='5' class='text-normal' align='left'>{{ accion.estadoaccion }}</td>
+                    <th colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha de seguimiento: </th>
+                    <td colspan='5' class='text-normal' align='left'>{{ s.fecha }}</td>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <th colspan='12' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Observación: </th>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='12' class='text-normal' align='left'>{{ s.observaciones }}</td>
+                </tr>
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='12' class='text-normal' align='left'><hr style="2px solid #455a64"></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 25px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>____________________________________</th>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>____________________________________</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>Firma Responsable Verificación:</th>
+                <th colspan='6' class='italic' scope='colgroup' align='center'>Firma Coordinador UGCDO:</th>
+            </tr>
+        </table>
+
+        <div class="header" style="font-weight: 400; margin-top: 10px; background-color: #cfd8dc; padding: 2px;">
+            Reprogramación de acciones correctivas / preventivas <i>(solo si el estado es parcial o no implementada)</i>
+        </div>
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='8' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Motivo Reprogramación: </th>
+                <th colspan='3' class='italic' scope='colgroup' align='left' style='padding-left: 24px'>Fecha Reprogramada: </th>
+            </tr>
+            {% for r in reprogramas %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='8' class='text-normal' align='left'> {{ r.motivojustificacion }} </td>
+                    <td colspan='3' class='text-normal' align='left'> {{ r.fechaimplementacion }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 40px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Aprobado por:</th>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Aprobación Gerencia de área:</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Fecha de aprobación: <i style='color: white;'>dd</i> / <i style='color: white;'>mm</i> / <i style='color: white;'>yyyy</i> </th>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Fecha de aprobación: <i style='color: white;'>dd</i>  / <i style='color: white;'>mm</i> / <i style='color: white;'>yyyy</i> </th>
+            </tr>
+        </table>
+
+    </div>
+</div>

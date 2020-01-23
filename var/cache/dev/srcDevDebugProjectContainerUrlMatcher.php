@@ -436,6 +436,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/auditoria_notif' => [['_route' => 'auditoria_notif', '_controller' => 'App\\Controller\\ReportingController::auditoria_notif'], null, ['POST' => 0], null, false],
                     '/auditoria_rep' => [['_route' => 'auditoria_rep', '_controller' => 'App\\Controller\\ReportingController::auditoria_rep'], null, ['POST' => 0], null, false],
                     '/accion_correctiva' => [['_route' => 'accion_correctiva', '_controller' => 'App\\Controller\\ReportingController::accion_correctiva'], null, ['POST' => 0], null, false],
+                    '/seguimiento_accion' => [['_route' => 'seguimiento_accion', '_controller' => 'App\\Controller\\ReportingController::seguimiento_accion'], null, ['POST' => 0], null, false],
                     '/accion_verif' => [['_route' => 'accion_verif', '_controller' => 'App\\Controller\\ReportingController::accion_verif'], null, ['POST' => 0], null, false],
                     '/docproceso_reporte' => [['_route' => 'docproceso_reporte', '_controller' => 'App\\Controller\\ReportingController::reporte'], null, ['POST' => 0], null, false],
                     '/responsabilidad' => [['_route' => 'responsabilidad', '_controller' => 'App\\Controller\\ResponsabilidadSocialController::index'], null, null, null, false],

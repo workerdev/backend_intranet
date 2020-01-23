@@ -122,6 +122,24 @@ function attach_edit() {
     })
 }
 
+function segaccion_rep() {
+    $('.sgacnrep').click(function () {
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+        });
+        ajax_call_reptb("/seguimiento_accion",{
+            object: obj
+        },function(response){
+            var self = JSON.parse(response);
+
+            let urlfile = self.url;
+            let servidor = document.URL
+            let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+            window.open(urlserv + urlfile)
+        })
+    })
+}
+
 function verifacc_rep() {
     $('.eficrep').click(function () {
         obj = JSON.stringify({
@@ -173,6 +191,7 @@ reload_form()
 
 attach_edit()
 verifacc_rep()
+segaccion_rep()
 
 let message= ''
 function accion_previous(id) {

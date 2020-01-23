@@ -25,10 +25,10 @@
         <div class="header" style="font-weight: 400; margin-top: 10px; padding: 2px;">A. IDENTIFICACIÓN</div>
         <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>PROCESO</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>SECTOR</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>ÁREA</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>NÚMERO DE AUDITORÍA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>PROCESO</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>SECTOR</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>ÁREA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>NÚMERO DE AUDITORÍA</th>
             </tr>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
                 <td colspan='3' class='text-normal' align='center'>
@@ -56,10 +56,10 @@
                 <td colspan='3' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
             </tr>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>GERENCIA</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>GERENTE</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>JEFE / COORDINADOR / SUPERVISOR DE ÁREA</th>
-                <th colspan='3' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>ORDINAL</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>GERENCIA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>GERENTE</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>JEFE / COORDINADOR / SUPERVISOR DE ÁREA</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>ORDINAL</th>
             </tr>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
                 <td colspan='3' class='text-normal' align='center'>
@@ -86,18 +86,120 @@
             </tr>
         </table>
 
-        <div class="header" style="font-weight: 400; margin-top: 10px; padding: 2px;">B. DESCRIPCIÓN</div>
-        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+        <div class="header" style="font-weight: 400; margin-top: 20px; padding: 2px;">B. DESCRIPCIÓN</div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px; border-bottom: 1px solid white;' width='100%'>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
-                <th colspan='8' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>DESCRIPCIÓN NO CONFORMIDAD</th>
-                <th colspan='4' class='italic' scope='colgroup' align='center' style='padding-left: 24px; margin-top: 4px; background-color: #cfd8dc;'>PUNTO DE LA NORMA INCUMPLIDO</th>
+                <th colspan='8' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>DESCRIPCIÓN NO CONFORMIDAD</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>PUNTO DE LA NORMA INCUMPLIDO</th>
             </tr>
             <tr style='font-size: 12px; border: 0px; padding: 0px'>
-                <td colspan='8' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
-                <td colspan='4' class='text-normal' align='center'>{{ auditoria.codigo }}</td>
+                <td colspan='8' class='text-normal' align='left'>{{ hallazgo.descripcion }}</td>
+                <td colspan='4' class='text-normal' align='center'>{{ hallazgo.puntoiso }}</td>
+            </tr>
+        </table>
+        <table align='center' style='padding: 4px; border: 1px solid grey; border-top: 1px solid white;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='5' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>NO CONFORMIDAD MAYOR</th>
+                <td colspan='1' class='text-normal' align='center'>
+                    {% if hallazgo.fktipo != null and hallazgo.fktipo.nombre == 'No conformidad mayor' %}
+                        X
+                    {% endif %}
+                </td>
+                <th colspan='5' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>NO CONFORMIDAD MENOR</th>
+                <td colspan='1' class='text-normal' align='center'>
+                    {% if hallazgo.fktipo != null and hallazgo.fktipo.nombre == 'No conformidad menor' %}
+                        X
+                    {% endif %}
+                </td>
             </tr>
         </table>
 
+        <div class="header" style="font-weight: 400; margin-top: 20px; padding: 2px;">C. CORRECIONES, ANÁLISIS DE CAUSAS Y ACCIONES CORRECTIVAS</div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='12' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>1. ACCIÓN INMEDIATA (CORECCIÓN)</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='4' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>Nr</th>
+                <th colspan='2' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>DESCRIPCIÓN</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>RESPONSABLE</th>
+                <th colspan='2' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>PLAZO PLANIFICADO</th>
+            </tr>
+
+            {% for ai in acn_inmediata %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='4' class='text-normal' align='center'>{{ ai.id }}</td>
+                    <td colspan='2' class='text-normal' align='center'>{{ ai.descripcion }}</td>
+                    <td colspan='4' class='text-normal' align='center'>{{ ai.responsableimplementacion }}</td>
+                    <td colspan='2' class='text-normal' align='center'>{{ ai.fechaimplementacion }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='12' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>
+                    2. ANÁLISIS DE CAUSA RAÍZ (Solo llenado por el jefe de área o grupo de análisis). Realizar un análisis por cada evidemcia y adjuntar reporte
+                    de 5 Porqués o Espina de pescado. Se debe incorporar el análisis por cada hallazgo encontrado identificándolo para cada causa raíz.
+                </th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <td colspan='12' class='text-normal' align='left' style='padding-left: 20px;'>{{ hallazgo.analisiscausaraiz }}</td>
+            </tr>
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='12' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>
+                    3. ACCIÓN CORRECTIVA
+                </th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='7' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>DESCRIPCIÓN</th>
+                <th colspan='3' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>RESPONSABLE</th>
+                <th colspan='2' class='italic' scope='colgroup' align='center' style='margin-top: 4px; background-color: #cfd8dc;'>PLAZO PLANIFICADO</th>
+            </tr>
+            {% for ac in acn_correctiva %}
+                <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                    <td colspan='2' class='text-normal' align='center'>{{ ac.id }}</td>
+                    <td colspan='5' class='text-normal' align='left'>{{ ac.descripcion }}</td>
+                    <td colspan='3' class='text-normal' align='center'>{{ ac.responsableimplementacion }}</td>
+                    <td colspan='2' class='text-normal' align='center'>{{ ac.fechaimplementacion }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='8' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>
+                    ¿Se requiere gestión de cambio?
+                </th>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'></td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'>SI</td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'></td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'>NO</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='8' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>
+                    ¿Se identifica riesgos y/u oportunidades?
+                </th>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'></td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'>SI</td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'></td>
+                <td colspan='1' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'>NO</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='3' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #cfd8dc;'>
+                    Descripción del Cambio o Riesgos y Oportunidades
+                </th>
+                <td colspan='9' class='italic' scope='colgroup' align='left' style='padding-left: 15px; margin-top: 4px; background-color: #eeeeee;'>No aplica</td>
+            </tr>
+        </table>
+        <div class="header" style="font-weight: 400; margin-top: 10px; padding: 2px;">
+            * En caso de marcar "SI", llenar formulario gestión de cambio GCDO-0630-01 o el formulario Matriz de
+            Riesgos y Oportunidades GG-0892-01, según sea el caso.
+        </div>
+        
         <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 60px;' width='100%'>
             <tr style='font-size: 12px; border: 0px; padding: 0px;'>
                 <th colspan='6' class='italic' scope='colgroup' align='center'>Sergio Góngora</th>
@@ -108,8 +210,8 @@
                 <th colspan='6' class='italic' scope='colgroup' align='center'>GERENTE COMERCIAL INTERINO</th>
             </tr>
             <tr style='font-size: 12px; border: 0px; padding: 0px;'>
-                <th colspan='6' class='italic' scope='colgroup' align='LEFT'>Fecha</th>
-                <th colspan='6' class='italic' scope='colgroup' align='LEFT'>Fecha</th>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Fecha:</th>
+                <th colspan='6' class='italic' scope='colgroup' align='left'>Fecha:</th>
             </tr>
         </table>
     </div>

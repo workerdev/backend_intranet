@@ -186,7 +186,7 @@ class AccionEficaciaController extends Controller
             $id = $sx['id'];
             $accioneficacia = $this->getDoctrine()->getRepository(AccionEficacia::class)->find($id);
             $fec = $accioneficacia->getFecha();
-            $rsfc = $fec->format('Y-m-d');
+            if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
             
             $sendinf = [
                 "id" => $accioneficacia->getId(),

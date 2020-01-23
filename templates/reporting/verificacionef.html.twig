@@ -1,145 +1,128 @@
-{% block stylesheets %}
-    <link rel="stylesheet" href="resources/bootstrap4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
-    <style>
-        .borderless td, .borderless th, .borderless tr {
-            border: none;
-        }
-        #tb-ef tr, #tb-ef td, .frm-efc{
-            height: 14px !important;
-        }
-        .td-wrap{
-            white-space: pre-wrap;
-        }
-    </style>
-{% endblock %}
+<meta http-equiv='Content-Type' content='text/html'; charset='utf-8' />
+<style>
+    .border-own { border-left: 0px; border-right: 0px; padding: 6px; border-bottom: 1px solid rgba(96, 96, 96, 0.5) }
+    .border-own-l { border-right: 0px; }
+    .border-own-r { border-left: 0px; }
+    .italic, .text-normal { padding-bottom: 4px; }
+</style>
+<link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
 
-{% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <img src="resources/images/image_rep.png" width="auto" height="60" alt="logo">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <h6 class="font-weight-bold float-right">GCDO-0802-07</h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h6 class="font-weight-bold text-center"><u>Verificación eficacia de la Acción Correctiva</u></h6>
-                <h6 class="font-weight-bold text-center">Sistema Integrado de Gestión de ELFEC S.A.</h6>
-            </div>
-        </div>
+{% set gerencias = [] %}
+{% set areas = [] %}
+<div class='container' style='font-size: 12px'>
+    <div>
+        <table align='center' style='padding: 4px; border: 0px solid grey' width='100%'>
+            <tr>
+                <th colspan="3" rowspan="3"><img src="resources/images/image_rep.png" width="auto" height="70" alt="logo"></th>
+                <th colspan="11" align="right" style="font-size: 11px">GCDO-802-07</th>
+            </tr>
+            <tr>
+                <td colspan="11" align="left" style="font-size: 14px; font-weight: 400;">Verificación Eficacia de la Acción Correctiva</td>
+            </tr>
+            <tr>
+                <td colspan="11" align="left" style="font-size: 14px; font-weight: 400;">Sistema Integrado de Gestión de ELFEC S.A.</td>
+            </tr>
+        </table>
     </div>
 
-    {% if objects %}
-    <div class="container">
-        <div class="mt-3">
-            </br>          
-            <table class="table table-bordered table-sm">
-                <tr>
-                    <th>No. Auditoría:</th>
-                    <td>{{objects[0].cb_auditoria_codigo}}</td>
-                </tr>
-                <tr>
-                    <th>No. de Hallazgo:</th>
-                    <td>{{objects[0].cb_hallazgo_titulo}}</td>
-                </tr>
-                <tr>
-                    <th>Identificador de la Acción:</th>
-                    <td>{{objects[0].cb_accion_descripcion}}</td>
-                </tr>
-            </table>
+    <div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>No. Auditoría:</th>
+                <td colspan='10' class='text-normal' align='left'>{{ auditoria.codigo }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>No. de Hallazgo:</th>
+                <td colspan='10' class='text-normal' align='left'>{{ hallazgo.id }}</td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>Identificador de la Acción:</th>
+                <td colspan='10' class='text-normal' align='left'>{{ accion.id }}</td>
+            </tr>
+        </table>
 
-            <h7><b>Resultado de la verificación de la eficacia de la Acción tomada:</b></h7>
-            <table id="tb-ef" class="table table-bordered table-sm">
-                <tr>
-                    <td>
-                        <label class="">EFICAZ:</label>
-                    </td>
-                    <td>
-                        {% if objects[0].cb_accion_eficacia_eficaz == 'Si' %} <i class="fa fa-check"></i> {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="">NO EFICAZ:</label>
-                    </td>
-                    <td>
-                        {% if objects[0].cb_accion_eficacia_eficaz == 'No' %} <i class="fa fa-check"></i> {% endif %}
-                    </td>
-                </tr>
-            </table>
+        <div class="header" style="font-weight: 400; margin-top: 20px; padding: 2px;">Resultado de la Verificación de la eficacia de la Acción tomada:</div>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px; border-bottom: 1px solid white;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>EFICAZ</th>
+                <td colspan='10' class='text-normal' align='left'>
+                    {% if eficacia and eficacia.eficaz == 'Si' %} 
+                        <i class="fa fa-check"></i> 
+                    {% endif %}
+                </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>NO EFICAZ:</th>
+                <td colspan='10' class='text-normal' align='left'>
+                    {% if eficacia and eficacia.eficaz == 'No' %} 
+                        <i class="fa fa-check"></i> 
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
 
-            <h7><b>Observaciones:</b></h7>
-            <table class="table table-bordered table-sm">
-                <tr>
-                    <td class="td-wrap">{{ objects[0].cb_accion_eficacia_resultado }}</td>
-                </tr>
-            </table>     
+        <table align='center' style='padding: 4px; border: 1px solid grey; border-top: 1px solid white;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='12' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>Observaciones</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <td colspan='12' class='text-normal' align='left'>
+                    {% if eficacia %} 
+                        {{ eficacia.resultado }}
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
 
-            <table class="table borderless table-sm">
-                <tr>
-                    <th>Fecha verificación: </th>
-                    <td>{{ objects[0].cb_accion_eficacia_fecha|date('d-m-Y') }} </td>
-                </tr>
-                <tr>
-                    <th>Verificado por: </th>
-                    <td>{{ objects[0].cb_accion_eficacia_nombreverificador }} </td>
-                </tr>
-            </table>    
-            
-                      
-            <table class="table table-bordered table-sm">
-                <tr>
-                    <th>Responsable del proceso verificado:</th>
-                    <td>{{ objects[0].cb_accion_eficacia_responsable }} </td>
-                </tr>
-                <tr>
-                    <th>Cargo del Responsable:</th>
-                    <td>{{ objects[0].cb_accion_eficacia_cargoverificador }}</td>
-                </tr>
-            </table>
-
-            <table class="table borderless table-sm">
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr class="spacer"> <td></td></tr>
-                <tr>
-                    <th style="text-decoration: overline">Firma Responsable del proceso verificado</th>
-                    <th style="text-decoration: overline">Firma Verificador</th>
-                    <td></td>
-                    <th style="text-decoration: overline">
-                        Firma Coord. GCDO / Resp. Med. Amb. / Resp. SySO
-                    </th>
-                </tr>
-            </table>
-        </div>
-
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>Fecha Verificación:</th>
+                <td colspan='10' class='text-normal' align='left'>
+                    {% if eficacia %} 
+                        {{ eficacia.fecha }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>Verificado por:</th>
+                <td colspan='10' class='text-normal' align='left'>
+                    {% if eficacia %} 
+                        {{ eficacia.responsable }}
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <table align='center' style='padding: 4px; border: 1px solid grey; margin-top: 10px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' scope='colgroup' align='left' style='margin-top: 4px; background-color: #cfd8dc;'>Responsable del proceso verificado::</th>
+                <td colspan='10' class='text-normal' align='left'>
+                {% if eficacia %} 
+                    {{ eficacia.nombreverificador }}
+                {% endif %}
+            </td>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px'>
+                <th colspan='2' class='italic' align='left' scope='colgroup' style='margin-top: 4px; background-color: #cfd8dc;'>Cargo del Responsable:</th>
+                <td colspan='10' class='text-normal' align='left'>
+                {% if eficacia %} 
+                    {{ eficacia.cargoverificador }}
+                {% endif %}
+                </td>
+            </tr>
+            </tr>
+        </table>
+        
+        <table align='center' style='padding: 4px; border: 0px solid grey; margin-top: 60px;' width='100%'>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>___________________________________</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>___________________________________</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>___________________________________</th>
+            </tr>
+            <tr style='font-size: 12px; border: 0px; padding: 0px;'>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>Firma Responsable del proceso verificado</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>Firma Verificador</th>
+                <th colspan='4' class='italic' scope='colgroup' align='center'>Firma Coord. GCDO / Resp. Med. Amb. / Resp. SySO</th>
+            </tr>
+        </table>
     </div>
-    {% else %}
-        <div class="container">
-            <div class="mt-3">
-                <p>No se encontraron registros.</p>
-            </div>
-        </div>
-    {% endif %}
-    
-{% endblock %}
-
-{% block javascripts %}
-    <script>
-        function check_data(val){
-            if(val == 'Si') $('#opyes').attr('checked', true);
-            else $('#opno').attr('checked', true);
-        }
-    </script>
-    <script src="resources/bootstrap4/js/bootstrap.min.js"></script>
-{% endblock %}
+</div>
