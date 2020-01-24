@@ -57,7 +57,7 @@
                             <p class="text-center inf-own">Cargando datos...</p>
                         </div>
                         
-                        {% if 'home_correlativo' in permisos and objects %}
+                        {% if 'home_correlativo' in permisos %}
                             <div class="row">
                                 <div class="body table-responsive">
                                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -259,8 +259,7 @@
                 data: {object: obj},
                 async: true
             }).done(function (response) {
-                let self = JSON.parse(response);
-                let datos = JSON.parse(self.response);
+                var datos = response.response;
 
                 var table = $('#data_table').DataTable({
                     data: datos,

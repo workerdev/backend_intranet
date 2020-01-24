@@ -236,16 +236,13 @@ class CorrelativoController extends Controller
                     "urlorigen" => $dtcrtv['urlorigen']
                 ];
                 $correlativos[] = $sendinf;
-            }       
+            }
 
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));  
-            $json = $serializer->serialize($correlativos, 'json');
+            $resultado = array('response' => $correlativos, 'success' => true, 'message' => 'Correlativos listados correctamente.');
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($resultado, 'json');
 
-            $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Correlativos listados correctamente.');
-            $resultado = json_encode($resultado);
-
-            return new Response($resultado);
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }

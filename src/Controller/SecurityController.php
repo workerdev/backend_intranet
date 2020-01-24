@@ -35,9 +35,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/sesion4", methods={"POST"}, name="sesion4")
+     * @Route("/sesion", methods={"POST"}, name="sesion")
      */
-    public function login4()
+    public function login()
     {
         $sx = json_decode($_POST['object'], true);
         $process = 'init';
@@ -371,9 +371,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/sesion", methods={"POST"}, name="sesion")
+     * @Route("/sesion7", methods={"POST"}, name="sesion7")
      */
-    public function login()
+    public function login7()
     {
         $sx = json_decode($_POST['object'], true);
 

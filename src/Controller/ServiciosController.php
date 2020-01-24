@@ -2572,9 +2572,9 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/loginbackend4", methods={"POST"}, name="loginbackend4")
+     * @Route("/loginbackend7", methods={"POST"}, name="loginbackend7")
      */
-    public function info4(Request $request)
+    public function info7(Request $request)
     {
         $sx = json_decode($request->getContent(), true);
 
