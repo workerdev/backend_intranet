@@ -2616,6 +2616,75 @@ class ServiciosController extends AbstractController
         }
     }
 
+    /* VERIFICACION EFICACIA LISTA ********/
+    /* DESARROLLADOR: ARIEL VARGAS TICONA */
+
+    /**
+     * @Route("/listar_verificaref", name="listar_verificaref")
+     * @Method({"GET"})
+     */
+    public function listar_verificaref()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_hallazgo_id AS id_hallazgo, cb_hallazgo_ordinal AS ordinal_hallazgo,
+                        cb_hallazgo_titulo AS titulo_hallazgo, cb_hallazgo_descripcion AS descripcion, cb_accion_id as id_accion, cb_accion_ordinal AS ordinal_accion,
+                        cb_accion_descripcion AS accion, cb_accion_eficacia_eficaz AS eficaz_si_no, cb_accion_eficacia_resultado AS resultado,
+                        cb_accion_eficacia_fecha AS f_verificacion, cb_accion_eficacia_responsable AS responsable, cb_accion_eficacia_nombreverificador AS nombre_verificado,
+                        cb_accion_eficacia_cargoverificador AS cargo_verificado
+                    FROM cb_aud_hallazgo, cb_aud_accion, cb_aud_accion_eficacia, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
+                    WHERE cb_accion_eficacia_fkaccion=cb_accion_id AND cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND
+                        cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_accion_eficacia_estado=1";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->fetchAll();
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($query, 'json');
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /* FORTALEZAS LISTA *******************/
+    /* DESARROLLADOR: ARIEL VARGAS TICONA */
+
+    /**
+     * @Route("/listar_fortaleza", name="listar_fortaleza")
+     * @Method({"GET"})
+     */
+    public function listar_fortaleza()
+    {
+        try {
+            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_auditoria_codigo AS id_auditoria, date_part('year', cb_auditoria_fechaprogramada) AS anio,
+                        cb_auditoria_fechaprogramada AS f_programada, cb_fortaleza_id AS id_fortaleza, cb_fortaleza_ordinal AS ordinal_f, cb_fortaleza_descripcion AS descripcion
+                    FROM cb_aud_fortaleza, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
+                    WHERE cb_fortaleza_fkauditoria=cb_auditoria_id AND cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
+                        cb_fortaleza_estado=1";
+
+            $stmt = $cx->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->fetchAll();
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data2 = $serializer->serialize($query, 'json');
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+    
+    /***************************************************************************************************************************************************************************************************************************************************************/
+
+    /************************************************************************************/
+    /*                              * CAMBIOS RIESGOS OPORTUNIDADES CORRECTIVAS Y MEJORAS                                         /
+    /*                                                                                   /
+    /************************************************************************************/
+
+
     /* CROCM LISTA ************************/
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
@@ -2727,70 +2796,8 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
-
-    /* VERIFICACION EFICACIA LISTA ********/
-    /* DESARROLLADOR: ARIEL VARGAS TICONA */
-
-    /**
-     * @Route("/listar_verificaref", name="listar_verificaref")
-     * @Method({"GET"})
-     */
-    public function listar_verificaref()
-    {
-        try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_hallazgo_id AS id_hallazgo, cb_hallazgo_ordinal AS ordinal_hallazgo,
-                        cb_hallazgo_titulo AS titulo_hallazgo, cb_hallazgo_descripcion AS descripcion, cb_accion_id as id_accion, cb_accion_ordinal AS ordinal_accion,
-                        cb_accion_descripcion AS accion, cb_accion_eficacia_eficaz AS eficaz_si_no, cb_accion_eficacia_resultado AS resultado,
-                        cb_accion_eficacia_fecha AS f_verificacion, cb_accion_eficacia_responsable AS responsable, cb_accion_eficacia_nombreverificador AS nombre_verificado,
-                        cb_accion_eficacia_cargoverificador AS cargo_verificado
-                    FROM cb_aud_hallazgo, cb_aud_accion, cb_aud_accion_eficacia, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_accion_eficacia_fkaccion=cb_accion_id AND cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND
-                        cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_accion_eficacia_estado=1";
-
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($query, 'json');
-            return new jsonResponse(json_decode($data2));
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
-        }
-    }
-
-    /* FORTALEZAS LISTA *******************/
-    /* DESARROLLADOR: ARIEL VARGAS TICONA */
-
-    /**
-     * @Route("/listar_fortaleza", name="listar_fortaleza")
-     * @Method({"GET"})
-     */
-    public function listar_fortaleza()
-    {
-        try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_auditoria_codigo AS id_auditoria, date_part('year', cb_auditoria_fechaprogramada) AS anio,
-                        cb_auditoria_fechaprogramada AS f_programada, cb_fortaleza_id AS id_fortaleza, cb_fortaleza_ordinal AS ordinal_f, cb_fortaleza_descripcion AS descripcion
-                    FROM cb_aud_fortaleza, cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_fortaleza_fkauditoria=cb_auditoria_id AND cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
-                        cb_fortaleza_estado=1";
-
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($query, 'json');
-            return new jsonResponse(json_decode($data2));
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
-        }
-    }
     
     /***************************************************************************************************************************************************************************************************************************************************************/
-
 
     /**
      * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
