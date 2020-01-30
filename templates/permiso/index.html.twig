@@ -121,7 +121,7 @@
                 'tipo': $('#tipo').val(),
                 'unidad': $('#fkunidad').val()
             })
-            ajax_call_validation("/permiso_insertar", {object: objeto}, null, main_route)
+            ajax_call_validation_msg("/permiso_insertar", {object: objeto}, null, main_route)
         })
 
         function attach_edit() {
@@ -161,7 +161,7 @@
                 'tipo': $('#tipo').val(),
                 'unidad': $('#fkunidad').val()
             })
-            ajax_call_validation("/permiso_actualizar", {object: objeto}, null, main_route)
+            ajax_call_validation_msg("/permiso_actualizar", {object: objeto}, null, main_route)
         })
         reload_form()
     </script>

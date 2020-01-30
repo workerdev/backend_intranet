@@ -78,6 +78,23 @@ class CorrelativoRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findDataFile($id): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT cb_correlativo_id AS id, date_part(\'Year\', cb_correlativo_fechareg) AS gestion, cb_correlativo_numcorrelativo AS numcorrelativo, 
+                    cb_correlativo_url AS url, cb_correlativo_urleditable AS urleditable, cb_correlativo_urlorigen AS urlorigen
+            FROM cb_correlativo_correlativo
+            WHERE cb_correlativo_estado=1 AND cb_correlativo_id=:id
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
     public function filterByPermissions($idu): array
     {
         $conn = $this->getEntityManager()->getConnection();

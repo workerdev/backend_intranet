@@ -279,14 +279,13 @@ class AuditoriaController extends AbstractController
                     $cx->flush();
                 }
 
-                $sectordel = $this->getDoctrine()->getRepository(SectorAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id]);
+                $sectordel = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id]);
                 if($sectordel != null) {
                     foreach ($sectordel as $sctdel) {
-                        if(!in_array($sctdel->getId(), $sectores)){
-                            $sectoraud = $this->getDoctrine()->getRepository(SectorAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkgas' => $sctdel]);
-                            $sectoraud->setEstado(0);
+                        if(!in_array($sctdel->getFkgas()->getId(), $sectores)){
+                            $sctdel->setEstado(0);
         
-                            $cx->merge($sectoraud);
+                            $cx->merge($sctdel);
                             $cx->flush();
                         }
                     }
@@ -308,14 +307,13 @@ class AuditoriaController extends AbstractController
                     $cx->flush();
                 }
 
-                $docsdel = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id]);
+                $docsdel = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $id]);
                 if($docsdel != null) {
                     foreach ($docsdel as $dcdel) {
-                        if(!in_array($dcdel->getId(), $documentos)){
-                            $documentoaud = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findOneBy(['estado' => '1', 'fkauditoria' => $id, 'fkgas' => $dcdel]);
-                            $documentoaud->setEstado(0);
+                        if(!in_array($dcdel->getFkdocumento()->getId(), $documentos)){
+                            $dcdel->setEstado(0);
                             
-                            $cx->merge($documentoaud);
+                            $cx->merge($dcdel);
                             $cx->flush();
                         }
                     }

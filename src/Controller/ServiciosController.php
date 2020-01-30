@@ -1665,7 +1665,6 @@ class ServiciosController extends AbstractController
 
             $docs = array();
             foreach ($documentos as $doc) {
-
                 if(!in_array($doc['vinculo_archivo'], ['N/A', null, ''])){
                     $urlfd = $this->getParameter('Directorio_proyecto').$doc['vinculo_archivo'];
                     if(file_exists($urlfd) && (strpos($urlfd, '.') !== false)) $filedig = $doc['vinculo_archivo'];
@@ -2572,9 +2571,9 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/loginbackend7", methods={"POST"}, name="loginbackend7")
+     * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
      */
-    public function info7(Request $request)
+    public function info(Request $request)
     {
         $sx = json_decode($request->getContent(), true);
 
@@ -2611,9 +2610,9 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
+     * @Route("/loginbackend4", methods={"POST"}, name="loginbackend4")
      */
-    public function info(Request $request)
+    public function info4(Request $request)
     {
         $sx = json_decode($request->getContent(), true);
 
@@ -3129,7 +3128,37 @@ class ServiciosController extends AbstractController
                     $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
                     $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
 
-                    $sendinf = [
+                    if (strpos($dtcrtv['url'], ";base64,") !== false) $dturl = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['url'], ['N/A', null, ''])) {
+                            $urlfl = $this->getParameter('Directorio_proyecto').$dtcrtv['url'];
+                            if (file_exists($urlfl) && (strpos($urlfl, '.') !== false)) $dturl = $dtcrtv['url'];
+                            else $dturl = 'N/A';
+                        }
+                        else $dturl = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urleditable'], ";base64,") !== false) $dturleditable = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urleditable'], ['N/A', null, ''])) {
+                            $urleditablefl = $this->getParameter('Directorio_proyecto').$dtcrtv['urleditable'];
+                            if (file_exists($urleditablefl) && (strpos($urleditablefl, '.') !== false)) $dturleditable = $dtcrtv['urleditable'];
+                            else $dturleditable = 'N/A';
+                        }
+                        else $dturleditable = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urlorigen'], ";base64,") !== false) $dturlorigen = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urlorigen'], ['N/A', null, ''])) {
+                            $urlorigenfl = $this->getParameter('Directorio_proyecto').$dtcrtv['urlorigen'];
+                            if (file_exists($urlorigenfl) && (strpos($urlorigenfl, '.') !== false)) $dturlorigen = $dtcrtv['urlorigen'];
+                            else $dturlorigen = 'N/A';
+                        }
+                        else $dturlorigen = 'N/A';
+                    }
+
+                    $itemcrtv = [
                         "id" => $dtcrtv['id'],
                         "antecedente" => $dtcrtv['antecedente'],
                         "item" => $itemvl,
@@ -3143,15 +3172,15 @@ class ServiciosController extends AbstractController
                         "fktiponota" => $fktiponota_cln,
                         "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
                         "ip" => $dtcrtv['ip'],
-                        "url" => $dtcrtv['url'],
-                        "urleditable" => $dtcrtv['urleditable'],
+                        "url" => $dturl,
+                        "urleditable" => $dturleditable,
                         "entrega" => $fecent,
                         "fkunidad" => $fkunidad_cln,
-                        "urlorigen" => $dtcrtv['urlorigen'],
+                        "urlorigen" => $dturlorigen,
                         "fullname" => $fullname,
                         "action_permission" => $action_permission
                     ];
-                    $correlativos[] = $sendinf;
+                    $correlativos[] = $itemcrtv;
                 }
             }
 
@@ -3168,12 +3197,17 @@ class ServiciosController extends AbstractController
             $combo = $stmt->fetchAll();
             $data_gestion = array_column($combo, 'anio');
 
-            $response = array('btn_permission' => $access, 'combo_gestion' => $data_gestion, 'correlativos' => $correlativos);
+            $datos = array('btn_permission' => $access, 'combo_gestion' => $data_gestion, 'correlativos' => $correlativos);
 
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data = $serializer->serialize($response, 'json');
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            $json = $serializer->serialize($datos, 'json');
 
-            return new jsonResponse(json_decode($data));
+            $resultado = $json;
+
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            
+            return $response;
         } catch (Exception $e) {
             $mensaje[0] = ["response" => "error"];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -3225,13 +3259,18 @@ class ServiciosController extends AbstractController
             $idcontrol = $serializer->normalize($controldt, null, array('attributes' => array('id')));
 
             $combos = array('idctrl' => $idcontrol, 'permission_units' => $access, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $respuesta = $serializer->serialize($combos, 'json');
             
-            return new jsonResponse(json_decode($respuesta));
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            $json = $serializer->serialize($combos, 'json');
 
+            $resultado = $json;
+
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            
+            return $response;
         } catch (Exception $e) {
-            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
@@ -3270,70 +3309,144 @@ class ServiciosController extends AbstractController
     public function correlative_insert(Request $request)
     {
         try {
-            $sx = json_decode($request->getContent(), true);
+            $datos = $_POST;
+            $archivos = $_FILES;
 
-            $fksolicitante = $sx['fksolicitante'];
-            $redactor = $sx['redactor'];
-            $destinatario = $sx['destinatario'];
-            $referencia = $sx['referencia'];
-            $fkcorrelativo = $sx['fkcorrelativo'];
-            $fktiponota = $sx['fktiponota'];
-            $url = $sx['url'];
-            $antecedente = $sx['antecedente'];
-            $item = $sx['item'];
-            $urleditable = $sx['urleditable'];
-            $entrega = $sx['entrega'];
-            $fkunidad = $sx['fkunidad'];
-            $urlorigen = $sx['urlorigen'];
+            $entrega = $datos['entrega'];
+            $fkcorrelativo = $datos['fkcorrelativo'];
+            $fktiponota = $datos['fktiponota'];
+            $fkunidad = $datos['fkunidad'];
             
-            $ipcontrol = '';
-            $estadocorrelativo = 'Vigente';
-            $numcorrelativo = $this->numerar();
-            $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['username' => $fksolicitante]): $fksolicitante = null;
+            date_default_timezone_set('America/La_Paz');
+            $gestion = date("Y");
+
+            if (array_key_exists("id", $datos)) {
+                $correlative = $this->getDoctrine()->getRepository(Correlativo::class)->find($datos['id']);
+            } else {
+                $correlative = new Correlativo();
+
+                $fksolicitante = $datos['fksolicitante'];
+                $item = $datos['item'];
+                
+                $numcorrelativo = $this->numerar();
+                $url = 'N/A';
+                $urleditable = 'N/A';
+                $urlorigen = 'N/A';
+
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['username' => $fksolicitante]): $fksolicitante = null;
+
+                $correlative->setFechareg(new \DateTime('now'));
+                $correlative->setNumcorrelativo($numcorrelativo);
+                $correlative->setFksolicitante($fksolicitante);
+                $correlative->setEstadoCorrelativo('Vigente');
+                $correlative->setIp('');
+                $correlative->setUrl($url);
+                $correlative->setUrleditable($urleditable);
+                $correlative->setUrlorigen($urlorigen);
+                $correlative->setEstado(1);
+    
+                if (!in_array($item, [null, '', 0, 'null'])) $correlative->setItem($item);
+            }
+
+            if (array_key_exists("url", $archivos)) {
+                if (!empty($archivos['url']['name'])) {
+                    if (!empty($archivos["url"]["type"])) {
+                        $fileName = $archivos['url']['name'];
+                        $fileName = $gestion.'_'.$correlative->getNumcorrelativo().'_'.str_replace(" ", "_", $fileName);
+                        $sourcePath = $archivos['url']['tmp_name'];
+                        $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
+                        
+                        if(move_uploaded_file($sourcePath, $targetPath)){
+                            $uploadedFile = $fileName;
+                        }
+                        $url = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
+                        $url = str_replace("\\", "/", $url);
+                        $correlative->setUrl($url);
+                    }
+                }
+            }
+
+            if (array_key_exists("urleditable", $archivos)) {
+                if (!empty($archivos['urleditable']['name'])) {
+                    if (!empty($archivos["urleditable"]["type"])) {
+                        $fileName = $archivos['urleditable']['name'];
+                        $fileName = $gestion.'_'.$correlative->getNumcorrelativo().'_'.str_replace(" ", "_", $fileName);
+                        $sourcePath = $archivos['urleditable']['tmp_name'];
+                        $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
+                        
+                        if(move_uploaded_file($sourcePath, $targetPath)){
+                            $uploadedFile = $fileName;
+                        }
+                        $urleditable = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
+                        $urleditable = str_replace("\\", "/", $urleditable);
+                        $correlative->setUrleditable($urleditable);
+                    }
+                }
+            }
+
+            if (array_key_exists("urlorigen", $archivos)) {
+                if (!empty($archivos['urlorigen']['name'])) {
+                    if (!empty($archivos["urlorigen"]["type"])) {
+                        $fileName = $archivos['urlorigen']['name'];
+                        $fileName = $gestion.'_'.$correlative->getNumcorrelativo().'_'.str_replace(" ", "_", $fileName);
+                        $sourcePath = $archivos['urlorigen']['tmp_name'];
+                        $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
+                        
+                        if(move_uploaded_file($sourcePath, $targetPath)){
+                            $uploadedFile = $fileName;
+                        }
+                        $urlorigen = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
+                        $urlorigen = str_replace("\\", "/", $urlorigen);
+                        $correlative->setUrlorigen($urlorigen);
+                    }
+                }
+            }
+            
             $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find(['id' => $fkcorrelativo]): $fkcorrelativo = null;
             $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find(['id' => $fktiponota]): $fktiponota = null;
             $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find(['id' => $fkunidad]): $fkunidad = null;
-
             
             $cx = $this->getDoctrine()->getManager();
 
-            $correlative = new Correlativo();
-            $correlative->setNumcorrelativo($numcorrelativo);
-            $correlative->setFechareg(new \DateTime('now'));
-            $correlative->setFksolicitante($fksolicitante);
-            $correlative->setRedactor($redactor);
-            $correlative->setDestinatario($destinatario);
-            $correlative->setReferencia($referencia);
+            $correlative->setRedactor($datos['redactor']);
+            $correlative->setDestinatario($datos['destinatario']);
+            $correlative->setReferencia($datos['referencia']);
             $correlative->setFkcorrelativo($fkcorrelativo);
             $correlative->setFktiponota($fktiponota);
-            $correlative->setUrl($url);
-            $correlative->setAntecedente($antecedente);
-            $correlative->setEstadoCorrelativo($estadocorrelativo);
-
-            if (!in_array($item, [null, '', 0, 'null'])) $correlative->setItem($item);
-            
-            $correlative->setUrleditable($urleditable);
-            if (!in_array($entrega, [null, '', 'null'])) $correlative->setEntrega(new \DateTime($entrega));
+            $correlative->setAntecedente($datos['antecedente']);
             $correlative->setFkunidad($fkunidad);
-            $correlative->setUrlorigen($urlorigen);
-            $correlative->setIp($ipcontrol);
-            $correlative->setEstado(1);
+            if (!in_array($entrega, [null, '', 'null'])) $correlative->setEntrega(new \DateTime($entrega));
 
-            $cx->persist($correlative);
+            if (array_key_exists("id", $datos)) {
+                $cx->merge($correlative);
+                $resultado = [
+                    'response' => "El número de correlativo modificado es: ".$correlative->getNumcorrelativo().".",
+                    'success' => true,
+                    'message' => 'Correlativo modificado correctamente.'
+                ];
+            } else {
+                $cx->persist($correlative);
+                $resultado = [
+                    'response' => "El número de correlativo es: ".$correlative->getNumcorrelativo().".", 
+                    'success' => true,
+                    'message' => 'Correlativo registrado correctamente.'
+                ];
+            }
             $cx->flush();
 
-            $resultado = array('response' => "El número de correlativo es: " . $correlative->getNumcorrelativo() . ".",
-                'success' => true,
-                'message' => 'Correlativo registrado correctamente.');
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
             $json = $serializer->serialize($resultado, 'json');
 
             $resultado = $json;
 
-            return new Response($resultado);
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            // Allow all websites
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            
+            return $response;
         } catch (Exception $e) {
-            echo 'Excepción capturada: ', $e->getMessage(), "\n";
-
+            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
@@ -3415,17 +3528,96 @@ class ServiciosController extends AbstractController
             $correlativos = $cx->getRepository(Correlativo::class)->findEditors();
             $redactor = array_column($correlativos, 'redactor');
 
-            $response = array('permission_unit' => $access, 'correlativo' => $sendinf, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
-            
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($response, 'json');
+            $datos = array('permission_unit' => $access, 'correlativo' => $sendinf, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
+
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            $json = $serializer->serialize($datos, 'json');
 
             $resultado = $json;
-            return new Response($resultado);
 
-            // return new jsonResponse(json_decode($data2));
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            
+            return $response;
         } catch (Exception $e) {
-            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/get_b64file", methods={"POST"}, name="get_b64file")
+     */
+    public function get_b64file(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $id = $sx['id'];
+            $tipo = $sx['tipo'];
+            
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findDataFile($id);
+            $keysData = array('id', 'gestion', 'numcorrelativo', $tipo);
+            $datafile = $this->array_columns($correlativo, $keysData);
+
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            $json = $serializer->serialize($datafile, 'json');
+
+            $resultado = $json;
+
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            
+            return $response;
+        } catch (Exception $e) {
+            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/correlative_delete", methods={"POST"}, name="correlative_delete")
+     */
+    public function correlative_delete(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $cx = $this->getDoctrine()->getManager();
+            $id = $sx['id'];
+            $user = $sx['username'];
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
+
+            if($correlativo->getFkunidad() != null){
+                $dtunit = array_column($unidad, 'id');
+
+                if (in_array($correlativo->getFkunidad()->getId(), $dtunit)) $access = true;
+                else $access = false;
+            }
+            else $access = false;
+
+            if($access){
+                $correlativo->setEstadoCorrelativo('Anulado');
+                $cx->persist($correlativo);
+                $cx->flush();
+
+                $resultado = array('response' => "El número de correlativo anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
+                    'message' => 'Correlativo anulado correctamente.');
+            }else{
+                $resultado = array('response' => "El número de correlativo ". $correlativo->getNumcorrelativo(). " no fue anulado.", 'success' => false,
+                    'message' => 'No tiene permiso para realizar esta acción en esta unidad.');
+            }
+            
+            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            $json = $serializer->serialize($resultado, 'json');
+
+            $resultado = $json;
+
+            $response = new Response($resultado);
+            $response->headers->set('Content-Type', 'application/json');
+            
+            return $response;
+        } catch (Exception $e) {
+            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
@@ -3490,46 +3682,110 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/correlative_delete", methods={"POST"}, name="correlative_delete")
+     * @Route("/listar_correlativo", methods={"POST"}, name="listar_correlativo")
      */
-    public function correlative_delete(Request $request)
+    public function listar_correlativo(Request $request)
+    {
+        try {
+            date_default_timezone_set('America/La_Paz');
+            $dia = date("d");
+            $mes = date("m");
+            $anio = date("Y");
+
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+            //  $user = $sx['gestion'];
+            $cx = $this->getDoctrine()->getManager();
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $anio);
+
+            $correlativos = array();
+            foreach ($correlativo as $crtv) {
+                $dtcrtv = $crtv;
+
+                $fecreg = $dtcrtv['fechareg'];
+                $fecent = $dtcrtv['entrega'];
+
+                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                    $itemvl = $dtcrtv['item'];
+                } else {
+                    $itemvl = "";
+                }
+
+                $fksolicitante = $dtcrtv['fksolicitante'];
+                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                $fktiponota = $dtcrtv['fktiponota'];
+                $fkunidad = $dtcrtv['fkunidad'];
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+
+                $sendinf = [
+                    "id" => $dtcrtv['id'],
+                    "antecedente" => $dtcrtv['antecedente'],
+                    "item" => $itemvl,
+                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                    "fechareg" => $fecreg,
+                    "redactor" => $dtcrtv['redactor'],
+                    "destinatario" => $dtcrtv['destinatario'],
+                    "referencia" => $dtcrtv['referencia'],
+                    "fksolicitante" => $fksolicitante,
+                    "fkcorrelativo" => $fkcorrelativo,
+                    "fktiponota" => $fktiponota,
+                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                    "ip" => $dtcrtv['ip'],
+                    "url" => $dtcrtv['url'],
+                    "urleditable" => $dtcrtv['urleditable'],
+                    "entrega" => $fecent,
+                    "fkunidad" => $fkunidad,
+                    "urlorigen" => $dtcrtv['urlorigen']
+                ];
+                $correlativos[] = $sendinf;
+            }
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            if (sizeof($correlativo) > 0) {
+                $data2 = $serializer->serialize($correlativos, 'json');
+            } else {
+                $empty = array('mensaje' => 'No se encotraron datos.');
+                $data2 = $serializer->serialize($empty, 'json');
+            }
+            return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
+    /**
+     * @Route("/correlativoform", methods={"POST"}, name="correlativoform")
+     */
+    public function correlativoform(Request $request)
     {
         try {
             $sx = json_decode($request->getContent(), true);
-            $cx = $this->getDoctrine()->getManager();
-            $id = $sx['id'];
             $user = $sx['username'];
-            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+            $cx = $this->getDoctrine()->getManager();
+
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
+
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
+            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $datatipo = $serializer->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
+
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
+            $dataunidad = array_column($unidad, 'cb_unidad_nombre');
 
-            if($correlativo->getFkunidad() != null){
-                $dtunit = array_column($unidad, 'id');
-
-                if (in_array($correlativo->getFkunidad()->getId(), $dtunit)) $access = true;
-                else $access = false;
-            }
-            else $access = false;
-
-            if($access){
-                $correlativo->setEstadoCorrelativo('Anulado');
-                $cx->persist($correlativo);
-                $cx->flush();
-
-                $resultado = array('response' => "El número de correlativo anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
-                    'message' => 'Correlativo anulado correctamente.');
-            }else{
-                $resultado = array('response' => "El número de correlativo ". $correlativo->getNumcorrelativo(). " no fue anulado.", 'success' => false,
-                    'message' => 'No tiene permiso para realizar esta acción en esta unidad.');
-            }
-            
+            $elementos = array('Control' => $datacontrol, 'Nota' => $datatipo, 'Unidad' => $dataunidad);
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $json = $serializer->serialize($resultado, 'json');
+            $respuesta = $serializer->serialize($elementos, 'json');
+            return new jsonResponse(json_decode($respuesta));
 
-            $resultado = $json;
-
-            return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
 

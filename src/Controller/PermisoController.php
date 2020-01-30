@@ -86,27 +86,36 @@ class PermisoController extends Controller
             $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
 
-            $permiso = new Permiso();
-            $permiso->setFkusuario($usuario);
-            $permiso->setTipo($tipo);
-            $permiso->setFkunidad($unidad);
-            $permiso->setEstado(1);
-            
-            $errors = $validator->validate($permiso);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return new Response(json_encode($array)) ;
+            $dtpermiso = null;
+            if ($usuario != null && $unidad != null) {
+                $dtpermiso = $this->getDoctrine()->getRepository(Permiso::class)->findOneBy(['estado' => '1', 'fkusuario' => $usuario->getId(), 'fkunidad' => $unidad->getId()]);
             }
-            $cx->persist($permiso);
-            $cx->flush();
 
-            $resultado = array('response'=>"El ID registrado es: ".$permiso->getId().".",'success' => true,
-                'message' => 'Permiso registrado correctamente.');
+            if ($dtpermiso == null) {
+                $permiso = new Permiso();
+                $permiso->setFkusuario($usuario);
+                $permiso->setTipo($tipo);
+                $permiso->setFkunidad($unidad);
+                $permiso->setEstado(1);
+                
+                $errors = $validator->validate($permiso);
+                if (count($errors)>0){
+                    $array = array();
+                    $array['error'] = 'error';
+                    foreach ($errors as $e){
+                        $array += [$e->getPropertyPath() => $e->getMessage()];
+                    }
+                    return new Response(json_encode($array)) ;
+                }
+                $cx->persist($permiso);
+                $cx->flush();
+
+                $resultado = array('response' => "El ID registrado es: ".$permiso->getId().".",'success' => true, 'message' => 'Permiso registrado correctamente.');
+            } 
+            else $resultado = array('response' => "No es posible registrar los datos.", 'success' => false, 'message' => 'El permiso fue asignado antes.');
+            
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -128,31 +137,37 @@ class PermisoController extends Controller
             $tipo = $sx['tipo'];
             $unidad = $sx['unidad'];
             if($tipo == 'Crear') $tipo = 'Completo';
+            $permiso = $this->getDoctrine()->getRepository(Permiso::class)->find($id);
 
             $usuario != '' ? $usuario = $this->getDoctrine()->getRepository(Usuario::class)->find($usuario) : $usuario=null;
             $unidad != '' ? $unidad = $this->getDoctrine()->getRepository(Unidad::class)->find($unidad) : $unidad=null;
 
-            $permiso = new Permiso();
-            $permiso->setId($id);
-            $permiso->setFkusuario($usuario);
-            $permiso->setTipo($tipo);
-            $permiso->setFkunidad($unidad);
-            $permiso->setEstado(1);
-            
-            $errors = $validator->validate($permiso);
-            if (count($errors)>0){
-                $array = array();
-                $array['error'] = 'error';
-                foreach ($errors as $e){
-                    $array += [$e->getPropertyPath() => $e->getMessage()];
-                }
-                return new Response(json_encode($array)) ;
+            $dtpermiso = null;
+            if ($usuario != null && $unidad != null) {
+                $dtpermiso = $this->getDoctrine()->getRepository(Permiso::class)->findOneBy(['estado' => '1', 'fkusuario' => $usuario->getId(), 'fkunidad' => $unidad->getId()]);
             }
-            $cx->merge($permiso);
-            $cx->flush();
 
-            $resultado = array('success' => true,
-                    'message' => 'Permiso actualizado correctamente.');
+            if ($dtpermiso == null || $dtpermiso->getId() == $id) {
+                $permiso->setFkusuario($usuario);
+                $permiso->setTipo($tipo);
+                $permiso->setFkunidad($unidad);
+                
+                $errors = $validator->validate($permiso);
+                if (count($errors)>0){
+                    $array = array();
+                    $array['error'] = 'error';
+                    foreach ($errors as $e){
+                        $array += [$e->getPropertyPath() => $e->getMessage()];
+                    }
+                    return new Response(json_encode($array)) ;
+                }
+                $cx->merge($permiso);
+                $cx->flush();
+
+                $resultado = array('success' => true, 'message' => 'Permiso actualizado correctamente.');
+            } 
+            else $resultado = array('response' => "No es posible modificar los datos.", 'success' => false, 'message' => 'El permiso fue asignado antes.');
+
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -170,11 +185,12 @@ class PermisoController extends Controller
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $permiso = $this->getDoctrine()->getRepository(Permiso::class)->find($id);
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($permiso, 'json');
-            $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Permiso listado correctamente.');
+            $resultado = array('response'=>$json,'success' => true, 'message' => 'Permiso listado correctamente.');
             $resultado = json_encode($resultado);
+
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";

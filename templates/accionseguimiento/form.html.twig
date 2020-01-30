@@ -30,7 +30,7 @@
                     <label>Acción</label>
                         <select id="fkaccion" class="form-control show-tick">
                         {% for t in accion %}
-                            <option value="{{t.id}}">{{t.descripcion}}</option>
+                            <option class="truncate-own" value="{{t.id}}" title="{{ t.descripcion }}">{{t.descripcion}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -90,7 +90,7 @@
 </div>
 
 <div id="form-rpg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-sgac" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -104,7 +104,7 @@
                     <label>Acción</label>
                         <select id="fkaccionrpg" class="form-control show-tick">
                         {% for t in accion %}
-                            <option value="{{t.id}}">{{t.descripcion}}</option>
+                            <option class="truncate-own" value="{{t.id}}">{{t.descripcion}}</option>
                         {% endfor %}
                         </select>
                         </br>

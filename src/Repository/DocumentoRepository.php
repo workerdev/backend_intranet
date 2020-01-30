@@ -23,7 +23,7 @@ class DocumentoRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT cb_documento_codigo AS codigo, cb_documento_titulo AS titulo, cb_documento_fktipo
+        $sql = "SELECT cb_documento_codigo AS codigo, cb_documento_titulo AS titulo, cb_documento_fktipo AS fktipo, cb_tipo_documento_nombre AS tipo, cb_documento_fkficha AS fkficha
                 FROM cb_gestion_documento, cb_gestion_tipo_documento
                 WHERE cb_documento_fkficha=:idf AND cb_documento_estado=1 AND cb_documento_fktipo=cb_tipo_documento_id AND cb_tipo_documento_nombre='Procedimiento'
                 ORDER BY 1 ASC";

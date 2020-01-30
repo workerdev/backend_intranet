@@ -131,13 +131,11 @@ class ControlCorrelativoController extends Controller
             $codigo = $sx['codigo'];
             $descripcion = $sx['descripcion'];
             $gerencia = $sx['gerencia'];
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($id);
 
-            $controlcorrelativo = new ControlCorrelativo();
-            $controlcorrelativo->setId($id);
             $controlcorrelativo->setNombre($nombre);
             $controlcorrelativo->setCodigo($codigo);
             $controlcorrelativo->setDescripcion($descripcion);
-            $controlcorrelativo->setEstado(1);
 
             $gerencia != '' ? $gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->find($gerencia) : $gerencia=null;
             $controlcorrelativo->setFkgerencia($gerencia);
@@ -147,17 +145,15 @@ class ControlCorrelativoController extends Controller
                 $array['error'] = 'error';
                 foreach ($errors as $e){
                     $array += [$e->getPropertyPath() => $e->getMessage()];
-                    // dd($e->getMessage());
-                    // dd($e->getPropertyPath()) ;
                 }
                 return  new  Response(json_encode($array)) ;
             }
             $cx->merge($controlcorrelativo);
             $cx->flush();
 
-            $resultado = array('success' => true,
-                    'message' => 'Control correlativo actualizado correctamente.');
+            $resultado = array('success' => true, 'message' => 'Control correlativo actualizado correctamente.');
             $resultado = json_encode($resultado);
+            
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -174,10 +170,12 @@ class ControlCorrelativoController extends Controller
             $sx = json_decode($_POST['object'], true);
             $id = $sx['id'];
             $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($id);
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($controlcorrelativo, 'json');
             $resultado = array('response'=>$json,'success' => true,
                 'message' => 'Control correlativo listado correctamente.');
+
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

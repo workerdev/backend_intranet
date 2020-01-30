@@ -40,6 +40,8 @@ class Permiso
      * @var string
      *
      * @ORM\Column(name="cb_permiso_tipo", type="string", length=200, nullable=false)
+     * 
+     * @Assert\NotBlank
      */
     private $tipo;
     

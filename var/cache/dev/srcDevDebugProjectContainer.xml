@@ -735,6 +735,13 @@
         <argument type="service" id=".service_locator.ychIlgF.App\Controller\ServiciosController"/>
       </call>
     </service>
+    <service id="App\Controller\TipoAccionController" class="App\Controller\TipoAccionController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.ychIlgF.App\Controller\TipoAccionController"/>
+      </call>
+    </service>
     <service id="App\Controller\TipoAuditorController" class="App\Controller\TipoAuditorController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -2644,14 +2651,6 @@
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
-        <argument>console.command</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
           <argument>configure</argument>
@@ -5705,6 +5704,9 @@
     <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\ServiciosController" class="App\Controller\ServiciosController" public="false" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ServiciosController" class="App\Controller\ServiciosController" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ServiciosController" class="App\Controller\ServiciosController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\TipoAccionController" class="App\Controller\TipoAccionController" public="false" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\TipoAccionController" class="App\Controller\TipoAccionController" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\TipoAccionController" class="App\Controller\TipoAccionController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\TipoAuditorController" class="App\Controller\TipoAuditorController" public="false" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\TipoAuditorController" class="App\Controller\TipoAuditorController" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\TipoAuditorController" class="App\Controller\TipoAuditorController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
@@ -6222,7 +6224,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.arG1rph" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.lka6pxf" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccidentesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6339,6 +6341,8 @@
         <argument key="App\Controller\SeguimientoPlanController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ServiciosController::enviarcorreo" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\ServiciosController::enviarcorreo_buzon" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\TipoAccionController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\TipoAccionController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditorController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditorController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditoriaController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6485,6 +6489,8 @@
         <argument key="App\Controller\SeguimientoPlanController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ServiciosController:enviarcorreo" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\ServiciosController:enviarcorreo_buzon" type="service" id=".service_locator.3FFBWiy"/>
+        <argument key="App\Controller\TipoAccionController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\TipoAccionController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditorController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditorController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\TipoAuditoriaController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6943,6 +6949,11 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.ychIlgF" method="withContext"/>
     </service>
+    <service id=".service_locator.ychIlgF.App\Controller\TipoAccionController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <argument>App\Controller\TipoAccionController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ychIlgF" method="withContext"/>
+    </service>
     <service id=".service_locator.ychIlgF.App\Controller\TipoAuditorController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <argument>App\Controller\TipoAuditorController</argument>
       <argument type="service" id="service_container"/>
@@ -7097,7 +7108,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.arG1rph"/>
+      <argument type="service" id=".service_locator.lka6pxf"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -7411,7 +7422,7 @@
     <service id="jms_serializer.accessor_strategy" alias="jms_serializer.accessor_strategy.default" public="false"/>
     <service id="JMS\Serializer\ContextFactory\SerializationContextFactoryInterface" alias="jms_serializer.configured_serialization_context_factory" public="false"/>
     <service id="JMS\Serializer\ContextFactory\DeserializationContextFactoryInterface" alias="jms_serializer.configured_deserialization_context_factory" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.arG1rph"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.lka6pxf"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>

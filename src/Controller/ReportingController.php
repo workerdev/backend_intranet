@@ -31,6 +31,7 @@ use App\Entity\TipoAccion;
 use App\Entity\AccionSeguimiento;
 use App\Entity\AccionReprograma;
 use App\Entity\AccionEficacia;
+use App\Entity\FichaProcesos;
 
 
 class ReportingController extends AbstractController
@@ -53,48 +54,123 @@ class ReportingController extends AbstractController
         try {
             $sx = json_decode($_POST['object'], true);
             $anio = $sx['anio'];
-            
-            $cx = $this->getDoctrine()->getManager()->getConnection();
-            $sql  = "SELECT adq.cb_auditoria_equipo_id AS eq_id, tad.cb_tipo_auditoria_nombre AS  tpaud_tipo, adq.cb_auditoria_equipo_fkauditoria AS eq_fkaud, ad.cb_auditoria_fkgas AS aud_fkarea,
-                        ad.cb_auditoria_alcance AS aud_alcance, adt.cb_auditor_apellidosnombres AS adr_apnomb, tadt.cb_tipo_auditor_nombre AS tpadr_nombre, ad.cb_auditoria_lugar AS aud_lugar,
-                        ad.cb_auditoria_responsable AS aud_responsable, ad.cb_auditoria_fechahorainicio AS aud_fhini, ad.cb_auditoria_fechahorafin AS aud_fhfin, ad.cb_auditoria_duracionestimada AS aud_duracionest,
-                        ac.cb_accion_descripcion AS acn_descripcion, ef.cb_accion_eficacia_resultado AS ef_resultado, hl.cb_hallazgo_id AS hlg_id, fp.cb_ficha_procesos_nombre AS fp_nombre, g.cb_gerencia_nombre AS g_nombre
-                        FROM cb_aud_auditoria ad, cb_aud_auditor adt, cb_aud_tipo_auditoria tad, 
-                        cb_aud_tipo_auditor tadt, cb_aud_auditoria_equipo adq, cb_aud_hallazgo hl, cb_aud_accion ac, 
-                        cb_aud_accion_eficacia ef, cb_proc_gas pga, cb_procesos_ficha_procesos fp, cb_configuracion_gerencia g
-                    WHERE adq.cb_auditoria_equipo_fkauditoria=ad.cb_auditoria_id AND
-                        adq.cb_auditoria_equipo_fkauditor=adt.cb_auditor_id AND 
-                        adq.cb_auditoria_equipo_fktipo=tadt.cb_tipo_auditor_id  AND
-                        ad.cb_auditoria_fktipo=tad.cb_tipo_auditoria_id AND ad.cb_auditoria_id=hl.cb_hallazgo_fkauditoria AND
-                        ad.cb_auditoria_id=hl.cb_hallazgo_fkauditoria AND hl.cb_hallazgo_id=ac.cb_accion_fkhallazgo AND
-                        ac.cb_accion_id=ef.cb_accion_eficacia_fkaccion AND ad.cb_auditoria_fkgas=pga.cb_gas_id AND
-                        fp.cb_ficha_procesos_fkareagerenciasector=pga.cb_gas_id AND pga.cb_gas_fkgerencia=g.cb_gerencia_id AND date_part('year', ad.cb_auditoria_fechaprogramada)=:anio";
 
-            $stmt = $cx->prepare($sql);
-            $stmt->execute(['anio' => $anio]);
-            $dtaud = $stmt->fetchAll();
+            $auditorias = $this->getDoctrine()->getRepository(Auditoria::class)->findAllByYear($anio);
 
-            $sql2  = "SELECT tbr.cb_auditoria_id AS aud_id, tbr.cb_auditoria_fkgas AS aud_fkarea, tbr.cb_auditoria_fktipo AS aud_fktipo, tbr.cb_auditoria_codigo AS aud_codigo,
-                        tbr.cb_auditoria_fechaprogramada AS aud_fprog, tbr.cb_auditoria_duracionestimada AS aud_duracion, tbr.cb_auditoria_lugar AS aud_lugar,
-                        tbr.cb_auditoria_alcance AS aud_alcance, tbr.cb_auditoria_objetivos AS aud_objetivos, tbr.cb_auditoria_fechahorainicio AS aud_fhini, 
-                        tbr.cb_auditoria_fechahorafin AS aud_fhfin, tbr.cb_auditoria_conclusiones AS aud_conclusiones, tbr.cb_auditoria_responsable AS aud_responsable,
-                        tbr.cb_auditoria_fecharegistro AS aud_freg, tbr.cb_auditoria_estado AS aud_estado, tbr.cb_documento_extra_id AS dex_id, tbr.cb_gas_id AS gas_id,
-                        tbr.cb_gas_responsable AS gas_responsable, tbr.cb_documento_extra_codigo AS dex_codigo, tbr.cb_documento_extra_titulo AS dex_titulo,
-                        tbr.cb_doc_tipoextra_tipo AS dtpex_tipo, tbr.cb_ficha_procesos_nombre AS fp_nombre, tbr.cb_gerencia_nombre AS g_nombre
-                    FROM (SELECT *
-                    FROM cb_aud_auditoria adta,
-                    (SELECT d.cb_documento_extra_id ,grc.cb_gas_id, (u.cb_usuario_nombre || ' ' || u.cb_usuario_apellido) AS cb_gas_responsable, d.cb_documento_extra_codigo, d.cb_documento_extra_titulo, dt.cb_doc_tipoextra_tipo, fp.cb_ficha_procesos_nombre, g.cb_gerencia_nombre
-                    FROM cb_procesos_ficha_procesos fp, cb_gest_documento_extra d, cb_gestion_doctipoextra dt, cb_proc_gas grc, cb_configuracion_gerencia g, cb_usuario_usuario u
-                    WHERE grc.cb_gas_id=fp.cb_ficha_procesos_fkareagerenciasector AND grc.cb_gas_fkgerencia=g.cb_gerencia_id AND u.cb_usuario_id=grc.cb_gas_fkresponsable AND
-                        fp.cb_ficha_procesos_id=d.cb_documento_extra_fkproceso AND d.cb_documento_extra_fktipo=dt.cb_doc_tipoextra_id) AS docs
-                    WHERE adta.cb_auditoria_fkgas=docs.cb_gas_id AND date_part('year', adta.cb_auditoria_fechaprogramada)=:anio) AS tbr";
+            $dtauditoria = [];
+            if (!empty($auditorias)) {
+                foreach ($auditorias as $aud) {
+                    $fkproceso = $this->getDoctrine()->getRepository(FichaProcesos::class)->findOneBy(['id' => $aud['fkproceso'], 'estado' => '1']);
+                    $equipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $aud['id'], 'estado' => '1']);
+                    $sector = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $aud['id']], ['id' => 'ASC']);
+                    $documentsadd = $this->getDoctrine()->getRepository(DocumentoAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $aud['id']], ['id' => 'ASC']);
 
-            $stmt2 = $cx->prepare($sql2);
-            $stmt2->execute(['anio' => $anio]);
-            $dtdoc = $stmt2->fetchAll();
+                    if ($aud['fkproceso'] != null) {
+                        $documentos = $this->getDoctrine()->getRepository(Documento::class)->findDocByProc($aud['fkproceso']);
+                    }
+                    else $documentos = [];
 
-            //dd($dtaud);
-            //dd($dtdoc);
+                    $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1', 'fkauditoria' => $aud['id']], ['fecharegistro' => 'ASC', 'titulo' => 'ASC']);
+
+                    $dthallazgo = [];
+                    if ($hallazgos != null) {
+                        foreach ($hallazgos as $hlg) {
+                            $fecreg = $hlg->getFecharegistro();
+                            if ($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                            
+                            $itemhlg = [
+                                "id" => $hlg->getId(),
+                                "fkauditoria" => $hlg->getFkauditoria(),
+                                "fktipo" => $hlg->getFktipo(),
+                                "ordinal" => $hlg->getOrdinal(),
+                                "titulo" => $hlg->getTitulo(),
+                                "descripcion" => $hlg->getDescripcion(),
+                                "evidencia" => $hlg->getEvidencia(),
+                                "documento" => $hlg->getDocumento(),
+                                "puntoiso" => $hlg->getPuntoiso(),
+                                "fkimpacto" => $hlg->getFkimpacto(),
+                                "fkprobabilidad" => $hlg->getFkprobabilidad(),
+                                "analisiscausaraiz" => $hlg->getAnalisiscausaraiz(),
+                                "recomendaciones" => $hlg->getRecomendaciones(),
+                                "cargoauditado" => $hlg->getCargoauditado(),
+                                "nombreauditado" => $hlg->getNombreauditado(),
+                                "responsable" => $hlg->getResponsable(),
+                                "fecharegistro" => $rsfcr
+                            ];
+                            
+                            $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'fkhallazgo' => $hlg->getId()], ['fechaimplementacion' => 'ASC']);
+                            $dtaccion = [];
+                            if ($acciones != null) {
+                                foreach ($acciones as $acn) {
+                                    $fecimp = $acn->getFechaimplementacion();
+                                    $fecreg = $acn->getFecharegistro();
+
+                                    if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
+                                    if($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+                                
+                                    $itemacn = [
+                                        "id" => $acn->getId(),
+                                        "fkhallazgo" => $acn->getFkhallazgo(),
+                                        "ordinal" => $acn->getOrdinal(),
+                                        "descripcion" => $acn->getDescripcion(),
+                                        "fechaimplementacion" => $rsfci,
+                                        "responsableimplementacion" => $acn->getResponsableimplementacion(),
+                                        "estadoaccion" => $acn->getEstadoaccion(),
+                                        "responsableregistro" => $acn->getResponsableregistro(),
+                                        "fecharegistro" => $rsfcr,
+                                        "fktipo" => $acn->getFktipo()
+                                    ];
+
+                                    $verificaciones = $this->getDoctrine()->getRepository(AccionEficacia::class)->findBy(['fkaccion' => $acn->getId(), 'estado' => '1'], ['fecha' => 'ASC']);
+                                    
+                                    $dteficacia = [];
+                                    if ($verificaciones != null) {
+                                        foreach ($verificaciones as $efc) {
+                                            $fec = $efc->getFecha();
+                                            if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
+                                            
+                                            $itemvrf = [
+                                                "id" => $efc->getId(),
+                                                "fkaccion" => $efc->getFkaccion(),
+                                                "eficaz" => $efc->getEficaz(),
+                                                "resultado" => $efc->getResultado(),
+                                                "fecha" => $rsfc,
+                                                "responsable" => $efc->getResponsable(),
+                                                "nombreverificador" => $efc->getNombreverificador(),
+                                                "cargoverificador" => $efc->getCargoverificador()
+                                            ];
+                                            $dteficacia[] = $itemvrf;
+                                        }
+                                    }
+                                    $dtaccion[] = ['itemacn' => $itemacn, 'eficacia' => $dteficacia];
+                                }
+                            }
+                            
+                            $dthallazgo[] = ['itemhlg' =>  $itemhlg, 'accion' =>  $dtaccion];
+                        }
+                    }
+
+                    $eq_auditor = [];
+                    $eq_lider = [];
+                    $eq_experto = [];
+                    $eq_observador = [];
+                    if ($equipo != null) {
+                        foreach ($equipo as $eqp) {
+                            if ($eqp->getFktipo() != null) {
+                                if (strtoupper($eqp->getFktipo()->getNombre()) == 'AUDITOR') $eq_auditor[] = $eqp;
+                                if (strtoupper($eqp->getFktipo()->getNombre()) == 'AUDITOR LIDER') $eq_lider[] = $eqp;
+                                if (strtoupper($eqp->getFktipo()->getNombre()) == 'EXPERTO TECNICO') $eq_experto[] = $eqp;
+                                if (strtoupper($eqp->getFktipo()->getNombre()) == 'OBSERVADOR') $eq_observador[] = $eqp;
+                            }
+                        }
+                    }
+
+                    $dtauditoria[] = [
+                        'itemaud' =>  $aud, 'hallazgo' =>  $dthallazgo, 'sector' => $sector, 'docs' => $documentos, 'docsadd' => $documentsadd, 
+                        'auditor' => $eq_auditor, 'lider' => $eq_lider, 'experto' => $eq_experto, 'observador' => $eq_observador, 'proceso' => $fkproceso
+                    ];
+                }
+            }
             
             $spreadsheet = new Spreadsheet();
             
@@ -140,436 +216,513 @@ class ReportingController extends AbstractController
             $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
             $spreadsheet->getActiveSheet()->getCell('B2')->setValue($richText);
 
-            if (sizeof($dtaud) > 0){
-            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 
-            $spreadsheet->getActiveSheet()->getStyle('A4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('B4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('C4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('D4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('F4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('G4')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G4')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G4')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G4')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            if (sizeof($dtauditoria) > 0) {
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('GESTIÓN: ');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $richText->createText($anio);
+                $spreadsheet->getActiveSheet()->getCell('B3')->setValue($richText);
+                $i = 4;
 
 
+                foreach ($dtauditoria as $t) {
+                    $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 
-            $spreadsheet->getActiveSheet()->getStyle('A5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('A5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            $spreadsheet->getActiveSheet()->getStyle('B5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('B5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            $spreadsheet->getActiveSheet()->getStyle('C5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('C5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            $spreadsheet->getActiveSheet()->getStyle('D5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('D5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            $spreadsheet->getActiveSheet()->getStyle('E5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('E5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('E5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('E5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            $spreadsheet->getActiveSheet()->getStyle('F5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('F5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('G5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('G5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('H5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('H5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('H5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('H5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('I5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('I5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('I5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('I5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('J5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('J5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('J5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('J5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('K5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('K5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('K5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('K5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('L5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('L5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('L5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('L5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('M5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('M5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('M5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('M5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('N5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('N5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('N5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('N5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            $spreadsheet->getActiveSheet()->getStyle('O5')
-                ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('O5')
-                ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('O5')
-                ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-            $spreadsheet->getActiveSheet()->getStyle('O5')
-                ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.$i)
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.$i)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.$i)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.$i)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('GESTIÓN: ');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $richText->createText(substr($dtaud[0]['aud_fhini'], 0, 4));
-            $spreadsheet->getActiveSheet()->getCell('B3')->setValue($richText);
-            
-            $code = $dtaud[0]['eq_id'];
-            $pass = false;
-            $i = 6;
 
-            foreach ($dtaud as $t) {
-                if($t['eq_id'] != $code && $pass == true){
-                    $code = $t['tpaud_tipo'];
-                    $pass = false;
-                }
-                if($t['eq_id'] == $code && $pass == false){
+                    $spreadsheet->getActiveSheet()->getStyle('A'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('B'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('B'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('C'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('C'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('D'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('D'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('E'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('E'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('E'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('E'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('F'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('F'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('G'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('G'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('H'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('H'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('H'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('H'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('I'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('I'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('I'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('I'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('J'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('J'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('J'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('J'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('K'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('K'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('K'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('K'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('L'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('L'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('L'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('L'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('M'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('M'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('M'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('M'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('N'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('N'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('N'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('N'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                    $spreadsheet->getActiveSheet()->getStyle('O'.($i+1))
+                        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('O'.($i+1))
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('O'.($i+1))
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    $spreadsheet->getActiveSheet()->getStyle('O'.($i+1))
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+                
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Equipo ');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $richText->createText($t['eq_id']);
-                    $spreadsheet->getActiveSheet()->getCell('A4')->setValue($richText);
+
+                    if ($t['itemaud']['id'] != '' && $t['itemaud']['id'] != null) $clteam = (int)$t['itemaud']['id'];
+                    else $clteam = 0;
+
+                    $richText->createText($clteam);
+                    $spreadsheet->getActiveSheet()->getCell('A'.$i)->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getStyle('A'.$i)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Auditor líder: ');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    if($t['tpadr_nombre'] == "AUDITOR LIDER"){
-                        $richText->createText($t['adr_apnomb']);
+     
+                    $str_lider = '';
+                    if (!empty($t['lider'])) {
+                        $firstldr = true;
+                        foreach ($t['lider'] as $ldr) {
+                            if (!$firstldr) $str_lider = $str_lider.' - ';
+                            else $firstldr = false;
+                            $str_lider = $str_lider.$ldr->getFkauditor()->getNombres().' '.$ldr->getFkauditor()->getPaterno().' '.$ldr->getFkauditor()->getMaterno();
+                        }
                     }
-                    $spreadsheet->getActiveSheet()->getCell('B4')->setValue($richText);
+                    $richText->createText($str_lider);
+                    $spreadsheet->getActiveSheet()->getCell('B'.$i)->setValue($richText);
+
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Auditor: ');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    if($t['tpadr_nombre'] == "AUDITOR"){
-                        $richText->createText($t['adr_apnomb'].' ');
+                    
+                    $str_auditor = '';
+                    if (!empty($t['auditor'])) {
+                        $firstadtr = true;
+                        foreach ($t['auditor'] as $adtr) {
+                            if (!$firstadtr) $str_auditor = $str_auditor.' - ';
+                            else $firstadtr = false;
+                            $str_auditor = $str_auditor.$adtr->getFkauditor()->getNombres().' '.$adtr->getFkauditor()->getPaterno().' '.$adtr->getFkauditor()->getMaterno();
+                        }
                     }
+                    $richText->createText($str_auditor);
+
+
                     $payable = $richText->createTextRun(' Observador: ');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    if($t['tpadr_nombre'] == "OBSERVADOR"){
-                        $richText->createText($t['adr_apnomb']);
+                    
+                    $str_observador = '';
+                    if (!empty($t['observador'])) {
+                        $firstobs = true;
+                        foreach ($t['observador'] as $obs) {
+                            if (!$firstobs) $str_observador = $str_observador.' - ';
+                            else $firstobs = false;
+                            $str_observador = $str_observador.$obs->getFkauditor()->getNombres().' '.$obs->getFkauditor()->getPaterno().' '.$obs->getFkauditor()->getMaterno();
+                        }
                     }
-                    $spreadsheet->getActiveSheet()->getCell('C4')->setValue($richText);
+                    $richText->createText($str_observador);
+                    
+                    $spreadsheet->getActiveSheet()->getCell('C'.$i)->setValue($richText);
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Experto técnico: ');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    if($t['tpadr_nombre'] == "EXPERTO TECNICO"){
-                        $richText->createText($t['adr_apnomb']);
+                    
+                    $str_experto = '';
+                    if (!empty($t['experto'])) {
+                        $firstexp = true;
+                        foreach ($t['experto'] as $exp) {
+                            if (!$firstexp) $str_experto = $str_experto.' - ';
+                            else $firstexp = false;
+                            $str_experto = $str_experto.$exp->getFkauditor()->getNombres().' '.$exp->getFkauditor()->getPaterno().' '.$exp->getFkauditor()->getMaterno();
+                        }
                     }
-                    $spreadsheet->getActiveSheet()->getCell('D4')->setValue($richText);
+                    $richText->createText($str_experto);
+
+                    $spreadsheet->getActiveSheet()->getCell('D'.$i)->setValue($richText);
+
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Fecha y hora');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('F4')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('F'.$i)->setValue($richText);
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Fecha y hora');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('G4')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('G'.$i)->setValue($richText);
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('No. Auditoría');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('A5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('A'.($i+1))->setValue($richText);
 
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Proceso a auditar');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('B5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('B'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Gerencia o área');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('C5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('C'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Lugar');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('D5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('D'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Persona auditar');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('E5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('E'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('INICIO');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('F5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('F'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('FIN');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('G5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('G'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Duración (hrs.)');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('H5')->setValue($richText);
+                    
+                    $spreadsheet->getActiveSheet()->getCell('H'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Tipo documento');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('I5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('I'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Código doc.');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('J5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('J'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Descripción del documento');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('K5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('K'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Resultados de auditorías previas');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('L5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('L'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Verificación de la eficacia Aud. Previa');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('M5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('M'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Propósitos comerciales y de negocio');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('N5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('N'.($i+1))->setValue($richText);
                     
                     $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                     $payable = $richText->createTextRun('Prioridades de la Dirección');
                     $payable->getFont()->setBold(true);
                     $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                    $spreadsheet->getActiveSheet()->getCell('O5')->setValue($richText);
+                    $spreadsheet->getActiveSheet()->getCell('O'.($i+1))->setValue($richText);
 
-                    $pass = true;
+                    
+
+                    $i = $i + 2;
+                    $sheet->setCellValue('A'.$i, $t['itemaud']['id']);
+
+                    if ($t['proceso'] != null) $dtproc = $t['proceso']->getNombre();
+                    else $dtproc = '';  
+
+                    $sheet->setCellValue('B'.$i, $dtproc);
+
+                    $str_gerencia = '';
+                    $gerencias = [];
+                    if (!empty($t['sector'])) {
+                        $firstgr = true;
+                        foreach ($t['sector'] as $sctr) {
+                            if (!in_array($sctr->getFkgas()->getFkgerencia()->getId(), $gerencias)) {
+                                if (!$firstgr) $str_gerencia = $str_gerencia.' - ';
+                                else $firstgr = false;
+
+                                $str_gerencia = $str_gerencia.$sctr->getFkgas()->getFkgerencia()->getNombre();
+                                $gerencias[] = $sctr->getFkgas()->getFkgerencia()->getId();
+                            } 
+                        }
+                    }
+
+                    $sheet->setCellValue('C'.$i, $str_gerencia);
+
+                    $sheet->setCellValue('D'.$i, $t['itemaud']['lugar']);
+                    $sheet->setCellValue('E'.$i, '');
+                    $sheet->setCellValue('F'.$i, $t['itemaud']['fechahorainicio']);
+                    $sheet->setCellValue('G'.$i, $t['itemaud']['fechahorafin']);
+
+                    if ($t['itemaud']['duracionestimada'] != '' && $t['itemaud']['duracionestimada'] != null) $clduration = (int)$t['itemaud']['duracionestimada'];
+                    else $clduration = 0;
+
+                    $sheet->setCellValue('H'.$i, $clduration);
+                    $spreadsheet->getActiveSheet()->getStyle('H'.$i)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                    $k = $i - 1;
+                    if (!empty($t['docs'])){
+                        foreach ($t['docs'] as $dc) {
+                            $k++;
+                            $sheet->setCellValue('I'.$k, $dc['tipo']);
+                            $sheet->setCellValue('J'.$k, $dc['codigo']);
+                            $sheet->setCellValue('K'.$k, $dc['titulo']);
+                        }
+                    }
+                    if (!empty($t['docsadd'])){
+                        foreach ($t['docsadd'] as $dca) {
+                            $k++;
+                            $sheet->setCellValue('I'.$k, $dca->getFkdocumento()->getFktipo()->getNombre());
+                            $sheet->setCellValue('J'.$k, $dca->getFkdocumento()->getCodigo());
+                            $sheet->setCellValue('K'.$k, $dca->getFkdocumento()->getTitulo());
+                        }
+                    }
+
+                    $n = $i - 1;
+                    if (!empty($t['hallazgo'])) {
+                        foreach ($t['hallazgo'] as $hlg) {
+                            if (!empty($hlg['accion'])) {
+                                foreach ($hlg['accion'] as $acn) {
+                                    if (!empty($acn['eficacia'])) {
+                                        foreach ($acn['eficacia'] as $efc) {
+                                            $n++;
+                                            $sheet->setCellValue('L'.$n, $efc['resultado']);
+                                            $sheet->setCellValue('M'.$n, $efc['eficaz']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if ($k > $n) $i = $k + 3;
+                    else $i = $n + 3;
                 }
 
-                $sheet->setCellValue('A'.$i, $t['eq_fkaud']);
-                $sheet->setCellValue('B'.$i, $t['fp_nombre']);
-                $sheet->setCellValue('C'.$i, $t['g_nombre']);
-                $sheet->setCellValue('D'.$i, $t['aud_lugar']);
-                $sheet->setCellValue('E'.$i, $t['aud_responsable']);
-                $sheet->setCellValue('F'.$i, $t['aud_fhini']);
-                $sheet->setCellValue('G'.$i, $t['aud_fhfin']);
-                $sheet->setCellValue('H'.$i, $t['aud_duracionest']);
-                
-                $sheet->setCellValue('I'.$i, $dtdoc[0]['dtpex_tipo']);
-                $sheet->setCellValue('J'.$i, $dtdoc[0]['dex_codigo']);
-                $sheet->setCellValue('K'.$i, $dtdoc[0]['dex_titulo']);
-
-                $sheet->setCellValue('L'.$i, $t['acn_descripcion']);
-                $sheet->setCellValue('M'.$i, $t['ef_resultado']);
-
-                foreach ($dtdoc as $m) {
-                    if($dtdoc[0]['dex_codigo'] != $m['dex_codigo'] && $t['eq_fkaud'] == $m['aud_id'] && $t['aud_fkarea'] == $m['aud_fkarea']){    
-                        $i++;
-                        $sheet->setCellValue('I'.$i, $m['dtpex_tipo']);
-                        $sheet->setCellValue('J'.$i, $m['dex_codigo']);
-                        $sheet->setCellValue('K'.$i, $m['dex_titulo']);
-                    }                 }
-
-                $i++;
-                //echo json_encode($t['tpaud_tipo']).'<br>';
-                //dd($t);
-            }
-
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('Fecha');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('D'.($i+4))->setValue($richText);
-
-
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('COORDINADOR GCDO');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('A'.($i+7))->setValue($richText);
-            
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('RESPONSABLE MEDIO AMBIENTE');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('C'.($i+7))->setValue($richText);
-
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('RESPONSABLE SySO');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('F'.($i+7))->setValue($richText);
-
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('DIRECTOR SIG');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('K'.($i+7))->setValue($richText);
-
-            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('GERENTE GENERAL');
-            $payable->getFont()->setBold(true);
-            $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-            $spreadsheet->getActiveSheet()->getCell('N'.($i+7))->setValue($richText);
-            } else {
-                $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(10);
 
                 $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-                $payable = $richText->createTextRun('No se encontraron registros de esta gestión.');
+                $payable = $richText->createTextRun('Fecha');
                 $payable->getFont()->setBold(true);
                 $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
-                $spreadsheet->getActiveSheet()->getCell('B4')->setValue($richText);
+                $spreadsheet->getActiveSheet()->getCell('D'.($i+4))->setValue($richText);
+
+
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('COORDINADOR GCDO');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $spreadsheet->getActiveSheet()->getCell('A'.($i+7))->setValue($richText);
+                
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('RESPONSABLE MEDIO AMBIENTE');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $spreadsheet->getActiveSheet()->getCell('C'.($i+7))->setValue($richText);
+
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('RESPONSABLE SySO');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $spreadsheet->getActiveSheet()->getCell('F'.($i+7))->setValue($richText);
+
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('DIRECTOR SIG');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $spreadsheet->getActiveSheet()->getCell('K'.($i+7))->setValue($richText);
+
+                $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                $payable = $richText->createTextRun('GERENTE GENERAL');
+                $payable->getFont()->setBold(true);
+                $payable->getFont()->setColor( new \PhpOffice\PhpSpreadsheet\Style\Color( \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK));
+                $spreadsheet->getActiveSheet()->getCell('N'.($i+7))->setValue($richText);
             }
 
             

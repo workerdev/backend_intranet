@@ -211,25 +211,35 @@
             $('#gestionf').selectpicker('render')
         });
         
-        $(document).on('click','.urlcrtv', function() {
-            var archivo = this.dataset.file
-            var tipoArchivo = base64MimeType(archivo)
-            var archivoBlob = b64toBlob(archivo,tipoArchivo)
-            saveAs(archivoBlob , "archivo")
-        })
+        $(document).on('click','.urlb64', function() {
+            var id = this.getAttribute("data-id")
+            var tipo = this.getAttribute("data-type")
 
-        $(document).on('click','.urledt', function() {
-            var archivo = this.dataset.file
-            var tipoArchivo = base64MimeType(archivo)
-            var archivoBlob = b64toBlob(archivo,tipoArchivo)
-            saveAs(archivoBlob , "archivo")
-        })
+            $('html, body').animate({scrollTop: 0}, 'slow');
+            obj = JSON.stringify({
+                'id': parseInt(id),
+                'tipo': tipo
+            })
+            $("#dt-loader").show();
 
-        $(document).on('click','.urlorg', function() {
-            var archivo = this.dataset.file
-            var tipoArchivo = base64MimeType(archivo)
-            var archivoBlob = b64toBlob(archivo,tipoArchivo)
-            saveAs(archivoBlob , "archivo")
+            $.ajax({
+                method: 'POST',
+                url: '/correlativo_b64file',
+                data: {object: obj},
+                async: true
+            }).done(function (response) {
+                var self = JSON.parse(response)
+                console.log(self)
+                $("#dt-loader").fadeOut('800');
+                var dtfile = self.response[0] 
+                var archivo = dtfile[tipo]
+                var tipoArchivo = base64MimeType(archivo)
+                console.log(tipoArchivo)
+                
+                var archivoBlob = b64toBlob(archivo, tipoArchivo)
+                var filename = dtfile.gestion + '_' + dtfile.numcorrelativo + '_' + tipo
+                saveAs(archivoBlob , (filename))
+            })
         })
 
         $('#gestionf').change(function() {
@@ -260,6 +270,7 @@
                 async: true
             }).done(function (response) {
                 var datos = response.response;
+                console.log(datos)
 
                 var table = $('#data_table').DataTable({
                     data: datos,
@@ -276,33 +287,30 @@
                         { data: "id", visible: false },
                         { title: "Número correlativo" , data: "numcorrelativo" },
                         { title: "Fecha de registro" , data: "fechareg" },
-                        { title: "Solicitante", data : 'fksolicitante' ,
-                            render : function (data, type, row){    
-                                if(data != null) a = row.fksolicitante.nombre + ' ' + row.fksolicitante.apellido                        
-                                else a = ''   
-                                return a
-                            }
-                        }, 
+                        { title: "Solicitante", data : "fullname" }, 
                         { title: "Redactor" , data: "redactor" },
                         { data: "destinatario", visible: false },
                         { title: "Referencia" , data: "referencia" },
-                        { data : function(data){
-                                if(data.fkcorrelativo != null) return data.fkcorrelativo.descripcion
+                        { data: function(data) {
+                                if (data.fkcorrelativo != null) return data.fkcorrelativo.nombre
                                 else return ''
                             },
                             visible: false 
                         },
-                        { data : function(data){
-                                if(data.fktiponota != null) return data.fktiponota.descripcion
+                        { data: function(data) {
+                                if (data.fktiponota != null) return data.fktiponota.nombre
                                 else return ''
                             },
                             visible: false 
                         },
                         { data: "ip", visible: false },
                         { title: "URL", data: "url",                       
-                            render : function (data){  
-                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
-                                else a = '<a href="#" data-file="'+data+'" class="urlcrtv"><i class="material-icons">folder</i> Archivo</a>'                           
+                            render: function (data, type, row) {  
+                                if (['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else {
+                                    if (data == "base64") a = '<a href="javascript:void(0)" data-id="'+row.id+'" data-type="url" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a>' 
+                                    else a = '<a href="'+data+'" target="_blank"><i class="material-icons">folder</i> Archivo</a>' 
+                                }                          
                                 return a
                             }
                         },
@@ -310,28 +318,42 @@
                         { data: "estadocorrelativo", visible: false },
                         { data: "item", visible: false },
                         { title: "URL editable", data: "urleditable",
-                            render : function (data){                            
-                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
-                                else a = '<a href="#" data-file="'+data+'" class="urledt"><i class="material-icons">folder_open</i> Archivo</a>'                           
+                            render : function (data, type, row) {                            
+                                if (['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else {
+                                    if (data == "base64") a = '<a href="javascript:void(0)" data-id="'+row.id+'" data-type="urleditable" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a>' 
+                                    else a = '<a href="'+data+'" target="_blank"><i class="material-icons">folder_open</i> Archivo</a>' 
+                                }                         
                                 return a
                             }
                         },
                         { data: "entrega", visible: false },
-                        { data: "fkunidad.nombre", visible: false },
+                        { data: function(data) {
+                                if (data.fkunidad != null) return data.fkunidad.nombre
+                                else return ''
+                            },
+                            visible: false 
+                        },
                         { title: "URL origen", data: "urlorigen",
-                            render : function (data){                            
-                                if(['', 'N/A', null].includes(data)) a = 'N/A'                         
-                                else a = '<a href="#" data-file="'+data+'" class="urlorg"><i class="material-icons">folder_special</i> Archivo</a>'
+                            render : function (data, type, row) {                            
+                                if (['', 'N/A', null].includes(data)) a = 'N/A'                         
+                                else {
+                                    if (data == "base64") a = '<a href="javascript:void(0)" data-id="'+row.id+'" data-type="urlorigen" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a>' 
+                                    else a = '<a href="'+data+'" target="_blank"><i class="material-icons">folder_special</i> Archivo</a>' 
+                                }
                                 return a
                             }
                         },
                     ],
                     "createdRow": function( row, data, dataIndex ) {
-                        if(data.estadocorrelativo === "Anulado"){
+                        if (data.estadocorrelativo === "Anulado") {
                             $(row).addClass('bg-cancel');
-                        }else{
+                        } else {
                             $(row).removeClass('bg-cancel');
                         }
+                        $(row).children(':nth-child(6)').attr('align', 'center');
+                        $(row).children(':nth-child(7)').attr('align', 'center');
+                        $(row).children(':nth-child(8)').attr('align', 'center');
                     },
                     "order": [[ 1, 'desc' ]],
                     "pageLength": 10,

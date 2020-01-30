@@ -6,13 +6,15 @@
         </td>
         <td class="d-none">{{ tr.id }}</td>
         <td>{{ tr.numcorrelativo }}</td>
-        <td>{{ tr.fechareg | date('Y-m-d') }}</td>
-        <td>
-            {{ tr.fksolicitante.nombre ~ ' ' ~ tr.fksolicitante.apellido }}
-            {% if tr.fksolicitante.estado == 2 %}
-                 <b><i>{{' (Inactivo)' }}</i></b>
-            {% endif %}
-        </td>
+
+        {% if tr.fechareg != null %}
+            <td>{{ tr.fechareg | date('Y-m-d') }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+
+        <td>{{ tr.fullname }}</td>
+
         <td>{{ tr.redactor }}</td>
         <td class="d-none">{{ tr.destinatario }}</td>
         <td>{{ tr.referencia }}</td>
@@ -31,32 +33,54 @@
 
         <td class="d-none">{{ tr.ip }}</td>
 
-        {% if tr.url != null and tr.url != 'N/A' %}
-            <td><a href="#" data-file="{{tr.url}}" class="urlcrtv"><i class="material-icons">folder</i> Archivo</a></td>
+        {% if tr.url == 'base64' %}
+            <td align="center"><a href="javascript:void(0)" data-id="{{tr.id}}" data-type="url" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a></td>
         {% else %}
-            <td>{{ tr.url }}</td>
+            {% if tr.url != null and tr.url != 'N/A' %}
+                <td align="center"><a href="{{tr.url}}" target="_blank"><i class="material-icons">folder</i> Archivo</a></td>
+            {% else %}
+                <td align="center">{{ tr.url }}</td>
+            {% endif %}
         {% endif %}
 
         <td class="d-none">{{ tr.antecedente }}</td>
         <td class="d-none">{{ tr.estadocorrelativo }}</td>
         <td class="d-none">{{ tr.item }}</td>
 
-        {% if tr.urleditable != null and tr.urleditable != 'N/A' %}
-            <td><a href="#" data-file="{{tr.urleditable}}" class="urledt"><i class="material-icons">folder_open</i> Archivo</a></td>
+        {% if tr.urleditable == 'base64' %}
+            <td align="center"><a href="javascript:void(0)" data-id="{{tr.id}}" data-type="urleditable" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a></td>
         {% else %}
-            <td>{{ tr.urleditable }}</td>
+            {% if tr.urleditable != null and tr.urleditable != 'N/A' %}
+                <td align="center"><a href="{{tr.urleditable}}" target="_blank"><i class="material-icons">folder_open</i> Archivo</a></td>
+            {% else %}
+                <td align="center">{{ tr.urleditable }}</td>
+            {% endif %}
+        {% endif %}
+        
+        {% if tr.entrega  != null %}
+            <td class="d-none">{{ tr.entrega | date('Y-m-d') }}</td>
+        {% else %}
+            <td class="d-none"></td>
         {% endif %}
 
-        <td class="d-none">{{ tr.entrega | date('Y-m-d') }}</td>
-        <td class="d-none">{{ tr.fkunidad.nombre }}</td>
+        {% if tr.fkunidad != null %}
+            <td class="d-none">{{ tr.fkunidad.nombre }}</td>
+        {% else %}
+            <td class="d-none"></td>
+        {% endif %}
         
         {% set cmp = 'Completo' ~ tr.fkunidad.nombre %}
         {% set crp = 'Crear' ~ tr.fkunidad.nombre %}
 
-        {% if tr.urlorigen != null and tr.urlorigen != 'N/A' %}
-            <td><a href="#" data-file="{{tr.urlorigen}}" class="urlorg"><i class="material-icons">folder_special</i> Archivo</a></td>
+        {% if tr.urlorigen == 'base64' %}
+            <td align="center"><a href="javascript:void(0)" data-id="{{tr.id}}" data-type="urlorigen" class="urlb64"><i class="material-icons">cloud_download</i> Archivo</a></td>
         {% else %}
-            <td>{{ tr.urlorigen }}</td>
+            {% if tr.urlorigen != null and tr.urlorigen != 'N/A' %}
+                <td align="center"><a href="{{tr.urlorigen}}" target="_blank"><i class="material-icons">folder_special</i> Archivo</a></td>
+            {% else %}
+                <td align="center">{{ tr.urlorigen }}</td>
+            {% endif %}
         {% endif %}
     </tr>
+    
 {% endfor %}

@@ -73,50 +73,93 @@ class CorrelativoController extends Controller
         $c_user = $s_user['username'];
         $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findPermissionByUser($c_user, $anio);
 
-        $correlativos = array();
-        foreach ($correlativo as $crtv) {
-            $dtcrtv = $crtv;
+        $correlativos = [];
+        if($correlativo != null){
+            foreach ($correlativo as $crtv) {
+                $dtcrtv = $crtv;
 
-            $fecreg = $dtcrtv['fechareg'];
-            $fecent = $dtcrtv['entrega'];
+                $fecreg = $dtcrtv['fechareg'];
+                $fecent = $dtcrtv['entrega'];
 
-            if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
-                $itemvl = $dtcrtv['item'];
-            } else {
-                $itemvl = "";
+                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                    $itemvl = $dtcrtv['item'];
+                } else {
+                    $itemvl = "";
+                }
+
+                $fksolicitante = $dtcrtv['fksolicitante'];
+                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                $fktiponota = $dtcrtv['fktiponota'];
+                $fkunidad = $dtcrtv['fkunidad'];
+                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+                
+                if($fksolicitante != null) $fullname = $fksolicitante->getNombre().' '.$fksolicitante->getApellido();
+                else $fullname = '';
+
+                $serializer = new Serializer(array(new ObjectNormalizer()));
+                $fksolicitante_cln = $serializer->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido', 'estado')));
+                $fkcorrelativo_cln = $serializer->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
+                $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
+                $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
+
+                if (strpos($dtcrtv['url'], ";base64,") !== false) $dturl = 'base64';
+                else {
+                    if (!in_array($dtcrtv['url'], ['N/A', null, ''])) {
+                        $urlfl = $this->getParameter('Directorio_proyecto').$dtcrtv['url'];
+                        if (file_exists($urlfl) && (strpos($urlfl, '.') !== false)) $dturl = $dtcrtv['url'];
+                        else $dturl = 'N/A';
+                    }
+                    else $dturl = 'N/A';
+                }
+
+                if (strpos($dtcrtv['urleditable'], ";base64,") !== false) $dturleditable = 'base64';
+                else {
+                    if (!in_array($dtcrtv['urleditable'], ['N/A', null, ''])) {
+                        $urleditablefl = $this->getParameter('Directorio_proyecto').$dtcrtv['urleditable'];
+                        if (file_exists($urleditablefl) && (strpos($urleditablefl, '.') !== false)) $dturleditable = $dtcrtv['urleditable'];
+                        else $dturleditable = 'N/A';
+                    }
+                    else $dturleditable = 'N/A';
+                }
+
+                if (strpos($dtcrtv['urlorigen'], ";base64,") !== false) $dturlorigen = 'base64';
+                else {
+                    if (!in_array($dtcrtv['urlorigen'], ['N/A', null, ''])) {
+                        $urlorigenfl = $this->getParameter('Directorio_proyecto').$dtcrtv['urlorigen'];
+                        if (file_exists($urlorigenfl) && (strpos($urlorigenfl, '.') !== false)) $dturlorigen = $dtcrtv['urlorigen'];
+                        else $dturlorigen = 'N/A';
+                    }
+                    else $dturlorigen = 'N/A';
+                }
+
+                $itemcrtv = [
+                    "id" => $dtcrtv['id'],
+                    "antecedente" => $dtcrtv['antecedente'],
+                    "item" => $itemvl,
+                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                    "fechareg" => $fecreg,
+                    "redactor" => $dtcrtv['redactor'],
+                    "destinatario" => $dtcrtv['destinatario'],
+                    "referencia" => $dtcrtv['referencia'],
+                    "fksolicitante" => $fksolicitante_cln,
+                    "fkcorrelativo" => $fkcorrelativo_cln,
+                    "fktiponota" => $fktiponota_cln,
+                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                    "ip" => $dtcrtv['ip'],
+                    "url" => $dturl,
+                    "urleditable" => $dturleditable,
+                    "entrega" => $fecent,
+                    "fkunidad" => $fkunidad_cln,
+                    "urlorigen" => $dturlorigen,
+                    "fullname" => $fullname
+                ];
+                $correlativos[] = $itemcrtv;
             }
-
-            $fksolicitante = $dtcrtv['fksolicitante'];
-            $fkcorrelativo = $dtcrtv['fkcorrelativo'];
-            $fktiponota = $dtcrtv['fktiponota'];
-            $fkunidad = $dtcrtv['fkunidad'];
-            $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
-            $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
-            $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
-            $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
-
-            $sendinf = [
-                "id" => $dtcrtv['id'],
-                "antecedente" => $dtcrtv['antecedente'],
-                "item" => $itemvl,
-                "numcorrelativo" => $dtcrtv['numcorrelativo'],
-                "fechareg" => $fecreg,
-                "redactor" => $dtcrtv['redactor'],
-                "destinatario" => $dtcrtv['destinatario'],
-                "referencia" => $dtcrtv['referencia'],
-                "fksolicitante" => $fksolicitante,
-                "fkcorrelativo" => $fkcorrelativo,
-                "fktiponota" => $fktiponota,
-                "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
-                "ip" => $dtcrtv['ip'],
-                "url" => $dtcrtv['url'],
-                "urleditable" => $dtcrtv['urleditable'],
-                "entrega" => $fecent,
-                "fkunidad" => $fkunidad,
-                "urlorigen" => $dtcrtv['urlorigen']
-            ];
-            $correlativos[] = $sendinf;
         }
+
         $cx = $this->getDoctrine()->getEntityManager()->getConnection();
         $sql = "SELECT DISTINCT(date_part('Year', cb_correlativo_fechareg)) AS anio
                     FROM cb_correlativo_correlativo
@@ -130,6 +173,44 @@ class CorrelativoController extends Controller
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         return $this->render('correlativo/index.html.twig', array('objects' => $correlativos, 'gestion' => $combo, 'anio' => $anio, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }
+
+
+    public function array_columns(array $arr, array $keysSelect)
+    {    
+        $keys = array_flip($keysSelect);
+        $filteredArray = array_map(function($a) use($keys){
+            return array_intersect_key($a, $keys);
+        }, $arr);
+
+        return $filteredArray;
+    }
+
+
+    /**
+     * @Route("/correlativo_b64file", methods={"POST"}, name="correlativo_b64file")
+     */
+    public function b64file()
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $id = $sx['id'];
+            $tipo = $sx['tipo'];  
+
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
+
+            $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findDataFile($id);
+            $keysData = array('id', 'gestion', 'numcorrelativo', $tipo);
+            $datafile = $this->array_columns($correlativo, $keysData);
+
+            $resultado = array('response' => $datafile,'success' => true, 'message' => 'Se obtuvieron los datos del archivo.');
+            $resultados = json_encode($resultado);
+
+            return new Response($resultados);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+    }
+    
 
 
     /**
@@ -193,49 +274,91 @@ class CorrelativoController extends Controller
             
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findPermissionByUser($c_user, $year);
 
-            $correlativos = array();
-            foreach ($correlativo as $crtv) {
-                $dtcrtv = $crtv;
+            $correlativos = [];
+            if($correlativo != null){
+                foreach ($correlativo as $crtv) {
+                    $dtcrtv = $crtv;
 
-                $fecreg = $dtcrtv['fechareg'];
-                $fecent = $dtcrtv['entrega'];
+                    $fecreg = $dtcrtv['fechareg'];
+                    $fecent = $dtcrtv['entrega'];
 
-                if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
-                    $itemvl = $dtcrtv['item'];
-                } else {
-                    $itemvl = "";
+                    if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                        $itemvl = $dtcrtv['item'];
+                    } else {
+                        $itemvl = "";
+                    }
+
+                    $fksolicitante = $dtcrtv['fksolicitante'];
+                    $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                    $fktiponota = $dtcrtv['fktiponota'];
+                    $fkunidad = $dtcrtv['fkunidad'];
+                    $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                    $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                    $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                    $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+                    
+                    if($fksolicitante != null) $fullname = $fksolicitante->getNombre().' '.$fksolicitante->getApellido();
+                    else $fullname = '';
+
+                    $serializer = new Serializer(array(new ObjectNormalizer()));
+                    $fksolicitante_cln = $serializer->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido', 'estado')));
+                    $fkcorrelativo_cln = $serializer->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
+                    $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
+                    $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
+
+                    if (strpos($dtcrtv['url'], ";base64,") !== false) $dturl = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['url'], ['N/A', null, ''])) {
+                            $urlfl = $this->getParameter('Directorio_proyecto').$dtcrtv['url'];
+                            if (file_exists($urlfl) && (strpos($urlfl, '.') !== false)) $dturl = $dtcrtv['url'];
+                            else $dturl = 'N/A';
+                        }
+                        else $dturl = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urleditable'], ";base64,") !== false) $dturleditable = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urleditable'], ['N/A', null, ''])) {
+                            $urleditablefl = $this->getParameter('Directorio_proyecto').$dtcrtv['urleditable'];
+                            if (file_exists($urleditablefl) && (strpos($urleditablefl, '.') !== false)) $dturleditable = $dtcrtv['urleditable'];
+                            else $dturleditable = 'N/A';
+                        }
+                        else $dturleditable = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urlorigen'], ";base64,") !== false) $dturlorigen = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urlorigen'], ['N/A', null, ''])) {
+                            $urlorigenfl = $this->getParameter('Directorio_proyecto').$dtcrtv['urlorigen'];
+                            if (file_exists($urlorigenfl) && (strpos($urlorigenfl, '.') !== false)) $dturlorigen = $dtcrtv['urlorigen'];
+                            else $dturlorigen = 'N/A';
+                        }
+                        else $dturlorigen = 'N/A';
+                    }
+
+                    $itemcrtv = [
+                        "id" => $dtcrtv['id'],
+                        "antecedente" => $dtcrtv['antecedente'],
+                        "item" => $itemvl,
+                        "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                        "fechareg" => $fecreg,
+                        "redactor" => $dtcrtv['redactor'],
+                        "destinatario" => $dtcrtv['destinatario'],
+                        "referencia" => $dtcrtv['referencia'],
+                        "fksolicitante" => $fksolicitante_cln,
+                        "fkcorrelativo" => $fkcorrelativo_cln,
+                        "fktiponota" => $fktiponota_cln,
+                        "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                        "ip" => $dtcrtv['ip'],
+                        "url" => $dturl,
+                        "urleditable" => $dturleditable,
+                        "entrega" => $fecent,
+                        "fkunidad" => $fkunidad_cln,
+                        "urlorigen" => $dturlorigen,
+                        "fullname" => $fullname
+                    ];
+                    $correlativos[] = $itemcrtv;
                 }
-
-                $fksolicitante = $dtcrtv['fksolicitante'];
-                $fkcorrelativo = $dtcrtv['fkcorrelativo'];
-                $fktiponota = $dtcrtv['fktiponota'];
-                $fkunidad = $dtcrtv['fkunidad'];
-                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
-                $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
-                $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
-                $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
-
-                $sendinf = [
-                    "id" => $dtcrtv['id'],
-                    "antecedente" => $dtcrtv['antecedente'],
-                    "item" => $itemvl,
-                    "numcorrelativo" => $dtcrtv['numcorrelativo'],
-                    "fechareg" => $fecreg,
-                    "redactor" => $dtcrtv['redactor'],
-                    "destinatario" => $dtcrtv['destinatario'],
-                    "referencia" => $dtcrtv['referencia'],
-                    "fksolicitante" => $fksolicitante,
-                    "fkcorrelativo" => $fkcorrelativo,
-                    "fktiponota" => $fktiponota,
-                    "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
-                    "ip" => $dtcrtv['ip'],
-                    "url" => $dtcrtv['url'],
-                    "urleditable" => $dtcrtv['urleditable'],
-                    "entrega" => $fecent,
-                    "fkunidad" => $fkunidad,
-                    "urlorigen" => $dtcrtv['urlorigen']
-                ];
-                $correlativos[] = $sendinf;
             }
 
             $resultado = array('response' => $correlativos, 'success' => true, 'message' => 'Correlativos listados correctamente.');
