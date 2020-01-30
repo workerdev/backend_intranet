@@ -33,6 +33,11 @@ use App\Entity\TipoNota;
 use App\Entity\Turno;
 use App\Entity\Unidad;
 use App\Entity\Usuario;
+use App\Entity\Auditoria;
+use App\Entity\SectorAudit;
+use App\Entity\AuditoriaEquipo;
+use App\Entity\Hallazgo;
+use App\Entity\Accion;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -258,7 +263,8 @@ class ServiciosController extends AbstractController
         }
     }
 
-    public function get_children($array, $id, $idf){
+    public function get_children($array, $id, $idf)
+    {
         $children = [];
         $aux = $array;
         foreach ($aux as $ditem){
@@ -2134,9 +2140,6 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
-
-    /***************************************************************************************************************************************************************************************************************************************************************/
-
     /************************************************************************************************************************************************************************************************************************/
     /*                                                                                                                                                                                                                      */
     /*      4.- AUDITORIAS S.I.G.                                                                                                                                                                                           */
@@ -2158,20 +2161,65 @@ class ServiciosController extends AbstractController
     public function listar_audhlg()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_auditoria_codigo AS id, date_part('year', cb_auditoria_fechaprogramada) AS anio,
-                        cb_auditoria_fechaprogramada AS f_programada, cb_auditoria_fechahorainicio AS f_inicio, cb_auditoria_fechahorafin AS f_fin,
-                        cb_auditoria_alcance AS alcance, cb_auditoria_conclusiones AS conclusiones, cb_tipo_auditoria_nombre AS tipo_auditoria, cb_auditoria_id AS idaud
-                    FROM cb_aud_auditoria, cb_aud_tipo_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
-                        cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_estado=1 ORDER BY 1, 2, 3";
+            $auditorias = $this->getDoctrine()->getRepository(Auditoria::class)->findBy(['estado' => '1'], ['codigo' => 'ASC']);
 
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
+            $data_aud = [];
+            if (!empty($auditorias)) {
+                foreach ($auditorias as $aud) {
+                    $sectores = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $aud->getId()], ['fkgas' => 'ASC']);
+                    
+                    $dt_sector = [];
+                    if (!empty($sectores)) {
+                        foreach ($sectores as $sct) {
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkgerencia() != null) $gerencia = $sct->getFkgas()->getFkgerencia()->getNombre();
+                            else $gerencia = '';
+                            
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkarea() != null) $area = $sct->getFkgas()->getFkarea()->getNombre();
+                            else $area = '';
+
+                            $dt_sector[] = ['gerencia' => $gerencia, 'area' => $area];
+                        }
+                    }
+                    
+                    $fecpro = $aud->getFechaprogramada();
+                    $fecini = $aud->getFechahorainicio();
+                    $fecfin = $aud->getFechahorafin();
+                    $fecreg = $aud->getFecharegistro();
+
+                    if ($fecpro != null) {
+                        $date = date('Y', strtotime($fecpro->format('Y-m-d')));
+                        $anio = $date;
+                    } 
+                    else $anio = '';
+
+                    if ($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = '';
+                    if ($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+                    if ($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
+
+                    if ($aud->getFktipo() != null) $tipo = $aud->getFktipo()->getNombre();
+                    else $tipo = '';
+                    
+                    $item_aud = [
+                        "sectores" => $dt_sector,
+                        "id" => $aud->getCodigo(),
+                        "anio" => $anio,
+                        "f_programada" => $rsfcp,
+                        "f_inicio" => $rsfci,
+                        "f_fin" => $rsfcf,
+                        "alcance" => $aud->getAlcance(),
+                        "conclusiones" => $aud->getConclusiones(),
+                        "tipo_auditoria" => $tipo,
+                        "idaud" => $aud->getId()
+                    ];
+
+                    $data_aud[] = $item_aud;
+                }
+            }
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($query, 'json');
-            return new jsonResponse(json_decode($data2));
+            $data = $serializer->serialize($data_aud, 'json');
+
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -2188,54 +2236,119 @@ class ServiciosController extends AbstractController
     {
         try {
             $sx = json_decode($request->getContent(), true);
-            $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $codigo = $sx['id'];
 
-            $sql = "SELECT cb_auditoria_codigo AS id_auditoria, cb_gas_codigo AS id_area, cb_tipo_auditoria_nombre AS tipo_auditoria, cb_auditoria_fechaprogramada AS f_programada,
-                        cb_auditoria_duracionestimada AS duracion_estimada_horas, cb_auditoria_lugar AS lugar_de_auditoria, cb_auditoria_alcance AS alcance,
-                        cb_auditoria_objetivos AS objetivos, cb_auditoria_fechahorainicio AS fecha_hora_inicio, cb_auditoria_fechahorafin AS fecha_hora_fin,
-                        cb_auditoria_responsable AS responsable_registro, cb_auditoria_fecharegistro AS fecha_registro, cb_auditoria_conclusiones AS conclusiones
-                    FROM cb_aud_auditoria, cb_proc_gas, cb_aud_tipo_auditoria
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_auditoria_fktipo=cb_tipo_auditoria_id AND cb_auditoria_estado=1 AND cb_auditoria_codigo=:id";
-            $stmt = $cx->prepare($sql);
-            $stmt->execute(['id' => ($id)]);
-            $auditoria = $stmt->fetchAll();
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->findOneBy(['estado' => '1', 'codigo' => $codigo]);
 
-            $sql2 = "SELECT cb_gas_codigo AS id_area, cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_sector_nombre AS sector,
-                        (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable, cb_gas_vigente AS vigente
-                    FROM cb_aud_auditoria, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_configuracion_sector, cb_usuario_usuario
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND cb_gas_fksector=cb_sector_id AND
-                        cb_gas_fkresponsable=cb_usuario_id AND cb_gas_estado=1 AND cb_auditoria_codigo=:id";
+            $response = [];
+            if ($auditoria != null) {
+                $fecpro = $auditoria->getFechaprogramada();
+                $fecini = $auditoria->getFechahorainicio();
+                $fecfin = $auditoria->getFechahorafin();
+                $fecreg = $auditoria->getFecharegistro();
+                if ($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = $fecpro;
+                if ($fecini != null) $rsfci = $fecini->format('Y-m-d H:i'); else $rsfci = $fecini;
+                if ($fecfin != null) $rsfcf = $fecfin->format('Y-m-d H:i'); else $rsfcf = $fecfin;
+                if ($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');  else $rsfcr = $fecreg;
 
-            $stmt = $cx->prepare($sql2);
-            $stmt->execute(['id' => ($id)]);
-            $gerenciareasector = $stmt->fetchAll();
+                if ($auditoria->getFktipo() != null) $tipo = $auditoria->getFktipo()->getNombre(); else $tipo = '';
+                if ($auditoria->getFkproceso() != null) $proceso = $auditoria->getFkproceso()->getCodproceso(); else $proceso = '';
+                if ($auditoria->getFkjefe() != null) $jefe = $auditoria->getFkjefe()->getNombre().' '.$auditoria->getFkjefe()->getApellido(); else $jefe = '';
+                
+                $item_aud = [
+                    "id_auditoria" => $auditoria->getCodigo(),
+                    "id_proceso" => $proceso,
+                    "tipo_auditoria" => $tipo,
+                    "f_programada" => $rsfcp,
+                    "duracion_estimada_horas" => $auditoria->getDuracionestimada(),
+                    "lugar_de_auditoria" => $auditoria->getLugar(),
+                    "alcance" => $auditoria->getAlcance(),
+                    "objetivos" => $auditoria->getObjetivos(),
+                    "fecha_hora_inicio" => $rsfci,
+                    "fecha_hora_fin" => $rsfcf,
+                    "jefe_sup_coord" => $jefe,
+                    "fecha_registro" => $rsfcr,
+                    "conclusiones" => $auditoria->getConclusiones()
+                ];
 
-            $sql3 = "SELECT cb_auditoria_codigo AS id_auditoria, cb_auditor_item AS item_auditor, cb_tipo_auditor_nombre AS tipo_auditor,
-                        cb_auditor_item AS item, cb_auditor_apellidosnombres AS apellidos_nombres, cb_auditor_vigente AS vigente
-                    FROM cb_aud_auditoria_equipo, cb_aud_auditoria, cb_aud_tipo_auditor, cb_aud_auditor
-                    WHERE cb_auditoria_equipo_fkauditoria=cb_auditoria_id AND cb_auditoria_equipo_fktipo=cb_tipo_auditor_id AND
-                        cb_auditoria_equipo_fkauditor=cb_auditor_id AND cb_auditoria_equipo_estado=1 AND cb_auditoria_codigo=:id";
+                $sectores = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $auditoria->getId()], ['fkgas' => 'ASC']);
+                    
+                $dt_sector = [];
+                if (!empty($sectores)) {
+                    foreach ($sectores as $sct) {
+                        if ($sct->getFkgas() != null) {
+                            if ($sct->getFkgas()->getFkgerencia() != null) $gerencia = $sct->getFkgas()->getFkgerencia()->getNombre();
+                            else $gerencia = '';
+                            
+                            if ($sct->getFkgas()->getFkarea() != null) $area = $sct->getFkgas()->getFkarea()->getNombre();
+                            else $area = '';
+                            
+                            if ($sct->getFkgas()->getFksector() != null) $sector = $sct->getFkgas()->getFksector()->getNombre();
+                            else $sector = '';
+                            
+                            if ($sct->getFkgas()->getFkresponsable() != null) $responsable = $sct->getFkgas()->getFkresponsable()->getNombre().' '.$sct->getFkgas()->getFkresponsable()->getApellido();
+                            else $responsable = '';
 
-            $stmt = $cx->prepare($sql3);
-            $stmt->execute(['id' => ($id)]);
-            $equipo = $stmt->fetchAll();
+                            $item_sector = [
+                                'id_area' => $sct->getFkgas()->getCodigo(), 
+                                'gerencia' => $gerencia, 
+                                'area' => $area,
+                                'sector' => $sector, 
+                                'responsable' => $responsable, 
+                                'vigente' => $sct->getFkgas()->getVigente()
+                            ];
+                            $dt_sector[] = $item_sector;
+                        }
+                    }
+                }
 
-            $sql4 = "SELECT cb_hallazgo_id AS id_hallazgo, cb_tipo_hallazgo_nombre AS tipo_hallazgo, cb_hallazgo_ordinal AS ordinal,
-                        cb_hallazgo_titulo AS titulo, cb_hallazgo_descripcion AS descripcion
-                    FROM cb_aud_auditoria, cb_aud_hallazgo, cb_aud_tipo_hallazgo
-                    WHERE cb_auditoria_id=cb_hallazgo_fkauditoria AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_hallazgo_estado=1 AND cb_auditoria_codigo=:id";
+                $equipo = $this->getDoctrine()->getRepository(AuditoriaEquipo::class)->findBy(['fkauditoria' => $auditoria->getId(), 'estado' => '1']);
+                
+                $dt_equipo = [];
+                if ($equipo != null) {
+                    foreach ($equipo as $eqp) {
+                        if ($eqp->getFkauditor() != null) {
+                            if ($eqp->getFktipo() != null) $tipo_aud = $eqp->getFktipo()->getNombre(); else $tipo_aud = ''; 
 
-            $stmt = $cx->prepare($sql4);
-            $stmt->execute(['id' => ($id)]);
-            $hallazgo = $stmt->fetchAll();
+                            $item_eqp = [
+                                'id_auditoria' => $eqp->getFkauditoria()->getCodigo(), 
+                                'item_auditor' => $eqp->getFkauditor()->getItem(), 
+                                'tipo_auditor' => $tipo_aud,
+                                'item' => $eqp->getFkauditor()->getItem(), 
+                                'apellidos_nombres' => $eqp->getFkauditor()->getApellidosnombres(), 
+                                'vigente' => $eqp->getFkauditor()->getVigente()
+                            ];
+                            $dt_equipo[] = $item_eqp;
+                        }
+                    }
+                }
 
-            $elementos = array('auditoria' => $auditoria, 'gerenciareasector' => $gerenciareasector, 'equipo' => $equipo, 'hallazgo' => $hallazgo);
+                $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1', 'fkauditoria' => $auditoria->getId()], ['fecharegistro' => 'ASC', 'titulo' => 'ASC']);
+
+                $dt_hallazgo = [];
+                if ($hallazgos != null) {
+                    foreach ($hallazgos as $hlg) {
+                        if ($hlg->getFktipo() != null) $tipo_hlg = $hlg->getFktipo()->getNombre(); else $tipo_hlg = '';
+                        
+                        $item_hlg = [
+                            "id_hallazgo" => $hlg->getId(),
+                            "tipo_hallazgo" => $tipo_hlg,
+                            "ordinal" => $hlg->getOrdinal(),
+                            "titulo" => $hlg->getTitulo(),
+                            "descripcion" => $hlg->getDescripcion()
+                        ];
+                        
+                        $dt_hallazgo[] = $item_hlg;
+                    }
+                }
+
+                $response = ['auditoria' => $item_aud, 'sectores' => $dt_sector, 'equipo' => $dt_equipo, 'hallazgo' => $dt_hallazgo];
+            }
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($elementos, 'json');
+            $data = $serializer->serialize($response, 'json');
 
-            return new jsonResponse(json_decode($data2));
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -2253,36 +2366,69 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            
+            $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findOneBy(['estado' => '1', 'id' => $id]);
 
-            $sql = "SELECT cb_hallazgo_id AS id_hallazgo, cb_auditoria_codigo AS id_auditoria, cb_tipo_hallazgo_nombre AS tipo_hallazgo,
-                        cb_hallazgo_ordinal AS ordinal_hallazgo, cb_hallazgo_titulo AS titulo_hallazgo, cb_hallazgo_descripcion AS descripcion_hallazgo,
-                        cb_hallazgo_evidencia AS evidencia_del_hallazgo, cb_hallazgo_documento AS documento_del_hallazgo, cb_hallazgo_puntoiso AS punto_iso_del_hallazgo,
-                        cb_impacto_nombre AS impacto, cb_probabilidad_ocurrencia_nombre AS probabilidad, cb_hallazgo_analisiscausaraiz AS analisis_causa_raiz,
-                        cb_hallazgo_recomendaciones AS recomendaciones, cb_hallazgo_cargoauditado AS cargo_del_auditado, cb_hallazgo_nombreauditado AS nombre_del_auditado,
-                        cb_hallazgo_responsable AS responsable_registro, cb_hallazgo_fecharegistro AS fecha_registro
-                    FROM cb_aud_auditoria, cb_aud_hallazgo, cb_aud_tipo_hallazgo, cb_procesos_impacto, cb_prob_ocurrencia
-                    WHERE cb_auditoria_id=cb_hallazgo_fkauditoria AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_hallazgo_fkimpacto=cb_impacto_id AND
-                        cb_hallazgo_fkprobabilidad=cb_probabilidad_ocurrencia_id AND cb_hallazgo_estado=1 AND cb_hallazgo_id=:id";
-            $stmt = $cx->prepare($sql);
-            $stmt->execute(['id' => ($id)]);
-            $hallazgo = $stmt->fetchAll();
+            $response = [];
+            if ($hallazgo != null) {
+                $fecreg = $hallazgo->getFecharegistro();
+                if ($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
 
-            $sql2 = "SELECT cb_accion_estadoaccion AS estado, cb_accion_id AS id_accion, cb_accion_ordinal AS ordinal_accion, cb_accion_descripcion AS accion,
-                        cb_accion_fechaimplementacion AS f_implementacion, cb_accion_responsableimplementacion AS responsable
-                    FROM cb_aud_hallazgo, cb_aud_accion
-                    WHERE cb_accion_fkhallazgo=cb_hallazgo_id AND cb_accion_estado=1 AND cb_hallazgo_id=:id";
+                if ($hallazgo->getFktipo() != null) $tipo = $hallazgo->getFktipo()->getNombre(); else $tipo = '';
+                if ($hallazgo->getFkimpacto() != null) $impacto = $hallazgo->getFkimpacto()->getNombre(); else $impacto = '';
+                if ($hallazgo->getFkprobabilidad() != null) $probabilidad = $hallazgo->getFkprobabilidad()->getNombre(); else $probabilidad = '';
+                
+                $item_hlg = [
+                    "id_hallazgo" => $hallazgo->getId(),
+                    "id_auditoria" => $hallazgo->getFkauditoria()->getCodigo(),
+                    "tipo_hallazgo" => $tipo,
+                    "ordinal_hallazgo" => $hallazgo->getOrdinal(),
+                    "titulo_hallazgo" => $hallazgo->getTitulo(),
+                    "descripcion_hallazgo" => $hallazgo->getDescripcion(),
+                    "evidencia_del_hallazgo" => $hallazgo->getEvidencia(),
+                    "documento_del_hallazgo" => $hallazgo->getDocumento(),
+                    "punto_iso_del_hallazgo" => $hallazgo->getPuntoiso(),
+                    "impacto" => $impacto,
+                    "probabilidad" => $probabilidad ,
+                    "analisis_causa_raiz" => $hallazgo->getAnalisiscausaraiz(),
+                    "recomendaciones" => $hallazgo->getRecomendaciones(),
+                    "cargo_del_auditado" => $hallazgo->getCargoauditado(),
+                    "nombre_del_auditado" => $hallazgo->getNombreauditado(),
+                    "responsable_registro" => $hallazgo->getResponsable(),
+                    "fecha_registro" => $rsfcr
+                ];
+                
+                $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'fkhallazgo' => $hallazgo->getId()], ['fechaimplementacion' => 'ASC']);
+                $dt_accion = [];
+                if ($acciones != null) {
+                    foreach ($acciones as $acn) {
+                        $fecimp = $acn->getFechaimplementacion();
+                        if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
 
-            $stmt = $cx->prepare($sql2);
-            $stmt->execute(['id' => ($id)]);
-            $accion = $stmt->fetchAll();
+                        
+                        if ($acn->getFktipo() != null) $tipo_acn = $acn->getFktipo()->getNombre(); else $tipo_acn = '';
+                    
+                        $item_acn = [
+                            "estado" => $acn->getEstadoaccion(),
+                            "id_accion" => $acn->getId(),
+                            "ordinal_accion" => $acn->getOrdinal(),
+                            "accion" => $acn->getDescripcion(),
+                            "f_implementacion" => $rsfci,
+                            "responsable" => $acn->getResponsableimplementacion(),
+                            "tipo_accion" => $tipo_acn
+                        ];
 
-            $elementos = array('hallazgo' => $hallazgo, 'accion' => $accion);
+                        $dt_accion[] = $item_acn;
+                    }
+                }
+                
+                $response = ['hallazgo' =>  $item_hlg, 'accion' =>  $dt_accion];
+            }
 
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($elementos, 'json');
+            $data = $serializer->serialize($response, 'json');
 
-            return new jsonResponse(json_decode($data2));
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -2299,20 +2445,60 @@ class ServiciosController extends AbstractController
     public function listar_hallazgo()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_auditoria_codigo AS id_auditoria, date_part('year', cb_auditoria_fechaprogramada) AS anio,
-                        cb_auditoria_fechaprogramada AS f_programada, cb_hallazgo_id AS id_hallazgo, cb_hallazgo_ordinal AS ordinal,
-                        cb_tipo_hallazgo_nombre AS tipo_hallazgo, cb_hallazgo_titulo AS titulo, cb_hallazgo_descripcion AS descripcion
-                    FROM cb_aud_hallazgo, cb_aud_auditoria, cb_aud_tipo_hallazgo, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND cb_gas_fkarea=cb_area_id AND
-                        cb_hallazgo_fkauditoria=cb_auditoria_id AND cb_hallazgo_fktipo=cb_tipo_hallazgo_id AND cb_hallazgo_estado=1 ORDER BY 1, 2, 3, 7";
+            $hallazgos = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['fecharegistro' => 'ASC', 'titulo' => 'ASC']);
 
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
+            $dt_hallazgo = [];
+            if (!empty($hallazgos)) {
+                foreach ($hallazgos as $hlg) {
+                    $fecreg = $hlg->getFecharegistro();
+                    if ($fecreg != null) $rsfcr = $fecreg->format('Y-m-d'); else $rsfcr = $fecreg;
+
+                    if ($hlg->getFktipo() != null) $tipo = $hlg->getFktipo()->getNombre(); else $tipo = '';
+
+                    $fecpro = $hlg->getFkauditoria()->getFechaprogramada();
+                    if ($fecpro != null) $rsfcp = $fecpro->format('Y-m-d');  else $rsfcp = '';
+
+                    if ($fecpro != null) {
+                        $date = date('Y', strtotime($fecpro->format('Y-m-d')));
+                        $anio = $date;
+                    } 
+                    else $anio = '';
+
+                    $sectores = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $hlg->getFkauditoria()->getId()], ['fkgas' => 'ASC']);
+
+                    $dt_sector = [];
+                    if (!empty($sectores)) {
+                        foreach ($sectores as $sct) {
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkgerencia() != null) $gerencia = $sct->getFkgas()->getFkgerencia()->getNombre();
+                            else $gerencia = '';
+                            
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkarea() != null) $area = $sct->getFkgas()->getFkarea()->getNombre();
+                            else $area = '';
+
+                            $dt_sector[] = ['gerencia' => $gerencia, 'area' => $area];
+                        }
+                    }
+                    
+                    $item_hlg = [
+                        "sectores" => $dt_sector,
+                        "id_auditoria" => $hlg->getFkauditoria()->getCodigo(),
+                        "anio" => $anio,
+                        "f_programada" => $rsfcp,
+                        "id_hallazgo" => $hlg->getId(),
+                        "ordinal" => $hlg->getOrdinal(),
+                        "tipo_hallazgoo" => $tipo,
+                        "titulo" => $hlg->getTitulo(),
+                        "descripcion" => $hlg->getDescripcion()
+                    ];
+                    
+                    $dt_hallazgo[] = $item_hlg;
+                }
+            }
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($query, 'json');
-            return new jsonResponse(json_decode($data2));
+            $data = $serializer->serialize($dt_hallazgo, 'json');
+            
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -2329,21 +2515,54 @@ class ServiciosController extends AbstractController
     public function listar_accion()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
-            $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_hallazgo_id AS id_hallazgo, cb_hallazgo_ordinal AS ordinal_hallazgo,
-                        cb_hallazgo_titulo AS titulo, cb_hallazgo_descripcion AS descripcion, cb_accion_id AS id_accion,
-                        cb_accion_ordinal AS ordinal_accion, cb_accion_descripcion AS accion, cb_accion_fechaimplementacion AS f_implementacion,
-                        cb_accion_responsableregistro AS responsable, cb_accion_estadoaccion AS estado
-                    FROM cb_aud_hallazgo, cb_aud_auditoria, cb_aud_accion, cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area
-                    WHERE cb_accion_fkhallazgo=cb_hallazgo_id AND cb_hallazgo_fkauditoria=cb_auditoria_id AND cb_auditoria_fkgas=cb_gas_id AND cb_gas_fkgerencia=cb_gerencia_id AND
-                        cb_gas_fkarea=cb_area_id AND cb_accion_estado=1 ORDER BY 1, 2, 3, 4, 7, 8";
+            $acciones = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1'], ['fechaimplementacion' => 'ASC']);
 
-            $stmt = $cx->prepare($sql);
-            $stmt->execute();
-            $query = $stmt->fetchAll();
+            $dt_accion = [];
+            if ($acciones != null) {
+                foreach ($acciones as $acn) {
+                    $fecimp = $acn->getFechaimplementacion();
+                    if($fecimp != null) $rsfci = $fecimp->format('Y-m-d'); else $rsfci = $fecimp;
+
+                    if ($acn->getFktipo() != null) $tipo = $acn->getFktipo()->getNombre(); else $tipo = '';
+
+                    $sectores = $this->getDoctrine()->getRepository(SectorAudit::class)->findBy(['estado' => '1', 'fkauditoria' => $acn->getFkhallazgo()->getFkauditoria()->getId()], ['fkgas' => 'ASC']);
+
+                    $dt_sector = [];
+                    if (!empty($sectores)) {
+                        foreach ($sectores as $sct) {
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkgerencia() != null) $gerencia = $sct->getFkgas()->getFkgerencia()->getNombre();
+                            else $gerencia = '';
+                            
+                            if ($sct->getFkgas() != null && $sct->getFkgas()->getFkarea() != null) $area = $sct->getFkgas()->getFkarea()->getNombre();
+                            else $area = '';
+
+                            $dt_sector[] = ['gerencia' => $gerencia, 'area' => $area];
+                        }
+                    }
+                
+                    $item_acn = [
+                        "sectores" => $dt_sector,
+                        "id_hallazgo" => $acn->getFkhallazgo()->getId(),
+                        "ordinal_hallazgo" => $acn->getFkhallazgo()->getOrdinal(),
+                        "titulo" => $acn->getFkhallazgo()->getTitulo(),
+                        "descripcion" => $acn->getFkhallazgo()->getDescripcion(),
+                        "id_accion" => $acn->getId(),
+                        "ordinal_accion" => $acn->getOrdinal(),
+                        "accion" => $acn->getDescripcion(),
+                        "f_implementacion" => $rsfci,
+                        "responsable" => $acn->getResponsableimplementacion(),
+                        "estado" => $acn->getEstadoaccion(),
+                        "tipo" => $tipo
+                    ];
+
+                    $dt_accion[] = $item_acn;
+                }
+            }
+
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data2 = $serializer->serialize($query, 'json');
-            return new jsonResponse(json_decode($data2));
+            $data = $serializer->serialize($dt_accion, 'json');
+
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
@@ -2569,6 +2788,9 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
+    
+    /***************************************************************************************************************************************************************************************************************************************************************/
+
 
     /**
      * @Route("/loginbackend", methods={"POST"}, name="loginbackend")
