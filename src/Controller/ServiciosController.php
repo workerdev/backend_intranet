@@ -2488,7 +2488,7 @@ class ServiciosController extends AbstractController
                         "f_programada" => $rsfcp,
                         "id_hallazgo" => $hlg->getId(),
                         "ordinal" => $hlg->getOrdinal(),
-                        "tipo_hallazgoo" => $tipo,
+                        "tipo_hallazgo" => $tipo,
                         "titulo" => $hlg->getTitulo(),
                         "descripcion" => $hlg->getDescripcion()
                     ];
@@ -2690,7 +2690,7 @@ class ServiciosController extends AbstractController
                         "titulo_hallazgo" => $hallazgo->getTitulo(),
                         "descripcion" => $hallazgo->getDescripcion(),
                         "id_accion" => $accion->getId(),
-                        "ordinal_accionr" => $accion->getOrdinal(),
+                        "ordinal_accion" => $accion->getOrdinal(),
                         "accion" => $accion->getDescripcion(),
                         "tipo_accion" => $tipo_acn,
                         "eficaz_si_no" => $efc->getEficaz(),
@@ -3768,12 +3768,18 @@ class ServiciosController extends AbstractController
 
             $resultado = $json;
 
-            $response = new Response();
-            $response->setContent($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            // Allow all websites
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response = new Response(
+                $resultado,
+                Response::HTTP_OK,
+                [
+                    'content-type' => 'application/json', 
+                    'Access-Control-Allow-Origin' => '*', 
+                    'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, DELETE, PUT'
+                ]
+            );
+            $response->prepare($request);
             
+            //$response->send();
             return $response;
         } catch (Exception $e) {
             //echo 'Excepción capturada: ', $e->getMessage(), "\n";
@@ -3951,6 +3957,76 @@ class ServiciosController extends AbstractController
             return new Response('Excepción capturada: ', $e->getMessage(), "\n");
         }
     }
+
+    /**
+     * @Route("/correlativoinsert4", methods={"POST"}, name="correlativoinsert4")
+     */
+    public function correlativoinsert4(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+
+            $fksolicitante = $sx['fksolicitante'];
+            $redactor = $sx['redactor'];
+            $destinatario = $sx['destinatario'];
+            $referencia = $sx['referencia'];
+            $fkcorrelativo = $sx['fkcorrelativo'];
+            $fktiponota = $sx['fktiponota'];
+            $url = $sx['url'];
+            $antecedente = $sx['antecedente'];
+            $estadocorrelativo = $sx['estadocorrelativo'];
+            $item = $sx['item'];
+            $urleditable = $sx['urleditable'];
+            $entrega = $sx['entrega'];
+            $fkunidad = $sx['fkunidad'];
+            $urlorigen = $sx['urlorigen'];
+            $ipcontrol = $sx['ipcontrol'];
+            $cx = $this->getDoctrine()->getManager();
+            $Correlativo = new Correlativo();
+            $numcorrelativo = $this->numerar();
+            $Correlativo->setNumcorrelativo($numcorrelativo);
+            $Correlativo->setFechareg(new \DateTime('now'));
+            $Usuario = $this->getDoctrine()->getRepository(Usuario::class)->findBy(array('username' => $fksolicitante));
+            $Correlativo->setFksolicitante($Usuario[0]);
+            $Correlativo->setRedactor($redactor);
+            $Correlativo->setDestinatario($destinatario);
+            $Correlativo->setReferencia($referencia);
+            $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(array('id' => $fkcorrelativo));
+            if ($fkcorrelativo != null) {
+                $Correlativo->setFkcorrelativo($controlcorrelativo[0]);
+            }
+            $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(array('id' => $fktiponota));
+            $Correlativo->setFktiponota($tiponota[0]);
+            $Correlativo->setUrl($url);
+            $Correlativo->setAntecedente($antecedente);
+            $Correlativo->setEstadoCorrelativo($estadocorrelativo);
+
+            if ($item != null && $item != "" && $item != 0) {
+                $Correlativo->setItem($item);
+            }
+            
+            $Correlativo->setUrleditable($urleditable);
+            $Correlativo->setEntrega(new \DateTime($entrega));
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->findBy(array('nombre' => $fkunidad));
+            $Correlativo->setFkunidad($unidad[0]);
+            $Correlativo->setUrlorigen($urlorigen);
+            $Correlativo->setIp($ipcontrol);
+            $Correlativo->setEstado(1);
+            $cx->persist($Correlativo);
+            $cx->flush();
+            $resultado = array('response' => "El numero de correlativo es: " . $Correlativo->getNumcorrelativo() . ".",
+                'success' => true,
+                'message' => 'Correlativo registrado correctamente.');
+            $resultado = json_encode($resultado);
+            return new Response($resultado);
+
+            // return new jsonResponse(json_decode($data2));
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $e->getMessage(), "\n";
+            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+        }
+    }
+
 
     /**
      * @Route("/correlative_update", methods={"POST"}, name="correlative_update")
