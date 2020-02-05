@@ -440,6 +440,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/seguimiento_accion' => [['_route' => 'seguimiento_accion', '_controller' => 'App\\Controller\\ReportingController::seguimiento_accion'], null, ['POST' => 0], null, false],
                     '/accion_verif' => [['_route' => 'accion_verif', '_controller' => 'App\\Controller\\ReportingController::accion_verif'], null, ['POST' => 0], null, false],
                     '/docproceso_reporte' => [['_route' => 'docproceso_reporte', '_controller' => 'App\\Controller\\ReportingController::reporte'], null, ['POST' => 0], null, false],
+                    '/accion_vrfmail' => [['_route' => 'accion_vrfmail', '_controller' => 'App\\Controller\\ReportingController::accion_vrfmail'], null, ['POST' => 0], null, false],
                     '/responsabilidad' => [['_route' => 'responsabilidad', '_controller' => 'App\\Controller\\ResponsabilidadSocialController::index'], null, null, null, false],
                     '/responsabilidad_insertar' => [['_route' => 'responsabilidad_insertar', '_controller' => 'App\\Controller\\ResponsabilidadSocialController::insertar'], null, ['POST' => 0], null, false],
                     '/responsabilidad_actualizar' => [['_route' => 'responsabilidad_actualizar', '_controller' => 'App\\Controller\\ResponsabilidadSocialController::actualizar'], null, ['POST' => 0], null, false],

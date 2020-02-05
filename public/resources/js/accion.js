@@ -193,6 +193,30 @@ attach_edit()
 verifacc_rep()
 segaccion_rep()
 
+function send_vrfmail() {
+    $('.eficmail').click(function () {
+        $('html, body').animate({scrollTop: 0}, 'slow');
+        $('#spn-smail').show();
+        
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json')))
+        });
+        ajax_call_get("/accion_vrfmail",{
+            object: obj
+        },function(response){
+            var self = JSON.parse(response)
+            console.log(self)
+            $('#spn-smail').fadeOut('slow');
+            swal(
+                self,
+                '',
+                'info'
+            )
+        })
+    })
+}
+send_vrfmail()
+
 let message= ''
 function accion_previous(id) {
     obj = JSON.stringify({

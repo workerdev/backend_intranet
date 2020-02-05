@@ -1321,7 +1321,7 @@ class ReportingController extends AbstractController
             $publicDirectory = $this->getParameter('Directorio_Reportes');
             date_default_timezone_set('America/La_Paz');
             $fecha = date("dmY_his");
-            $pdfFilepath =  $publicDirectory . '/Eficacia_accion_'.$ida.'.pdf';
+            $pdfFilepath =  $publicDirectory . '/Eficacia_accion_'.$fecha.'.pdf';
             
             // Write file to the desired path
             file_put_contents($pdfFilepath, $output);
@@ -1329,7 +1329,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Eficacia_accion_'.$ida.'.pdf');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Eficacia_accion_'.$fecha.'.pdf');
 
             $resultado = json_encode($resultado);
             return new Response($resultado);
@@ -1405,6 +1405,112 @@ class ReportingController extends AbstractController
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
+    
+
+    /**
+     * @Route("/accion_vrfmail", methods={"POST"}, name="accion_vrfmail")
+     */
+    public function accion_vrfmail(\Swift_Mailer $mailer)
+    {
+        try {
+            $sx = json_decode($_POST['object'], true);
+            $ida = $sx['id'];
+            
+            $dtaccion = $this->getDoctrine()->getRepository(Accion::class)->find($ida);
+            $idh = $dtaccion->getFkhallazgo()->getId();
+            $dthallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->find($idh);
+            $id = $dthallazgo->getFkauditoria()->getId();
+            $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
+
+            $acn_eficacia = $this->getDoctrine()->getRepository(AccionEficacia::class)->findOneBy(['estado' => '1', 'fkaccion' => $ida]);
+            
+            $dteficacia = [];
+            if ($acn_eficacia != null) {
+                $fec = $acn_eficacia->getFecha();
+                if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
+                
+                $dteficacia = [
+                    "id" => $acn_eficacia->getId(),
+                    "fkaccion" => $acn_eficacia->getFkaccion(),
+                    "eficaz" => $acn_eficacia->getEficaz(),
+                    "resultado" => $acn_eficacia->getResultado(),
+                    "fecha" => $rsfc,
+                    "responsable" => $acn_eficacia->getResponsable(),
+                    "nombreverificador" => $acn_eficacia->getNombreverificador(),
+                    "cargoverificador" => $acn_eficacia->getCargoverificador()
+                ];
+            }
+
+            $html = $this->renderView('reporting/verificacionef.html.twig', array('auditoria' => $auditoria, 'hallazgo' => $dthallazgo, 'accion' => $dtaccion, 'eficacia' => $dteficacia));
+            // Configure Dompdf according to your needs
+            
+            if ($acn_eficacia != null && $auditoria != null && $auditoria->getFkgerente() != null && $auditoria->getFkjefe() != null) {
+                $pdfOptions = new Options();
+                $pdfOptions->set('defaultFont', 'Arial');
+                
+                // Instantiate Dompdf with our options
+                $dompdf = new Dompdf($pdfOptions);
+                $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                // Load HTML to Dompdf
+                $dompdf->loadHtml($html);
+                
+                // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+                $dompdf->setPaper('A4', 'portrait');
+
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Store PDF Binary Data
+                $output = $dompdf->output();
+                
+                // In this case, we want to write the file in the public directory
+                $publicDirectory = $this->getParameter('Directorio_Reportes');
+                date_default_timezone_set('America/La_Paz');
+                $fecha = date("dmY_his");
+                $pdfFilepath =  $publicDirectory . '/Eficacia_accion_'.$ida.'.pdf';
+                
+                // Write file to the desired path
+                file_put_contents($pdfFilepath, $output);
+
+                $mail_gr = $auditoria->getFkgerente()->getCorreo();
+                $mail_jf = $auditoria->getFkjefe()->getCorreo();
+                if (!in_array($mail_gr, [null, '', 'null']) && !in_array($mail_gr, [null, '', 'null'])) {
+                    $correos = [$mail_gr, $mail_jf];
+
+                    $message = (new \Swift_Message('ELFEC - Verifición de Eficacia'))
+                        ->setFrom($_SERVER['REMITENTE_CORREO'])
+                        ->setTo($correos)
+                        ->setBody('');
+
+                    $message->attach(\Swift_Attachment::fromPath($pdfFilepath));
+
+                    $mailer->send($message);
+
+                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                    $json = $serializer->serialize('Email enviado!', 'json');
+                    $resultado = array('response' => $json, 'success' => true, 'message' => 'Email enviado correctamente.');
+                } else {
+                    $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                    $json = $serializer->serialize('El email ho se ha enviado!', 'json');
+
+                    $resultado = array('response' => $json, 'success' => false, 'message' => 'No se tienen datos para el destinatario.');
+                }
+            } else {
+                $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+                $json = $serializer->serialize('El email ho se ha enviado!', 'json');
+
+                $resultado = array('response' => $json, 'success' => false, 'message' => 'No se tienen datos para realizar la acción.');
+            }
+
+            $resultado = json_encode($resultado);
+
+            return new Response($resultado);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
 }

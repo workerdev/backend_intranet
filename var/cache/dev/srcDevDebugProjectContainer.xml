@@ -6224,7 +6224,7 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.lka6pxf" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.2S3R40r" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccidentesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6325,6 +6325,7 @@
         <argument key="App\Controller\RecursoNecesarioController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RegistroMejoraController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RegistroMejoraController::insertar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\ReportingController::accion_vrfmail" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\ResponsabilidadSocialController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ResponsabilidadSocialController::insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RiesgosOportunidadesController::actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -6473,6 +6474,7 @@
         <argument key="App\Controller\RecursoNecesarioController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RegistroMejoraController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RegistroMejoraController:insertar" type="service" id=".service_locator.eUzYpM2"/>
+        <argument key="App\Controller\ReportingController:accion_vrfmail" type="service" id=".service_locator.3FFBWiy"/>
         <argument key="App\Controller\ResponsabilidadSocialController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\ResponsabilidadSocialController:insertar" type="service" id=".service_locator.eUzYpM2"/>
         <argument key="App\Controller\RiesgosOportunidadesController:actualizar" type="service" id=".service_locator.eUzYpM2"/>
@@ -7108,7 +7110,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.lka6pxf"/>
+      <argument type="service" id=".service_locator.2S3R40r"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -7422,7 +7424,7 @@
     <service id="jms_serializer.accessor_strategy" alias="jms_serializer.accessor_strategy.default" public="false"/>
     <service id="JMS\Serializer\ContextFactory\SerializationContextFactoryInterface" alias="jms_serializer.configured_serialization_context_factory" public="false"/>
     <service id="JMS\Serializer\ContextFactory\DeserializationContextFactoryInterface" alias="jms_serializer.configured_deserialization_context_factory" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.lka6pxf"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.2S3R40r"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>
