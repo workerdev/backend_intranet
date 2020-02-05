@@ -113,6 +113,8 @@ function add_focushlg(){
 
 function hallazgo_edit() {
     $('.edit-hlg').click(function () {
+        $('.error').remove()
+
         obj = JSON.stringify({
             'id': parseInt(JSON.parse($(this).attr('data-json')))
         });
@@ -312,6 +314,24 @@ function delete_hallazgo(ehlg){
                 else setTimeout(function(){ window.location = main_route; }, 1000);
             }
         )
+    })
+}
+
+function report_hallazgo(ehlg) {
+    let idh = parseInt(JSON.parse($(ehlg).attr('data-json')))
+
+    obj = JSON.stringify({
+        'id': idh
+    });
+    ajax_call_reptb("/accion_correctiva",{
+        object: obj
+    },function(response){
+        var self = JSON.parse(response);
+
+        let urlfile = self.url;
+        let servidor = document.URL
+        let urlserv = servidor.substring(0, servidor.lastIndexOf("/"));
+        window.open(urlserv + urlfile)
     })
 }
 

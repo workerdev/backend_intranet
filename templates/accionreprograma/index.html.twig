@@ -115,6 +115,12 @@
         $(document).ready(function() {
             table = $('#data_tabletr').DataTable();
             table.order([6, 'desc'] ).draw();
+
+            var widthf = $('#form').width();
+            console.log(widthf)
+            $('a.option-lg').css("max-width", (widthf - 280)+'px');
+            $('a.option-lg').css("overflow", 'hidden');
+            $('a.option-lg').css("text-overflow", 'ellipsis');
         });
         attach_validators()
 

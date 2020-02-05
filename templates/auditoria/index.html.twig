@@ -9,8 +9,15 @@
         .swal2-title{
             font-size: 16px !important;
         }
-        .modal-dialog-own{
-            width: 70%;
+        .modal-aud {
+            width: 80% !important;
+            margin-left: 12% !important;
+        }
+        .modal-eqp {
+            margin-left: 7% !important;
+        }
+        .modal-hlfr {
+            margin-left: 7% !important;
         }
         .all-w{
             width: 100% !important;
@@ -484,6 +491,10 @@
                     var docs = datos.documento;
 
                     console.log(datos);
+                    $('#idaud').val(self.id)
+                    $('#codigoaud').val(self.codigo)
+                    if (self.fkproceso != null) $('#sectoraud').val(self.fkproceso.codproceso)
+
                     $('#id').val(self.id)
                     $('#codigo').val(self.codigo)
 
@@ -729,7 +740,7 @@
 
                     $('#idaud').val(self.auditoria.id)
                     $('#codigoaud').val(self.auditoria.codigo)
-                    if (self.auditoria.fkproceso != null) $('#sectoraud').val(self.auditoria.fkprocesonombre)
+                    if (self.auditoria.fkproceso != null) $('#sectoraud').val(self.auditoria.fkproceso.codproceso)
                     
                     var table = $('#table_team').DataTable({
                         language: {
@@ -959,7 +970,7 @@
                         
                         $('#id-aud').val(self.auditoria.id)
                         $('#codigo-aud').val(self.auditoria.codigo)
-                        if(self.fkproceso != null) $('#sector-aud').val(self.auditoria.fkproceso.nombre)
+                        if(self.auditoria.fkproceso != null) $('#sector-aud').val(self.auditoria.fkproceso.codproceso)
                         
                         var tablefr = $('#table_fort').DataTable();
                         tablefr.destroy();
@@ -984,7 +995,7 @@
                             data: datafr,
                             "order": [[ 4, 'desc' ]],
                             "pageLength": 10,
-                            "scrollY": "300px",
+                            //"scrollY": "300px",
                             "createdRow": function(row, data, dataIndex) {
                                 $(row).children(':nth-child(3)').addClass('table_fort-td');
                                 $(row).children(':nth-child(6)').attr('align', 'center');
@@ -1015,7 +1026,7 @@
                             data: datahl,
                             "order": [[ 6, 'desc' ]],
                             "pageLength": 10,
-                            "scrollY": "300px",
+                            //"scrollY": "300px",
                             "createdRow": function(row, data, dataIndex) {
                                 $(row).children(':nth-child(4)').addClass('table_hlg-td');
                                 $(row).children(':nth-child(5)').addClass('table_hlg-td');
@@ -1080,7 +1091,7 @@
                             "url": "/resources/js/spanish.json"
                         },
                         "pageLength": 10,
-                        "scrollY": "300px",
+                        //"scrollY": "300px",
                         "createdRow": function(row, data, dataIndex) {
                             $(row).children(':nth-child(3)').addClass('table_fort-td');
                             $(row).children(':nth-child(6)').attr('align', 'center');
@@ -1114,7 +1125,7 @@
                             "url": "/resources/js/spanish.json"
                         },
                         "pageLength": 10,
-                        "scrollY": "300px",
+                        //"scrollY": "300px",
                         "createdRow": function(row, data, dataIndex) {
                             $(row).children(':nth-child(4)').addClass('table_hlg-td');
                             $(row).children(':nth-child(5)').addClass('table_hlg-td');

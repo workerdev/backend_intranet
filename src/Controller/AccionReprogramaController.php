@@ -62,7 +62,7 @@ class AccionReprogramaController extends Controller
         $docderiv = $this->getDoctrine()->getRepository(DocProcRevision::class)->findBy(array('fkresponsable' => $s_user['id'], 'firma' => 'Por firmar', 'estado' => '1'));
        	$fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
-        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1'));
+        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'estadoaccion' => 'Pendiente'], ['descripcion' => 'ASC']);
         $accionreprograma = $this->getDoctrine()->getRepository(AccionReprograma::class)->findBy(array('estado' => '1'));
         return $this->render('accionreprograma/index.html.twig', array('objects' => $accionreprograma, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));
     }

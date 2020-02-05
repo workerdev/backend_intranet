@@ -3528,7 +3528,7 @@ class ServiciosController extends AbstractController
 
             $datos = array('btn_permission' => $access, 'combo_gestion' => $data_gestion, 'correlativos' => $correlativos);
 
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
+            /*$serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
             $json = $serializer->serialize($datos, 'json');
 
             $resultado = $json;
@@ -3536,7 +3536,12 @@ class ServiciosController extends AbstractController
             $response = new Response($resultado);
             $response->headers->set('Content-Type', 'application/json');
             
-            return $response;
+            return $response;*/
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($datos, 'json');
+
+            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
             $mensaje[0] = ["response" => "error"];
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -3547,7 +3552,7 @@ class ServiciosController extends AbstractController
     }
 
     public function array_columns(array $arr, array $keysSelect)
-    {    
+    {
         $keys = array_flip($keysSelect);
         $filteredArray = array_map(function($a) use($keys){
             return array_intersect_key($a,$keys);

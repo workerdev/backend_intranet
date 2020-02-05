@@ -17,8 +17,8 @@
             max-width: 100% !important;
             padding: 4px !important;
         }
-        .modal-dialog-own{
-            width: 65%;
+        .modal-hlg {
+            margin-left: 7% !important;
         }
         .modal-dialog-acn{
             width: 55%;
@@ -348,6 +348,7 @@
                                 {% if 'hallazgo_eliminar' in permisos %}
                                     a += '<button id="delete-hlg" data-json="' + row.id + '" onclick="delete_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>'
                                 {% endif %}
+                                a+= '<button id="correctrep" data-json="' + row.id + '" onclick="report_hallazgo(this)" type="button" class="btn bg-green waves-effect waves-light correctrep" title="Formulario Acciones Correctivas"><i class="material-icons">picture_as_pdf</i></button>'
 
                                 return a
                             }

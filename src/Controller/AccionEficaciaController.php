@@ -63,7 +63,7 @@ class AccionEficaciaController extends Controller
         $fcaprobjf = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkjefeaprobador' => $s_user['id'], 'firmajefe' => 'Por aprobar', 'estado' => '1'));
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
         
-        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(array('estado' => '1','estadoaccion' => 'Implementada'));
+        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'estadoaccion' => 'Pendiente'], ['descripcion' => 'ASC']);
         $accioneficacia = $this->getDoctrine()->getRepository(AccionEficacia::class)->findBy(array('estado' => '1'));
         
         return $this->render('accioneficacia/index.html.twig', array('objects' => $accioneficacia, 'accion' => $accion, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));

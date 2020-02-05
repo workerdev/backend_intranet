@@ -63,7 +63,7 @@ class AccionSeguimientoController extends Controller
         $fcaprobgr = $this->getDoctrine()->getRepository(FichaCargo::class)->findBy(array('fkgerenteaprobador' => $s_user['id'], 'firmagerente' => 'Por aprobar', 'estado' => '1'));
       
         $hallazgo = $this->getDoctrine()->getRepository(Hallazgo::class)->findBy(['estado' => '1'], ['titulo' => 'ASC']);
-        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1'], ['descripcion' => 'ASC']);
+        $accion = $this->getDoctrine()->getRepository(Accion::class)->findBy(['estado' => '1', 'estadoaccion' => 'Pendiente'], ['descripcion' => 'ASC']);
         $accionseguimiento = $this->getDoctrine()->getRepository(AccionSeguimiento::class)->findBy(array('estado' => '1'));
         
         return $this->render('accionseguimiento/index.html.twig', array('objects' => $accionseguimiento, 'accion' => $accion, 'hallazgo' => $hallazgo, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos, 'docderiv' => $docderiv, 'fcaprobjf' => $fcaprobjf, 'fcaprobgr' => $fcaprobgr));

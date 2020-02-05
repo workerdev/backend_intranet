@@ -18,7 +18,7 @@
                     <label>Acción</label>
                         <select id="fkaccion" class="form-control show-tick" onchange="addDate()">
                         {% for t in accion %}
-                            <option class="truncate-rp" value="{{t.id}}" title="{{t.descripcion}}">{{t.descripcion}}</option>
+                            <option class="option-lg" value="{{t.id}}">{{t.descripcion}}</option>
                         {% endfor %}
                         </select>
                         </br>

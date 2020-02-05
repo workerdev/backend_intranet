@@ -27,13 +27,6 @@
         #data_tabletr tbody tr td:nth-child(1), #data_tabletr tbody tr td:nth-child(3){
             white-space: pre-wrap;
         }
-        .truncate-efc{
-            width: 1200px !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            padding-right: 36px !important;
-        }
         .modal-dialog-own-85{
             width: 85% !important;
         }
@@ -115,6 +108,12 @@
         $(document).ready(function() {
             table = $('#data_tabletr').DataTable();
             table.order([3, 'desc'] ).draw();
+
+            var widthf = $('#form').width();
+            console.log(widthf)
+            $('a.option-lg').css("max-width", (widthf - 280)+'px');
+            $('a.option-lg').css("overflow", 'hidden');
+            $('a.option-lg').css("text-overflow", 'ellipsis');
         });
         attach_validators()
 

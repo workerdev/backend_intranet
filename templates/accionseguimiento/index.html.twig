@@ -119,6 +119,12 @@
         $(document).ready(function() {
             table = $('#data_tabletr').DataTable();
             table.order([ 3, 'desc'] ).draw();
+
+            var widthf = $('#form').width();
+            console.log(widthf)
+            $('a.option-lg').css("max-width", (widthf - 280)+'px');
+            $('a.option-lg').css("overflow", 'hidden');
+            $('a.option-lg').css("text-overflow", 'ellipsis');
         });
 
         $('#rpg-link').click(function(){
@@ -161,14 +167,21 @@
                 var select = document.getElementById("fkaccion")
 
                 for (var i = 0; i < Object.keys(self).length; i++) {
-                    var option = document.createElement("OPTION");
-                    option.innerHTML = self[i]['descripcion'];
-                    option.value = self[i]['id'];
-                    option.className = "truncate-own";
-                    option.setAttribute("title", self[i]['descripcion']);
-                    select.appendChild(option);
+                    if (self[i]['estadoaccion'] == 'Pendiente') {
+                        var option = document.createElement("OPTION");
+                        option.innerHTML = self[i]['descripcion'];
+                        option.value = self[i]['id'];
+                        option.className = "option-lg";
+                        select.appendChild(option);
+                    }
                 }
                 $('#fkaccion').selectpicker('refresh');
+
+                var widthf = $('#form').width();
+                console.log(widthf)
+                $('a.option-lg').css("max-width", (widthf - 280)+'px');
+                $('a.option-lg').css("overflow", 'hidden');
+                $('a.option-lg').css("text-overflow", 'ellipsis');
             })
         })
 

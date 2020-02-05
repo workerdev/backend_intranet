@@ -1278,19 +1278,23 @@ class ReportingController extends AbstractController
             $auditoria = $this->getDoctrine()->getRepository(Auditoria::class)->find($id);
 
             $acn_eficacia = $this->getDoctrine()->getRepository(AccionEficacia::class)->findOneBy(['estado' => '1', 'fkaccion' => $ida]);
-            $fec = $acn_eficacia->getFecha();
-            if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
             
-            $dteficacia = [
-                "id" => $acn_eficacia->getId(),
-                "fkaccion" => $acn_eficacia->getFkaccion(),
-                "eficaz" => $acn_eficacia->getEficaz(),
-                "resultado" => $acn_eficacia->getResultado(),
-                "fecha" => $rsfc,
-                "responsable" => $acn_eficacia->getResponsable(),
-                "nombreverificador" => $acn_eficacia->getNombreverificador(),
-                "cargoverificador" => $acn_eficacia->getCargoverificador()
-            ];
+            $dteficacia = [];
+            if ($acn_eficacia != null) {
+                $fec = $acn_eficacia->getFecha();
+                if($fec != null) $rsfc = $fec->format('Y-m-d'); else $rsfc = $fec;
+                
+                $dteficacia = [
+                    "id" => $acn_eficacia->getId(),
+                    "fkaccion" => $acn_eficacia->getFkaccion(),
+                    "eficaz" => $acn_eficacia->getEficaz(),
+                    "resultado" => $acn_eficacia->getResultado(),
+                    "fecha" => $rsfc,
+                    "responsable" => $acn_eficacia->getResponsable(),
+                    "nombreverificador" => $acn_eficacia->getNombreverificador(),
+                    "cargoverificador" => $acn_eficacia->getCargoverificador()
+                ];
+            }
 
             $html = $this->renderView('reporting/verificacionef.html.twig', array('auditoria' => $auditoria, 'hallazgo' => $dthallazgo, 'accion' => $dtaccion, 'eficacia' => $dteficacia));
             // Configure Dompdf according to your needs
@@ -1317,7 +1321,7 @@ class ReportingController extends AbstractController
             $publicDirectory = $this->getParameter('Directorio_Reportes');
             date_default_timezone_set('America/La_Paz');
             $fecha = date("dmY_his");
-            $pdfFilepath =  $publicDirectory . '/Eficacia_accion_'.$fecha.'.pdf';
+            $pdfFilepath =  $publicDirectory . '/Eficacia_accion_'.$ida.'.pdf';
             
             // Write file to the desired path
             file_put_contents($pdfFilepath, $output);
@@ -1325,7 +1329,7 @@ class ReportingController extends AbstractController
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize('File guardado!', 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Eficacia_accion_'.$fecha.'.pdf');
+                'message' => 'Reporte generado correctamente.', 'url' => '/reportes/Eficacia_accion_'.$ida.'.pdf');
 
             $resultado = json_encode($resultado);
             return new Response($resultado);

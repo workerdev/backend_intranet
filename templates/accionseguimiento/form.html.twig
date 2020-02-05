@@ -30,7 +30,7 @@
                     <label>Acción</label>
                         <select id="fkaccion" class="form-control show-tick">
                         {% for t in accion %}
-                            <option class="truncate-own" value="{{t.id}}" title="{{ t.descripcion }}">{{t.descripcion}}</option>
+                            <option class='option-lg' value="{{t.id}}">{{t.descripcion}}</option>
                         {% endfor %}
                         </select>
                         </br>
@@ -104,7 +104,7 @@
                     <label>Acción</label>
                         <select id="fkaccionrpg" class="form-control show-tick">
                         {% for t in accion %}
-                            <option class="truncate-own" value="{{t.id}}">{{t.descripcion}}</option>
+                            <option class="option-lg" value="{{t.id}}">{{t.descripcion}}</option>
                         {% endfor %}
                         </select>
                         </br>
