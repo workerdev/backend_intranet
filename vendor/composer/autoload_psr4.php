@@ -104,6 +104,8 @@ return array(
     'Doctrine\\Bundle\\FixturesBundle\\' => array($vendorDir . '/doctrine/doctrine-fixtures-bundle'),
     'Doctrine\\Bundle\\DoctrineCacheBundle\\' => array($vendorDir . '/doctrine/doctrine-cache-bundle'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
+    'Cron\\CronBundle\\' => array($vendorDir . '/cron/cron-bundle'),
+    'Cron\\' => array($vendorDir . '/cron/cron/src'),
     'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
     'App\\Tests\\' => array($baseDir . '/tests'),
     'App\\' => array($baseDir . '/src'),

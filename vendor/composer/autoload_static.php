@@ -216,6 +216,8 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         ),
         'C' => 
         array (
+            'Cron\\CronBundle\\' => 16,
+            'Cron\\' => 5,
             'Complex\\' => 8,
         ),
         'A' => 
@@ -621,6 +623,14 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
+        ),
+        'Cron\\CronBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cron/cron-bundle',
+        ),
+        'Cron\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cron/cron/src',
         ),
         'Complex\\' => 
         array (

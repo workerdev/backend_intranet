@@ -22,6 +22,7 @@
       <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
       <parameter key="WebpackEncoreBundle">Symfony\WebpackEncoreBundle\WebpackEncoreBundle</parameter>
       <parameter key="JMSSerializerBundle">JMS\SerializerBundle\JMSSerializerBundle</parameter>
+      <parameter key="CronCronBundle">Cron\CronBundle\CronCronBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -75,6 +76,10 @@
       <parameter key="JMSSerializerBundle" type="collection">
         <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\jms\serializer-bundle</parameter>
         <parameter key="namespace">JMS\SerializerBundle</parameter>
+      </parameter>
+      <parameter key="CronCronBundle" type="collection">
+        <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\cron\cron-bundle</parameter>
+        <parameter key="namespace">Cron\CronBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -284,6 +289,11 @@
     <parameter key="security.authentication.session_strategy.strategy">migrate</parameter>
     <parameter key="security.access.always_authenticate_before_granting">false</parameter>
     <parameter key="security.authentication.hide_user_not_found">true</parameter>
+    <parameter key="cron.resolver.class">Cron\CronBundle\Cron\Resolver</parameter>
+    <parameter key="cron.manager.class">Cron\CronBundle\Cron\Manager</parameter>
+    <parameter key="cron.command_builder.class">Cron\CronBundle\Cron\CommandBuilder</parameter>
+    <parameter key="cron.executor.class">Cron\Executor\Executor</parameter>
+    <parameter key="cron.validator.class">Cron\Validator\CrontabValidator</parameter>
     <parameter key="console.command.ids" type="collection">
       <parameter>console.command.public_alias.doctrine_cache.contains_command</parameter>
       <parameter>console.command.public_alias.doctrine_cache.delete_command</parameter>
@@ -299,6 +309,14 @@
       <parameter>console.command.public_alias.doctrine_migrations.status_command</parameter>
       <parameter>console.command.public_alias.doctrine_migrations.up_to_date_command</parameter>
       <parameter>console.command.public_alias.doctrine_migrations.version_command</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronCreateCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronDeleteCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronDisableCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronEnableCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronListCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronRunCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronStartCommand</parameter>
+      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronStopCommand</parameter>
     </parameter>
   </parameters>
   <services>
@@ -3946,6 +3964,7 @@
       <call method="setEntityNamespaces">
         <argument type="collection">
           <argument key="App">App\Entity</argument>
+          <argument key="CronCronBundle">Cron\CronBundle\Entity</argument>
         </argument>
       </call>
       <call method="setMetadataCacheImpl">
@@ -3992,12 +4011,17 @@
       <argument type="service" id="annotations.cached_reader"/>
       <argument type="collection">
         <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\src\Entity</argument>
+        <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\cron\cron-bundle\Entity</argument>
       </argument>
     </service>
     <service id="doctrine.orm.default_metadata_driver" class="Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain" public="false">
       <call method="addDriver">
         <argument type="service" id="doctrine.orm.default_annotation_metadata_driver"/>
         <argument>App\Entity</argument>
+      </call>
+      <call method="addDriver">
+        <argument type="service" id="doctrine.orm.default_annotation_metadata_driver"/>
+        <argument>Cron\CronBundle\Entity</argument>
       </call>
     </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_metadata_cache" class="Doctrine\Common\Cache\ArrayCache" public="true">
@@ -5507,6 +5531,51 @@
     </service>
     <service id="jms_serializer.configured_serialization_context_factory" class="JMS\SerializerBundle\ContextFactory\ConfiguredContextFactory" public="false"/>
     <service id="jms_serializer.configured_deserialization_context_factory" class="JMS\SerializerBundle\ContextFactory\ConfiguredContextFactory" public="false"/>
+    <service id="Cron\CronBundle\Command\CronCreateCommand" class="Cron\CronBundle\Command\CronCreateCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronDeleteCommand" class="Cron\CronBundle\Command\CronDeleteCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronDisableCommand" class="Cron\CronBundle\Command\CronDisableCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronEnableCommand" class="Cron\CronBundle\Command\CronEnableCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronListCommand" class="Cron\CronBundle\Command\CronListCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronRunCommand" class="Cron\CronBundle\Command\CronRunCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronStartCommand" class="Cron\CronBundle\Command\CronStartCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="Cron\CronBundle\Command\CronStopCommand" class="Cron\CronBundle\Command\CronStopCommand">
+      <tag name="console.command"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="cron.resolver" class="Cron\CronBundle\Cron\Resolver" public="true">
+      <argument type="service" id="cron.manager"/>
+      <argument type="service" id="cron.command_builder"/>
+      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\src</argument>
+    </service>
+    <service id="cron.manager" class="Cron\CronBundle\Cron\Manager" public="true">
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="cron.executor" class="Cron\Executor\Executor" public="true"/>
+    <service id="cron.command_builder" class="Cron\CronBundle\Cron\CommandBuilder">
+      <argument>dev</argument>
+    </service>
+    <service id="cron.validator" class="Cron\Validator\CrontabValidator" public="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\RunSchedulesCommand" class="App\Command\RunSchedulesCommand" public="false" autowire="true" abstract="true"/>
@@ -7477,5 +7546,13 @@
     <service id="console.command.public_alias.doctrine_migrations.status_command" alias="doctrine_migrations.status_command" public="true"/>
     <service id="console.command.public_alias.doctrine_migrations.up_to_date_command" alias="doctrine_migrations.up_to_date_command" public="true"/>
     <service id="console.command.public_alias.doctrine_migrations.version_command" alias="doctrine_migrations.version_command" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronCreateCommand" alias="Cron\CronBundle\Command\CronCreateCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronDeleteCommand" alias="Cron\CronBundle\Command\CronDeleteCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronDisableCommand" alias="Cron\CronBundle\Command\CronDisableCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronEnableCommand" alias="Cron\CronBundle\Command\CronEnableCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronListCommand" alias="Cron\CronBundle\Command\CronListCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronRunCommand" alias="Cron\CronBundle\Command\CronRunCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronStartCommand" alias="Cron\CronBundle\Command\CronStartCommand" public="true"/>
+    <service id="console.command.public_alias.Cron\CronBundle\Command\CronStopCommand" alias="Cron\CronBundle\Command\CronStopCommand" public="true"/>
   </services>
 </container>

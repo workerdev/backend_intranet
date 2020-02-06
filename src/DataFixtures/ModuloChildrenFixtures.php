@@ -102,8 +102,8 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const TIPONOVEDAD_CHILD = 'child-tpnov';
 
     /** MODULO DE COMUNICACION **/
+    public const CATEGORIANOT_CHILD = 'child-cat';
     public const NOTICIA_CHILD = 'child-not';
-    public const CATEGORIANOT_CHILD = 'child-catnot';
     public const NOTICIACAT_CHILD = 'child-notcat';
     public const GALERIA_CHILD = 'child-gal';
     public const FILE_CHILD = 'child-file';
@@ -827,7 +827,6 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $catnotprt->setMenu(1);
         $catnotprt->setFkmodulo($this->getReference(ModuloFixtures::COMUNICACION_MOD));
         $manager->persist($catnotprt);
-        $this->addReference(self::CATEGORIANOT_CHILD, $catnotprt);
 
         $notcatprt = new Modulo();
         $notcatprt->setNombre('noticiacategoria');
@@ -1045,7 +1044,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::DATOEMPRESARIAL_CHILD, $dtoemprt);
         $this->addReference(self::TIPONOVEDAD_CHILD, $tpnvdprt);
         
-        $this->addReference(self::CATEGORIA_CHILD, $catnotprt);
+        $this->addReference(self::CATEGORIANOT_CHILD, $catnotprt);
         $this->addReference(self::NOTICIA_CHILD, $notcprt);
         $this->addReference(self::NOTICIACAT_CHILD, $notcatprt);
         $this->addReference(self::GALERIA_CHILD, $galprt);

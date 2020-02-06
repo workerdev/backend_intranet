@@ -2709,43 +2709,6 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
 
 
 
-        $noticia = new Modulo();
-        $noticia->setNombre('home_noticia');
-        $noticia->setTitulo('Consultar');
-        $noticia->setRuta( 'home_noticia');
-        $noticia->setIcono('home');
-        $noticia->setMenu(0);
-        $noticia->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
-        $manager->persist($noticia);
-
-        $noticiains = new Modulo();
-        $noticiains->setNombre('noticia_insertar');
-        $noticiains->setTitulo('Adicionar');
-        $noticiains->setRuta( '/noticia_insertar');
-        $noticiains->setIcono('home');
-        $noticiains->setMenu(0);
-        $noticiains->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
-        $manager->persist($noticiains);
-
-        $noticiaupd = new Modulo();
-        $noticiaupd->setNombre('noticia_editar');
-        $noticiaupd->setTitulo('Actualizar');
-        $noticiaupd->setRuta( '/noticia_editar');
-        $noticiaupd->setIcono('home');
-        $noticiaupd->setMenu(0);
-        $noticiaupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
-        $manager->persist($noticiaupd);
-
-        $noticiadel = new Modulo();
-        $noticiadel->setNombre('noticia_eliminar');
-        $noticiadel->setTitulo('Eliminar');
-        $noticiadel->setRuta( '/noticia_eliminar');
-        $noticiadel->setIcono('home');
-        $noticiadel->setMenu(0);
-        $noticiadel->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
-        $manager->persist($noticiadel);
-
-
         $catnoticia = new Modulo();
         $catnoticia->setNombre('home_categorianoticia');
         $catnoticia->setTitulo('Consultar');
@@ -2781,6 +2744,43 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $catnoticiadel->setMenu(0);
         $catnoticiadel->setFkmodulo($this->getReference(ModuloChildrenFixtures::CATEGORIANOT_CHILD));
         $manager->persist($catnoticiadel);
+
+
+        $noticia = new Modulo();
+        $noticia->setNombre('home_noticia');
+        $noticia->setTitulo('Consultar');
+        $noticia->setRuta( 'home_noticia');
+        $noticia->setIcono('home');
+        $noticia->setMenu(0);
+        $noticia->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
+        $manager->persist($noticia);
+
+        $noticiains = new Modulo();
+        $noticiains->setNombre('noticia_insertar');
+        $noticiains->setTitulo('Adicionar');
+        $noticiains->setRuta( '/noticia_insertar');
+        $noticiains->setIcono('home');
+        $noticiains->setMenu(0);
+        $noticiains->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
+        $manager->persist($noticiains);
+
+        $noticiaupd = new Modulo();
+        $noticiaupd->setNombre('noticia_editar');
+        $noticiaupd->setTitulo('Actualizar');
+        $noticiaupd->setRuta( '/noticia_editar');
+        $noticiaupd->setIcono('home');
+        $noticiaupd->setMenu(0);
+        $noticiaupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
+        $manager->persist($noticiaupd);
+
+        $noticiadel = new Modulo();
+        $noticiadel->setNombre('noticia_eliminar');
+        $noticiadel->setTitulo('Eliminar');
+        $noticiadel->setRuta( '/noticia_eliminar');
+        $noticiadel->setIcono('home');
+        $noticiadel->setMenu(0);
+        $noticiadel->setFkmodulo($this->getReference(ModuloChildrenFixtures::NOTICIA_CHILD));
+        $manager->persist($noticiadel);
 
 
         $notcategoria = new Modulo();

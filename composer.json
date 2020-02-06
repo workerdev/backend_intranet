@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "apixu/apixu-php": "^1.1",
+        "cron/cron-bundle": "^2.2",
         "doctrine/doctrine-bundle": "^1.9",
         "dompdf/dompdf": "^0.8.3",
         "eightpoints/guzzle-bundle": "^7.3",

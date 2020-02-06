@@ -99,6 +99,107 @@
         ]
     },
     {
+        "name": "cron/cron",
+        "version": "1.4.2",
+        "version_normalized": "1.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Cron/Cron.git",
+            "reference": "8156b9532ecc64ed5aa5c4ebdfc4346d2ef91c4d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Cron/Cron/zipball/8156b9532ecc64ed5aa5c4ebdfc4346d2ef91c4d",
+            "reference": "8156b9532ecc64ed5aa5c4ebdfc4346d2ef91c4d",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1",
+            "symfony/process": "^2.4|^3.0|^4.0|^5.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^7.0"
+        },
+        "time": "2019-11-23T12:08:49+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cron\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Dries De Peuter",
+                "email": "dries@nousefreak.be"
+            }
+        ],
+        "description": "Cronjobs"
+    },
+    {
+        "name": "cron/cron-bundle",
+        "version": "2.2.0",
+        "version_normalized": "2.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Cron/Symfony-Bundle.git",
+            "reference": "ea23adb1996ede6ed3ffd8aade23016054f23ddf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Cron/Symfony-Bundle/zipball/ea23adb1996ede6ed3ffd8aade23016054f23ddf",
+            "reference": "ea23adb1996ede6ed3ffd8aade23016054f23ddf",
+            "shasum": ""
+        },
+        "require": {
+            "cron/cron": "^1.0.1",
+            "doctrine/doctrine-bundle": "~1.4",
+            "doctrine/orm": "~2.4,>=2.4.5",
+            "php": ">=5.5.9",
+            "symfony/framework-bundle": "^3.4|^4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.0",
+            "symfony/symfony": "^2.4|^3.0|^4.0"
+        },
+        "time": "2019-10-22T07:29:14+00:00",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cron\\CronBundle\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Dries De Peuter",
+                "email": "dries@nousefreak.be"
+            }
+        ],
+        "description": "Symfony cron"
+    },
+    {
         "name": "doctrine/annotations",
         "version": "v1.8.0",
         "version_normalized": "1.8.0.0",
@@ -7227,7 +7328,8 @@
             "ZendFramework",
             "code",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-code"
     },
     {
         "name": "zendframework/zend-eventmanager",
@@ -7283,6 +7385,7 @@
             "eventmanager",
             "events",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-eventmanager"
     }
 ]
