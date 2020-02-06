@@ -199,23 +199,37 @@ function send_vrfmail() {
         $('#spn-smail').show();
         
         obj = JSON.stringify({
-            'id': parseInt(JSON.parse($(this).attr('data-json')))
+            'id': parseInt(JSON.parse($(this).attr('data-json'))),
+            'spinner': 'spn-smail'
         });
-        ajax_call_get("/accion_vrfmail",{
+        ajax_call_spnr("/accion_vrfmail",{
             object: obj
         },function(response){
             var self = JSON.parse(response)
             console.log(self)
-            $('#spn-smail').fadeOut('slow');
-            swal(
-                self,
-                '',
-                'info'
-            )
+        })
+    })
+}
+
+function send_segmail() {
+    $('.segmail').click(function () {
+        $('html, body').animate({scrollTop: 0}, 'slow');
+        $('#spn-smail').show();
+        
+        obj = JSON.stringify({
+            'id': parseInt(JSON.parse($(this).attr('data-json'))),
+            'spinner': 'spn-smail'
+        });
+        ajax_call_spnr("/accion_segmail",{
+            object: obj
+        },function(response){
+            var self = JSON.parse(response)
+            console.log(self)
         })
     })
 }
 send_vrfmail()
+send_segmail()
 
 let message= ''
 function accion_previous(id) {
