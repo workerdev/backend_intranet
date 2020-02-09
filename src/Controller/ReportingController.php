@@ -1660,7 +1660,7 @@ class ReportingController extends AbstractController
                 if (!in_array($mail_gr, [null, '', 'null']) && !in_array($mail_gr, [null, '', 'null'])) {
                     $correos = [$mail_gr, $mail_jf];
 
-                    $message = (new \Swift_Message('ELFEC - Verifición de Eficacia'))
+                    $message = (new \Swift_Message('ELFEC - Seguimiento de Acciones'))
                         ->setFrom($_SERVER['REMITENTE_CORREO'])
                         ->setTo($correos)
                         ->setBody('');

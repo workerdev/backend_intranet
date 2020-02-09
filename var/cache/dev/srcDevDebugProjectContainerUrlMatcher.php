@@ -220,7 +220,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/documentoformulario' => [['_route' => 'documentoformulario', '_controller' => 'App\\Controller\\DocumentoFormularioController::index'], null, null, null, false],
                     '/documentoformulario_editar' => [['_route' => 'documentoformulario_editar', '_controller' => 'App\\Controller\\DocumentoFormularioController::editar'], null, ['POST' => 0], null, false],
                     '/documentoformulario_eliminar' => [['_route' => 'documentoformulario_eliminar', '_controller' => 'App\\Controller\\DocumentoFormularioController::eliminar'], null, ['POST' => 0], null, false],
-                    '/documentoproceso' => [['_route' => 'documentoproceso_listar', '_controller' => 'App\\Controller\\DocumentoProcesoController::index'], null, null, null, false],
+                    '/documentoproceso' => [['_route' => 'documentoproceso_listar', '_controller' => 'App\\Controller\\DocumentoProcesoController::index'], null, ['GET' => 0], null, false],
                     '/documentoproceso_insertar' => [['_route' => 'documentoproceso_insertar', '_controller' => 'App\\Controller\\DocumentoProcesoController::insertardoc'], null, ['POST' => 0], null, false],
                     '/docproc_prev' => [['_route' => 'docproc_prev', '_controller' => 'App\\Controller\\DocumentoProcesoController::docproc_prev'], null, ['POST' => 0], null, false],
                     '/documentoproceso_eliminar' => [['_route' => 'documentoproceso_eliminar', '_controller' => 'App\\Controller\\DocumentoProcesoController::eliminar'], null, ['POST' => 0], null, false],

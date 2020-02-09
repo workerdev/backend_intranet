@@ -17,7 +17,7 @@ use App\Entity\Correo;
 
 class RunSchedulesCommand extends Command
 {
-    protected static $defaultName = 'run-schedules';
+    protected static $defaultName = 'app:run-schedules';
 
     private $em;
 
@@ -52,7 +52,7 @@ class RunSchedulesCommand extends Command
         $accion = $this->em->getRepository(Accion::class)->findBy(['estado' => '1']);
         $progressBar->advance();
         
-        $correo = $this->em->getRepository(Correo::class)->find('4');
+        $correo = $this->em->getRepository(Correo::class)->find('5');
         $newml = new Correo();
         $newml->setAsunto($correo->getAsunto());
         $newml->setMensaje($correo->getMensaje());
@@ -63,7 +63,6 @@ class RunSchedulesCommand extends Command
 
         $this->em->persist($newml);
         $this->em->flush();
-
 
         $progressBar->finish();
         $io->success('Datos obtenidosdos exitosamente :)');

@@ -19,7 +19,6 @@ use App\Entity\DocumentoBaja;
 use App\Form\FileUploadType;
 use App\Form\DocumentoFileType;
 use App\Form\DocumentoProcesoType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,13 +29,13 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use DateTimeImmutable;
 
 
 class DocumentoProcesoController extends Controller
 {
     /**
-     * @Route("/documentoproceso", name="documentoproceso_listar")
-     * @Method({"GET"})
+     * @Route("/documentoproceso", methods={"GET"}, name="documentoproceso_listar")
      */
     public function index()
     {
@@ -356,6 +355,13 @@ class DocumentoProcesoController extends Controller
                 if($proc == 'con_modificacion') $docrevision->setEstadodoc('');
                 $docrevision->setFirma('Por firmar');
 
+                /*$transport = (new \Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+                    ->setUsername('procreator4all@gmail.com&')
+                    ->setPassword('shades_on4the.vamps');*/
+                
+                // Create the Mailer using your created Transport
+                //$mailer = new \Swift_Mailer($transport);
+
                 $message = (new \Swift_Message('ELFEC - Documento a revisar'))
                     ->setFrom($_SERVER['REMITENTE_CORREO'])
                     ->setTo($revisor->getCorreo())
@@ -365,6 +371,9 @@ class DocumentoProcesoController extends Controller
                             'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                         )
                     ), 'text/html');
+
+                /*$headers = $message->getHeaders();
+                $headers->addDateHeader('Your-Header', new DateTimeImmutable('now'));*/
 
                 $mailer->send($message);
 
@@ -389,6 +398,9 @@ class DocumentoProcesoController extends Controller
                                             'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                                         )
                                     ), 'text/html');
+
+                                $headers = $message->getHeaders();
+                                $headers->addDateHeader('Your-Header', new DateTimeImmutable('now'));
         
                                 $mailer->send($message);
                             }
@@ -416,6 +428,10 @@ class DocumentoProcesoController extends Controller
                                 'adicional' => array('fecha' => $fecha, 'website' => $website, 'logo' => '/resources/images/h_color_lg.png'),
                             )
                         ), 'text/html');
+
+                    $headers = $message->getHeaders();
+                    $headers->addDateHeader('Your-Header', new DateTimeImmutable('now'));
+                    
                     $mailer->send($message);
     
                     $cx->merge($docrevision);
