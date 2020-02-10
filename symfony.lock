@@ -5,12 +5,6 @@
     "apixu/apixu-php": {
         "version": "v1.1"
     },
-    "cron/cron": {
-        "version": "1.4.2"
-    },
-    "cron/cron-bundle": {
-        "version": "2.2.0"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -181,6 +175,9 @@
     "markbaker/matrix": {
         "version": "1.1.4"
     },
+    "mtdowling/cron-expression": {
+        "version": "v1.2.3"
+    },
     "nikic/php-parser": {
         "version": "v4.0.3"
     },
@@ -231,6 +228,9 @@
             "version": "5.2",
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         }
+    },
+    "shapecode/cron-bundle": {
+        "version": "3.2.3"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.1.2"

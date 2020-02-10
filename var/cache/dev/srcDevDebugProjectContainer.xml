@@ -22,7 +22,7 @@
       <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
       <parameter key="WebpackEncoreBundle">Symfony\WebpackEncoreBundle\WebpackEncoreBundle</parameter>
       <parameter key="JMSSerializerBundle">JMS\SerializerBundle\JMSSerializerBundle</parameter>
-      <parameter key="CronCronBundle">Cron\CronBundle\CronCronBundle</parameter>
+      <parameter key="ShapecodeCronBundle">Shapecode\Bundle\CronBundle\ShapecodeCronBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -77,9 +77,9 @@
         <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\jms\serializer-bundle</parameter>
         <parameter key="namespace">JMS\SerializerBundle</parameter>
       </parameter>
-      <parameter key="CronCronBundle" type="collection">
-        <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\cron\cron-bundle</parameter>
-        <parameter key="namespace">Cron\CronBundle</parameter>
+      <parameter key="ShapecodeCronBundle" type="collection">
+        <parameter key="path">H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\shapecode\cron-bundle\src</parameter>
+        <parameter key="namespace">Shapecode\Bundle\CronBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -305,11 +305,8 @@
     <parameter key="security.authentication.session_strategy.strategy">migrate</parameter>
     <parameter key="security.access.always_authenticate_before_granting">false</parameter>
     <parameter key="security.authentication.hide_user_not_found">true</parameter>
-    <parameter key="cron.resolver.class">Cron\CronBundle\Cron\Resolver</parameter>
-    <parameter key="cron.manager.class">Cron\CronBundle\Cron\Manager</parameter>
-    <parameter key="cron.command_builder.class">Cron\CronBundle\Cron\CommandBuilder</parameter>
-    <parameter key="cron.executor.class">Cron\Executor\Executor</parameter>
-    <parameter key="cron.validator.class">Cron\Validator\CrontabValidator</parameter>
+    <parameter key="shapecode_cron.results.auto_prune">true</parameter>
+    <parameter key="shapecode_cron.results.interval">7 days ago</parameter>
     <parameter key="console.command.ids" type="collection">
       <parameter>console.command.public_alias.doctrine_cache.contains_command</parameter>
       <parameter>console.command.public_alias.doctrine_cache.delete_command</parameter>
@@ -325,14 +322,14 @@
       <parameter>console.command.public_alias.doctrine_migrations.status_command</parameter>
       <parameter>console.command.public_alias.doctrine_migrations.up_to_date_command</parameter>
       <parameter>console.command.public_alias.doctrine_migrations.version_command</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronCreateCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronDeleteCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronDisableCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronEnableCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronListCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronRunCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronStartCommand</parameter>
-      <parameter>console.command.public_alias.Cron\CronBundle\Command\CronStopCommand</parameter>
+      <parameter>shapecode_cron.command.cron_job_edit</parameter>
+      <parameter>shapecode_cron.command.cron_process</parameter>
+      <parameter>shapecode_cron.command.cron_prune_logs</parameter>
+      <parameter>shapecode_cron.command.cron_run</parameter>
+      <parameter>shapecode_cron.command.cron_scan</parameter>
+      <parameter>shapecode_cron.command.cron_status</parameter>
+      <parameter>shapecode_cron.cronjob.generic_clean_up_daily</parameter>
+      <parameter>shapecode_cron.cronjob.generic_clean_up_hourly</parameter>
     </parameter>
   </parameters>
   <services>
@@ -2882,6 +2879,30 @@
         </argument>
         <argument>0</argument>
       </call>
+      <call method="addListener">
+        <argument>shapecode_cron.load_jobs</argument>
+        <argument type="collection">
+          <argument type="service" id="shapecode_cron.event_listener.annotation_job_loader"/>
+          <argument>onLoadJobs</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>shapecode_cron.generic_cleanup.hourly.process</argument>
+        <argument type="collection">
+          <argument type="service" id="shapecode_cron.event_listener.result_auto_prune"/>
+          <argument>onHourlyProcess</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>shapecode_cron.load_jobs</argument>
+        <argument type="collection">
+          <argument type="service" id="shapecode_cron.event_listener.service_job_loader"/>
+          <argument>onLoadJobs</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
     </service>
     <service id="debug.controller_resolver" class="Symfony\Component\HttpKernel\Controller\TraceableControllerResolver" public="false">
       <tag name="monolog.logger" channel="request"/>
@@ -3807,6 +3828,12 @@
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager" public="false">
       <argument type="service" id="service_container"/>
+      <call method="addEventSubscriber">
+        <argument type="service" id="doctrine.orm.listeners.resolve_target_entity"/>
+      </call>
+      <call method="addEventSubscriber">
+        <argument type="service" id="shapecode_cron.event_listener.entity_subscriber"/>
+      </call>
       <call method="addEventListener">
         <argument type="collection">
           <argument>loadClassMetadata</argument>
@@ -3873,7 +3900,19 @@
     <service id="doctrine.orm.security.user.provider" class="Symfony\Bridge\Doctrine\Security\User\EntityUserProvider" public="false" abstract="true">
       <argument type="service" id="doctrine"/>
     </service>
-    <service id="doctrine.orm.listeners.resolve_target_entity" class="Doctrine\ORM\Tools\ResolveTargetEntityListener" public="false"/>
+    <service id="doctrine.orm.listeners.resolve_target_entity" class="Doctrine\ORM\Tools\ResolveTargetEntityListener" public="false">
+      <tag name="doctrine.event_subscriber"/>
+      <call method="addResolveTargetEntity">
+        <argument>Shapecode\Bundle\CronBundle\Entity\CronJobInterface</argument>
+        <argument>Shapecode\Bundle\CronBundle\Entity\CronJob</argument>
+        <argument type="collection"/>
+      </call>
+      <call method="addResolveTargetEntity">
+        <argument>Shapecode\Bundle\CronBundle\Entity\CronJobResultInterface</argument>
+        <argument>Shapecode\Bundle\CronBundle\Entity\CronJobResult</argument>
+        <argument type="collection"/>
+      </call>
+    </service>
     <service id="doctrine.orm.naming_strategy.default" class="Doctrine\ORM\Mapping\DefaultNamingStrategy" public="false"/>
     <service id="doctrine.orm.naming_strategy.underscore" class="Doctrine\ORM\Mapping\UnderscoreNamingStrategy" public="false"/>
     <service id="doctrine.orm.quote_strategy.default" class="Doctrine\ORM\Mapping\DefaultQuoteStrategy" public="false"/>
@@ -3980,7 +4019,7 @@
       <call method="setEntityNamespaces">
         <argument type="collection">
           <argument key="App">App\Entity</argument>
-          <argument key="CronCronBundle">Cron\CronBundle\Entity</argument>
+          <argument key="ShapecodeCronBundle">Shapecode\Bundle\CronBundle\Entity</argument>
         </argument>
       </call>
       <call method="setMetadataCacheImpl">
@@ -4027,7 +4066,7 @@
       <argument type="service" id="annotations.cached_reader"/>
       <argument type="collection">
         <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\src\Entity</argument>
-        <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\cron\cron-bundle\Entity</argument>
+        <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\vendor\shapecode\cron-bundle\src\Entity</argument>
       </argument>
     </service>
     <service id="doctrine.orm.default_metadata_driver" class="Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain" public="false">
@@ -4037,7 +4076,7 @@
       </call>
       <call method="addDriver">
         <argument type="service" id="doctrine.orm.default_annotation_metadata_driver"/>
-        <argument>Cron\CronBundle\Entity</argument>
+        <argument>Shapecode\Bundle\CronBundle\Entity</argument>
       </call>
     </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_metadata_cache" class="Doctrine\Common\Cache\ArrayCache" public="true">
@@ -5578,51 +5617,85 @@
     </service>
     <service id="jms_serializer.configured_serialization_context_factory" class="JMS\SerializerBundle\ContextFactory\ConfiguredContextFactory" public="false"/>
     <service id="jms_serializer.configured_deserialization_context_factory" class="JMS\SerializerBundle\ContextFactory\ConfiguredContextFactory" public="false"/>
-    <service id="Cron\CronBundle\Command\CronCreateCommand" class="Cron\CronBundle\Command\CronCreateCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
+    <service id="shapecode_cron.cronjob_manager" class="Shapecode\Bundle\CronBundle\Manager\CronJobManager" public="false">
+      <argument type="service" id="debug.event_dispatcher"/>
     </service>
-    <service id="Cron\CronBundle\Command\CronDeleteCommand" class="Cron\CronBundle\Command\CronDeleteCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronDisableCommand" class="Cron\CronBundle\Command\CronDisableCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronEnableCommand" class="Cron\CronBundle\Command\CronEnableCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronListCommand" class="Cron\CronBundle\Command\CronListCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronRunCommand" class="Cron\CronBundle\Command\CronRunCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronStartCommand" class="Cron\CronBundle\Command\CronStartCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="Cron\CronBundle\Command\CronStopCommand" class="Cron\CronBundle\Command\CronStopCommand">
-      <tag name="console.command"/>
-      <argument type="service" id="service_container"/>
-    </service>
-    <service id="cron.resolver" class="Cron\CronBundle\Cron\Resolver" public="true">
-      <argument type="service" id="cron.manager"/>
-      <argument type="service" id="cron.command_builder"/>
-      <argument>H:\INTRANET\servidor_elfec\september_14m\produccion\Intranet-Backend\src</argument>
-    </service>
-    <service id="cron.manager" class="Cron\CronBundle\Cron\Manager" public="true">
+    <service id="shapecode_cron.abstract" abstract="true">
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
       <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
     </service>
-    <service id="cron.executor" class="Cron\Executor\Executor" public="true"/>
-    <service id="cron.command_builder" class="Cron\CronBundle\Cron\CommandBuilder">
-      <argument>dev</argument>
+    <service id="shapecode_cron.command.cron_job_edit" class="Shapecode\Bundle\CronBundle\Command\CronJobEditCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
     </service>
-    <service id="cron.validator" class="Cron\Validator\CrontabValidator" public="true"/>
+    <service id="shapecode_cron.command.cron_process" class="Shapecode\Bundle\CronBundle\Command\CronProcessCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="shapecode_cron.command.cron_prune_logs" class="Shapecode\Bundle\CronBundle\Command\CronPruneLogsCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="shapecode_cron.service.cronjob_result"/>
+    </service>
+    <service id="shapecode_cron.command.cron_run" class="Shapecode\Bundle\CronBundle\Command\CronRunCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="shapecode_cron.command.cron_scan" class="Shapecode\Bundle\CronBundle\Command\CronScanCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="shapecode_cron.cronjob_manager"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="shapecode_cron.command.cron_status" class="Shapecode\Bundle\CronBundle\Command\CronStatusCommand" public="true">
+      <tag name="console.command"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="shapecode_cron.cronjob.generic_clean_up_daily" class="Shapecode\Bundle\CronBundle\CronJob\GenericCleanUpDailyCommand" public="true">
+      <tag name="console.command"/>
+      <tag name="shapecode_cron.cron_job" expression="@daily"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+    </service>
+    <service id="shapecode_cron.cronjob.generic_clean_up_hourly" class="Shapecode\Bundle\CronBundle\CronJob\GenericCleanUpHourlyCommand" public="true">
+      <tag name="console.command"/>
+      <tag name="shapecode_cron.cron_job" expression="@hourly"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+    </service>
+    <service id="shapecode_cron.event_listener.entity_subscriber" class="Shapecode\Bundle\CronBundle\EventListener\EntitySubscriber" public="true">
+      <tag name="doctrine.event_subscriber"/>
+    </service>
+    <service id="shapecode_cron.event_listener.annotation_job_loader" class="Shapecode\Bundle\CronBundle\EventListener\AnnotationJobLoaderListener" public="true">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id="annotations.reader"/>
+    </service>
+    <service id="shapecode_cron.event_listener.result_auto_prune" class="Shapecode\Bundle\CronBundle\EventListener\ResultAutoPruneListener" public="true">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="shapecode_cron.service.cronjob_result"/>
+      <argument>true</argument>
+    </service>
+    <service id="shapecode_cron.event_listener.service_job_loader" class="Shapecode\Bundle\CronBundle\EventListener\ServiceJobLoaderListener" public="true">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="shapecode_cron.service.cronjob_result" class="Shapecode\Bundle\CronBundle\Service\CronJobResultService" public="false">
+      <argument type="service" id="doctrine"/>
+      <argument>7 days ago</argument>
+    </service>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\RunSchedulesCommand" class="App\Command\RunSchedulesCommand" public="false" autowire="true" abstract="true"/>
@@ -7593,13 +7666,5 @@
     <service id="console.command.public_alias.doctrine_migrations.status_command" alias="doctrine_migrations.status_command" public="true"/>
     <service id="console.command.public_alias.doctrine_migrations.up_to_date_command" alias="doctrine_migrations.up_to_date_command" public="true"/>
     <service id="console.command.public_alias.doctrine_migrations.version_command" alias="doctrine_migrations.version_command" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronCreateCommand" alias="Cron\CronBundle\Command\CronCreateCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronDeleteCommand" alias="Cron\CronBundle\Command\CronDeleteCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronDisableCommand" alias="Cron\CronBundle\Command\CronDisableCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronEnableCommand" alias="Cron\CronBundle\Command\CronEnableCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronListCommand" alias="Cron\CronBundle\Command\CronListCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronRunCommand" alias="Cron\CronBundle\Command\CronRunCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronStartCommand" alias="Cron\CronBundle\Command\CronStartCommand" public="true"/>
-    <service id="console.command.public_alias.Cron\CronBundle\Command\CronStopCommand" alias="Cron\CronBundle\Command\CronStopCommand" public="true"/>
   </services>
 </container>

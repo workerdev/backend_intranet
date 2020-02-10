@@ -136,6 +136,7 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
             'Symfony\\Bridge\\Twig\\' => 20,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'Svg\\' => 4,
+            'Shapecode\\Bundle\\CronBundle\\' => 28,
             'Serializer\\' => 11,
             'Sensio\\Bundle\\FrameworkExtraBundle\\' => 35,
         ),
@@ -198,6 +199,7 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'D' => 
         array (
             'Dompdf\\' => 7,
+            'Doctrine\\Persistence\\' => 21,
             'Doctrine\\ORM\\' => 13,
             'Doctrine\\Migrations\\' => 20,
             'Doctrine\\Instantiator\\' => 22,
@@ -216,7 +218,6 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         ),
         'C' => 
         array (
-            'Cron\\CronBundle\\' => 16,
             'Cron\\' => 5,
             'Complex\\' => 8,
         ),
@@ -421,6 +422,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         array (
             0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
+        'Shapecode\\Bundle\\CronBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/shapecode/cron-bundle/src',
+        ),
         'Serializer\\' => 
         array (
             0 => __DIR__ . '/..' . '/andreiavrammsd/serializer/src',
@@ -561,6 +566,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
+        'Doctrine\\Persistence\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/persistence/lib/Doctrine/Persistence',
+        ),
         'Doctrine\\ORM\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/orm/lib/Doctrine/ORM',
@@ -624,13 +633,9 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
         ),
-        'Cron\\CronBundle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/cron/cron-bundle',
-        ),
         'Cron\\' => 
         array (
-            0 => __DIR__ . '/..' . '/cron/cron/src',
+            0 => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron',
         ),
         'Complex\\' => 
         array (

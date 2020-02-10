@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -10,11 +12,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Doctrine\ORM\EntityManagerInterface;
+use Shapecode\Bundle\CronBundle\Annotation\CronJob;
+
 use App\Entity\Auditoria;
 use App\Entity\Hallazgo;
 use App\Entity\Accion;
 use App\Entity\Correo;
 
+
+/**
+ * @CronJob("*\/1 * * * *")
+ * Will be executed every minute
+ */
 class RunSchedulesCommand extends Command
 {
     protected static $defaultName = 'app:run-schedules';
@@ -36,23 +45,15 @@ class RunSchedulesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $progressBar = new ProgressBar($output, 3);
+        /*$progressBar = new ProgressBar($output, 3);
         $progressBar->setBarCharacter('<fg=blue>▄</>');
         $progressBar->setEmptyBarCharacter("<fg=white>▄</>");
-        $progressBar->setProgressCharacter("<fg=blue>➧</>");
+        $progressBar->setProgressCharacter("<fg=blue>➧</>");*/
         $io = new SymfonyStyle($input, $output);
 
-        $progressBar->start();
-        $auditoria = $this->em->getRepository(Auditoria::class)->findBy(['estado' => '1']);
-        $progressBar->advance();
+        //$progressBar->start();
         
-        $hallazgo = $this->em->getRepository(Hallazgo::class)->findBy(['estado' => '1']);
-        $progressBar->advance();
-    
-        $accion = $this->em->getRepository(Accion::class)->findBy(['estado' => '1']);
-        $progressBar->advance();
-        
-        $correo = $this->em->getRepository(Correo::class)->find('5');
+        $correo = $this->em->getRepository(Correo::class)->find('1');
         $newml = new Correo();
         $newml->setAsunto($correo->getAsunto());
         $newml->setMensaje($correo->getMensaje());
@@ -63,8 +64,9 @@ class RunSchedulesCommand extends Command
 
         $this->em->persist($newml);
         $this->em->flush();
+        //$progressBar->advance();
 
-        $progressBar->finish();
+        //$progressBar->finish();
         $io->success('Datos obtenidosdos exitosamente :)');
     }
 }
