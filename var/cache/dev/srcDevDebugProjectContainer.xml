@@ -347,6 +347,12 @@
         <argument>app:run-schedules</argument>
       </call>
     </service>
+    <service id="App\Command\RunTaskCommand" class="App\Command\RunTaskCommand" public="false" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <call method="setName">
+        <argument>app:run-task</argument>
+      </call>
+    </service>
     <service id="App\Controller\AccesoController" class="App\Controller\AccesoController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
     </service>
@@ -2689,6 +2695,14 @@
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service" id="debug.debug_handlers_listener"/>
+          <argument>configure</argument>
+        </argument>
+        <argument>2048</argument>
+      </call>
+      <call method="addListener">
+        <argument>console.command</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
           <argument>configure</argument>
@@ -5692,6 +5706,8 @@
     <service id=".abstract.instanceof.App\Command\LoadInfoCommand" class="App\Command\LoadInfoCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\RunSchedulesCommand" class="App\Command\RunSchedulesCommand" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\RunSchedulesCommand" class="App\Command\RunSchedulesCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\RunTaskCommand" class="App\Command\RunTaskCommand" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\RunTaskCommand" class="App\Command\RunTaskCommand" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\Controller.0.App\Controller\AccesoController" class="App\Controller\AccesoController" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AccesoController" class="App\Controller\AccesoController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\AccidentesController" class="App\Controller\AccidentesController" public="false" autowire="true" abstract="true"/>
@@ -7327,10 +7343,11 @@
       </argument>
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
-      <argument type="service" id=".service_locator.zsYdV4o"/>
+      <argument type="service" id=".service_locator.YV9vtGy"/>
       <argument type="collection">
         <argument key="app:load-info">app.command.load_info</argument>
         <argument key="app:run-schedules">App\Command\RunSchedulesCommand</argument>
+        <argument key="app:run-task">App\Command\RunTaskCommand</argument>
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
         <argument key="cache:clear">console.command.cache_clear</argument>
@@ -7401,11 +7418,12 @@
         <argument key="make:migration">maker.auto_command.make_migration</argument>
       </argument>
     </service>
-    <service id=".service_locator.zsYdV4o" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.YV9vtGy" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\LoadInfoCommand" type="service" id="App\Command\LoadInfoCommand"/>
         <argument key="App\Command\RunSchedulesCommand" type="service" id="App\Command\RunSchedulesCommand"/>
+        <argument key="App\Command\RunTaskCommand" type="service" id="App\Command\RunTaskCommand"/>
         <argument key="app.command.load_info" type="service" id="app.command.load_info"/>
         <argument key="console.command.about" type="service" id="console.command.about"/>
         <argument key="console.command.assets_install" type="service" id="console.command.assets_install"/>

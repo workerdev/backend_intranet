@@ -3551,7 +3551,7 @@ class ServiciosController extends AbstractController
             $error = false;
 
             $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-            $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
+            $datacontrol = $this->serializer_obj->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
 
             $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $datatipo = $this->serializer_obj->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
@@ -3662,7 +3662,7 @@ class ServiciosController extends AbstractController
                         $sourcePath = $archivos['url']['tmp_name'];
                         $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
                         
-                        if(move_uploaded_file($sourcePath, $targetPath)){
+                        if (move_uploaded_file($sourcePath, $targetPath)) {
                             $uploadedFile = $fileName;
                         }
                         $url = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
@@ -3680,7 +3680,7 @@ class ServiciosController extends AbstractController
                         $sourcePath = $archivos['urleditable']['tmp_name'];
                         $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
                         
-                        if(move_uploaded_file($sourcePath, $targetPath)){
+                        if (move_uploaded_file($sourcePath, $targetPath)) {
                             $uploadedFile = $fileName;
                         }
                         $urleditable = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
@@ -3698,7 +3698,7 @@ class ServiciosController extends AbstractController
                         $sourcePath = $archivos['urlorigen']['tmp_name'];
                         $targetPath = $this->getParameter('Directorio_Correlativo') . '/' . $fileName;
                         
-                        if(move_uploaded_file($sourcePath, $targetPath)){
+                        if (move_uploaded_file($sourcePath, $targetPath)) {
                             $uploadedFile = $fileName;
                         }
                         $urlorigen = substr($targetPath, strpos($targetPath, "public") + 6, strlen($targetPath));
@@ -3746,11 +3746,9 @@ class ServiciosController extends AbstractController
         $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
 
         $response->setContent($jsonresp);
-        $response->headers->set([
-            'Content-Type' => 'application/json',
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, DELETE, PUT'
-        ]);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT');
         $response->prepare($request);
 
         return $response;
@@ -3813,10 +3811,10 @@ class ServiciosController extends AbstractController
             else $sendinf = null;
 
             $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-            $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
+            $datacontrol = $this->serializer_obj->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
 
             $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-            $datatipo = $serializer->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
+            $datatipo = $this->serializer_obj->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
 
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
             $keysData = array('id', 'nombre');

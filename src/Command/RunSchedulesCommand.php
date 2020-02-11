@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Doctrine\ORM\EntityManagerInterface;
-use Shapecode\Bundle\CronBundle\Annotation\CronJob;
 
 use App\Entity\Auditoria;
 use App\Entity\Hallazgo;
@@ -20,10 +19,6 @@ use App\Entity\Accion;
 use App\Entity\Correo;
 
 
-/**
- * @CronJob("*\/1 * * * *")
- * Will be executed every minute
- */
 class RunSchedulesCommand extends Command
 {
     protected static $defaultName = 'app:run-schedules';

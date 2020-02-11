@@ -18,6 +18,7 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
         '21a5860fbef5be28db5ddfbc3cca67c4' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acos.php',
         '1546e3f9d127f2a9bb2d1b6c31c26ef1' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acosh.php',
@@ -76,7 +77,6 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'aa53dcba601214d17ad405b7c291b7e8' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/multiply.php',
         '75c79eb1b25749b05a47976f32b0d8a2' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideby.php',
         '6ab8ad87a734f276a6bcd5a0fe1289be' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideinto.php',
-        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -136,6 +136,7 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
             'Symfony\\Bridge\\Twig\\' => 20,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'Svg\\' => 4,
+            'SuperClosure\\' => 13,
             'Shapecode\\Bundle\\CronBundle\\' => 28,
             'Serializer\\' => 11,
             'Sensio\\Bundle\\FrameworkExtraBundle\\' => 35,
@@ -162,6 +163,7 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         ),
         'J' => 
         array (
+            'Jobby\\' => 6,
             'JMS\\Serializer\\' => 15,
             'JMS\\SerializerBundle\\' => 21,
         ),
@@ -422,6 +424,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         array (
             0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
+        'SuperClosure\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jeremeamia/superclosure/src',
+        ),
         'Shapecode\\Bundle\\CronBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/shapecode/cron-bundle/src',
@@ -477,6 +483,10 @@ class ComposerStaticInit83bed87c4c6d8a0cb2bb2f7c6e22ce2d
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
+        'Jobby\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hellogerard/jobby/src',
         ),
         'JMS\\Serializer\\' => 
         array (
