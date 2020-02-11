@@ -95,6 +95,42 @@ class CorrelativoRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findYears(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+                SELECT DISTINCT(date_part(\'Year\', cb_correlativo_fechareg)) AS anio
+                FROM cb_correlativo_correlativo
+                WHERE cb_correlativo_estado=1
+                ORDER BY 1
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
+    public function findNumbering($anio): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+                    SELECT cb_correlativo_numcorrelativo + 1 AS numcorrelativo
+                    FROM cb_correlativo_correlativo
+                    WHERE cb_correlativo_estado = 1 AND cb_correlativo_id IN
+                        (SELECT MAX(c.cb_correlativo_id)
+                        FROM cb_correlativo_correlativo c
+                        WHERE c.cb_correlativo_estado = 1 AND date_part(\'year\', c.cb_correlativo_fechareg)=:anio)
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['anio' => $anio]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
     public function filterByPermissions($idu): array
     {
         $conn = $this->getEntityManager()->getConnection();

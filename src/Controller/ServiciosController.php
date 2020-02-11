@@ -40,7 +40,6 @@ use App\Entity\Hallazgo;
 use App\Entity\Accion;
 use App\Entity\AccionEficacia;
 use App\Entity\Fortaleza;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
@@ -62,6 +61,22 @@ use Symfony\Component\Translation\Translator;
 
 class ServiciosController extends AbstractController
 {
+    private $encoders_json;
+    private $normalizers_json;
+    private $serializer_json;
+    private $serializer_obj;
+
+    public function __construct()
+    {
+        /* Array to Json */
+        $this->encoders_json = [new XmlEncoder(), new JsonEncoder()];
+        $this->normalizers_json = [new ObjectNormalizer()];
+        $this->serializer_json = new Serializer($this->normalizers_json, $this->encoders_json);
+
+        /* Array to Object */
+        $this->serializer_obj = new Serializer([new ObjectNormalizer()]);
+    }
+
     /**
      * @Route("/enlace_lista", methods={"GET"}, name="enlace_lista")
      */
@@ -103,8 +118,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/enviarcorreo", name="enviarcorreo")
-     * @Method({"POST"})
+     * @Route("/enviarcorreo", methods={"POST"}, name="enviarcorreo")
      */
     public function enviarcorreo(Request $request, \Swift_Mailer $mailer)
     {
@@ -156,8 +170,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/enviarcorreo_buzon", name="enviarcorreo_buzon")
-     * @Method({"POST"})
+     * @Route("/enviarcorreo_buzon", methods={"POST"}, name="enviarcorreo_buzon")
      */
     public function enviarcorreo_buzon(Request $request, \Swift_Mailer $mailer)
     {
@@ -210,13 +223,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/organigrama2", name="organigrama2")
-     * @Method({"GET"})
+     * @Route("/organigrama2", methods={"GET"}, name="organigrama2")
      */
     public function organigrama()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT CARGO.cb_cargo_id AS KEY,
                         CASE
                             WHEN PER.cb_personal_nombre IS NULL THEN
@@ -276,13 +288,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/organigrama_por_cargo", name="organigrama_por_cargo")
-     * @Method({"POST"})
+     * @Route("/organigrama_por_cargo", methods={"POST"}, name="organigrama_por_cargo")
      */
     public function organigrama_por_cargo(Request $request)
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
 
@@ -502,7 +513,7 @@ class ServiciosController extends AbstractController
     public function getTipoEmpresarialLista()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT T
                     .cb_tipodatoempresarial_id AS ID,
                     T.cb_tipodatoempresarial_nombre AS nombre,
@@ -536,7 +547,7 @@ class ServiciosController extends AbstractController
     public function lastFileUpload(Request $request)
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_file_ruta as ruta, cb_file_tipo as tipo
                     FROM cb_comunicacion_file
                     WHERE cb_file_estado = 1
@@ -563,7 +574,7 @@ class ServiciosController extends AbstractController
     public function galeriaList(Request $request)
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT
                     galeria.cb_galeria_id as galeria_id, galeria.cb_galeria_nombre as galeria_nombre, case
                     when N.cantidad ISNULL then 0
@@ -665,7 +676,7 @@ class ServiciosController extends AbstractController
     public function lastNoticiaCategoria(Request $request)
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT NOTICIA.cb_noticia_id as id_noticia, NOTICIA.cb_noticia_titulo as titulo_noticia,NOTICIA.cb_noticia_contenido as contenido_noticia,NOTICIA.cb_noticia_contenido as contenido_noticia, NOTICIA.cb_noticia_subtitulo as subtitulo_noticia, CAT.cb_categorianoticia_nombre as nombre_categoria, CAT.cb_categorianoticia_id as categoria_id
                     FROM cb_comunicacion_noticia NOTICIA join (
                     SELECT MAX
@@ -702,7 +713,7 @@ class ServiciosController extends AbstractController
     public function lastPrensaCategoria(Request $request)
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT NOTICIA.cb_noticia_id as id_noticia, NOTICIA.cb_noticia_titulo as titulo_noticia, NOTICIA.cb_noticia_subtitulo as subtitulo_noticia,NOTICIA.cb_noticia_contenido as contenido_noticia, CAT.cb_categorianoticia_nombre as nombre_categoria, CAT.cb_categorianoticia_id as categoria_id
                     FROM cb_comunicacion_noticia NOTICIA join (
                     SELECT MAX
@@ -799,7 +810,7 @@ class ServiciosController extends AbstractController
             $sx = json_decode($request->getContent(), true);
             $tipo = $sx['tipo'];
             $tipo2 = $sx['tipo3'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "select n.cb_noticia_id as id_noticia,n.cb_noticia_titulo as titulo_noticia, n.cb_noticia_subtitulo as subtitulo_noticia,
                     n.cb_noticia_fecha as fecha_noticia,n.cb_noticia_tipo as tipo_noticia, c.cb_categorianoticia_id as id_categoria, c.cb_categorianoticia_nombre as nombre_categoria
                     from cb_comunicacion_noticia n, cb_comunicacion_categorianoticia c, cb_comunicacion_noticiacategoria nc
@@ -831,7 +842,7 @@ class ServiciosController extends AbstractController
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
             $tipo = $sx['tipo'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "select N.cb_noticia_id as id_noticia, N.cb_noticia_titulo as titulo_noticia, N.cb_noticia_subtitulo as subtitulo_noticia, N.cb_noticia_contenido as contenido_noticia, N.cb_noticia_fecha as fecha_noticia
                     from cb_comunicacion_noticiacategoria NC
                     join cb_comunicacion_categorianoticia CN on NC.cb_noticiacategoria_fkcategoria = CN.cb_categorianoticia_id join cb_comunicacion_noticia N on NC.cb_noticiacategoria_fknoticia = N.cb_noticia_id
@@ -860,7 +871,7 @@ class ServiciosController extends AbstractController
             // $tipo = $request->get("tipo");
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_noticia_titulo as titulo_noticia, cb_noticia_subtitulo as subtitulo_noticia, cb_noticia_contenido as contenido_noticia, cb_noticia_fecha as fecha_noticia FROM
                     cb_comunicacion_noticia N
                     WHERE N.cb_noticia_id =:id and N.cb_noticia_estado = 1";
@@ -896,7 +907,7 @@ class ServiciosController extends AbstractController
     {
         try {
             // $tipo = $request->get("tipo");
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT
                     concat(cb_personal_nombre,' ',cb_personal_apellido) as nombre,
                     cb_personal_fnac as fecha, cb_personal_genero as genero, cb_personal_foto as foto,
@@ -987,13 +998,12 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: JUAN CARLOS CAMPOS*/
 
     /**
-     * @Route("/sigprocfcgerencia", name="procesogerencia")
-     * @Method({"GET"})
+     * @Route("/sigprocfcgerencia", methods={"GET"}, name="procesogerencia")
      */
     public function procesogerencia()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gas_id AS id_area, cb_gas_codigo as ID, cb_gerencia_nombre AS GERENCIA, cb_area_nombre AS AREA, cb_sector_nombre AS SECTOR,
                 cb_ficha_procesos_nombre AS NOMBRE_DEL_PROCESO, cb_ficha_procesos_codproceso AS CODIGO_DEL_PROCESO, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS RESPONSABLE,
                 cb_ficha_procesos_id AS idfc
@@ -1026,7 +1036,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_ficha_procesos_id AS ID,cb_gas_codigo AS ID_AREA,cb_ficha_procesos_codproceso AS COD_PROCESO,cb_ficha_procesos_nombre AS NOMBRE_PROCESO,
                         cb_ficha_procesos_objetivo AS OBJETIVO_PROCESO,cb_ficha_procesos_vigente AS VIGENTE,cb_ficha_procesos_version AS VERSION,
                         cb_ficha_procesos_fechaemision AS FECHA_EMISION,cb_ficha_procesos_entradasrequeridas AS ENTRADAS_REQUERIDAS,
@@ -1077,7 +1087,7 @@ class ServiciosController extends AbstractController
             $stmt->execute(['id' => ($id)]);
             $Riesgo = $stmt->fetchAll();
 
-            $cx = $this->getDoctrine()->getEntityManager();
+            $cx = $this->getDoctrine()->getManager();
 
             $dqlIndicador = "SELECT ip.id AS ID,fi.nombre AS COD_PROCESO, ip.codigo AS CODIGO_INDICADOR, ip.objetivo AS OBJETIVO_INDICADOR,
                                 ip.descripcion AS DESCRIPCION_INDICADOR, u.nombre AS UNIDAD,ip.metamensual AS META_MENSUAL,
@@ -1108,13 +1118,12 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: JUAN CARLOS CAMPOS*/
 
     /**
-     * @Route("/sigprocfcprocesos", name="procesoprocesos")
-     * @Method({"GET"})
+     * @Route("/sigprocfcprocesos", methods={"GET"}, name="procesoprocesos")
      */
     public function sigprocesoprocesos()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_ficha_procesos_nombre AS nombre_del_proceso, cb_ficha_procesos_codproceso AS codigo_proceso, cb_gas_codigo AS id,
                         cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_sector_nombre AS sector, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable,
                         cb_ficha_procesos_id AS idfc, cb_gas_id AS id_area
@@ -1152,7 +1161,7 @@ class ServiciosController extends AbstractController
     public function indicadores()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gas_codigo AS id, cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_ficha_procesos_codproceso AS cod_proceso,
                         cb_indicador_proceso_codigo AS codigo_indicador, cb_indicador_proceso_objetivo AS objetivo_del_indicador,
                         cb_indicador_proceso_descripcion AS descripcion_del_indicador
@@ -1188,7 +1197,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $codigo = $sx['codigo'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_indicador_proceso_id AS id, cb_ficha_procesos_codproceso AS cod_proceso, cb_indicador_proceso_codigo AS codigo_indicador,
                         cb_indicador_proceso_objetivo AS objetivo_indicador, cb_indicador_proceso_descripcion AS descripcion_indicador,
@@ -1232,7 +1241,7 @@ class ServiciosController extends AbstractController
     public function indicadorseg()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_ficha_procesos_codproceso AS codigo_del_proceso, cb_indicador_proceso_codigo AS codigo_del_indicador,
                         cb_indicador_proceso_objetivo AS objetivo_del_indicador, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable_del_seguimiento,
                         cb_seguimiento_indicador_ano AS anio, cb_seguimiento_indicador_mes AS mes,
@@ -1313,7 +1322,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_riesgos_oportunidades_id AS \"ID_CROCM\", cb_tipocro_nombre AS \"TIPO_CRO\", cb_ficha_procesos_codproceso AS \"COD_PROCESO\",
                         cb_riesgos_oportunidades_origen AS \"ORIGEN_CROCM\", cb_riesgos_oportunidades_descripcion AS \"DESCRIPCION_CROCM\",
@@ -1360,7 +1369,7 @@ class ServiciosController extends AbstractController
     public function seguimientocrocm()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_ficha_procesos_codproceso AS codigo_proceso,
                         cb_riesgos_oportunidades_id AS id_cro, cb_tipocro_nombre AS tipo_crocm, cb_riesgos_oportunidades_descripcion AS descripcion_crocm,
                         cb_riesgos_oportunidades_accion AS accion, cb_seguimientocro_fechaseg AS fec_segu, cb_seguimientocro_observaciones AS observaciones,
@@ -1409,7 +1418,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $sp = "_";
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS GERENCIA, cb_area_nombre AS AREA, cb_tipo_documento_nombre AS TIPO_DOCUMENTO,
                     cb_documento_codigo AS CODIGO, cb_documento_titulo AS TITULO_DOC,
                         cb_documento_vinculoarchivodig AS VINCULO_DOC, cb_documento_versionvigente AS VERSION,
@@ -1483,7 +1492,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $gerencia = $sx['gerencia'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_gerencia_nombre AS GERENCIA, cb_area_nombre AS AREA, cb_tipo_documento_nombre AS TIPO_DOCUMENTO,
                     cb_documento_codigo AS CODIGO, cb_documento_titulo AS TITULO_DOC,
@@ -1556,7 +1565,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_documento_codigo AS codigo_documento, cb_ficha_procesos_codproceso AS cod_proceso, cb_tipo_documento_nombre AS tipo_documento, cb_documento_titulo AS titulo_doc,
                         cb_documento_versionvigente AS version, cb_documento_fechapublicacion AS f_publicacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido)AS aprobado_por,
@@ -1655,7 +1664,7 @@ class ServiciosController extends AbstractController
     public function getdocformulario()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, 
                         cb_documento_formulario_titulo AS titulo_formulario, cb_documento_formulario_vinculofiledig AS vinculo_archivo, 
                         cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
@@ -1725,7 +1734,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $gerencia = $sx['gerencia'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_documento_formulario_codigo AS cod_formulario, cb_documento_formulario_titulo AS titulo_formulario,
                         cb_documento_formulario_vinculofiledig AS vinculo_archivo, cb_documento_formulario_vinculofiledesc AS descarga_formulario, cb_documento_formulario_versionvigente AS version,
@@ -1794,7 +1803,7 @@ class ServiciosController extends AbstractController
             $id = $sx['id'];
             $documento = $sx['documento'];
             
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_documento_formulario_id AS ID_FORMULARIO, cb_documento_codigo AS COD_DOCUMENTO, cb_documento_formulario_codigo AS COD_FORMULARIO,
                         cb_documento_formulario_titulo AS TITULO_FORMULARIO, cb_documento_formulario_versionVigente AS VERSION_VIGENTE_FORMULARIO,
                         cb_documento_formulario_fechaPublicacion AS FECHA_PUBLICACION_FORMULARIO, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS APROBADO_POR,
@@ -1948,7 +1957,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_documento_proceso_id AS \"ID\", cb_documento_proceso_nuevoactualizacion AS \"NUEVO_O_ACTUALIZACION\", cb_documento_codigo AS \"COD_DOCUMENTO\", cb_ficha_procesos_codproceso AS \"COD_PROCESO\",
                     cb_tipo_documento_nombre AS \"TIPO_DOCUMENTO\", cb_documento_proceso_titulo AS \"TITULO\", cb_documento_proceso_versionvigente AS \"VERSION\", cb_documento_proceso_vinculoarchivo AS \"VINCULO_ARCHIVO_DIGITAL\",
                     cb_documento_proceso_carpetaoperativa AS \"CARPETA_OPERATIVA\", cb_documento_proceso_aprobadorechazado AS \"APROBADO_O_RECHAZADO\",
@@ -1979,7 +1988,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_docprocrevision_fkdoc AS id_revision, cb_docprocrevision_fecha AS fecha_recibido, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable_revision,
                     cb_docprocrevision_estadodoc AS estado, cb_docprocrevision_firma AS firma_electronica
@@ -2014,7 +2023,7 @@ class ServiciosController extends AbstractController
     public function documentobaja()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT tbr.cb_bajadocumento_id AS id, tbr.cb_bajadocumento_codigo AS codigo_documento, tbr.cb_tipo_documento_nombre AS tipo_documento, tbr.cb_bajadocumento_titulo AS titulo, tbr.cb_bajadocumento_versionvigente AS version,
                         tbr.cb_bajadocumento_fechapublicacion AS fecha_publicacion, tbr.cb_bajadocumento_aprobadopor AS aprobado_por, tbr.cb_bajadocumento_carpetaoperativa AS carpeta_operativa,
                         tbr.cb_bajadocumento_vinculoarchivo AS vinculo_archivo_digital, tbr.cb_ficha_procesos_codproceso AS codigo_proceso
@@ -2073,7 +2082,7 @@ class ServiciosController extends AbstractController
     public function fichascargo()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_ficha_cargo_nombre AS id_cargo, cb_ficha_cargo_fechaaprobacion AS f_aprobacion,
             jefe.cb_usuario_nombre AS aprobado_jefe, gerente.cb_usuario_nombre AS aprobado_gerente, cb_ficha_cargo_id AS id
           FROM cb_proc_gas, cb_configuracion_gerencia, cb_procesos_area, cb_fc_ficha_cargo,cb_usuario_usuario jefe,cb_usuario_usuario gerente
@@ -2108,7 +2117,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_ficha_cargo_nombre AS id_cargo, cb_gas_codigo AS id_area, cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_sector_nombre AS sector,
                         cb_ficha_cargo_objetivo AS objetivo_cargo, cb_ficha_cargo_responsabilidades AS responsabilidades, cb_ficha_cargo_experiencia AS experiencia,
@@ -2157,8 +2166,7 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/listar_audhlg", name="listar_audhlg")
-     * @Method({"GET"})
+     * @Route("/listar_audhlg", methods={"GET"}, name="listar_audhlg")
      */
     public function listar_audhlg()
     {
@@ -2441,8 +2449,7 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/listar_hallazgo", name="listar_hallazgo")
-     * @Method({"GET"})
+     * @Route("/listar_hallazgo", methods={"GET"}, name="listar_hallazgo")
      */
     public function listar_hallazgo()
     {
@@ -2511,8 +2518,7 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/listar_accion", name="listar_accion")
-     * @Method({"GET"})
+     * @Route("/listar_accion", methods={"GET"}, name="listar_accion")
      */
     public function listar_accion()
     {
@@ -2648,8 +2654,7 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/listar_verificaref", name="listar_verificaref")
-     * @Method({"GET"})
+     * @Route("/listar_verificaref", methods={"GET"}, name="listar_verificaref")
      */
     public function listar_verificaref()
     {
@@ -2719,8 +2724,7 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/listar_fortaleza", name="listar_fortaleza")
-     * @Method({"GET"})
+     * @Route("/listar_fortaleza", methods={"GET"}, name="listar_fortaleza")
      */
     public function listar_fortaleza()
     {
@@ -2789,13 +2793,12 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/crocm_list", name="crocm_list")
-     * @Method({"POST"})
+     * @Route("/crocm_list", methods={"POST"}, name="crocm_list")
      */
     public function crocm_list()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_riesgos_oportunidades_id AS id_cro, cb_tipocro_nombre AS tipo, cb_ficha_procesos_codproceso AS cod_proceso,
                         cb_riesgos_oportunidades_origen AS origen_crocm, cb_riesgos_oportunidades_descripcion AS descripcion_crocm,
                         cb_riesgos_oportunidades_analisiscausaraiz AS analisis_causa_raiz, cb_probabilidad_ocurrencia_nombre AS probabilidad,
@@ -2822,13 +2825,12 @@ class ServiciosController extends AbstractController
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
     /**
-     * @Route("/crocm_consulta", name="crocm_consulta")
-     * @Method({"POST"})
+     * @Route("/crocm_consulta", methods={"POST"}, name="crocm_consulta")
      */
     public function crocm_consulta()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
             $sql = "SELECT cb_gerencia_nombre AS gerencia, cb_area_nombre AS area, cb_ficha_procesos_codproceso AS cod_proceso, cb_riesgos_oportunidades_id AS id_cro,
                         cb_tipocro_nombre AS tipo, cb_riesgos_oportunidades_descripcion AS descripcion, cb_riesgos_oportunidades_accion AS accion,
                         cb_riesgos_oportunidades_fecha AS f_implementacion, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS responsable, cb_riesgos_oportunidades_estadocro AS estado
@@ -2859,7 +2861,7 @@ class ServiciosController extends AbstractController
         try {
             $sx = json_decode($request->getContent(), true);
             $id = $sx['id'];
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_riesgos_oportunidades_id AS id_cro, cb_tipocro_nombre AS tipo_cro, cb_ficha_procesos_codproceso AS cod_proceso,
                         cb_riesgos_oportunidades_origen AS origen_crocm, cb_riesgos_oportunidades_descripcion AS descripcion_crocm,
@@ -3140,13 +3142,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_proceso", name="combo_proceso")
-     * @Method({"GET"})
+     * @Route("/combo_proceso", methods={"GET"}, name="combo_proceso")
      */
     public function combo_proceso()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_ficha_procesos_id AS idfp, cb_ficha_procesos_codproceso AS codigofp
                     FROM cb_procesos_ficha_procesos
@@ -3165,8 +3166,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_tipocrocm", name="combo_tipocrocm")
-     * @Method({"GET"})
+     * @Route("/combo_tipocrocm", methods={"GET"}, name="combo_tipocrocm")
      */
     public function combo_tipocrocm()
     {
@@ -3187,8 +3187,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_probabilidad", name="combo_probabilidad")
-     * @Method({"GET"})
+     * @Route("/combo_probabilidad", methods={"GET"}, name="combo_probabilidad")
      */
     public function combo_probabilidad()
     {
@@ -3209,8 +3208,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_impacto", name="combo_impacto")
-     * @Method({"GET"})
+     * @Route("/combo_impacto", methods={"GET"}, name="combo_impacto")
      */
     public function combo_impacto()
     {
@@ -3231,13 +3229,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_responsable", name="combo_responsable")
-     * @Method({"GET"})
+     * @Route("/combo_responsable", methods={"GET"}, name="combo_responsable")
      */
     public function combo_responsable()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_usuario_id AS idu, (cb_usuario_nombre || ' ' || cb_usuario_apellido) AS nombre
                     FROM cb_usuario_usuario
@@ -3262,7 +3259,7 @@ class ServiciosController extends AbstractController
     {
         try {
             $sx = json_decode($request->getContent(), true);
-            $cx = $this->getDoctrine()->getEntityManager();
+            $cx = $this->getDoctrine()->getManager();
 
             $descripcion = $sx['descripcion'];
             $origen = $sx['origen'];
@@ -3317,13 +3314,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_org_cargo", name="combo_org_cargo")
-     * @Method({"GET"})
+     * @Route("/combo_org_cargo", methods={"GET"}, name="combo_org_cargo")
      */
     public function combo_org_cargo()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_cargo_id AS idc, cb_cargo_nombre AS cargo 
                     FROM cb_personal_cargo
@@ -3346,8 +3342,7 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/combo_organigrama", name="combo_organigrama")
-     * @Method({"GET"})
+     * @Route("/combo_organigrama", methods={"GET"}, name="combo_organigrama")
      */
     public function combo_organigrama()
     {
@@ -3368,13 +3363,12 @@ class ServiciosController extends AbstractController
     }
 
     /**
-     * @Route("/listar_cobertura", name="listar_cobertura")
-     * @Method({"POST"})
+     * @Route("/listar_cobertura", methods={"POST"}, name="listar_cobertura")
      */
     public function listar_cobertura()
     {
         try {
-            $cx = $this->getDoctrine()->getEntityManager()->getConnection();
+            $cx = $this->getDoctrine()->getManager()->getConnection();
 
             $sql = "SELECT cb_tipo_cobertura_id AS id, cb_tipo_cobertura_nombre AS nombre, cb_tipo_cobertura_descripcion AS descripcion
                     FROM cb_ind_tipo_cobertura
@@ -3412,57 +3406,51 @@ class ServiciosController extends AbstractController
             $sx = json_decode($request->getContent(), true);
             $user = $sx['username'];
             $year = $sx['anio'];
-            $cx = $this->getDoctrine()->getEntityManager();
+            $cx = $this->getDoctrine()->getManager();
+            
+            $code = 200;
+            $error = false;
 
             $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $year);
-
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
             $unidades = array_column($unidad, 'id');
 
             $correlativos = array();
-            if($correlativo != null){
+            if (!empty($correlativo)) {
                 foreach ($correlativo as $crtv) {
                     $dtcrtv = $crtv;
 
                     $fecreg = $dtcrtv['fechareg'];
                     $fecent = $dtcrtv['entrega'];
 
-                    if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
-                        $itemvl = $dtcrtv['item'];
-                    } else {
-                        $itemvl = "";
-                    }
+                    $itemvl = !in_array($dtcrtv['item'], [null, 0, ''])? $dtcrtv['item']: "";
 
                     $fksolicitante = $dtcrtv['fksolicitante'];
                     $fkcorrelativo = $dtcrtv['fkcorrelativo'];
                     $fktiponota = $dtcrtv['fktiponota'];
                     $fkunidad = $dtcrtv['fkunidad'];
-                    $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
-                    $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
-                    $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
-                    $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+                    $fksolicitante = $fksolicitante != ''? $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante): null;
+                    $fkcorrelativo = $fkcorrelativo != ''? $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo): null;
+                    $fktiponota = $fktiponota != ''? $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota): null;
+                    $fkunidad = $fkunidad != ''? $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad): null;
                     
-                    if($fksolicitante != null) $fullname = $fksolicitante->getNombre().' '.$fksolicitante->getApellido();
-                    else $fullname = '';
+                    $fullname = $fksolicitante != null? $fksolicitante->getNombre().' '.$fksolicitante->getApellido(): '';
 
-                    if($fkunidad != null){
-                        if(in_array($fkunidad->getId(), $unidades)) $action_permission = true;
-                        else $action_permission = false;
+                    if ($fkunidad != null) {
+                        $action_permission = in_array($fkunidad->getId(), $unidades)? true: false;
                     }
                     else $action_permission = false;
 
-                    $serializer = new Serializer(array(new ObjectNormalizer()));
-                    $fksolicitante_cln = $serializer->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido')));
-                    $fkcorrelativo_cln = $serializer->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
-                    $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
-                    $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
+                    $fksolicitante_cln = $this->serializer_obj->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido')));
+                    $fkcorrelativo_cln = $this->serializer_obj->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
+                    $fktiponota_cln = $this->serializer_obj->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
+                    $fkunidad_cln = $this->serializer_obj->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
 
                     if (strpos($dtcrtv['url'], ";base64,") !== false) $dturl = 'base64';
                     else {
                         if (!in_array($dtcrtv['url'], ['N/A', null, ''])) {
                             $urlfl = $this->getParameter('Directorio_proyecto').$dtcrtv['url'];
-                            if (file_exists($urlfl) && (strpos($urlfl, '.') !== false)) $dturl = $dtcrtv['url'];
-                            else $dturl = 'N/A';
+                            $dturl = (file_exists($urlfl) && strpos($urlfl, '.') !== false)? $dtcrtv['url']: 'N/A';
                         }
                         else $dturl = 'N/A';
                     }
@@ -3471,8 +3459,7 @@ class ServiciosController extends AbstractController
                     else {
                         if (!in_array($dtcrtv['urleditable'], ['N/A', null, ''])) {
                             $urleditablefl = $this->getParameter('Directorio_proyecto').$dtcrtv['urleditable'];
-                            if (file_exists($urleditablefl) && (strpos($urleditablefl, '.') !== false)) $dturleditable = $dtcrtv['urleditable'];
-                            else $dturleditable = 'N/A';
+                            $dturleditable = (file_exists($urleditablefl) && strpos($urleditablefl, '.') !== false)? $dtcrtv['urleditable']: 'N/A';
                         }
                         else $dturleditable = 'N/A';
                     }
@@ -3481,8 +3468,7 @@ class ServiciosController extends AbstractController
                     else {
                         if (!in_array($dtcrtv['urlorigen'], ['N/A', null, ''])) {
                             $urlorigenfl = $this->getParameter('Directorio_proyecto').$dtcrtv['urlorigen'];
-                            if (file_exists($urlorigenfl) && (strpos($urlorigenfl, '.') !== false)) $dturlorigen = $dtcrtv['urlorigen'];
-                            else $dturlorigen = 'N/A';
+                            $dturlorigen = (file_exists($urlorigenfl) && strpos($urlorigenfl, '.') !== false)? $dtcrtv['urlorigen']: 'N/A';
                         }
                         else $dturlorigen = 'N/A';
                     }
@@ -3513,42 +3499,31 @@ class ServiciosController extends AbstractController
                 }
             }
 
-            if($unidades != null) $access = true;
-            else $access = false;
-
-            $sql = "SELECT DISTINCT(date_part('Year', cb_correlativo_fechareg)) AS anio
-                FROM cb_correlativo_correlativo
-                WHERE cb_correlativo_estado=1
-                ORDER BY 1";
-
-            $stmt = $cx->getConnection()->prepare($sql);
-            $stmt->execute();
-            $combo = $stmt->fetchAll();
+            $access = !empty($unidades)? true: false;
+            
+            $combo = $cx->getRepository(Correlativo::class)->findYears();
             $data_gestion = array_column($combo, 'anio');
 
             $datos = array('btn_permission' => $access, 'combo_gestion' => $data_gestion, 'correlativos' => $correlativos);
-
-            /*$serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($datos, 'json');
-
-            $resultado = $json;
-
-            $response = new Response($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            
-            return $response;*/
-
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data = $serializer->serialize($datos, 'json');
-
-            return new jsonResponse(json_decode($data));
         } catch (Exception $e) {
-            $mensaje[0] = ["response" => "error"];
-            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            $data = $serializer->serialize($mensaje, 'json');
-
-            return new Response($data);
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $code == 200 ? $datos : $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
+
+        $response->setContent($jsonresp);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->prepare($request);
+
+        return $response;
     }
 
     public function array_columns(array $arr, array $keysSelect)
@@ -3571,42 +3546,48 @@ class ServiciosController extends AbstractController
             $user = $sx['username'];
             $year = $sx['anio'];
             $cx = $this->getDoctrine()->getManager();
-            $serializer = new Serializer(array(new ObjectNormalizer()));
+            
+            $code = 200;
+            $error = false;
 
             $controlcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
             $datacontrol = $serializer->normalize($controlcorrelativo, null, array('attributes' => array('id', 'nombre')));
 
             $tiponota = $this->getDoctrine()->getRepository(TipoNota::class)->findBy(['estado' => '1'], ['nombre' => 'ASC']);
-            $datatipo = $serializer->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
+            $datatipo = $this->serializer_obj->normalize($tiponota, null, array('attributes' => array('id', 'nombre')));
 
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
             $keysData = array('id', 'nombre');
             $dataunidad = $this->array_columns($unidad, $keysData);
 
-            if($dataunidad != null) $access = true;
-            else $access = false;
+            $access = ($dataunidad != null)? true: false;
 
             $correlativos = $cx->getRepository(Correlativo::class)->findEditors();
             $redactor = array_column($correlativos, 'redactor');
 
             $controldt = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->findOneBy(['nombre' => 'ELFEC']);
-            $idcontrol = $serializer->normalize($controldt, null, array('attributes' => array('id')));
+            $idcontrol = $this->serializer_obj->normalize($controldt, null, array('attributes' => array('id')));
 
             $combos = array('idctrl' => $idcontrol, 'permission_units' => $access, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
-            
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($combos, 'json');
-
-            $resultado = $json;
-
-            $response = new Response($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            
-            return $response;
         } catch (Exception $e) {
-            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $code == 200 ? $combos : $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
+
+        $response->setContent($jsonresp);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->prepare($request);
+
+        return $response;
     }
 
     public function numerar()
@@ -3614,21 +3595,9 @@ class ServiciosController extends AbstractController
         try {
             date_default_timezone_set('America/La_Paz');
             $anio = date("Y");
-
-            $cx = $this->getDoctrine()->getManager()->getConnection();
-            $sql = "SELECT cb_correlativo_numcorrelativo + 1 AS numcorrelativo
-                    FROM cb_correlativo_correlativo
-                    WHERE cb_correlativo_estado = 1 AND cb_correlativo_id IN
-                        (SELECT MAX(c.cb_correlativo_id)
-                        FROM cb_correlativo_correlativo c
-                        WHERE c.cb_correlativo_estado = 1 AND date_part('year', c.cb_correlativo_fechareg)=:anio)";
-
-            $stmt = $cx->prepare($sql);
-            $stmt->execute(['anio' => ($anio)]);
-            $query = $stmt->fetchAll();
-
-            if (empty($query)) $num = 1;
-            else $num = $query[0]['numcorrelativo'];
+            
+            $number = $this->getDoctrine()->getRepository(Correlativo::class)->findNumbering($anio);
+            $num = empty($number)? 1: $number[0]['numcorrelativo'];
 
             return $num;
         } catch (Exception $e) {
@@ -3651,6 +3620,9 @@ class ServiciosController extends AbstractController
             $fktiponota = $datos['fktiponota'];
             $fkunidad = $datos['fkunidad'];
             
+            $code = 200;
+            $error = false;
+            
             date_default_timezone_set('America/La_Paz');
             $gestion = date("Y");
 
@@ -3667,7 +3639,7 @@ class ServiciosController extends AbstractController
                 $urleditable = 'N/A';
                 $urlorigen = 'N/A';
 
-                $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['username' => $fksolicitante]): $fksolicitante = null;
+                $fksolicitante = $fksolicitante != ''? $this->getDoctrine()->getRepository(Usuario::class)->findOneBy(['username' => $fksolicitante]): null;
 
                 $correlative->setFechareg(new \DateTime('now'));
                 $correlative->setNumcorrelativo($numcorrelativo);
@@ -3736,9 +3708,9 @@ class ServiciosController extends AbstractController
                 }
             }
             
-            $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find(['id' => $fkcorrelativo]): $fkcorrelativo = null;
-            $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find(['id' => $fktiponota]): $fktiponota = null;
-            $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find(['id' => $fkunidad]): $fkunidad = null;
+            $fkcorrelativo = $fkcorrelativo != ''? $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find(['id' => $fkcorrelativo]): null;
+            $fktiponota = $fktiponota != ''? $this->getDoctrine()->getRepository(TipoNota::class)->find(['id' => $fktiponota]): null;
+            $fkunidad = $fkunidad != ''? $this->getDoctrine()->getRepository(Unidad::class)->find(['id' => $fkunidad]): null;
             
             $cx = $this->getDoctrine()->getManager();
 
@@ -3753,43 +3725,35 @@ class ServiciosController extends AbstractController
 
             if (array_key_exists("id", $datos)) {
                 $cx->merge($correlative);
-                $resultado = [
-                    'response' => "El número de correlativo modificado es: ".$correlative->getNumcorrelativo().".",
-                    'success' => true,
-                    'message' => 'Correlativo modificado correctamente.'
-                ];
+                $message = "Correlativo número ".$correlative->getNumcorrelativo()." modificado correctamente.";
             } else {
                 $cx->persist($correlative);
-                $resultado = [
-                    'response' => "El número de correlativo es: ".$correlative->getNumcorrelativo().".", 
-                    'success' => true,
-                    'message' => 'Correlativo registrado correctamente.'
-                ];
+                $message = "El número de correlativo es: ".$correlative->getNumcorrelativo().".";
             }
             $cx->flush();
-
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($resultado, 'json');
-
-            $resultado = $json;
-
-            $response = new Response(
-                $resultado,
-                Response::HTTP_OK,
-                [
-                    'content-type' => 'application/json', 
-                    'Access-Control-Allow-Origin' => '*', 
-                    'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, DELETE, PUT'
-                ]
-            );
-            $response->prepare($request);
-            
-            //$response->send();
-            return $response;
         } catch (Exception $e) {
-            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
+
+        $response->setContent($jsonresp);
+        $response->headers->set([
+            'Content-Type' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, DELETE, PUT'
+        ]);
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**
@@ -3804,26 +3768,26 @@ class ServiciosController extends AbstractController
             $year = $sx['anio'];
             $cx = $this->getDoctrine()->getManager();
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
-            $serializer = new Serializer(array(new ObjectNormalizer()));
+            
+            $code = 200;
+            $error = false;
 
-            if($correlativo != null){
+            if ($correlativo != null) {
                 $fecreg = $correlativo->getFechareg();
                 $fecent = $correlativo->getEntrega();
-                if ($fecreg != null) $rsfcr = $fecreg->format('Y-m-d');
-                else $rsfcr = $fecreg;
+                $rsfcr = $fecreg != null? $fecreg->format('Y-m-d'): $fecreg;
 
-                if ($fecent != null) $rsfce = $fecent->format('Y-m-d');
-                else $rsfce = $fecent;
+                $rsfce = $fecent != null? $fecent->format('Y-m-d'): $fecent;
 
                 $fksolicitante = $correlativo->getFksolicitante();
                 $fkcorrelativo = $correlativo->getFkcorrelativo();
                 $fktiponota = $correlativo->getFktiponota();
                 $fkunidad = $correlativo->getFkunidad();
 
-                $fksolicitante_cln = $serializer->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido')));
-                $fkcorrelativo_cln = $serializer->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
-                $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
-                $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
+                $fksolicitante_cln = $this->serializer_obj->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido')));
+                $fkcorrelativo_cln = $this->serializer_obj->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
+                $fktiponota_cln = $this->serializer_obj->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
+                $fkunidad_cln = $this->serializer_obj->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
 
                 $sendinf = [
                     "id" => $correlativo->getId(),
@@ -3858,11 +3822,10 @@ class ServiciosController extends AbstractController
             $keysData = array('id', 'nombre');
             $dataunidad = $this->array_columns($unidad, $keysData);
 
-            if($correlativo->getFkunidad() != null){
+            if ($correlativo->getFkunidad() != null) {
                 $dtunit = array_column($unidad, 'id');
 
-                if (in_array($correlativo->getFkunidad()->getId(), $dtunit)) $access = true;
-                else $access = false;
+                $access = in_array($correlativo->getFkunidad()->getId(), $dtunit)? true: false;
             }
             else $access = false;
 
@@ -3870,20 +3833,25 @@ class ServiciosController extends AbstractController
             $redactor = array_column($correlativos, 'redactor');
 
             $datos = array('permission_unit' => $access, 'correlativo' => $sendinf, 'redactores' => $redactor, 'control' => $datacontrol, 'nota' => $datatipo, 'unidad' => $dataunidad);
-
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($datos, 'json');
-
-            $resultado = $json;
-
-            $response = new Response($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            
-            return $response;
         } catch (Exception $e) {
-            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $code == 200 ? $datos : $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
+
+        $response->setContent($jsonresp);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**
@@ -3896,23 +3864,31 @@ class ServiciosController extends AbstractController
             $id = $sx['id'];
             $tipo = $sx['tipo'];
             
+            $code = 200;
+            $error = false;
+            
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->findDataFile($id);
             $keysData = array('id', 'gestion', 'numcorrelativo', $tipo);
             $datafile = $this->array_columns($correlativo, $keysData);
-
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($datafile, 'json');
-
-            $resultado = $json;
-
-            $response = new Response($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            
-            return $response;
         } catch (Exception $e) {
-            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $code == 200 ? $datafile : $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
+
+        $response->setContent($jsonresp);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**
@@ -3927,42 +3903,46 @@ class ServiciosController extends AbstractController
             $user = $sx['username'];
             $correlativo = $this->getDoctrine()->getRepository(Correlativo::class)->find($id);
             $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
+            
+            $code = 200;
+            $error = false;
 
-            if($correlativo->getFkunidad() != null){
+            if ($correlativo->getFkunidad() != null) {
                 $dtunit = array_column($unidad, 'id');
 
-                if (in_array($correlativo->getFkunidad()->getId(), $dtunit)) $access = true;
-                else $access = false;
+                $access = in_array($correlativo->getFkunidad()->getId(), $dtunit)? true: false;
             }
             else $access = false;
 
-            if($access){
+            if ($access) {
                 $correlativo->setEstadoCorrelativo('Anulado');
                 $cx->persist($correlativo);
                 $cx->flush();
 
-                $resultado = array('response' => "El número de correlativo anulado es: " . $correlativo->getNumcorrelativo() . ".", 'success' => true,
-                    'message' => 'Correlativo anulado correctamente.');
-            }else{
-                $resultado = array('response' => "El número de correlativo ". $correlativo->getNumcorrelativo(). " no fue anulado.", 'success' => false,
-                    'message' => 'No tiene permiso para realizar esta acción en esta unidad.');
+                $message = "Correlativo número " . $correlativo->getNumcorrelativo() . " anulado correctamente.";
             }
-            
-            $serializer = new Serializer([new GetSetMethodNormalizer()], ['json' => new JsonEncoder()]);
-            $json = $serializer->serialize($resultado, 'json');
-
-            $resultado = $json;
-
-            $response = new Response($resultado);
-            $response->headers->set('Content-Type', 'application/json');
-            
-            return $response;
+            else $message = "No tiene permiso para realizar esta acción en esta unidad.";
         } catch (Exception $e) {
-            //echo 'Excepción capturada: ', $e->getMessage(), "\n";
-            return new Response('Excepción capturada: ', $e->getMessage(), "\n");
+            $code = 500;
+            $error = true;
+            $message = "Error: {$e->getMessage()}";
         }
-    }
+    
+        $response = new Response();
+        $dtresponse = [
+            'code' => $code,
+            'error' => $error,
+            'data' => $message
+        ];
+        $jsonresp = $this->serializer_json->serialize($dtresponse, "json");
 
+        $response->setContent($jsonresp);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->prepare($request);
+
+        return $response;
+    }
+    
     /**
      * @Route("/correlativoinsert4", methods={"POST"}, name="correlativoinsert4")
      */

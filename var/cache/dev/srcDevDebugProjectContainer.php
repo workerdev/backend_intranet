@@ -16,6 +16,6 @@ if (!\class_exists(srcDevDebugProjectContainer::class, false)) {
 
 return new \ContainerKgEvdPu\srcDevDebugProjectContainer([
     'container.build_hash' => 'KgEvdPu',
-    'container.build_id' => '63cb6c1a',
-    'container.build_time' => 1581281365,
+    'container.build_id' => '28241428',
+    'container.build_time' => 1581379887,
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerKgEvdPu');
