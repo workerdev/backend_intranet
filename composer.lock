@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c72f7e03229f236a9ebd96a14dd89d3",
+    "content-hash": "8fcf301caca9a6fef48a32e31d09a6b8",
     "packages": [
         {
             "name": "andreiavrammsd/serializer",
