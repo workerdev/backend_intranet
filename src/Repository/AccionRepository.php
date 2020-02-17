@@ -18,13 +18,12 @@ class AccionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Accion::class);
     }
-
     
     public function findActionsBefore($fecha): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'SELECT cb_accion_id AS id, cb_accion_fkhallazgo AS hallazgo, cb_accion_ordinal AS ordinal, cb_accion_descripcion AS descripcion, 
+        $sql = 'SELECT cb_accion_id AS id, cb_accion_fkhallazgo AS fkhallazgo, cb_accion_ordinal AS ordinal, cb_accion_descripcion AS descripcion, 
                     cb_accion_fechaimplementacion AS fechaimplementacion, cb_accion_responsableimplementacion AS responsableimplementacion, 
                     cb_accion_estadoaccion AS estadoaccion, cb_accion_responsableregistro AS responsableregistro, cb_accion_fecharegistro AS fecharegistro, 
                     cb_accion_estado AS estado, cb_accion_fktipo AS fktipo, (cb_accion_fechaimplementacion - INTERVAL \'7 day\')::timestamp::date AS date_b7d
@@ -43,7 +42,7 @@ class AccionRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'SELECT cb_accion_id AS id, cb_accion_fkhallazgo AS hallazgo, cb_accion_ordinal AS ordinal, cb_accion_descripcion AS descripcion, 
+        $sql = 'SELECT cb_accion_id AS id, cb_accion_fkhallazgo AS fkhallazgo, cb_accion_ordinal AS ordinal, cb_accion_descripcion AS descripcion, 
                     cb_accion_fechaimplementacion AS fechaimplementacion, cb_accion_responsableimplementacion AS responsableimplementacion, 
                     cb_accion_estadoaccion AS estadoaccion, cb_accion_responsableregistro AS responsableregistro, cb_accion_fecharegistro AS fecharegistro, 
                     cb_accion_estado AS estado, cb_accion_fktipo AS fktipo, (cb_accion_fechaimplementacion + INTERVAL \'1 day\')::timestamp::date AS date_out
@@ -57,7 +56,6 @@ class AccionRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();
     }
-
 
 //    /**
 //     * @return Accion[] Returns an array of Accion objects
@@ -75,7 +73,7 @@ class AccionRepository extends ServiceEntityRepository
         ;
     }
     */
-
+    
     /*
     public function findOneBySomeField($value): ?Accion
     {
