@@ -2188,6 +2188,43 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($halauditoriadel);
 
 
+        $tipoaccion = new Modulo();
+        $tipoaccion->setNombre('home_tipoaccion');
+        $tipoaccion->setTitulo('Consultar');
+        $tipoaccion->setRuta('');
+        $tipoaccion->setIcono('home');
+        $tipoaccion->setMenu(0);
+        $tipoaccion->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOACCION_CHILD));
+        $manager->persist($tipoaccion);
+
+        $tipoaccionins = new Modulo();
+        $tipoaccionins->setNombre('tipoaccion_insertar');
+        $tipoaccionins->setTitulo('Adicionar');
+        $tipoaccionins->setRuta('/tipoaccion_insertar');
+        $tipoaccionins->setIcono('home');
+        $tipoaccionins->setMenu(0);
+        $tipoaccionins->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOACCION_CHILD));
+        $manager->persist($tipoaccionins);
+
+        $tipoaccionupd = new Modulo();
+        $tipoaccionupd->setNombre('tipoaccion_editar');
+        $tipoaccionupd->setTitulo('Actualizar');
+        $tipoaccionupd->setRuta('/tipoaccion_editar');
+        $tipoaccionupd->setIcono('home');
+        $tipoaccionupd->setMenu(0);
+        $tipoaccionupd->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOACCION_CHILD));
+        $manager->persist($tipoaccionupd);
+
+        $tipoacciondel = new Modulo();
+        $tipoacciondel->setNombre('tipoaccion_eliminar');
+        $tipoacciondel->setTitulo('Dar de Baja');
+        $tipoacciondel->setRuta('/tipoaccion_eliminar');
+        $tipoacciondel->setIcono('home');
+        $tipoacciondel->setMenu(0);
+        $tipoacciondel->setFkmodulo($this->getReference(ModuloChildrenFixtures::TIPOACCION_CHILD));
+        $manager->persist($tipoacciondel);
+
+
         $accion = new Modulo();
         $accion->setNombre('home_accion');
         $accion->setTitulo('Consultar');
@@ -2858,7 +2895,7 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
 
 
         $homefileconsul = new Modulo();
-        $homefileconsul->setNombre('home_file');
+        $homefileconsul->setNombre('home_archivo');
         $homefileconsul->setTitulo( 'Consultar');
         $homefileconsul->setRuta( '');
         $homefileconsul->setIcono('home');
@@ -2867,27 +2904,27 @@ class ModuloAccionFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($homefileconsul);
 
         $fileadd = new Modulo();
-        $fileadd->setNombre('file_insertar');
+        $fileadd->setNombre('archivo_insertar');
         $fileadd->setTitulo( 'Adicionar');
-        $fileadd->setRuta( '/file_insertar');
+        $fileadd->setRuta( '/archivo_insertar');
         $fileadd->setIcono( 'home');
         $fileadd->setMenu( 0);
         $fileadd->setFkmodulo($this->getReference(ModuloChildrenFixtures::FILE_CHILD));
         $manager->persist($fileadd);
 
         $fileact = new Modulo();
-        $fileact->setNombre('file_editar');
+        $fileact->setNombre('archivo_editar');
         $fileact->setTitulo( 'Actualizar');
-        $fileact->setRuta( '/file_editar');
+        $fileact->setRuta( '/archivo_editar');
         $fileact->setIcono( 'home');
         $fileact->setMenu( 0);
         $fileact->setFkmodulo($this->getReference(ModuloChildrenFixtures::FILE_CHILD));
         $manager->persist($fileact);
 
         $fileelim = new Modulo();
-        $fileelim->setNombre('file_eliminar');
+        $fileelim->setNombre('archivo_eliminar');
         $fileelim->setTitulo( 'Dar de Baja');
-        $fileelim->setRuta('/file_eliminar');
+        $fileelim->setRuta('/archivo_eliminar');
         $fileelim->setIcono( 'home');
         $fileelim->setMenu(0);
         $fileelim->setFkmodulo($this->getReference(ModuloChildrenFixtures::FILE_CHILD));

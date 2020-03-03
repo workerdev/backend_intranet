@@ -1,13 +1,19 @@
 {% for tr in objects %}
+    {% set ctg = '' %}
     <tr>
-        <td>{{ tr.fknoticia.titulo }}</td>
-        <td>{{ tr.fkcategoria.nombre }}</td>
+        <td>{% if tr.fknoticia != null %} {{ tr.fknoticia.titulo }} {% endif %}</td>
+        <td>
+            {% if tr.fknoticia != null %} 
+                {{ tr.fkcategoria.nombre }}
+                {% set ctg = tr.fkcategoria.nombre %}
+            {% endif %}
+        </td>
         <td align="center">
         {% if 'noticiacategoria_editar' in permisos %}
             <button id="edit" data-json="{{tr.id}}" type="button" class="btn bg-indigo waves-effect waves-light edit" title="Editar"><i class="material-icons">create</i></button>
         {% endif %}
         {% if 'noticiacategoria_eliminar' in permisos %}  
-            <button id="delete" data-json="{{tr.id}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
+            <button id="delete" data-json="{{tr.id}}" data-ctg="{{ctg}}" type="button" class="btn bg-red waves-effect waves-light delete" title="Eliminar"><i class="material-icons">clear</i></button>
         {% endif %}
         </td>
     </tr>

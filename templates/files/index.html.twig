@@ -17,18 +17,18 @@
             <div class="block-header">
                 <div class="card" id="render_content">
 
-                    <div class="header bg-indigo"><h2>File</h2></div>
+                    <div class="header bg-indigo"><h2>Archivos</h2></div>
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-                            {% if 'file_insertar' in permisos %}
+                            {% if 'archivo_insertar' in permisos %}
                                 <button id="new" type="button" class="btn bg-indigo waves-effect" title="Nuevo">
                                     <i class="material-icons">add</i>
                                 </button>
                             {% endif %}
                             </div>
                         </div>
-                        {% if 'home_file' in permisos and objects %}
+                        {% if 'home_archivo' in permisos and objects %}
                             <div class="row">
                                 <div class="body table-responsive">
                                     <table id="data_tabletr" class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -62,7 +62,7 @@
     <script src="{{ asset('resources/js/transporte.js') }}"></script>
     <script src="{{ asset('resources/js/functions.js') }}"></script>
     <script>
-        main_route = '/files'
+        main_route = '/archivos'
 
         function default_values() {
             page_nr = 1
@@ -119,7 +119,7 @@
             $('#files_id').val(0)
         })
 
-        $('#insert').click(function () {
+        /*$('#insert').click(function () {
             objeto = JSON.stringify({
                 'ruta': $('#ruta').val(),
                 'tipo': $('#tipo').val(),
@@ -127,7 +127,7 @@
             })
             ajax_call("/file", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
             $('#form').modal('hide')
-        })
+        })*/
 
         $("#files_ruta").change(function(){
             $("#lnkva").hide();
@@ -150,7 +150,7 @@
                 obj = JSON.stringify({
                     'id': parseInt(JSON.parse($(this).attr('data-json')))
                 })
-                ajax_call_get("/files_editar",{
+                ajax_call_get("/archivo_editar",{
                     object: obj
                 },function(response){
                     var self = JSON.parse(response)  
@@ -179,7 +179,7 @@
             })
         }
 
-        $('#update').click(function () {
+        /*$('#update').click(function () {
             objeto = JSON.stringify({
                 'id': parseInt(JSON.parse($('#id').val())),
                 'ruta': $('#ruta').val(),
@@ -189,7 +189,7 @@
             ajax_call("/files_actualizar", {object: objeto}, null, function () {setTimeout(function(){window.location=main_route}, 2000);})
             
             $('#form').modal('hide')
-        })
+        })*/
         reload_form()
     </script>
 
@@ -200,7 +200,7 @@
             id = parseInt(JSON.parse($(this).attr('data-json')))
             enabled = false
             swal({
-                title: "¿Desea dar de baja el file?",
+                title: "¿Desea dar de baja el archivo?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#004c99",
@@ -208,7 +208,7 @@
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar"
             }).then(function () {
-                ajax_call("/files_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
+                ajax_call("/archivo_eliminar", { id,enabled,_xsrf: getCookie("_xsrf")}, null, function () {setTimeout(function(){window.location=main_route}, 2000);S})
             })
         })
     </script>

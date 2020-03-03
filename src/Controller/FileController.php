@@ -32,7 +32,7 @@ use App\Entity\FichaCargo;
 class FileController extends Controller
 {
     /**
-     * @Route("/files", name="file_listar", methods={"GET", "POST"})
+     * @Route("/archivos", name="archivo_listar", methods={"GET", "POST"})
      */
     public function index(Files $files = null, Request $request)
     {
@@ -114,7 +114,7 @@ class FileController extends Controller
                 unset($files);
                 unset($datosFiles);
             }
-            $redireccion = new RedirectResponse('/files');
+            $redireccion = new RedirectResponse('/archivos');
             return $redireccion;
             //return $this->render('files/index.html.twig', array('objects' => $Files,'form' => $form->createView(), 'tipo' => $Galeria, 'parents' => $parent, 'children' => $child, 'permisos' => $permisos));
         }
@@ -131,7 +131,7 @@ class FileController extends Controller
 
     
    /**
-     * @Route("/files_actualizar", methods={"POST"}, name="files_actualizar")
+     * @Route("/archivo_actualizar", methods={"POST"}, name="archivo_actualizar")
      */
     public function actualizar()
     {
@@ -157,17 +157,17 @@ class FileController extends Controller
             $cx->flush();
 
             $resultado = array('success' => true,
-                    'message' => 'Galeria actualizado correctamente.');
+                    'message' => 'Archivo actualizado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
     }
-
+    
 
     /**
-     * @Route("/files_editar", methods={"POST"}, name="files_editar")
+     * @Route("/archivo_editar", methods={"POST"}, name="archivo_editar")
      */
     public function editar()
     {
@@ -178,7 +178,7 @@ class FileController extends Controller
             $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
             $json = $serializer->serialize($file, 'json');
             $resultado = array('response'=>$json,'success' => true,
-                'message' => 'File listado correctamente.');
+                'message' => 'Archivo listado correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {
@@ -188,7 +188,7 @@ class FileController extends Controller
 
 
     /**
-     * @Route("/files_eliminar", methods={"POST"}, name="files_eliminar")
+     * @Route("/archivo_eliminar", methods={"POST"}, name="archivo_eliminar")
      */
     public function eliminar()
     {
@@ -202,7 +202,7 @@ class FileController extends Controller
             $cx->flush();
 
             $resultado = array('response'=>"El ID modificado es: ".$file->getId().".",'success' => true,
-                'message' => 'Files dado de baja correctamente.');
+                'message' => 'Archivo dado de baja correctamente.');
             $resultado = json_encode($resultado);
             return new Response($resultado);
         } catch (Exception $e) {

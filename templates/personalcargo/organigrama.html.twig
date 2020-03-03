@@ -113,11 +113,18 @@
 
             $("#pg-spinner-tmp").fadeOut(200);
             $("#spn-diag").fadeIn(200);
-            setTimeout(
-                function(){
-                    init()        
-                }, 400
-            );
+            var dtorg = String('{{organigrama}}') 
+            console.log(dtorg.length)
+
+            if (dtorg.length > 2) {
+                setTimeout (
+                    function(){ init() }
+                    , 400
+                );
+            } else {
+                $("#spn-diag").fadeOut(200)
+                showMessage('No se obtuvo ningún dato.', "warning", "info")
+            }
         });
 
         $('#ft-cargo').selectpicker({

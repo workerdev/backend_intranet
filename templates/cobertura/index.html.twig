@@ -168,6 +168,7 @@
 
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
+            enabled = false
             swal({
                 title: "¿Desea dar de baja los datos de la cobertura?",
                 type: "warning",
@@ -178,7 +179,7 @@
                 cancelButtonText: "Cancelar"
             }).then(function () {
                 ajax_call("/cobertura_eliminar", { 
-                    id, enabled,_xsrf: getCookie("_xsrf")}, 
+                    id: id, enabled: enabled, _xsrf: getCookie("_xsrf")}, 
                     null, 
                     function () {
                         setTimeout(function(){ window.location=main_route }, 1000);

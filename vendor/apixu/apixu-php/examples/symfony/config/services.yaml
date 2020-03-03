@@ -1,4 +1,0 @@
-services:
-    Apixu\ApixuInterface:
-        factory: ['Apixu\Factory', create]
-        arguments: ['%env(APIXUKEY)%']

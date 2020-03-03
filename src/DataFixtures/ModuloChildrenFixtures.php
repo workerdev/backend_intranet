@@ -84,6 +84,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
     public const FORTALEZA_CHILD = 'child-fort';
     public const TIPOHALLAZGO_CHILD = 'child-tphlg';
     public const HALLAZGO_CHILD = 'child-hlgadtra';
+    public const TIPOACCION_CHILD = 'child-tpacn';
     public const ACCION_CHILD = 'child-accn';
     public const ACCIONSEGUIMIENTO_CHILD = 'child-accnseg';
     public const ACCIONREPROGRAMA_CHILD = 'child-accnrpg';
@@ -680,6 +681,15 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $hlgadtaprt->setFkmodulo($this->getReference(ModuloFixtures::AUDITORIA_MOD));
         $manager->persist($hlgadtaprt);
 
+        $tpacnprt = new Modulo();
+        $tpacnprt->setNombre('tipoaccion');
+        $tpacnprt->setTitulo('Tipo de acción');
+        $tpacnprt->setRuta('/tipoaccion');
+        $tpacnprt->setIcono('business');
+        $tpacnprt->setMenu(1);
+        $tpacnprt->setFkmodulo($this->getReference(ModuloFixtures::AUDITORIA_MOD));
+        $manager->persist($tpacnprt);
+
         $accnprt = new Modulo();
         $accnprt->setNombre('accion');
         $accnprt->setTitulo('Acción');
@@ -847,9 +857,9 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $manager->persist($galprt);
 
         $fileprt = new Modulo();
-        $fileprt->setNombre('file');
-        $fileprt->setTitulo('Files');
-        $fileprt->setRuta('/files');
+        $fileprt->setNombre('archivos');
+        $fileprt->setTitulo('Archivos');
+        $fileprt->setRuta('/archivos');
         $fileprt->setIcono('business');
         $fileprt->setMenu(1);
         $fileprt->setFkmodulo($this->getReference(ModuloFixtures::COMUNICACION_MOD));
@@ -1028,6 +1038,7 @@ class ModuloChildrenFixtures extends Fixture implements DependentFixtureInterfac
         $this->addReference(self::FORTALEZA_CHILD, $fortprt);
         $this->addReference(self::TIPOHALLAZGO_CHILD, $tphlzgprt);
         $this->addReference(self::HALLAZGO_CHILD, $hlgadtaprt);
+        $this->addReference(self::TIPOACCION_CHILD, $tpacnprt);
         $this->addReference(self::ACCION_CHILD, $accnprt);
         $this->addReference(self::ACCIONSEGUIMIENTO_CHILD, $accnsegprt);
         $this->addReference(self::ACCIONREPROGRAMA_CHILD, $accnrpgprt);

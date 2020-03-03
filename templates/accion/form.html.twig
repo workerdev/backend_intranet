@@ -31,9 +31,11 @@
                         <div class="col-sm-12">
                             <label for="fktipoacn">Tipo</label>
                                 <select id="fktipoacn" class="form-control show-tick">
-                                {% for t in tipoacn %}
-                                    <option value="{{t.id}}">{{t.nombre}}</option>
-                                {% endfor %}
+                                {% if tipoacn %}
+                                    {% for t in tipoacn %}
+                                        <option value="{{t.id}}">{{t.nombre}}</option>
+                                    {% endfor %}
+                                {% endif %}
                                 </select>
                                 </br>
                         </div>

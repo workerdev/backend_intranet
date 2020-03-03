@@ -1,3 +1,0 @@
-index:
-    path: /weather
-    controller: App\Controller\WeatherController::indexAction

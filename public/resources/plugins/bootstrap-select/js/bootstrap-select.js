@@ -1021,7 +1021,7 @@
 
           $menu.css({
             'max-height': menuHeight + 'px',
-            'overflow': 'hidden',
+            //'overflow': 'hidden',
             'min-height': minHeight + headerHeight + searchHeight + actionsHeight + doneButtonHeight + 'px'
           });
           $menuInner.css({
@@ -1051,7 +1051,7 @@
         }
         $menu.css({
           'max-height': menuHeight + headerHeight + searchHeight + actionsHeight + doneButtonHeight + 'px',
-          'overflow': 'hidden',
+          //'overflow': 'hidden',
           'min-height': ''
         });
         $menuInner.css({

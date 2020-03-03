@@ -2787,8 +2787,7 @@ class ServiciosController extends AbstractController
     /*                              * CAMBIOS RIESGOS OPORTUNIDADES CORRECTIVAS Y MEJORAS                                         /
     /*                                                                                   /
     /************************************************************************************/
-
-
+    
     /* CROCM LISTA ************************/
     /* DESARROLLADOR: ARIEL VARGAS TICONA */
 
@@ -3398,6 +3397,144 @@ class ServiciosController extends AbstractController
     }
 
     /**
+     * @Route("/data_correlative4", methods={"POST"}, name="data_correlative4")
+     */
+    public function data_correlative4(Request $request)
+    {
+        try {
+            $sx = json_decode($request->getContent(), true);
+            $user = $sx['username'];
+            $year = $sx['anio'];
+            $cx = $this->getDoctrine()->getEntityManager();
+
+            $correlativo = $cx->getRepository(Correlativo::class)->findPermissionByUser($user, $year);
+
+            $unidad = $this->getDoctrine()->getRepository(Unidad::class)->unidadPermissionByUser($user);
+            $unidades = array_column($unidad, 'id');
+
+            $correlativos = array();
+            if($correlativo != null){
+                foreach ($correlativo as $crtv) {
+                    $dtcrtv = $crtv;
+
+                    $fecreg = $dtcrtv['fechareg'];
+                    $fecent = $dtcrtv['entrega'];
+
+                    if ($dtcrtv['item'] != null && $dtcrtv['item'] != "" && $dtcrtv['item'] != 0) {
+                        $itemvl = $dtcrtv['item'];
+                    } else {
+                        $itemvl = "";
+                    }
+
+                    $fksolicitante = $dtcrtv['fksolicitante'];
+                    $fkcorrelativo = $dtcrtv['fkcorrelativo'];
+                    $fktiponota = $dtcrtv['fktiponota'];
+                    $fkunidad = $dtcrtv['fkunidad'];
+                    $fksolicitante != ''? $fksolicitante = $this->getDoctrine()->getRepository(Usuario::class)->find($fksolicitante):$fksolicitante=null;
+                    $fkcorrelativo != ''? $fkcorrelativo = $this->getDoctrine()->getRepository(ControlCorrelativo::class)->find($fkcorrelativo):$fkcorrelativo=null;
+                    $fktiponota != ''? $fktiponota = $this->getDoctrine()->getRepository(TipoNota::class)->find($fktiponota):$fktiponota=null;
+                    $fkunidad != ''? $fkunidad = $this->getDoctrine()->getRepository(Unidad::class)->find($fkunidad):$fkunidad=null;
+                    
+                    if($fksolicitante != null) $fullname = $fksolicitante->getNombre().' '.$fksolicitante->getApellido();
+                    else $fullname = '';
+
+                    if($fkunidad != null){
+                        if(in_array($fkunidad->getId(), $unidades)) $action_permission = true;
+                        else $action_permission = false;
+                    }
+                    else $action_permission = false;
+
+                    $serializer = new Serializer(array(new ObjectNormalizer()));
+                    $fksolicitante_cln = $serializer->normalize($fksolicitante, null, array('attributes' => array('id', 'nombre', 'apellido')));
+                    $fkcorrelativo_cln = $serializer->normalize($fkcorrelativo, null, array('attributes' => array('id', 'codigo', 'nombre', 'descripcion')));
+                    $fktiponota_cln = $serializer->normalize($fktiponota, null, array('attributes' => array('id', 'nombre', 'descripcion')));
+                    $fkunidad_cln = $serializer->normalize($fkunidad, null, array('attributes' => array('id', 'nombre')));
+
+                    if (strpos($dtcrtv['url'], ";base64,") !== false) $dturl = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['url'], ['N/A', null, ''])) {
+                            $urlfl = $this->getParameter('Directorio_proyecto').$dtcrtv['url'];
+                            if (file_exists($urlfl) && (strpos($urlfl, '.') !== false)) $dturl = $dtcrtv['url'];
+                            else $dturl = 'N/A';
+                        }
+                        else $dturl = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urleditable'], ";base64,") !== false) $dturleditable = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urleditable'], ['N/A', null, ''])) {
+                            $urleditablefl = $this->getParameter('Directorio_proyecto').$dtcrtv['urleditable'];
+                            if (file_exists($urleditablefl) && (strpos($urleditablefl, '.') !== false)) $dturleditable = $dtcrtv['urleditable'];
+                            else $dturleditable = 'N/A';
+                        }
+                        else $dturleditable = 'N/A';
+                    }
+
+                    if (strpos($dtcrtv['urlorigen'], ";base64,") !== false) $dturlorigen = 'base64';
+                    else {
+                        if (!in_array($dtcrtv['urlorigen'], ['N/A', null, ''])) {
+                            $urlorigenfl = $this->getParameter('Directorio_proyecto').$dtcrtv['urlorigen'];
+                            if (file_exists($urlorigenfl) && (strpos($urlorigenfl, '.') !== false)) $dturlorigen = $dtcrtv['urlorigen'];
+                            else $dturlorigen = 'N/A';
+                        }
+                        else $dturlorigen = 'N/A';
+                    }
+
+                    $sendinf = [
+                        "id" => $dtcrtv['id'],
+                        "antecedente" => $dtcrtv['antecedente'],
+                        "item" => $itemvl,
+                        "numcorrelativo" => $dtcrtv['numcorrelativo'],
+                        "fechareg" => $fecreg,
+                        "redactor" => $dtcrtv['redactor'],
+                        "destinatario" => $dtcrtv['destinatario'],
+                        "referencia" => $dtcrtv['referencia'],
+                        "fksolicitante" => $fksolicitante_cln,
+                        "fkcorrelativo" => $fkcorrelativo_cln,
+                        "fktiponota" => $fktiponota_cln,
+                        "estadocorrelativo" => $dtcrtv['estadocorrelativo'],
+                        "ip" => $dtcrtv['ip'],
+                        "url" => $dturl,
+                        "urleditable" => $dturleditable,
+                        "entrega" => $fecent,
+                        "fkunidad" => $fkunidad_cln,
+                        "urlorigen" => $dturlorigen,
+                        "fullname" => $fullname,
+                        "action_permission" => $action_permission
+                    ];
+                    $correlativos[] = $sendinf;
+                }
+            }
+
+            if($unidades != null) $access = true;
+            else $access = false;
+
+            $sql = "SELECT DISTINCT(date_part('Year', cb_correlativo_fechareg)) AS anio
+                FROM cb_correlativo_correlativo
+                WHERE cb_correlativo_estado=1
+                ORDER BY 1";
+
+            $stmt = $cx->getConnection()->prepare($sql);
+            $stmt->execute();
+            $combo = $stmt->fetchAll();
+            $data_gestion = array_column($combo, 'anio');
+
+            $datos = array('btn_permission' => $access, 'combo_gestion' => $data_gestion, 'correlativos' => $correlativos);
+
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($datos, 'json');
+
+            return new jsonResponse(json_decode($data));
+        } catch (Exception $e) {
+            $mensaje[0] = ["response" => "error"];
+            $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            $data = $serializer->serialize($mensaje, 'json');
+
+            return new Response($data);
+        }
+    }
+    
+    /**
      * @Route("/data_correlative", methods={"POST"}, name="data_correlative")
      */
     public function data_correlative(Request $request)
@@ -3521,6 +3658,8 @@ class ServiciosController extends AbstractController
 
         $response->setContent($jsonresp);
         $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT');
         $response->prepare($request);
 
         return $response;

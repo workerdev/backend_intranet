@@ -160,10 +160,14 @@
 
         $('.delete').click(function () {
             id = parseInt(JSON.parse($(this).attr('data-json')))
+            categ = $(this).attr('data-ctg')
             enabled = false
 
+            if (categ.length > 0) dttl = "¿Desea dar de baja la noticia de la categoría '"+categ + "'?";
+            else dttl = '¿Desea dar de baja la noticia de la categoría?'
+
             swal({
-                title: "¿Desea dar de baja los datos de la noticia categoría?",
+                title: dttl,
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#004c99",

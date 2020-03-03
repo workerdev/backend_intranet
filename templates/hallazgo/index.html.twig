@@ -289,9 +289,6 @@
             $("#dt-loader").show();
             $(this).attr('disabled', 'disabled');
 
-            var tabled = $('#data_tabletr').DataTable();
-            tabled.destroy();
-
             obj = JSON.stringify({
                 'id': parseInt(JSON.parse($('#auditoriaf').val()))
             })
@@ -304,63 +301,76 @@
             }).done(function (response) {
                 let self = JSON.parse(response);
                 let datos = JSON.parse(self.response);
+                console.log(datos)
 
-                var table = $('#data_tabletr').DataTable({
-                    data: datos,
-                    columns: [
-                        {
-                            "className": 'details-control',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": '',
-                            "render": function () {
-                                return '<i class="fa fa-plus-square cl-teal" title="Mostrar más" aria-hidden="true"></i>';
-                            }
-                        },
-                        { data: "id", visible: false },
-                        { title: "Auditoría" , data: "fkauditoria.codigo" },
-                        { title: "Tipo de Hallazgo" , data: "fktipo.nombre" },
-                        { title: "Ordinal" , data: "ordinal" },
-                        { title: "Título" , data: "titulo" },
-                        { data: "descripcion", visible: false },
-                        { title: "Evidencia" , data: "evidencia" },
-                        { title: "Documento" , data: "documento" },
-                        { title: "Punto ISO" , data: "puntoiso" },
-                        { title: "Fecha de Registro" , data: "fecharegistro" },
-                        { data: "fktipo.nombre", visible: false },
-                        { data: "fkprobabilidad.nombre", visible: false },
-                        { data: "analisiscausaraiz", visible: false },
-                        { data: "recomendaciones", visible: false },
-                        { data: "cargoauditado", visible: false },
-                        { data: "nombreauditado", visible: false },
-                        { data: "responsable", visible: false },
-                        { title: "Acciones", data: 'id',
-                            render : function (data, type, row){ 
-                                a = ''
-                                {% if 'accion_insertar' in permisos %}  
-                                    a += '<button id="list-acn" data-json="' + row.id + '" onclick="action_list(this)" type="button" class="btn bg-blue waves-effect waves-light list-acn" title="Acción"><i class="material-icons">exit_to_app</i></button>'
-                                {% endif %}
+                if (datos.length > 0) {
+                    var tabled = $('#data_tabletr').DataTable();
+                    tabled.destroy();
 
-                                {% if 'hallazgo_editar' in permisos %}
-                                    a += '<button id="edit-hlg" data-json="' + row.id + '" onclick="edit_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>'
-                                {% endif %}
+                    var table = $('#data_tabletr').DataTable({
+                        data: datos,
+                        columns: [
+                            {
+                                "className": 'details-control',
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": '',
+                                "render": function () {
+                                    return '<i class="fa fa-plus-square cl-teal" title="Mostrar más" aria-hidden="true"></i>';
+                                }
+                            },
+                            { data: "id", visible: false },
+                            { title: "Auditoría" , data: "fkauditoria.codigo" },
+                            { title: "Tipo de Hallazgo" , data: "fktipo.nombre" },
+                            { title: "Ordinal" , data: "ordinal" },
+                            { title: "Título" , data: "titulo" },
+                            { data: "descripcion", visible: false },
+                            { title: "Evidencia" , data: "evidencia" },
+                            { title: "Documento" , data: "documento" },
+                            { title: "Punto ISO" , data: "puntoiso" },
+                            { title: "Fecha de Registro" , data: "fecharegistro" },
+                            { data: "fktipo.nombre", visible: false },
+                            { data: "fkprobabilidad.nombre", visible: false },
+                            { data: "analisiscausaraiz", visible: false },
+                            { data: "recomendaciones", visible: false },
+                            { data: "cargoauditado", visible: false },
+                            { data: "nombreauditado", visible: false },
+                            { data: "responsable", visible: false },
+                            { title: "Acciones", data: 'id',
+                                render : function (data, type, row){ 
+                                    a = ''
+                                    {% if 'accion_insertar' in permisos %}  
+                                        a += '<button id="list-acn" data-json="' + row.id + '" onclick="action_list(this)" type="button" class="btn bg-blue waves-effect waves-light list-acn" title="Acción"><i class="material-icons">exit_to_app</i></button>'
+                                    {% endif %}
 
-                                {% if 'hallazgo_eliminar' in permisos %}
-                                    a += '<button id="delete-hlg" data-json="' + row.id + '" onclick="delete_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>'
-                                {% endif %}
-                                a+= '<button id="correctrep" data-json="' + row.id + '" onclick="report_hallazgo(this)" type="button" class="btn bg-green waves-effect waves-light correctrep" title="Formulario Acciones Correctivas"><i class="material-icons">picture_as_pdf</i></button>'
+                                    {% if 'hallazgo_editar' in permisos %}
+                                        a += '<button id="edit-hlg" data-json="' + row.id + '" onclick="edit_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-indigo waves-effect waves-light edit-hlg" title="Editar"><i class="material-icons">create</i></button>'
+                                    {% endif %}
 
-                                return a
-                            }
-                        } 
-                    ],
-                    "order": [[ 4, 'desc' ]],
-                    "pageLength": 10,
-                    initComplete: function () {
-                        $("#dt-loader").fadeOut('800');
-                        $('#auditoriaf').removeAttr('disabled');
-                    }
-                });
+                                    {% if 'hallazgo_eliminar' in permisos %}
+                                        a += '<button id="delete-hlg" data-json="' + row.id + '" onclick="delete_hallazgo(this)" data-origin="hallazgo" type="button" class="btn bg-red waves-effect waves-light delete-hlg" title="Eliminar"><i class="material-icons">clear</i></button>'
+                                    {% endif %}
+                                    a+= '<button id="correctrep" data-json="' + row.id + '" onclick="report_hallazgo(this)" type="button" class="btn bg-green waves-effect waves-light correctrep" title="Formulario Acciones Correctivas"><i class="material-icons">picture_as_pdf</i></button>'
+
+                                    return a
+                                }
+                            } 
+                        ],
+                        "order": [[ 4, 'desc' ]],
+                        "pageLength": 10,
+                        initComplete: function () {
+                            $("#dt-loader").fadeOut('800');
+                            $('#auditoriaf').removeAttr('disabled');
+                        }
+                    });
+                } else {
+                    var tablec = $('#data_tabletr').DataTable();
+                    tablec.clear().draw();
+
+                    $("#dt-loader").fadeOut('800');
+                    $('#auditoriaf').removeAttr('disabled');
+                    showMessage('No se obtuvo ningún dato.', "warning", "info")
+                }
 
                 $ ('#data_tabletr').find('tbody').off('click', 'tr td.details-control'); $('#data_tabletr').find('tbody').on('click', 'tr td.details-control', function () {
                     var tr = $(this).closest('tr');

@@ -1408,8 +1408,6 @@ class ReportingController extends AbstractController
         }
     }
 
-    
-
     /**
      * @Route("/accion_vrfmail", methods={"POST"}, name="accion_vrfmail")
      */
